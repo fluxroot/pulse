@@ -1,0 +1,93 @@
+if (!hasProperty('buildNumber')) {
+    ext.buildNumber = 'dev'
+}
+if (version.contains('-')) {
+    if (hasProperty('branchName') && branchName == 'master') {
+        version += '.' + buildNumber
+    } else {
+        version += '.0'
+    }
+}
+
+if (!hasProperty('revisionNumber')) {
+    ext.revisionNumber = 'rev'
+}
+if (version.contains('-') && !(hasProperty('branchName') && branchName == 'master')) {
+    version += '+' + revisionNumber
+}
+
+println "Building version ${version}"
+
+allprojects {
+    group = 'com.fluxchess'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url "http://maven.fluxchess.com/release"
+        }
+    }
+
+    configurations {
+        eclipselibs {
+            extendsFrom compile
+        }
+    }
+
+    task libs(type: Sync) {
+        from configurations.eclipselibs
+        into "$projectDir/lib"
+    }
+
+    tasks.withType(Pmd) {
+        pmd {
+            ignoreFailures = true
+        }
+    }
+
+    tasks.withType(FindBugs) {
+        findbugs {
+            ignoreFailures = true
+        }
+    }
+
+    tasks.withType(Checkstyle) {
+        checkstyle {
+            ignoreFailures = true
+            showViolations = false
+        }
+    }
+}
+
+project(':pulse-java') {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'pmd'
+    apply plugin: 'findbugs'
+    apply plugin: 'checkstyle'
+
+    description = 'Pulse Chess Java Engine'
+
+    dependencies {
+        compile 'com.fluxchess:jcpi:+'
+
+        testCompile 'junit:junit:4.+'
+    }
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
+    jar {
+        from {
+            configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
+        }
+        from sourceSets.main.allJava
+        manifest {
+            attributes 'Implementation-Title': project.group, 'Implementation-Version': project.version, 'Main-Class': 'com.fluxchess.pulse.Pulse'
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.6'
+}
