@@ -1,0 +1,21 @@
+# Gradle
+.gradle/
+build/
+
+# Libraries
+lib/
+/vendor/
+
+# Testing
+run/
+
+# Eclipse
+.settings/
+bin/
+.classpath
+.project
+
+# IntelliJ IDEA
+.idea/
+out/
+*.iml
