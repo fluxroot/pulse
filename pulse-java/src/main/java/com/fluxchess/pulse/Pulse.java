@@ -23,9 +23,19 @@ import com.fluxchess.jcpi.AbstractEngine;
 import com.fluxchess.jcpi.commands.*;
 import com.fluxchess.jcpi.standardio.StandardIoCommunication;
 
+/**
+ * Pulse uses the Java Chess Protocol Interface (JCPI) to handle the
+ * UCI protocol.
+ * <p>
+ * We simply extend AbstractEngine and implement the required methods.
+ */
 public final class Pulse extends AbstractEngine {
 
     public static void main(String[] args) {
+        // Don't do any fancy stuff here. Just create our engine and
+        // run it. JCPI takes care of the rest. It waits for the GUI
+        // to issue commands which will call our methods using the
+        // visitor pattern.
         AbstractEngine engine = new Pulse(new StandardIoCommunication());
         engine.run();
     }
@@ -35,9 +45,17 @@ public final class Pulse extends AbstractEngine {
     }
 
     protected void quit() {
+        // We received a quit command. Stop calculating now and
+        // cleanup!
+        new EngineStopCalculatingCommand().accept(this);
     }
 
     public void visit(EngineInitializeRequestCommand engineInitializeRequestCommand) {
+        // We received an initialization request. Stop calculating now!
+        new EngineStopCalculatingCommand().accept(this);
+
+        // We must send an initialization answer back!
+        communication.send(new GuiInitializeAnswerCommand("Pulse 0.1.0-alpha.1", "Phokham Nonava"));
     }
 
     public void visit(EngineSetOptionCommand engineSetOptionCommand) {
@@ -47,6 +65,8 @@ public final class Pulse extends AbstractEngine {
     }
 
     public void visit(EngineReadyRequestCommand engineReadyRequestCommand) {
+        // We received a ready request. We must send the token back!
+        communication.send(new GuiReadyAnswerCommand(engineReadyRequestCommand.token));
     }
 
     public void visit(EngineNewGameCommand engineNewGameCommand) {
