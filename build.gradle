@@ -1,93 +1,134 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+
+description = 'Pulse Chess Java Engine'
+
+group = 'com.fluxchess'
+version = '0.1.0-alpha.1'
+
 if (!hasProperty('buildNumber')) {
-    ext.buildNumber = 'dev'
+  ext.buildNumber = 'dev'
 }
 if (version.contains('-')) {
-    if (hasProperty('branchName') && branchName == 'master') {
-        version += '.' + buildNumber
-    } else {
-        version += '.0'
-    }
+  if (hasProperty('branchName') && branchName == 'master') {
+    version += '.' + buildNumber
+  } else {
+    version += '.0'
+  }
 }
 
 if (!hasProperty('revisionNumber')) {
-    ext.revisionNumber = 'rev'
+  ext.revisionNumber = 'rev'
 }
 if (version.contains('-') && !(hasProperty('branchName') && branchName == 'master')) {
-    version += '+' + revisionNumber
+  version += '+' + revisionNumber
 }
 
 println "Building version ${version}"
 
-allprojects {
-    group = 'com.fluxchess'
-
-    repositories {
-        mavenCentral()
-        maven {
-            url "http://maven.fluxchess.com/release"
-        }
-    }
-
-    configurations {
-        eclipselibs {
-            extendsFrom compile
-        }
-    }
-
-    task libs(type: Sync) {
-        from configurations.eclipselibs
-        into "$projectDir/lib"
-    }
-
-    tasks.withType(Pmd) {
-        pmd {
-            ignoreFailures = true
-        }
-    }
-
-    tasks.withType(FindBugs) {
-        findbugs {
-            ignoreFailures = true
-        }
-    }
-
-    tasks.withType(Checkstyle) {
-        checkstyle {
-            ignoreFailures = true
-            showViolations = false
-        }
-    }
+repositories {
+  mavenCentral()
+  maven {
+    url "http://maven.fluxchess.com/release"
+  }
 }
 
-project(':pulse-java') {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'pmd'
-    apply plugin: 'findbugs'
-    apply plugin: 'checkstyle'
+tasks.withType(Pmd) {
+  pmd {
+    ignoreFailures = true
+  }
+}
 
-    description = 'Pulse Chess Java Engine'
+tasks.withType(FindBugs) {
+  findbugs {
+    ignoreFailures = true
+  }
+}
 
-    dependencies {
-        compile 'com.fluxchess:jcpi:+'
+tasks.withType(Checkstyle) {
+  checkstyle {
+    ignoreFailures = true
+    showViolations = false
+  }
+}
 
-        testCompile 'junit:junit:4.+'
+dependencies {
+  compile 'com.fluxchess:jcpi:1.0.+'
+
+  testCompile 'junit:junit:4.+'
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+processResources {
+  filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+    version: project.version,
+    buildNumber: project.buildNumber,
+    revisionNumber: project.revisionNumber
+  ])
+}
+
+jar {
+  from {
+    configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+  manifest {
+    attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version, 'Main-Class': 'com.fluxchess.pulse.Pulse'
+  }
+}
+
+task testsJar(type: Jar, dependsOn: testClasses) {
+  classifier = 'tests'
+  from sourceSets.test.output
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+task dist(type: Zip) {
+  def baseDir = "${project.name}-${project.version}"
+
+  into("$baseDir") {
+    from 'README.md'
+    from 'COPYING'
+    from 'COPYING.LESSER'
+
+    from jar
+    from testsJar
+    from sourcesJar
+    from javadocJar
+
+    from ('src/dist/Pulse.cmd') {
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
     }
-
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
-
-    jar {
-        from {
-            configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
-        }
-        from sourceSets.main.allJava
-        manifest {
-            attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version, 'Main-Class': 'com.fluxchess.pulse.Pulse'
-        }
+    from ('src/dist/Pulse') {
+      fileMode = 0755
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
     }
+  }
+}
+
+artifacts {
+  archives testsJar
+  archives sourcesJar
+  archives javadocJar
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.6'
+  gradleVersion = '1.8'
 }
