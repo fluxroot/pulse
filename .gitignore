@@ -2,13 +2,6 @@
 .gradle/
 build/
 
-# Libraries
-lib/
-/vendor/
-
-# Testing
-run/
-
 # Eclipse
 .settings/
 bin/
