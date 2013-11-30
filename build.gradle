@@ -7,27 +7,42 @@ apply plugin: 'checkstyle'
 description = 'Pulse Chess Java Engine'
 
 group = 'com.fluxchess'
-version = '0.1.0-alpha.1'
+version = '0.1.0-alpha'
+ext.releaseBranch = 'master'
 
-if (!hasProperty('buildNumber')) {
+if (!hasProperty('buildNumber') || !(hasProperty('branchName') && branchName == releaseBranch)) {
+  // We're probably building on a dev machine or we're building a branch
   ext.buildNumber = 'dev'
 }
-if (version.contains('-')) {
-  if (hasProperty('branchName') && branchName == 'master') {
-    version += '.' + buildNumber
-  } else {
-    version += '.0'
-  }
+if (!hasProperty('revisionNumber')) {
+  // We're probably building on a dev machine
+  ext.revisionNumber = 'dev'
 }
 
-if (!hasProperty('revisionNumber')) {
-  ext.revisionNumber = 'rev'
+if (!version.contains('-') && !(hasProperty('releaseVersion') && releaseVersion == version)) {
+  // Append '-rc' if we're not releasing yet
+  version += '-rc'
 }
-if (version.contains('-') && !(hasProperty('branchName') && branchName == 'master')) {
+
+if (version.contains('-')) {
+  // Append the buildNumber if we're not releasing
+  version += '.' + buildNumber
+}
+
+if (version.contains('-') && !(hasProperty('branchName') && branchName == releaseBranch)) {
+  // Append the revisionNumber if we're not releasing and not on a release branch
   version += '+' + revisionNumber
 }
 
 println "Building version ${version}"
+
+if (!hasProperty('s3AccessKeyId')) {
+  ext.s3AccessKeyId = 'n/a'
+}
+
+if (!hasProperty('s3SecretAccessKey')) {
+  ext.s3SecretAccessKey = 'n/a'
+}
 
 repositories {
   mavenCentral()
@@ -56,7 +71,7 @@ tasks.withType(Checkstyle) {
 }
 
 dependencies {
-  compile 'com.fluxchess:jcpi:1.0.+'
+  compile 'com.fluxchess:jcpi:1.1.+'
 
   testCompile 'junit:junit:4.+'
 }
@@ -127,6 +142,33 @@ artifacts {
   archives testsJar
   archives sourcesJar
   archives javadocJar
+}
+
+uploadArchives {
+  if (project.hasProperty('branchName')) {
+    if (branchName == releaseBranch) {
+      configurations {
+        deployerJars
+      }
+
+      dependencies {
+        deployerJars 'org.springframework.build:aws-maven:4.+'
+      }
+
+      repositories {
+        mavenDeployer {
+          configuration = configurations.deployerJars
+          repository(url: 's3://maven.fluxchess.com/release') {
+            authentication(userName: s3AccessKeyId, passphrase: s3SecretAccessKey)
+          }
+        }
+      }
+    } else {
+      println "Skipping upload. Not on ${releaseBranch} branch (${branchName})."
+    }
+  } else {
+    println "Skipping upload. No branch name defined."
+  }
 }
 
 task wrapper(type: Wrapper) {
