@@ -46,9 +46,7 @@ if (!hasProperty('s3SecretAccessKey')) {
 
 repositories {
   mavenCentral()
-  maven {
-    url "http://maven.fluxchess.com/release"
-  }
+  maven { url "http://maven.fluxchess.com/release" }
 }
 
 tasks.withType(Pmd) {
@@ -130,12 +128,12 @@ task dist(type: Zip) {
     from sourcesJar
     from javadocJar
 
-    from ('src/dist/Pulse.cmd') {
+    from('src/dist/Pulse.cmd') {
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
         version: project.version
       ])
     }
-    from ('src/dist/Pulse') {
+    from('src/dist/Pulse') {
       fileMode = 0755
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
         version: project.version
