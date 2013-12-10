@@ -3,6 +3,8 @@ apply plugin: 'maven'
 apply plugin: 'pmd'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
+apply plugin: 'cobertura'
+apply plugin: 'coveralls'
 
 description = 'Pulse Chess Java Engine'
 
@@ -44,6 +46,17 @@ if (!hasProperty('s3SecretAccessKey')) {
   ext.s3SecretAccessKey = 'n/a'
 }
 
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath 'net.saliman:gradle-cobertura-plugin:2.0.0'
+    classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.1.6'
+  }
+}
+
 repositories {
   mavenCentral()
   maven { url "http://maven.fluxchess.com/release" }
@@ -67,6 +80,8 @@ tasks.withType(Checkstyle) {
     showViolations = false
   }
 }
+
+cobertura.coverageFormats = ['html', 'xml']
 
 sourceSets {
   integration
@@ -155,7 +170,6 @@ uploadArchives {
       } else {
         ext.repositoryName = 'release'
       }
-      println "Queuing upload to ${repositoryName}."
 
       configurations {
         deployerJars
@@ -174,10 +188,10 @@ uploadArchives {
         }
       }
     } else {
-      println "Skipping upload. Not on ${releaseBranch} branch (${branchName})."
+      doLast { println "Skipping upload. Not on ${releaseBranch} branch (${branchName})." }
     }
   } else {
-    println "Skipping upload. No branch name defined."
+    doLast { println "Skipping upload. No branch name defined." }
   }
 }
 
