@@ -1,0 +1,18 @@
+language: java
+
+jdk:
+- oraclejdk7
+
+env:
+- TERM=dumb
+
+before_install:
+- chmod +x gradlew
+
+install: ./gradlew -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PrevisionNumber=${TRAVIS_COMMIT} -PbranchName=${TRAVIS_BRANCH} assemble
+
+script: ./gradlew -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PrevisionNumber=${TRAVIS_COMMIT} -PbranchName=${TRAVIS_BRANCH} clean test check dist integration
+
+after_success:
+- ./gradlew -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PrevisionNumber=${TRAVIS_COMMIT} -PbranchName=${TRAVIS_BRANCH} cobertura
+- ./gradlew -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PrevisionNumber=${TRAVIS_COMMIT} -PbranchName=${TRAVIS_BRANCH} coveralls
