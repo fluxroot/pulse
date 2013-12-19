@@ -1,1 +1,3 @@
 rootProject.name = 'pulse'
+
+include 'pulse-integration'
