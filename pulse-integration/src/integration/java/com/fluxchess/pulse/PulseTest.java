@@ -59,7 +59,7 @@ public class PulseTest {
     testOutput.println("uci");
     testOutput.println("quit");
 
-    thread.join(1000);
+    thread.join(5000);
     assertFalse(thread.isAlive());
   }
 
