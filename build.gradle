@@ -1,4 +1,5 @@
 apply plugin: 'maven'
+apply plugin: 'cobertura'
 apply plugin: 'coveralls'
 
 description = 'Pulse Chess Java Engine'
@@ -19,7 +20,6 @@ allprojects {
   apply plugin: 'pmd'
   apply plugin: 'findbugs'
   apply plugin: 'checkstyle'
-  apply plugin: 'cobertura'
 
   group = 'com.fluxchess'
   version = '0.1.0-alpha'
@@ -84,8 +84,6 @@ allprojects {
     }
   }
 
-  cobertura.coverageFormats = ['html', 'xml']
-
   dependencies {
     testCompile 'junit:junit:4.+'
   }
@@ -124,6 +122,8 @@ project(':pulse-integration') {
     classpath = sourceSets.integration.runtimeClasspath
   }
 }
+
+cobertura.coverageFormats = ['html', 'xml']
 
 dependencies {
   compile 'com.fluxchess:jcpi:1.1.+'
