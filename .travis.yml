@@ -4,15 +4,15 @@ jdk:
 - oraclejdk7
 
 env:
-- TERM=dumb
+- TERM=dumb ORG_GRADLE_PROJECT_buildNumber="${TRAVIS_BUILD_NUMBER}" ORG_GRADLE_PROJECT_revisionNumber="${TRAVIS_COMMIT}" ORG_GRADLE_PROJECT_branchName="${TRAVIS_BRANCH}"
 
 before_install:
 - chmod +x gradlew
 
-install: ./gradlew -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PrevisionNumber=${TRAVIS_COMMIT} -PbranchName=${TRAVIS_BRANCH} assemble
+install: ./gradlew assemble
 
-script: ./gradlew -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PrevisionNumber=${TRAVIS_COMMIT} -PbranchName=${TRAVIS_BRANCH} clean test check dist integration
+script: ./gradlew test check dist integration
 
 after_success:
-- ./gradlew -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PrevisionNumber=${TRAVIS_COMMIT} -PbranchName=${TRAVIS_BRANCH} cobertura
-- ./gradlew -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PrevisionNumber=${TRAVIS_COMMIT} -PbranchName=${TRAVIS_BRANCH} coveralls
+- ./gradlew cobertura
+- ./gradlew coveralls

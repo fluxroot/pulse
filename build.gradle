@@ -1,50 +1,7 @@
-apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'pmd'
-apply plugin: 'findbugs'
-apply plugin: 'checkstyle'
-apply plugin: 'cobertura'
 apply plugin: 'coveralls'
 
 description = 'Pulse Chess Java Engine'
-
-group = 'com.fluxchess'
-version = '0.1.0-alpha'
-ext.releaseBranch = 'master'
-
-if (!hasProperty('buildNumber') || !(hasProperty('branchName') && branchName == releaseBranch)) {
-  // We're probably building on a dev machine or we're building a branch
-  ext.buildNumber = 'dev'
-}
-if (!hasProperty('revisionNumber')) {
-  // We're probably building on a dev machine
-  ext.revisionNumber = 'dev'
-}
-
-if (!version.contains('-') && !(hasProperty('releaseVersion') && releaseVersion == version)) {
-  // Append '-rc' if we're not releasing yet
-  version += '-rc'
-}
-
-if (version.contains('-')) {
-  // Append the buildNumber if we're not releasing
-  version += '.' + buildNumber
-}
-
-if (version.contains('-') && !(hasProperty('branchName') && branchName == releaseBranch)) {
-  // Append the revisionNumber if we're not releasing and not on a release branch
-  version += '+' + revisionNumber
-}
-
-println "Building version ${version}"
-
-if (!hasProperty('s3AccessKeyId')) {
-  ext.s3AccessKeyId = 'n/a'
-}
-
-if (!hasProperty('s3SecretAccessKey')) {
-  ext.s3SecretAccessKey = 'n/a'
-}
 
 buildscript {
   repositories {
@@ -57,54 +14,119 @@ buildscript {
   }
 }
 
-repositories {
-  mavenCentral()
-  maven { url "http://maven.fluxchess.com/release" }
-}
+allprojects {
+  apply plugin: 'java'
+  apply plugin: 'pmd'
+  apply plugin: 'findbugs'
+  apply plugin: 'checkstyle'
+  apply plugin: 'cobertura'
 
-tasks.withType(Pmd) {
-  pmd {
-    ignoreFailures = true
+  group = 'com.fluxchess'
+  version = '0.1.0-alpha'
+  ext.releaseBranch = 'master'
+
+  if (!project.hasProperty('buildNumber') || !(project.hasProperty('branchName') && branchName == releaseBranch)) {
+    // We're probably building on a dev machine or we're building a branch
+    ext.buildNumber = 'dev'
+  }
+  if (!project.hasProperty('revisionNumber')) {
+    // We're probably building on a dev machine
+    ext.revisionNumber = 'dev'
+  }
+
+  if (!version.contains('-') && !(project.hasProperty('releaseVersion') && releaseVersion == version)) {
+    // Append '-rc' if we're not releasing yet
+    version += '-rc'
+  }
+
+  if (version.contains('-')) {
+    // Append the buildNumber if we're not releasing
+    version += '.' + buildNumber
+  }
+
+  if (version.contains('-') && !(project.hasProperty('branchName') && branchName == releaseBranch)) {
+    // Append the revisionNumber if we're not releasing and not on a release branch
+    version += '+' + revisionNumber
+  }
+
+  afterEvaluate { println "Building ${name} version ${version}" }
+
+  if (!project.hasProperty('s3AccessKeyId_password')) {
+    ext.s3AccessKeyId_password = 'n/a'
+  }
+
+  if (!project.hasProperty('s3SecretAccessKey_password')) {
+    ext.s3SecretAccessKey_password = 'n/a'
+  }
+
+  repositories {
+    mavenCentral()
+    maven { url "http://maven.fluxchess.com/release" }
+  }
+
+  tasks.withType(Pmd) {
+    pmd {
+      ignoreFailures = true
+    }
+  }
+
+  tasks.withType(FindBugs) {
+    findbugs {
+      ignoreFailures = true
+    }
+  }
+
+  tasks.withType(Checkstyle) {
+    checkstyle {
+      configFile = new File("${rootDir}/config/checkstyle/checkstyle.xml")
+      ignoreFailures = true
+      showViolations = false
+    }
+  }
+
+  cobertura.coverageFormats = ['html', 'xml']
+
+  dependencies {
+    testCompile 'junit:junit:4.+'
+  }
+
+  sourceCompatibility = 1.7
+  targetCompatibility = 1.7
+
+  processResources {
+    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+      version: project.version,
+      buildNumber: project.buildNumber,
+      revisionNumber: project.revisionNumber
+    ])
   }
 }
 
-tasks.withType(FindBugs) {
-  findbugs {
-    ignoreFailures = true
+project(':pulse-integration') {
+  description = 'Integration Testing'
+
+  sourceSets {
+    integration
   }
-}
 
-tasks.withType(Checkstyle) {
-  checkstyle {
-    ignoreFailures = true
-    showViolations = false
+  configurations {
+    integrationCompile.extendsFrom compile
+    integrationRuntime.extendsFrom runtime
   }
-}
 
-cobertura.coverageFormats = ['html', 'xml']
+  dependencies {
+    compile project(':')
+    compile 'junit:junit:4.+'
+  }
 
-sourceSets {
-  integration
+  task integration(type: Test) {
+    testClassesDir = sourceSets.integration.output.classesDir
+    classpath = sourceSets.integration.runtimeClasspath
+  }
 }
 
 dependencies {
   compile 'com.fluxchess:jcpi:1.1.+'
-
-  testCompile 'junit:junit:4.+'
-
-  integrationCompile project(':')
-  integrationCompile 'junit:junit:4.+'
-}
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
-processResources {
-  filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-    version: project.version,
-    buildNumber: project.buildNumber,
-    revisionNumber: project.revisionNumber
-  ])
 }
 
 jar {
@@ -124,11 +146,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
   from javadoc.destinationDir
-}
-
-task integration(type: Test) {
-  testClassesDir = sourceSets.integration.output.classesDir
-  classpath = sourceSets.integration.runtimeClasspath
 }
 
 task dist(type: Zip) {
@@ -183,7 +200,7 @@ uploadArchives {
         mavenDeployer {
           configuration = configurations.deployerJars
           repository(url: "s3://maven.fluxchess.com/${repositoryName}") {
-            authentication(userName: s3AccessKeyId, passphrase: s3SecretAccessKey)
+            authentication(userName: s3AccessKeyId_password, passphrase: s3SecretAccessKey_password)
           }
         }
       }
