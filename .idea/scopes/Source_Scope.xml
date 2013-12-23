@@ -1,3 +1,3 @@
 <component name="DependencyValidationManager">
-  <scope name="Source Scope" pattern="file:src/main/java//*||file:src/test/java//*||file:src/integration/java//*" />
+  <scope name="Source Scope" pattern="file:src/main/java//*||file:src/test/java//*||file:src/integration/java//*||file:src/testing/java//*" />
 </component>
