@@ -22,15 +22,19 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class VersionInfoTest {
+public class MoveListTest {
 
   @Test
-  public void testVersionInfo() {
-    VersionInfo versionInfo = VersionInfo.current();
+  public void test() {
+    MoveList moveList = new MoveList();
 
-    assertEquals("0.1.0-alpha.1", versionInfo.getVersion());
-    assertEquals("dev", versionInfo.getBuildNumber());
-    assertEquals("rev", versionInfo.getRevisionNumber());
+    assertEquals(0, moveList.size);
+
+    moveList.moves[moveList.size++] = 1;
+    assertEquals(1, moveList.size);
+
+    moveList.clear();
+    assertEquals(0, moveList.size);
   }
 
 }

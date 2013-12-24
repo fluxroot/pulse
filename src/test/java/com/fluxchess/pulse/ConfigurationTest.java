@@ -20,17 +20,15 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.lang.reflect.InvocationTargetException;
 
-public class VersionInfoTest {
+import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
+
+public class ConfigurationTest {
 
   @Test
-  public void testVersionInfo() {
-    VersionInfo versionInfo = VersionInfo.current();
-
-    assertEquals("0.1.0-alpha.1", versionInfo.getVersion());
-    assertEquals("dev", versionInfo.getBuildNumber());
-    assertEquals("rev", versionInfo.getRevisionNumber());
+  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    assertUtilityClassWellDefined(Configuration.class);
   }
 
 }
