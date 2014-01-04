@@ -18,19 +18,19 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.jcpi.models.GenericBoard;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class VersionInfoTest {
+public class EvaluationTest {
 
   @Test
-  public void testVersionInfo() {
-    VersionInfo versionInfo = VersionInfo.current();
+  public void testEvaluate() {
+    Board board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
+    Evaluation evaluation = new Evaluation();
 
-    assertEquals("0.1.0-alpha.1", versionInfo.getVersion());
-    assertEquals("dev", versionInfo.getBuildNumber());
-    assertEquals("rev", versionInfo.getRevisionNumber());
+    assertEquals(0, evaluation.evaluate(board));
   }
 
 }

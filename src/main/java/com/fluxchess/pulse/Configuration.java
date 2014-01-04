@@ -18,19 +18,22 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+import com.fluxchess.jcpi.options.AbstractOption;
+import com.fluxchess.jcpi.options.CheckboxOption;
+import com.fluxchess.jcpi.options.Options;
 
-import static org.junit.Assert.assertEquals;
+public final class Configuration {
 
-public class VersionInfoTest {
+  public static boolean debug = false;
 
-  @Test
-  public void testVersionInfo() {
-    VersionInfo versionInfo = VersionInfo.current();
+  public static boolean ponder = true;
+  public static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
 
-    assertEquals("0.1.0-alpha.1", versionInfo.getVersion());
-    assertEquals("dev", versionInfo.getBuildNumber());
-    assertEquals("rev", versionInfo.getRevisionNumber());
+  public static final AbstractOption[] options = new AbstractOption[]{
+    ponderOption
+  };
+
+  private Configuration() {
   }
 
 }

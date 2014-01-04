@@ -18,19 +18,15 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+public final class MoveList {
 
-import static org.junit.Assert.assertEquals;
+  private static final int MAXSIZE = 4096;
 
-public class VersionInfoTest {
+  public final int[] moves = new int[MAXSIZE];
+  public int size = 0;
 
-  @Test
-  public void testVersionInfo() {
-    VersionInfo versionInfo = VersionInfo.current();
-
-    assertEquals("0.1.0-alpha.1", versionInfo.getVersion());
-    assertEquals("dev", versionInfo.getBuildNumber());
-    assertEquals("rev", versionInfo.getRevisionNumber());
+  public void clear() {
+    size = 0;
   }
 
 }

@@ -18,19 +18,33 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericPosition;
+import com.fluxchess.jcpi.models.GenericRank;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+
+import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.junit.Assert.assertEquals;
 
-public class VersionInfoTest {
+public class PositionTest {
 
   @Test
-  public void testVersionInfo() {
-    VersionInfo versionInfo = VersionInfo.current();
+  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    assertUtilityClassWellDefined(Position.class);
+  }
 
-    assertEquals("0.1.0-alpha.1", versionInfo.getVersion());
-    assertEquals("dev", versionInfo.getBuildNumber());
-    assertEquals("rev", versionInfo.getRevisionNumber());
+  @Test
+  public void testValues() {
+    for (GenericFile genericFile : GenericFile.values()) {
+      for (GenericRank genericRank : GenericRank.values()) {
+        assertEquals(
+          GenericPosition.valueOf(genericFile, genericRank),
+          Position.toGenericPosition(Position.valueOf(GenericPosition.valueOf(genericFile, genericRank)))
+        );
+      }
+    }
   }
 
 }
