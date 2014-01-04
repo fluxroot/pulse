@@ -269,6 +269,7 @@ public final class Move {
     int targetPiece = board.board[Position.valueOf(GenericPosition.valueOf(move.to.file, move.from.rank))];
 
     return IntPiece.getChessman(originPiece) == IntChessman.PAWN
+      && IntPiece.isValid(targetPiece)
       && IntPiece.getChessman(targetPiece) == IntChessman.PAWN
       && IntPiece.getColor(originPiece) == IntColor.opposite(IntPiece.getColor(targetPiece))
       && board.enPassant == Position.valueOf(move.to);
