@@ -35,10 +35,11 @@ public final class PerftPerformance {
     GenericBoard genericBoard = new GenericBoard(GenericBoard.STANDARDSETUP);
     Board board = new Board(genericBoard);
     MoveGenerator moveGenerator = new MoveGenerator(board);
+    int depth = 6;
+
+    LOG.info(String.format("Testing %s at depth %d", genericBoard.toString(), depth));
 
     for (int i = 1; i < 4; ++i) {
-      int depth = 6;
-
       long startTime = System.currentTimeMillis();
       int result = miniMax(board, moveGenerator, depth);
       long endTime = System.currentTimeMillis();
@@ -48,9 +49,8 @@ public final class PerftPerformance {
       totalTime += duration;
 
       LOG.info(String.format(
-        "Tested %s at depth %d: %02d:%02d:%02d.%03d",
-        genericBoard.toString(),
-        depth,
+        "Duration iteration %d: %02d:%02d:%02d.%03d",
+        i,
         TimeUnit.MILLISECONDS.toHours(duration),
         TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
         TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)),
