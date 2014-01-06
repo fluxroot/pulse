@@ -25,8 +25,4 @@ public final class MoveList {
   public final int[] moves = new int[MAXSIZE];
   public int size = 0;
 
-  public void clear() {
-    size = 0;
-  }
-
 }

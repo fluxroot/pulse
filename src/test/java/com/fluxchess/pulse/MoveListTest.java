@@ -32,9 +32,6 @@ public class MoveListTest {
 
     moveList.moves[moveList.size++] = 1;
     assertEquals(1, moveList.size);
-
-    moveList.clear();
-    assertEquals(0, moveList.size);
   }
 
 }
