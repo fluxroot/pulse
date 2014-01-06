@@ -789,17 +789,17 @@ public final class Board {
     }
 
     // Move king
-    int targetPosition = Move.getTargetPosition(move);
+    int kingTargetPosition = Move.getTargetPosition(move);
     assert IntPiece.getChessman(Move.getOriginPiece(move)) == IntChessman.KING;
-    move(Move.getOriginPosition(move), targetPosition);
+    move(Move.getOriginPosition(move), kingTargetPosition);
 
     // Get rook positions and update castling rights
-    int rookFrom = Position.NOPOSITION;
-    int rookTo = Position.NOPOSITION;
-    switch (targetPosition) {
+    int rookOriginPosition = Position.NOPOSITION;
+    int rookTargetPosition = Position.NOPOSITION;
+    switch (kingTargetPosition) {
       case Position.g1:
-        rookFrom = Position.h1;
-        rookTo = Position.f1;
+        rookOriginPosition = Position.h1;
+        rookTargetPosition = Position.f1;
         if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
           castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
           zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
@@ -810,8 +810,8 @@ public final class Board {
         }
         break;
       case Position.c1:
-        rookFrom = Position.a1;
-        rookTo = Position.d1;
+        rookOriginPosition = Position.a1;
+        rookTargetPosition = Position.d1;
         if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
           castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
           zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
@@ -822,8 +822,8 @@ public final class Board {
         }
         break;
       case Position.g8:
-        rookFrom = Position.h8;
-        rookTo = Position.f8;
+        rookOriginPosition = Position.h8;
+        rookTargetPosition = Position.f8;
         if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
           castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
           zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
@@ -834,8 +834,8 @@ public final class Board {
         }
         break;
       case Position.c8:
-        rookFrom = Position.a8;
-        rookTo = Position.d8;
+        rookOriginPosition = Position.a8;
+        rookTargetPosition = Position.d8;
         if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
           castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
           zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
@@ -846,12 +846,12 @@ public final class Board {
         }
         break;
       default:
-        assert false : targetPosition;
+        assert false : kingTargetPosition;
         break;
     }
 
     // Move rook
-    int rook = move(rookFrom, rookTo);
+    int rook = move(rookOriginPosition, rookTargetPosition);
     assert IntPiece.getChessman(rook) == IntChessman.ROOK;
 
     // Save and update en passant
