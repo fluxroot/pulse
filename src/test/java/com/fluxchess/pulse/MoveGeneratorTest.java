@@ -19,36 +19,19 @@
 package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.models.IllegalNotationException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class MoveGeneratorTest {
-
-  private final Map<Long, Long> table = new HashMap<>();
-
-  @Ignore
-  @Test
-  public void testSpecial() throws IllegalNotationException {
-    GenericBoard genericBoard = new GenericBoard("r3k2R/8/8/8/8/8/8/R3K3 b Qq - 0 1");
-    Board board = new Board(genericBoard);
-    MoveGenerator moveGenerator = new MoveGenerator(board);
-
-    MoveList moves = moveGenerator.getAll();
-
-    for (int i = 0; i < moves.size; ++i) {
-      System.out.println(Move.toGenericMove(moves.moves[i]).toString());
-    }
-  }
 
   @Test
   public void testPerft() throws IOException, IllegalNotationException {
@@ -67,10 +50,11 @@ public class MoveGeneratorTest {
 
             GenericBoard genericBoard = new GenericBoard(tokens[0].trim());
             Board board = new Board(genericBoard);
-            table.clear();
 
             long result = miniMax(board, new MoveGenerator(board), depth);
-            assertEquals(tokens[0].trim() + " at depth " + depth + "failed", nodes, result);
+            if (nodes != result) {
+              throw new AssertionError(findMissingMoves(board, new MoveGenerator(board), depth));
+            }
           }
 
           line = file.readLine();
@@ -80,30 +64,73 @@ public class MoveGeneratorTest {
   }
 
   private long miniMax(Board board, MoveGenerator moveGenerator, int depth) {
-    if (depth == 0) {
-      return 1;
-    }
-
-    if (table.containsKey(board.zobristCode)) {
-      return table.get(board.zobristCode);
-    }
-
     long totalNodes = 0;
 
     MoveList moves = moveGenerator.getAll();
+
+    if (depth <= 1) {
+      return moves.size;
+    }
+
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.moves[i];
 
       board.makeMove(move);
-      long nodes = miniMax(board, moveGenerator, depth - 1);
+      totalNodes += miniMax(board, moveGenerator, depth - 1);
       board.undoMove(move);
-
-      totalNodes += nodes;
     }
 
-    table.put(board.zobristCode, totalNodes);
-
     return totalNodes;
+  }
+
+  private String findMissingMoves(Board board, MoveGenerator moveGenerator, int depth) {
+    String message = "";
+
+    // Get expected moves from JCPI
+    GenericBoard genericBoard = board.toGenericBoard();
+    Collection<GenericMove> expectedMoves = new HashSet<>(Arrays.asList(
+      com.fluxchess.jcpi.utils.MoveGenerator.getGenericMoves(genericBoard)
+    ));
+
+    // Get actual moves
+    MoveList moves = moveGenerator.getAll();
+    Collection<GenericMove> actualMoves = new HashSet<>();
+    for (int i = 0; i < moves.size; ++i) {
+      actualMoves.add(Move.toGenericMove(moves.moves[i]));
+    }
+
+    // Compare expected and actual moves
+    Collection<GenericMove> invalidMoves = new HashSet<>(actualMoves);
+    invalidMoves.removeAll(expectedMoves);
+
+    Collection<GenericMove> missingMoves = new HashSet<>(expectedMoves);
+    missingMoves.removeAll(actualMoves);
+
+    if (invalidMoves.isEmpty() && missingMoves.isEmpty()) {
+      if (depth <= 1) {
+        return message;
+      }
+
+      for (int i = 0; i < moves.size; ++i) {
+        int move = moves.moves[i];
+
+        board.makeMove(move);
+        message += miniMax(board, moveGenerator, depth - 1);
+        board.undoMove(move);
+
+        if (!message.isEmpty()) {
+          break;
+        }
+      }
+    } else {
+      message += String.format("Failed check for board: %s%n", genericBoard);
+      message += String.format("Expected: %s%n", expectedMoves);
+      message += String.format("  Actual: %s%n", actualMoves);
+      message += String.format(" Missing: %s%n", missingMoves);
+      message += String.format(" Invalid: %s%n", invalidMoves);
+    }
+
+    return message;
   }
 
 }
