@@ -35,11 +35,11 @@ public class MoveTest {
 
   @Test
   public void testCreation() {
-    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Position.a7, Position.b8, IntPiece.WHITEPAWN, IntPiece.BLACKQUEEN, IntChessman.KNIGHT);
+    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.a7, Square.b8, IntPiece.WHITEPAWN, IntPiece.BLACKQUEEN, IntChessman.KNIGHT);
 
     assertEquals(Move.Type.PAWNPROMOTION, Move.getType(move));
-    assertEquals(Position.a7, Move.getOriginPosition(move));
-    assertEquals(Position.b8, Move.getTargetPosition(move));
+    assertEquals(Square.a7, Move.getOriginSquare(move));
+    assertEquals(Square.b8, Move.getTargetSquare(move));
     assertEquals(IntPiece.WHITEPAWN, Move.getOriginPiece(move));
     assertEquals(IntPiece.BLACKQUEEN, Move.getTargetPiece(move));
     assertEquals(IntChessman.KNIGHT, Move.getPromotion(move));
@@ -51,8 +51,8 @@ public class MoveTest {
     int move = Move.valueOf(genericMove, new Board(new GenericBoard(GenericBoard.STANDARDSETUP)));
 
     assertEquals(Move.Type.NORMAL, Move.getType(move));
-    assertEquals(Position.a2, Move.getOriginPosition(move));
-    assertEquals(Position.a3, Move.getTargetPosition(move));
+    assertEquals(Square.a2, Move.getOriginSquare(move));
+    assertEquals(Square.a3, Move.getTargetSquare(move));
     assertEquals(IntPiece.WHITEPAWN, Move.getOriginPiece(move));
     assertEquals(IntPiece.NOPIECE, Move.getTargetPiece(move));
     assertEquals(IntChessman.NOCHESSMAN, Move.getPromotion(move));
@@ -62,8 +62,8 @@ public class MoveTest {
     move = Move.valueOf(genericMove, new Board(new GenericBoard(GenericBoard.STANDARDSETUP)));
 
     assertEquals(Move.Type.PAWNDOUBLE, Move.getType(move));
-    assertEquals(Position.a2, Move.getOriginPosition(move));
-    assertEquals(Position.a4, Move.getTargetPosition(move));
+    assertEquals(Square.a2, Move.getOriginSquare(move));
+    assertEquals(Square.a4, Move.getTargetSquare(move));
     assertEquals(IntPiece.WHITEPAWN, Move.getOriginPiece(move));
     assertEquals(IntPiece.NOPIECE, Move.getTargetPiece(move));
     assertEquals(IntChessman.NOCHESSMAN, Move.getPromotion(move));
@@ -73,8 +73,8 @@ public class MoveTest {
     move = Move.valueOf(genericMove, new Board(new GenericBoard("1q2k3/2P5/8/8/8/8/8/4K3 w - - 0 1")));
 
     assertEquals(Move.Type.PAWNPROMOTION, Move.getType(move));
-    assertEquals(Position.c7, Move.getOriginPosition(move));
-    assertEquals(Position.b8, Move.getTargetPosition(move));
+    assertEquals(Square.c7, Move.getOriginSquare(move));
+    assertEquals(Square.b8, Move.getTargetSquare(move));
     assertEquals(IntPiece.WHITEPAWN, Move.getOriginPiece(move));
     assertEquals(IntPiece.BLACKQUEEN, Move.getTargetPiece(move));
     assertEquals(IntChessman.KNIGHT, Move.getPromotion(move));
@@ -84,8 +84,8 @@ public class MoveTest {
     move = Move.valueOf(genericMove, new Board(new GenericBoard("4k3/8/8/8/2Pp4/8/8/4K3 b - c3 0 1")));
 
     assertEquals(Move.Type.ENPASSANT, Move.getType(move));
-    assertEquals(Position.d4, Move.getOriginPosition(move));
-    assertEquals(Position.c3, Move.getTargetPosition(move));
+    assertEquals(Square.d4, Move.getOriginSquare(move));
+    assertEquals(Square.c3, Move.getTargetSquare(move));
     assertEquals(IntPiece.BLACKPAWN, Move.getOriginPiece(move));
     assertEquals(IntPiece.WHITEPAWN, Move.getTargetPiece(move));
     assertEquals(IntChessman.NOCHESSMAN, Move.getPromotion(move));
@@ -95,8 +95,8 @@ public class MoveTest {
     move = Move.valueOf(genericMove, new Board(new GenericBoard("4k3/8/8/8/8/8/8/R3K3 w Q - 0 1")));
 
     assertEquals(Move.Type.CASTLING, Move.getType(move));
-    assertEquals(Position.e1, Move.getOriginPosition(move));
-    assertEquals(Position.c1, Move.getTargetPosition(move));
+    assertEquals(Square.e1, Move.getOriginSquare(move));
+    assertEquals(Square.c1, Move.getTargetSquare(move));
     assertEquals(IntPiece.WHITEKING, Move.getOriginPiece(move));
     assertEquals(IntPiece.NOPIECE, Move.getTargetPiece(move));
     assertEquals(IntChessman.NOCHESSMAN, Move.getPromotion(move));
@@ -104,24 +104,24 @@ public class MoveTest {
   }
 
   @Test
-  public void testSetTargetPosition() {
-    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Position.b7, Position.c8, IntPiece.WHITEPAWN, IntPiece.BLACKQUEEN, IntChessman.KNIGHT);
+  public void testSetTargetSquare() {
+    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.b7, Square.c8, IntPiece.WHITEPAWN, IntPiece.BLACKQUEEN, IntChessman.KNIGHT);
 
-    assertEquals(Position.c8, Move.getTargetPosition(move));
+    assertEquals(Square.c8, Move.getTargetSquare(move));
 
-    move = Move.setTargetPosition(move, Position.a8);
+    move = Move.setTargetSquare(move, Square.a8);
 
-    assertEquals(Position.a8, Move.getTargetPosition(move));
+    assertEquals(Square.a8, Move.getTargetSquare(move));
 
-    move = Move.setTargetPositionAndPiece(move, Position.c8, IntPiece.BLACKKNIGHT);
+    move = Move.setTargetSquareAndPiece(move, Square.c8, IntPiece.BLACKKNIGHT);
 
-    assertEquals(Position.c8, Move.getTargetPosition(move));
+    assertEquals(Square.c8, Move.getTargetSquare(move));
     assertEquals(IntPiece.BLACKKNIGHT, Move.getTargetPiece(move));
   }
 
   @Test
   public void testPromotion() {
-    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Position.b7, Position.c8, IntPiece.WHITEPAWN, IntPiece.BLACKQUEEN, IntChessman.KNIGHT);
+    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.b7, Square.c8, IntPiece.WHITEPAWN, IntPiece.BLACKQUEEN, IntChessman.KNIGHT);
 
     assertEquals(IntChessman.KNIGHT, Move.getPromotion(move));
 

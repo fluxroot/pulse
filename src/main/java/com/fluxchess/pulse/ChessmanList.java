@@ -20,40 +20,40 @@ package com.fluxchess.pulse;
 
 public final class ChessmanList {
 
-  public long positions = 0;
+  public long squares = 0;
 
-  static int toX88Position(int position) {
-    assert position >= 0 && position < Long.SIZE;
+  static int toX88Square(int square) {
+    assert square >= 0 && square < Long.SIZE;
 
-    return ((position & ~7) << 1) | (position & 7);
+    return ((square & ~7) << 1) | (square & 7);
   }
 
-  static int toBitPosition(int position) {
-    assert (position & 0x88) == 0;
+  static int toBitSquare(int square) {
+    assert (square & 0x88) == 0;
 
-    return ((position & ~7) >>> 1) | (position & 7);
+    return ((square & ~7) >>> 1) | (square & 7);
   }
 
-  public static int next(long positions) {
-    return ChessmanList.toX88Position(Long.numberOfTrailingZeros(positions));
+  public static int next(long squares) {
+    return ChessmanList.toX88Square(Long.numberOfTrailingZeros(squares));
   }
 
   public int size() {
-    return Long.bitCount(positions);
+    return Long.bitCount(squares);
   }
 
-  public void add(int position) {
-    assert (position & 0x88) == 0;
-    assert (positions & (1L << toBitPosition(position))) == 0 : String.format("positions = %d, 0x88 position = %d, bit position = %d", positions, position, toBitPosition(position));
+  public void add(int square) {
+    assert (square & 0x88) == 0;
+    assert (squares & (1L << toBitSquare(square))) == 0 : String.format("squares = %d, 0x88 square = %d, bit square = %d", squares, square, toBitSquare(square));
 
-    positions |= 1L << toBitPosition(position);
+    squares |= 1L << toBitSquare(square);
   }
 
-  public void remove(int position) {
-    assert (position & 0x88) == 0;
-    assert (positions & (1L << toBitPosition(position))) != 0 : String.format("positions = %d, 0x88 position = %d, bit position = %d", positions, position, toBitPosition(position));
+  public void remove(int square) {
+    assert (square & 0x88) == 0;
+    assert (squares & (1L << toBitSquare(square))) != 0 : String.format("squares = %d, 0x88 square = %d, bit square = %d", squares, square, toBitSquare(square));
 
-    positions &= ~(1L << toBitPosition(position));
+    squares &= ~(1L << toBitSquare(square));
   }
 
 }
