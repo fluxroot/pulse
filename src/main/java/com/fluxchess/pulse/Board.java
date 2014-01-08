@@ -251,7 +251,7 @@ public final class Board {
     zobristCode ^= zobristPiece[IntPiece.ordinal(piece)][square];
   }
 
-  private int remove(int square) {
+  private void remove(int square) {
     assert (square & 0x88) == 0;
     assert board[square] != IntPiece.NOPIECE;
 
@@ -287,11 +287,9 @@ public final class Board {
     board[square] = IntPiece.NOPIECE;
 
     zobristCode ^= zobristPiece[IntPiece.ordinal(piece)][square];
-
-    return piece;
   }
 
-  private int move(int originSquare, int targetSquare) {
+  private void move(int originSquare, int targetSquare) {
     assert (originSquare & 0x88) == 0;
     assert (targetSquare & 0x88) == 0;
     assert board[originSquare] != IntPiece.NOPIECE;
@@ -336,8 +334,6 @@ public final class Board {
 
     zobristCode ^= zobristPiece[IntPiece.ordinal(piece)][originSquare];
     zobristCode ^= zobristPiece[IntPiece.ordinal(piece)][targetSquare];
-
-    return piece;
   }
 
   public void makeMove(int move) {
@@ -375,6 +371,7 @@ public final class Board {
     ++halfMoveNumber;
 
     ++stackSize;
+    assert stackSize < MAX_GAMEMOVES;
   }
 
   public void undoMove(int move) {
@@ -531,8 +528,7 @@ public final class Board {
 
     // Save and update half move clock
     entry.halfMoveClock = halfMoveClock;
-    int originChessman = IntPiece.getChessman(Move.getOriginPiece(move));
-    if (originChessman == IntChessman.PAWN || targetPiece != IntPiece.NOPIECE) {
+    if (IntPiece.getChessman(Move.getOriginPiece(move)) == IntChessman.PAWN || targetPiece != IntPiece.NOPIECE) {
       halfMoveClock = 0;
     } else {
       ++halfMoveClock;
@@ -619,17 +615,17 @@ public final class Board {
   }
 
   private void makeMovePawnPromotion(int move, StackEntry entry) {
-    // Save castling rights
-    for (int color : IntColor.values) {
-      for (int castling : IntCastling.values) {
-        entry.castling[color][castling] = this.castling[color][castling];
-      }
-    }
-
     // Remove target piece and adjust castling rights.
     int targetSquare = Move.getTargetSquare(move);
     int targetPiece = Move.getTargetPiece(move);
     if (targetPiece != IntPiece.NOPIECE) {
+      // Save castling rights
+      for (int color : IntColor.values) {
+        for (int castling : IntCastling.values) {
+          entry.castling[color][castling] = this.castling[color][castling];
+        }
+      }
+
       assert targetPiece == board[targetSquare];
       remove(targetSquare);
 
@@ -707,25 +703,24 @@ public final class Board {
     int targetSquare = Move.getTargetSquare(move);
     remove(targetSquare);
 
-    // Put pawn at the origin square
-    int originPiece = Move.getOriginPiece(move);
-    put(originPiece, Move.getOriginSquare(move));
-
     // Restore target piece
     int targetPiece = Move.getTargetPiece(move);
     if (targetPiece != IntPiece.NOPIECE) {
       put(targetPiece, targetSquare);
-    }
 
-    // Restore castling rights
-    for (int color : IntColor.values) {
-      for (int castling : IntCastling.values) {
-        if (entry.castling[color][castling] != this.castling[color][castling]) {
-          this.castling[color][castling] = entry.castling[color][castling];
-          zobristCode ^= zobristCastling[color][castling];
+      // Restore castling rights
+      for (int color : IntColor.values) {
+        for (int castling : IntCastling.values) {
+          if (entry.castling[color][castling] != this.castling[color][castling]) {
+            this.castling[color][castling] = entry.castling[color][castling];
+            zobristCode ^= zobristCastling[color][castling];
+          }
         }
       }
     }
+
+    // Put pawn at the origin square
+    put(Move.getOriginPiece(move), Move.getOriginSquare(move));
   }
 
   private void makeMoveEnPassant(int move, StackEntry entry) {
@@ -851,8 +846,8 @@ public final class Board {
     }
 
     // Move rook
-    int rookPiece = move(rookOriginSquare, rookTargetSquare);
-    assert IntPiece.getChessman(rookPiece) == IntChessman.ROOK;
+    assert IntPiece.getChessman(board[rookOriginSquare]) == IntChessman.ROOK;
+    move(rookOriginSquare, rookTargetSquare);
 
     // Save and update en passant
     entry.enPassant = enPassant;
