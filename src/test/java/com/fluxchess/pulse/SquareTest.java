@@ -28,11 +28,11 @@ import java.lang.reflect.InvocationTargetException;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.junit.Assert.assertEquals;
 
-public class PositionTest {
+public class SquareTest {
 
   @Test
   public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    assertUtilityClassWellDefined(Position.class);
+    assertUtilityClassWellDefined(Square.class);
   }
 
   @Test
@@ -41,7 +41,7 @@ public class PositionTest {
       for (GenericRank genericRank : GenericRank.values()) {
         assertEquals(
           GenericPosition.valueOf(genericFile, genericRank),
-          Position.toGenericPosition(Position.valueOf(GenericPosition.valueOf(genericFile, genericRank)))
+          Square.toGenericPosition(Square.valueOf(GenericPosition.valueOf(genericFile, genericRank)))
         );
       }
     }
