@@ -221,3 +221,14 @@ uploadArchives {
 task wrapper(type: Wrapper) {
   gradleVersion = '1.8'
 }
+
+apply plugin: 'idea'
+
+idea {
+  module {
+    testSourceDirs += sourceSets.integration.java.srcDirs
+    testSourceDirs += sourceSets.integration.resources.srcDirs
+    testSourceDirs += sourceSets.testing.java.srcDirs
+    testSourceDirs += sourceSets.testing.resources.srcDirs
+  }
+}
