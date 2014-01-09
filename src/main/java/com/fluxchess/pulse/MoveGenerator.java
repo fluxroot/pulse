@@ -128,34 +128,6 @@ public final class MoveGenerator {
     return moveList;
   }
 
-  /**
-   * Returns all legal capturing moves. If we are in check, we will generate
-   * evasion moves to get out of it.
-   *
-   * @return all legal capuring moves.
-   */
-  public MoveList getAllQuiescent() {
-    MoveList moveList = new MoveList();
-
-    Attack attack = getAttack(ChessmanList.next(board.kings[board.activeColor].squares), IntColor.opposite(board.activeColor));
-    if (attack.count > 0) {
-      generateEvasion(moveList, attack);
-    } else {
-      MoveList tempList = new MoveList();
-
-      generateMoves(tempList);
-
-      for (int i = 0; i < tempList.size; ++i) {
-        int move = tempList.moves[i];
-        if (isLegal(move) && Move.getTargetPiece(move) != IntPiece.NOPIECE) {
-          moveList.moves[moveList.size++] = move;
-        }
-      }
-    }
-
-    return moveList;
-  }
-
   private void generateMoves(MoveList list) {
     assert list != null;
 
