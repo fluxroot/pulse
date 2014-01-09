@@ -216,7 +216,7 @@ public final class Board {
 
   private void put(int piece, int square) {
     assert piece != IntPiece.NOPIECE;
-    assert (square & 0x88) == 0;
+    assert Square.isValid(square);
     assert board[square] == IntPiece.NOPIECE;
 
     int chessman = IntPiece.getChessman(piece);
@@ -252,7 +252,7 @@ public final class Board {
   }
 
   private void remove(int square) {
-    assert (square & 0x88) == 0;
+    assert Square.isValid(square);
     assert board[square] != IntPiece.NOPIECE;
 
     int piece = board[square];
@@ -290,8 +290,8 @@ public final class Board {
   }
 
   private void move(int originSquare, int targetSquare) {
-    assert (originSquare & 0x88) == 0;
-    assert (targetSquare & 0x88) == 0;
+    assert Square.isValid(originSquare);
+    assert Square.isValid(targetSquare);
     assert board[originSquare] != IntPiece.NOPIECE;
     assert board[targetSquare] == IntPiece.NOPIECE;
 
@@ -589,7 +589,7 @@ public final class Board {
     } else {
       enPassant = targetSquare + 16;
     }
-    assert (enPassant & 0x88) == 0;
+    assert Square.isValid(enPassant);
     assert Math.abs(originSquare - enPassant) == 16;
     zobristCode ^= zobristEnPassant[enPassant];
 

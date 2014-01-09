@@ -209,7 +209,7 @@ public final class MoveGenerator {
       }
       if (!isOnCheckLine) {
         int targetSquare = kingSquare + delta;
-        if ((targetSquare & 0x88) == 0 && !isAttacked(targetSquare, attackerColor)) {
+        if (Square.isLegal(targetSquare) && !isAttacked(targetSquare, attackerColor)) {
           int targetPiece = board.board[targetSquare];
           if (targetPiece == IntPiece.NOPIECE) {
             int move = Move.setTargetSquare(moveTemplate, targetSquare);
@@ -301,7 +301,7 @@ public final class MoveGenerator {
   private void addMoves(MoveList list, int originPiece, int originSquare, int[] moveDelta) {
     assert list != null;
     assert IntPiece.isValid(originPiece);
-    assert (originSquare & 0x88) == 0;
+    assert Square.isValid(originSquare);
     assert board.board[originSquare] == originPiece;
     assert moveDelta != null;
 
@@ -313,7 +313,7 @@ public final class MoveGenerator {
       int square = originSquare + delta;
 
       // Get moves to empty squares
-      while ((square & 0x88) == 0) {
+      while (Square.isLegal(square)) {
         int targetPiece = board.board[square];
         if (targetPiece == IntPiece.NOPIECE) {
           int move = Move.setTargetSquare(moveTemplate, square);
@@ -341,7 +341,7 @@ public final class MoveGenerator {
     assert list != null;
     assert IntPiece.isValid(pawnPiece);
     assert IntPiece.getChessman(pawnPiece) == IntChessman.PAWN;
-    assert (pawnSquare & 0x88) == 0;
+    assert Square.isValid(pawnSquare);
     assert board.board[pawnSquare] == pawnPiece;
 
     int pawnColor = IntPiece.getColor(pawnPiece);
@@ -354,7 +354,7 @@ public final class MoveGenerator {
       }
 
       int targetSquare = pawnSquare + delta;
-      if ((targetSquare & 0x88) == 0) {
+      if (Square.isLegal(targetSquare)) {
         int targetPiece = board.board[targetSquare];
         if (targetPiece != IntPiece.NOPIECE) {
           if (IntColor.opposite(IntPiece.getColor(targetPiece)) == pawnColor
@@ -410,7 +410,7 @@ public final class MoveGenerator {
 
     // Move one rank forward
     int targetSquare = pawnSquare + delta;
-    if ((targetSquare & 0x88) == 0 && board.board[targetSquare] == IntPiece.NOPIECE) {
+    if (Square.isLegal(targetSquare) && board.board[targetSquare] == IntPiece.NOPIECE) {
       if ((targetSquare >>> 4 == IntRank.R8 && pawnColor == IntColor.WHITE)
         || (targetSquare >>> 4 == IntRank.R1 && pawnColor == IntColor.BLACK)) {
         // Pawn promotion move
@@ -432,7 +432,7 @@ public final class MoveGenerator {
 
         // Move another rank forward
         targetSquare += delta;
-        if ((targetSquare & 0x88) == 0 && board.board[targetSquare] == IntPiece.NOPIECE) {
+        if (Square.isLegal(targetSquare) && board.board[targetSquare] == IntPiece.NOPIECE) {
           if ((targetSquare >>> 4 == IntRank.R4 && pawnColor == IntColor.WHITE)
             || (targetSquare >>> 4 == IntRank.R5 && pawnColor == IntColor.BLACK)) {
             // Pawn double move
@@ -449,7 +449,7 @@ public final class MoveGenerator {
     assert list != null;
     assert IntPiece.isValid(kingPiece);
     assert IntPiece.getChessman(kingPiece) == IntChessman.KING;
-    assert (kingSquare & 0x88) == 0;
+    assert Square.isValid(kingSquare);
     assert board.board[kingSquare] == kingPiece;
 
     if (IntPiece.getColor(kingPiece) == IntColor.WHITE) {
@@ -533,7 +533,7 @@ public final class MoveGenerator {
   }
 
   private boolean isPinned(int originSquare, int kingColor) {
-    assert (originSquare & 0x88) == 0;
+    assert Square.isValid(originSquare);
     assert IntColor.isValid(kingColor);
 
     int kingSquare = ChessmanList.next(board.kings[kingColor].squares);
@@ -549,10 +549,10 @@ public final class MoveGenerator {
 
     // Walk towards the king
     int square = originSquare + delta;
-    assert (square & 0x88) == 0;
+    assert Square.isValid(square);
     while (board.board[square] == IntPiece.NOPIECE) {
       square += delta;
-      assert (square & 0x88) == 0;
+      assert Square.isValid(square);
     }
     if (square != kingSquare) {
       // There's a blocker between me and the king
@@ -561,7 +561,7 @@ public final class MoveGenerator {
 
     // Walk away from the king
     square = originSquare - delta;
-    while ((square & 0x88) == 0) {
+    while (Square.isLegal(square)) {
       int attacker = board.board[square];
       if (attacker != IntPiece.NOPIECE) {
         int attackerColor = IntPiece.getColor(attacker);
@@ -576,14 +576,14 @@ public final class MoveGenerator {
   }
 
   private boolean isAttacked(int targetSquare, int attackerColor) {
-    assert (targetSquare & 0x88) == 0;
+    assert Square.isValid(targetSquare);
     assert IntColor.isValid(attackerColor);
 
     return getAttack(targetSquare, attackerColor).count > 0;
   }
 
   private Attack getAttack(int targetSquare, int attackerColor) {
-    assert (targetSquare & 0x88) == 0;
+    assert Square.isValid(targetSquare);
     assert IntColor.isValid(attackerColor);
 
     Attack attack = new Attack();
@@ -598,7 +598,7 @@ public final class MoveGenerator {
       assert attackerColor == IntColor.WHITE;
     }
     int pawnAttackerSquare = targetSquare + sign * 15;
-    if ((pawnAttackerSquare & 0x88) == 0) {
+    if (Square.isLegal(pawnAttackerSquare)) {
       int pawn = board.board[pawnAttackerSquare];
       if (pawn != IntPiece.NOPIECE && pawn == pawnPiece) {
         assert Attack.deltas[targetSquare - pawnAttackerSquare + 127] == sign * -15;
@@ -608,7 +608,7 @@ public final class MoveGenerator {
       }
     }
     pawnAttackerSquare = targetSquare + sign * 17;
-    if ((pawnAttackerSquare & 0x88) == 0) {
+    if (Square.isLegal(pawnAttackerSquare)) {
       int pawn = board.board[pawnAttackerSquare];
       if (pawn != IntPiece.NOPIECE && pawn == pawnPiece) {
         assert Attack.deltas[targetSquare - pawnAttackerSquare + 127] == sign * -17;
@@ -693,8 +693,8 @@ public final class MoveGenerator {
   private boolean canAttack(int attackerChessman, int attackerColor, int attackerSquare, int targetSquare) {
     assert IntChessman.isValid(attackerChessman);
     assert IntColor.isValid(attackerColor);
-    assert (attackerSquare & 0x88) == 0;
-    assert (targetSquare & 0x88) == 0;
+    assert Square.isValid(attackerSquare);
+    assert Square.isValid(targetSquare);
 
     int attackVector = Attack.vector[targetSquare - attackerSquare + 127];
 
@@ -773,13 +773,13 @@ public final class MoveGenerator {
   }
 
   private boolean canSliderAttack(int attackerSquare, int targetSquare) {
-    assert (attackerSquare & 0x88) == 0;
-    assert (targetSquare & 0x88) == 0;
+    assert Square.isValid(attackerSquare);
+    assert Square.isValid(targetSquare);
 
     int attackDelta = Attack.deltas[targetSquare - attackerSquare + 127];
 
     int square = attackerSquare + attackDelta;
-    while ((square & 0x88) == 0 && square != targetSquare && board.board[square] == IntPiece.NOPIECE) {
+    while (Square.isLegal(square) && square != targetSquare && board.board[square] == IntPiece.NOPIECE) {
       square += attackDelta;
     }
 
@@ -788,8 +788,8 @@ public final class MoveGenerator {
 
   private boolean canSliderPseudoAttack(int attacker, int attackerSquare, int targetSquare) {
     assert IntPiece.isValid(attacker);
-    assert (attackerSquare & 0x88) == 0;
-    assert (targetSquare & 0x88) == 0;
+    assert Square.isValid(attackerSquare);
+    assert Square.isValid(targetSquare);
 
     int attackVector;
 

@@ -81,13 +81,30 @@ public final class Square {
   public static int valueOf(GenericPosition genericPosition) {
     assert genericPosition != null;
 
-    return IntRank.valueOf(genericPosition.rank) * 16 + IntFile.valueOf(genericPosition.file);
+    int square = IntRank.valueOf(genericPosition.rank) * 16 + IntFile.valueOf(genericPosition.file);
+    assert isValid(square);
+
+    return square;
   }
 
   public static GenericPosition toGenericPosition(int square) {
-    assert (square & 0x88) == 0;
+    assert isValid(square);
 
     return GenericPosition.valueOf(IntFile.toGenericFile(square % 16), IntRank.toGenericRank(square >>> 4));
+  }
+
+  public static boolean isValid(int square) {
+    if (isLegal(square)) {
+      return true;
+    } else if (square == NOSQUARE) {
+      return false;
+    } else {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  public static boolean isLegal(int square) {
+    return (square & 0x88) == 0;
   }
 
 }

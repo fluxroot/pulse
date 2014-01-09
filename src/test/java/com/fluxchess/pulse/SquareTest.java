@@ -27,6 +27,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SquareTest {
 
@@ -37,14 +39,16 @@ public class SquareTest {
 
   @Test
   public void testValues() {
-    for (GenericFile genericFile : GenericFile.values()) {
-      for (GenericRank genericRank : GenericRank.values()) {
-        assertEquals(
-          GenericPosition.valueOf(genericFile, genericRank),
-          Square.toGenericPosition(Square.valueOf(GenericPosition.valueOf(genericFile, genericRank)))
-        );
-      }
+    for (GenericPosition genericPosition : GenericPosition.values()) {
+      int square = Square.valueOf(genericPosition);
+
+      assertTrue(Square.isLegal(square));
+      assertTrue(Square.isValid(square));
+      assertEquals(genericPosition, Square.toGenericPosition(square));
     }
+
+    assertFalse(Square.isLegal(Square.NOSQUARE));
+    assertFalse(Square.isValid(Square.NOSQUARE));
   }
 
 }
