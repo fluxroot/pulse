@@ -180,33 +180,6 @@ public final class Move {
     return targetSquare;
   }
 
-  public static int setTargetSquare(int move, int targetSquare) {
-    // Zero out target square
-    move &= ~TARGETSQUARE_MASK;
-
-    // Encode target square
-    assert Square.isValid(targetSquare);
-    move |= targetSquare << TARGETSQUARE_SHIFT;
-
-    return move;
-  }
-
-  public static int setTargetSquareAndPiece(int move, int targetSquare, int targetPiece) {
-    // Zero out target square and target piece
-    move &= ~TARGETSQUARE_MASK;
-    move &= ~TARGETPIECE_MASK;
-
-    // Encode target square
-    assert Square.isValid(targetSquare);
-    move |= targetSquare << TARGETSQUARE_SHIFT;
-
-    // Encode target piece
-    assert IntPiece.isValid(targetPiece) || targetPiece == IntPiece.NOPIECE;
-    move |= targetPiece << TARGETPIECE_SHIFT;
-
-    return move;
-  }
-
   public static int getOriginPiece(int move) {
     int originPiece = (move & ORIGINPIECE_MASK) >>> ORIGINPIECE_SHIFT;
     assert IntPiece.isValid(originPiece);
@@ -227,18 +200,6 @@ public final class Move {
       || promotion == IntChessman.NOCHESSMAN;
 
     return promotion;
-  }
-
-  public static int setPromotion(int move, int promotion) {
-    // Zero out promotion chessman
-    move &= ~PROMOTION_MASK;
-
-    // Encode promotion
-    assert (IntChessman.isValid(promotion) && IntChessman.isValidPromotion(promotion))
-      || promotion == IntChessman.NOCHESSMAN;
-    move |= promotion << PROMOTION_SHIFT;
-
-    return move;
   }
 
   private static boolean isPromotion(GenericMove move, Board board) {
