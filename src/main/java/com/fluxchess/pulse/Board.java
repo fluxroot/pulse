@@ -216,7 +216,7 @@ public final class Board {
   }
 
   private void put(int piece, int square) {
-    assert piece != IntPiece.NOPIECE;
+    assert IntPiece.isValid(piece);
     assert Square.isValid(square);
     assert board[square] == IntPiece.NOPIECE;
 
@@ -254,7 +254,7 @@ public final class Board {
 
   private void remove(int square) {
     assert Square.isValid(square);
-    assert board[square] != IntPiece.NOPIECE;
+    assert IntPiece.isValid(board[square]);
 
     int piece = board[square];
 
@@ -293,7 +293,7 @@ public final class Board {
   private void move(int originSquare, int targetSquare) {
     assert Square.isValid(originSquare);
     assert Square.isValid(targetSquare);
-    assert board[originSquare] != IntPiece.NOPIECE;
+    assert IntPiece.isValid(board[originSquare]);
     assert board[targetSquare] == IntPiece.NOPIECE;
 
     int piece = board[originSquare];

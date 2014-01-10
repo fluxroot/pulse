@@ -352,8 +352,8 @@ public final class MoveGenerator {
           }
         } else if (targetSquare == board.enPassant) {
           // En passant move
-          assert (targetSquare >>> 4 == IntRank.R3 && pawnColor == IntColor.BLACK)
-            || ((targetSquare >>> 4) == IntRank.R6 && pawnColor == IntColor.WHITE);
+          assert (pawnColor == IntColor.BLACK && Square.getRank(targetSquare) == IntRank.R3)
+            || (pawnColor == IntColor.WHITE && Square.getRank(targetSquare) == IntRank.R6);
 
           int captureSquare;
           if (pawnColor == IntColor.WHITE) {
@@ -562,8 +562,6 @@ public final class MoveGenerator {
     if (attackerColor == IntColor.BLACK) {
       pawnPiece = IntPiece.BLACKPAWN;
       sign = 1;
-    } else {
-      assert attackerColor == IntColor.WHITE;
     }
     int pawnAttackerSquare = targetSquare + sign * 15;
     if (Square.isLegal(pawnAttackerSquare)) {
@@ -587,9 +585,9 @@ public final class MoveGenerator {
     }
     for (long squares = board.knights[attackerColor].squares; squares != 0; squares &= squares - 1) {
       int attackerSquare = ChessmanList.next(squares);
+      assert Square.isValid(attackerSquare);
+      assert IntPiece.isValid(board.board[attackerSquare]);
       assert IntPiece.getChessman(board.board[attackerSquare]) == IntChessman.KNIGHT;
-      assert attackerSquare != Square.NOSQUARE;
-      assert board.board[attackerSquare] != IntPiece.NOPIECE;
       assert attackerColor == IntPiece.getColor(board.board[attackerSquare]);
       if (canAttack(IntChessman.KNIGHT, attackerColor, attackerSquare, targetSquare)) {
         int attackDelta = Attack.deltas[targetSquare - attackerSquare + 127];
@@ -601,9 +599,9 @@ public final class MoveGenerator {
     }
     for (long squares = board.bishops[attackerColor].squares; squares != 0; squares &= squares - 1) {
       int attackerSquare = ChessmanList.next(squares);
+      assert Square.isValid(attackerSquare);
+      assert IntPiece.isValid(board.board[attackerSquare]);
       assert IntPiece.getChessman(board.board[attackerSquare]) == IntChessman.BISHOP;
-      assert attackerSquare != Square.NOSQUARE;
-      assert board.board[attackerSquare] != IntPiece.NOPIECE;
       assert attackerColor == IntPiece.getColor(board.board[attackerSquare]);
       if (canAttack(IntChessman.BISHOP, attackerColor, attackerSquare, targetSquare)) {
         int attackDelta = Attack.deltas[targetSquare - attackerSquare + 127];
@@ -615,9 +613,9 @@ public final class MoveGenerator {
     }
     for (long squares = board.rooks[attackerColor].squares; squares != 0; squares &= squares - 1) {
       int attackerSquare = ChessmanList.next(squares);
+      assert Square.isValid(attackerSquare);
+      assert IntPiece.isValid(board.board[attackerSquare]);
       assert IntPiece.getChessman(board.board[attackerSquare]) == IntChessman.ROOK;
-      assert attackerSquare != Square.NOSQUARE;
-      assert board.board[attackerSquare] != IntPiece.NOPIECE;
       assert attackerColor == IntPiece.getColor(board.board[attackerSquare]);
       if (canAttack(IntChessman.ROOK, attackerColor, attackerSquare, targetSquare)) {
         int attackDelta = Attack.deltas[targetSquare - attackerSquare + 127];
@@ -629,9 +627,9 @@ public final class MoveGenerator {
     }
     for (long squares = board.queens[attackerColor].squares; squares != 0; squares &= squares - 1) {
       int attackerSquare = ChessmanList.next(squares);
+      assert Square.isValid(attackerSquare);
+      assert IntPiece.isValid(board.board[attackerSquare]);
       assert IntPiece.getChessman(board.board[attackerSquare]) == IntChessman.QUEEN;
-      assert attackerSquare != Square.NOSQUARE;
-      assert board.board[attackerSquare] != IntPiece.NOPIECE;
       assert attackerColor == IntPiece.getColor(board.board[attackerSquare]);
       if (canAttack(IntChessman.QUEEN, attackerColor, attackerSquare, targetSquare)) {
         int attackDelta = Attack.deltas[targetSquare - attackerSquare + 127];
@@ -643,9 +641,9 @@ public final class MoveGenerator {
     }
     assert board.kings[attackerColor].size() == 1;
     int attackerSquare = ChessmanList.next(board.kings[attackerColor].squares);
+    assert Square.isValid(attackerSquare);
+    assert IntPiece.isValid(board.board[attackerSquare]);
     assert IntPiece.getChessman(board.board[attackerSquare]) == IntChessman.KING;
-    assert attackerSquare != Square.NOSQUARE;
-    assert board.board[attackerSquare] != IntPiece.NOPIECE;
     assert attackerColor == IntPiece.getColor(board.board[attackerSquare]);
     if (canAttack(IntChessman.KING, attackerColor, attackerSquare, targetSquare)) {
       int attackDelta = Attack.deltas[targetSquare - attackerSquare + 127];
