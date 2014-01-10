@@ -22,13 +22,13 @@ public final class ChessmanList {
 
   public long squares = 0;
 
-  static int toX88Square(int square) {
+  public static int toX88Square(int square) {
     assert square >= 0 && square < Long.SIZE;
 
     return ((square & ~7) << 1) | (square & 7);
   }
 
-  static int toBitSquare(int square) {
+  public static int toBitSquare(int square) {
     assert Square.isValid(square);
 
     return ((square & ~7) >>> 1) | (square & 7);

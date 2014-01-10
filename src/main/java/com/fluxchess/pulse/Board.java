@@ -342,11 +342,10 @@ public final class Board {
 
     // Move piece
     assert originPiece == board[originSquare];
+    remove(originSquare);
     if (type == Move.Type.PAWNPROMOTION) {
-      remove(originSquare);
       put(IntPiece.valueOf(Move.getPromotion(move), originColor), targetSquare);
     } else {
-      remove(originSquare);
       put(originPiece, targetSquare);
     }
 
@@ -358,26 +357,18 @@ public final class Board {
         case Square.g1:
           rookOriginSquare = Square.h1;
           rookTargetSquare = Square.f1;
-          clearCastling(IntColor.WHITE, IntCastling.QUEENSIDE);
-          clearCastling(IntColor.WHITE, IntCastling.KINGSIDE);
           break;
         case Square.c1:
           rookOriginSquare = Square.a1;
           rookTargetSquare = Square.d1;
-          clearCastling(IntColor.WHITE, IntCastling.QUEENSIDE);
-          clearCastling(IntColor.WHITE, IntCastling.KINGSIDE);
           break;
         case Square.g8:
           rookOriginSquare = Square.h8;
           rookTargetSquare = Square.f8;
-          clearCastling(IntColor.BLACK, IntCastling.QUEENSIDE);
-          clearCastling(IntColor.BLACK, IntCastling.KINGSIDE);
           break;
         case Square.c8:
           rookOriginSquare = Square.a8;
           rookTargetSquare = Square.d8;
-          clearCastling(IntColor.BLACK, IntCastling.QUEENSIDE);
-          clearCastling(IntColor.BLACK, IntCastling.KINGSIDE);
           break;
         default:
           assert false : targetSquare;
@@ -408,16 +399,16 @@ public final class Board {
       enPassant = Square.NOSQUARE;
     }
 
+    // Update activeColor
+    activeColor = IntColor.opposite(activeColor);
+    zobristCode ^= zobristActiveColor;
+
     // Update halfMoveClock
     if (IntPiece.getChessman(originPiece) == IntChessman.PAWN || targetPiece != IntPiece.NOPIECE) {
       halfMoveClock = 0;
     } else {
       ++halfMoveClock;
     }
-
-    // Update activeColor
-    activeColor = IntColor.opposite(activeColor);
-    zobristCode ^= zobristActiveColor;
 
     // Update fullMoveNumber
     ++halfMoveNumber;
@@ -490,13 +481,8 @@ public final class Board {
     }
 
     // Undo move piece
-    if (type == Move.Type.PAWNPROMOTION) {
-      remove(targetSquare);
-      put(originPiece, originSquare);
-    } else {
-      remove(targetSquare);
-      put(originPiece, originSquare);
-    }
+    remove(targetSquare);
+    put(originPiece, originSquare);
 
     // Restore target piece
     if (targetPiece != IntPiece.NOPIECE) {

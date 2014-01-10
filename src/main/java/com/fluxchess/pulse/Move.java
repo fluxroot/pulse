@@ -85,7 +85,7 @@ public final class Move {
     if (isPromotion(genericMove, board)) {
       int promotion;
       if (genericMove.promotion == null) {
-        // TODO: maybe better throw IllegalArgumentException()
+        // Promote to a queen if promotion is not set
         promotion = IntChessman.QUEEN;
       } else {
         promotion = IntChessman.valueOf(genericMove.promotion);
