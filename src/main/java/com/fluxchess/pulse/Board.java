@@ -252,7 +252,7 @@ public final class Board {
     zobristCode ^= zobristPiece[IntPiece.ordinal(piece)][square];
   }
 
-  private void remove(int square) {
+  private int remove(int square) {
     assert Square.isValid(square);
     assert IntPiece.isValid(board[square]);
 
@@ -288,53 +288,8 @@ public final class Board {
     board[square] = IntPiece.NOPIECE;
 
     zobristCode ^= zobristPiece[IntPiece.ordinal(piece)][square];
-  }
 
-  private void move(int originSquare, int targetSquare) {
-    assert Square.isValid(originSquare);
-    assert Square.isValid(targetSquare);
-    assert IntPiece.isValid(board[originSquare]);
-    assert board[targetSquare] == IntPiece.NOPIECE;
-
-    int piece = board[originSquare];
-    int chessman = IntPiece.getChessman(piece);
-    int color = IntPiece.getColor(piece);
-
-    switch (chessman) {
-      case IntChessman.PAWN:
-        pawns[color].remove(originSquare);
-        pawns[color].add(targetSquare);
-        break;
-      case IntChessman.KNIGHT:
-        knights[color].remove(originSquare);
-        knights[color].add(targetSquare);
-        break;
-      case IntChessman.BISHOP:
-        bishops[color].remove(originSquare);
-        bishops[color].add(targetSquare);
-        break;
-      case IntChessman.ROOK:
-        rooks[color].remove(originSquare);
-        rooks[color].add(targetSquare);
-        break;
-      case IntChessman.QUEEN:
-        queens[color].remove(originSquare);
-        queens[color].add(targetSquare);
-        break;
-      case IntChessman.KING:
-        kings[color].remove(originSquare);
-        kings[color].add(targetSquare);
-        break;
-      default:
-        assert false : chessman;
-        break;
-    }
-
-    board[originSquare] = IntPiece.NOPIECE;
-    board[targetSquare] = piece;
-
-    zobristCode ^= zobristPiece[IntPiece.ordinal(piece)][originSquare];
-    zobristCode ^= zobristPiece[IntPiece.ordinal(piece)][targetSquare];
+    return piece;
   }
 
   public void makeMove(int move) {
@@ -391,7 +346,8 @@ public final class Board {
       remove(originSquare);
       put(IntPiece.valueOf(Move.getPromotion(move), originColor), targetSquare);
     } else {
-      move(originSquare, targetSquare);
+      remove(originSquare);
+      put(originPiece, targetSquare);
     }
 
     // Move rook and update castling rights
@@ -429,7 +385,8 @@ public final class Board {
       }
 
       assert IntPiece.getChessman(board[rookOriginSquare]) == IntChessman.ROOK;
-      move(rookOriginSquare, rookTargetSquare);
+      int rookPiece = remove(rookOriginSquare);
+      put(rookPiece, rookTargetSquare);
     }
 
     // Update castling
@@ -528,7 +485,8 @@ public final class Board {
       }
 
       assert IntPiece.getChessman(board[rookTargetSquare]) == IntChessman.ROOK;
-      move(rookTargetSquare, rookOriginSquare);
+      int rookPiece = remove(rookTargetSquare);
+      put(rookPiece, rookOriginSquare);
     }
 
     // Undo move piece
@@ -536,7 +494,8 @@ public final class Board {
       remove(targetSquare);
       put(originPiece, originSquare);
     } else {
-      move(targetSquare, originSquare);
+      remove(targetSquare);
+      put(originPiece, originSquare);
     }
 
     // Restore target piece
