@@ -241,7 +241,7 @@ public final class Search implements Runnable {
       timer.schedule(new SearchTimer(), searchTime);
     }
 
-    //## BEGIN Root Move List
+    //### BEGIN Root Move List
     if (searchMoves.size == 0) {
       MoveList tempMoves = moveGenerator.getAll();
       for (int i = 0; i < tempMoves.size; ++i) {
@@ -252,13 +252,14 @@ public final class Search implements Runnable {
         rootMoves.moves[rootMoves.size++] = searchMoves.moves[i];
       }
     }
-    //## ENDOF Root Move List
+    //### ENDOF Root Move List
 
     // Go...
     semaphore.release();
 
-    //## BEGIN Iterative Deepening
+    //### BEGIN Iterative Deepening
     for (int currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
+      //### TODO: Implement Aspiration Windows
       Result currentResult = alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE, 0);
 
       if (currentResult.move != Move.NOMOVE) {
@@ -276,7 +277,7 @@ public final class Search implements Runnable {
         break;
       }
     }
-    //## ENDOF Iterative Deepening
+    //### ENDOF Iterative Deepening
 
     if (timer != null) {
       timer.cancel();
@@ -371,6 +372,7 @@ public final class Search implements Runnable {
   private int alphaBeta(int depth, int alpha, int beta, int height) {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
+      //### TODO: Implement Quiescent Search
       return evaluation.evaluate(board);
     }
 
@@ -386,6 +388,12 @@ public final class Search implements Runnable {
       return Evaluation.DRAW;
     }
 
+    //### TODO: Implement Mate Distance Pruning
+
+    //### TODO: Implement Null Move Pruning
+
+    //### TODO: Implement Internal Iterative Deepening
+
     // Initialize
     int bestValue = -Evaluation.INFINITY;
     int bestMove = Move.NOMOVE;
@@ -394,7 +402,16 @@ public final class Search implements Runnable {
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.moves[i];
 
+      //### TODO: Implement Minor Promotion Pruning
+
+      //### TODO: Implement Extensions
+
+      //### TODO: Implement Futility Pruning
+
+      //### TODO: Implement Late Move Reduction
+
       board.makeMove(move);
+      //### TODO: Implement Principal Variation Search
       int value = -alphaBeta(depth - 1, -beta, -alpha, height + 1);
       board.undoMove(move);
 
