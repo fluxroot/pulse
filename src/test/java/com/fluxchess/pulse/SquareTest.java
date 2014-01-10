@@ -18,15 +18,15 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericFile;
 import com.fluxchess.jcpi.models.GenericPosition;
-import com.fluxchess.jcpi.models.GenericRank;
+import com.fluxchess.jcpi.models.IntFile;
+import com.fluxchess.jcpi.models.IntRank;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class SquareTest {
 
@@ -37,14 +37,25 @@ public class SquareTest {
 
   @Test
   public void testValues() {
-    for (GenericFile genericFile : GenericFile.values()) {
-      for (GenericRank genericRank : GenericRank.values()) {
-        assertEquals(
-          GenericPosition.valueOf(genericFile, genericRank),
-          Square.toGenericPosition(Square.valueOf(GenericPosition.valueOf(genericFile, genericRank)))
-        );
-      }
+    for (GenericPosition genericPosition : GenericPosition.values()) {
+      int square = Square.valueOf(genericPosition);
+      assertTrue(Square.isLegal(square));
+      assertTrue(Square.isValid(square));
+      assertEquals(genericPosition, Square.toGenericPosition(square));
+
+      int file = Square.getFile(square);
+      assertTrue(IntFile.isValid(file));
+      assertEquals(genericPosition.file.ordinal(), file);
+      assertEquals(genericPosition.file, IntFile.toGenericFile(file));
+
+      int rank = Square.getRank(square);
+      assertTrue(IntRank.isValid(rank));
+      assertEquals(genericPosition.rank.ordinal(), rank);
+      assertEquals(genericPosition.rank, IntRank.toGenericRank(rank));
     }
+
+    assertFalse(Square.isLegal(Square.NOSQUARE));
+    assertFalse(Square.isValid(Square.NOSQUARE));
   }
 
 }

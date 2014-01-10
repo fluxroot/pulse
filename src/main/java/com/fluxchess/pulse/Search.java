@@ -371,8 +371,7 @@ public final class Search implements Runnable {
   private int alphaBeta(int depth, int alpha, int beta, int height) {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
-      // Descend into quiescent
-      return quiescent(alpha, beta, height);
+      return evaluation.evaluate(board);
     }
 
     updateSearch();
@@ -436,79 +435,6 @@ public final class Search implements Runnable {
       if (height == 1 && bestMove != Move.NOMOVE) {
         ponderMove = bestMove;
       }
-    }
-
-    return bestValue;
-  }
-
-  private int quiescent(int alpha, int beta, int height) {
-    updateSearch();
-
-    // Abort conditions
-    if (abort || height == MAX_HEIGHT) {
-      return evaluation.evaluate(board);
-    }
-
-    // Check the repetition table and fifty move rule
-    if (board.isRepetition() || board.halfMoveClock >= 100) {
-      return Evaluation.DRAW;
-    }
-
-    // Initialize
-    int bestValue = -Evaluation.INFINITY;
-
-    //## BEGIN Stand pat
-    if (!moveGenerator.isCheck()) {
-      bestValue = evaluation.evaluate(board);
-
-      // Do we have a better value?
-      if (bestValue > alpha) {
-        alpha = bestValue;
-
-        // Is the value higher than beta?
-        if (bestValue >= beta) {
-          // Cut-off
-          return bestValue;
-        }
-      }
-    }
-    //## ENDOF Stand pat
-
-    // Only generate capturing moves or evasion moves, in case we are in check.
-    MoveList moves = moveGenerator.getAllQuiescent();
-    for (int i = 0; i < moves.size; ++i) {
-      int move = moves.moves[i];
-
-      board.makeMove(move);
-      int value = -quiescent(-beta, -alpha, height + 1);
-      board.undoMove(move);
-
-      if (abort) {
-        break;
-      }
-
-      // Pruning
-      if (value > bestValue) {
-        bestValue = value;
-
-        // Do we have a better value?
-        if (value > alpha) {
-          alpha = value;
-
-          // Is the value higher than beta?
-          if (value >= beta) {
-            // Cut-off
-            break;
-          }
-        }
-      }
-    }
-
-    if (bestValue == -Evaluation.INFINITY) {
-      assert moveGenerator.isCheck();
-
-      // We have a check mate. This is bad for us, so return a -CHECKMATE.
-      bestValue = -Evaluation.CHECKMATE;
     }
 
     return bestValue;

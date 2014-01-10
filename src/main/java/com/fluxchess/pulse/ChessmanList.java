@@ -22,14 +22,14 @@ public final class ChessmanList {
 
   public long squares = 0;
 
-  static int toX88Square(int square) {
+  public static int toX88Square(int square) {
     assert square >= 0 && square < Long.SIZE;
 
     return ((square & ~7) << 1) | (square & 7);
   }
 
-  static int toBitSquare(int square) {
-    assert (square & 0x88) == 0;
+  public static int toBitSquare(int square) {
+    assert Square.isValid(square);
 
     return ((square & ~7) >>> 1) | (square & 7);
   }
@@ -43,14 +43,14 @@ public final class ChessmanList {
   }
 
   public void add(int square) {
-    assert (square & 0x88) == 0;
+    assert Square.isValid(square);
     assert (squares & (1L << toBitSquare(square))) == 0 : String.format("squares = %d, 0x88 square = %d, bit square = %d", squares, square, toBitSquare(square));
 
     squares |= 1L << toBitSquare(square);
   }
 
   public void remove(int square) {
-    assert (square & 0x88) == 0;
+    assert Square.isValid(square);
     assert (squares & (1L << toBitSquare(square))) != 0 : String.format("squares = %d, 0x88 square = %d, bit square = %d", squares, square, toBitSquare(square));
 
     squares &= ~(1L << toBitSquare(square));
