@@ -60,7 +60,7 @@ public final class Search implements Runnable {
   private final MoveList searchMoves = new MoveList();
 
   // Search parameters
-  private final MoveList rootMoves = new MoveList();
+  private RatedMove[] rootMoves = null;
   private Result bestResult = new Result();
   private int ponderMove = Move.NOMOVE;
   private boolean abort = false;
@@ -74,16 +74,20 @@ public final class Search implements Runnable {
       timerStopped = true;
 
       // If we already have a result abort the search.
-      if (bestResult.move != Move.NOMOVE) {
+      if (bestResult.bestMove.move != Move.NOMOVE) {
         abort = true;
       }
     }
   }
 
-  private final class Result {
+  private static final class RatedMove {
     public int move = Move.NOMOVE;
-    public int ponderMove = Move.NOMOVE;
     public int value = -Evaluation.INFINITY;
+  }
+
+  private static final class Result {
+    public RatedMove bestMove = new RatedMove();
+    public int ponderMove = Move.NOMOVE;
   }
 
   public static Search newDepthSearch(Board board, IProtocol protocol, int searchDepth) {
@@ -241,15 +245,16 @@ public final class Search implements Runnable {
       timer.schedule(new SearchTimer(), searchTime);
     }
 
+    MoveList tempMoves;
     if (searchMoves.size == 0) {
-      MoveList tempMoves = moveGenerator.getAll();
-      for (int i = 0; i < tempMoves.size; ++i) {
-        rootMoves.moves[rootMoves.size++] = tempMoves.moves[i];
-      }
+      tempMoves = moveGenerator.getAll();
     } else {
-      for (int i = 0; i < searchMoves.size; ++i) {
-        rootMoves.moves[rootMoves.size++] = searchMoves.moves[i];
-      }
+      tempMoves = searchMoves;
+    }
+    rootMoves = new RatedMove[tempMoves.size];
+    for (int i = 0; i < rootMoves.length; ++i) {
+      rootMoves[i] = new RatedMove();
+      rootMoves[i].move = tempMoves.moves[i];
     }
 
     // Go...
@@ -259,7 +264,7 @@ public final class Search implements Runnable {
     for (int currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
       Result currentResult = alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE, 0);
 
-      if (currentResult.move != Move.NOMOVE) {
+      if (currentResult.bestMove.move != Move.NOMOVE) {
         // Update the best result.
         bestResult = currentResult;
 
@@ -280,11 +285,11 @@ public final class Search implements Runnable {
       timer.cancel();
     }
 
-    if (bestResult.move != Move.NOMOVE) {
+    if (bestResult.bestMove.move != Move.NOMOVE) {
       if (bestResult.ponderMove != Move.NOMOVE) {
-        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(bestResult.move), Move.toGenericMove(bestResult.ponderMove)));
+        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(bestResult.bestMove.move), Move.toGenericMove(bestResult.ponderMove)));
       } else {
-        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(bestResult.move), null));
+        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(bestResult.bestMove.move), null));
       }
     } else {
       protocol.send(new ProtocolBestMoveCommand(null, null));
@@ -295,17 +300,17 @@ public final class Search implements Runnable {
     // We will check the stop conditions only if we are using time management,
     // that is if our timer != null. Also we cannot stop the search if we don't
     // have any result if using time management.
-    if (bestResult.move != Move.NOMOVE && timer != null) {
+    if (bestResult.bestMove.move != Move.NOMOVE && timer != null) {
       if (timerStopped) {
         abort = true;
       } else {
         // Check if we have only one move to make
-        if (rootMoves.size == 1) {
+        if (rootMoves.length == 1) {
           abort = true;
         }
 
         // Check if we have a checkmate
-        else if (Math.abs(bestResult.value) == Evaluation.CHECKMATE) {
+        else if (Math.abs(bestResult.bestMove.value) == Evaluation.CHECKMATE) {
           abort = true;
         }
       }
@@ -331,8 +336,8 @@ public final class Search implements Runnable {
       return result;
     }
 
-    for (int i = 0; i < rootMoves.size; ++i) {
-      int move = rootMoves.moves[i];
+    for (int i = 0; i < rootMoves.length; ++i) {
+      int move = rootMoves[i].move;
 
       ponderMove = Move.NOMOVE;
 
@@ -344,10 +349,11 @@ public final class Search implements Runnable {
         break;
       }
 
+      rootMoves[i].value = value;
+
       // Pruning
-      if (value > result.value) {
-        result.value = value;
-        result.move = move;
+      if (value > result.bestMove.value) {
+        result.bestMove = rootMoves[i];
         result.ponderMove = ponderMove;
 
         // Do we have a better value?
