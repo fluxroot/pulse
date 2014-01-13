@@ -67,6 +67,9 @@ public class PulseTest {
 
   @Test
   public void testDepth() throws InterruptedException {
+    final GenericMove[] bestMove = {null};
+    final GenericMove[] ponderMove = {null};
+
     final Semaphore semaphore = new Semaphore(0);
 
     // Test searching to a depth of 2
@@ -79,18 +82,24 @@ public class PulseTest {
       public void send(ProtocolBestMoveCommand command) {
         super.send(command);
 
-        assertNotNull(command.bestMove);
-        assertNotNull(command.ponderMove);
+        bestMove[0] = command.bestMove;
+        ponderMove[0] = command.ponderMove;
 
         semaphore.release();
       }
     }).run();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
+
+    assertNotNull(bestMove[0]);
+    assertNotNull(ponderMove[0]);
   }
 
   @Test
   public void testNodes() throws InterruptedException {
+    final GenericMove[] bestMove = {null};
+    final GenericMove[] ponderMove = {null};
+
     final Semaphore semaphore = new Semaphore(0);
 
     // Test if we can search only 1 node
@@ -103,14 +112,17 @@ public class PulseTest {
       public void send(ProtocolBestMoveCommand command) {
         super.send(command);
 
-        assertNull(command.bestMove);
-        assertNull(command.ponderMove);
+        bestMove[0] = command.bestMove;
+        ponderMove[0] = command.ponderMove;
 
         semaphore.release();
       }
     }).run();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
+
+    assertNull(bestMove[0]);
+    assertNull(ponderMove[0]);
   }
 
   @Test
