@@ -18,6 +18,7 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
 
 public final class Evaluation {
@@ -69,6 +70,27 @@ public final class Evaluation {
     }
 
     return total;
+  }
+
+  public static int getChessmanValue(int chessman) {
+    assert IntChessman.isValid(chessman);
+
+    switch (chessman) {
+      case IntChessman.PAWN:
+        return VALUE_PAWN;
+      case IntChessman.KNIGHT:
+        return VALUE_KNIGHT;
+      case IntChessman.BISHOP:
+        return VALUE_BISHOP;
+      case IntChessman.ROOK:
+        return VALUE_ROOK;
+      case IntChessman.QUEEN:
+        return VALUE_QUEEN;
+      case IntChessman.KING:
+        return VALUE_KING;
+      default:
+        throw new IllegalArgumentException();
+    }
   }
 
 }

@@ -84,6 +84,9 @@ public final class MoveGenerator {
       }
     }
 
+    moveList.rateFromMVVLVA();
+    moveList.sort();
+
     return moveList;
   }
 
