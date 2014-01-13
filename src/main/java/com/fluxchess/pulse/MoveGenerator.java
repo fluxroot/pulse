@@ -84,6 +84,53 @@ public final class MoveGenerator {
       }
     }
 
+    moveList.rateFromMVVLVA();
+    moveList.sort();
+
+    return moveList;
+  }
+
+  public MoveList getAllQuiescent() {
+    MoveList moveList = new MoveList();
+    MoveList tempList = new MoveList();
+
+    boolean isCheck = isCheck();
+
+    int activeColor = board.activeColor;
+
+    for (long squares = board.pawns[activeColor].squares; squares != 0; squares &= squares - 1) {
+      int square = ChessmanList.next(squares);
+      addPawnMoves(tempList, board.board[square], square);
+    }
+    for (long squares = board.knights[activeColor].squares; squares != 0; squares &= squares - 1) {
+      int square = ChessmanList.next(squares);
+      addMoves(tempList, board.board[square], square, moveDeltaKnight);
+    }
+    for (long squares = board.bishops[activeColor].squares; squares != 0; squares &= squares - 1) {
+      int square = ChessmanList.next(squares);
+      addMoves(tempList, board.board[square], square, moveDeltaBishop);
+    }
+    for (long squares = board.rooks[activeColor].squares; squares != 0; squares &= squares - 1) {
+      int square = ChessmanList.next(squares);
+      addMoves(tempList, board.board[square], square, moveDeltaRook);
+    }
+    for (long squares = board.queens[activeColor].squares; squares != 0; squares &= squares - 1) {
+      int square = ChessmanList.next(squares);
+      addMoves(tempList, board.board[square], square, moveDeltaQueen);
+    }
+    int square = ChessmanList.next(board.kings[activeColor].squares);
+    addMoves(tempList, board.board[square], square, moveDeltaKing);
+
+    for (int i = 0; i < tempList.size; ++i) {
+      int move = tempList.moves[i];
+      if (isLegal(move) && (isCheck || Move.getTargetPiece(move) != IntPiece.NOPIECE)) {
+        moveList.moves[moveList.size++] = move;
+      }
+    }
+
+    moveList.rateFromMVVLVA();
+    moveList.sort();
+
     return moveList;
   }
 

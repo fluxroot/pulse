@@ -18,11 +18,50 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.jcpi.models.IntPiece;
+
 public final class MoveList {
 
-  private static final int MAXSIZE = 4096;
+  private static final int MAXSIZE = 256;
 
   public final int[] moves = new int[MAXSIZE];
+  public final int[] values = new int[MAXSIZE];
   public int size = 0;
+
+  public void sort() {
+    for (int i = 1; i < size; ++i) {
+      int move = moves[i];
+      int value = values[i];
+
+      int j = i;
+      while ((j > 0) && (values[j - 1] < value)) {
+        moves[j] = moves[j - 1];
+        values[j] = values[j - 1];
+        --j;
+      }
+
+      moves[j] = move;
+      values[j] = value;
+    }
+  }
+
+  public void rateFromMVVLVA() {
+    for (int i = 0; i < size; ++i) {
+      int move = moves[i];
+      int value = 0;
+
+      int chessmanValue = Evaluation.getChessmanValue(IntPiece.getChessman(Move.getOriginPiece(move)));
+      value += Evaluation.VALUE_KING / chessmanValue;
+
+      int target = Move.getTargetPiece(move);
+      if (IntPiece.isValid(target)) {
+        value += 10 * Evaluation.getChessmanValue(IntPiece.getChessman(target));
+      }
+
+      assert value >= (Evaluation.VALUE_KING / Evaluation.VALUE_KING) && value <= (Evaluation.VALUE_KING / Evaluation.VALUE_PAWN) + 10 * Evaluation.VALUE_QUEEN;
+
+      values[i] = value;
+    }
+  }
 
 }

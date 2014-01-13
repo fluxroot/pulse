@@ -18,6 +18,7 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
 
 public final class Evaluation {
@@ -25,6 +26,7 @@ public final class Evaluation {
   public static final int INFINITY = 200000;
   public static final int DRAW = 0;
   public static final int CHECKMATE = 100000;
+  public static final int CHECKMATE_THRESHOLD = CHECKMATE - 1000;
 
   public static final int VALUE_PAWN = 100;
   public static final int VALUE_KNIGHT = 325;
@@ -62,13 +64,34 @@ public final class Evaluation {
       VALUE_KING * board.kings[oppositeColor].size();
     total += myMaterial - oppositeMaterial;
 
-    if (total < -CHECKMATE) {
-      total = -CHECKMATE;
-    } else if (total > CHECKMATE) {
-      total = CHECKMATE;
+    if (total < -CHECKMATE_THRESHOLD) {
+      total = -CHECKMATE_THRESHOLD;
+    } else if (total > CHECKMATE_THRESHOLD) {
+      total = CHECKMATE_THRESHOLD;
     }
 
     return total;
+  }
+
+  public static int getChessmanValue(int chessman) {
+    assert IntChessman.isValid(chessman);
+
+    switch (chessman) {
+      case IntChessman.PAWN:
+        return VALUE_PAWN;
+      case IntChessman.KNIGHT:
+        return VALUE_KNIGHT;
+      case IntChessman.BISHOP:
+        return VALUE_BISHOP;
+      case IntChessman.ROOK:
+        return VALUE_ROOK;
+      case IntChessman.QUEEN:
+        return VALUE_QUEEN;
+      case IntChessman.KING:
+        return VALUE_KING;
+      default:
+        throw new IllegalArgumentException();
+    }
   }
 
 }
