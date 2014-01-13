@@ -20,9 +20,11 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
+import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
 import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.models.IntColor;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,7 +51,6 @@ public final class Search implements Runnable {
 
   // Nodes search
   private long searchNodes = Long.MAX_VALUE;
-  private long totalNodes = 0;
 
   // Time & Clock & Ponder search
   private long searchTime = 0;
@@ -61,9 +62,15 @@ public final class Search implements Runnable {
 
   // Search parameters
   private final MoveList rootMoves = new MoveList();
-  private Result bestResult = new Result();
-  private int ponderMove = Move.NOMOVE;
+  private final Result result = new Result();
   private boolean abort = false;
+  private long startTime = 0;
+  private long statusStartTime = 0;
+  private long totalNodes = 0;
+  private int currentDepth = 0;
+  private int currentMove = Move.NOMOVE;
+  private int currentMoveNumber = 0;
+  private int currentPonderMove = Move.NOMOVE;
 
   /**
    * This is our search timer for time & clock & ponder searches.
@@ -74,7 +81,7 @@ public final class Search implements Runnable {
       timerStopped = true;
 
       // If we already have a result abort the search.
-      if (bestResult.bestMove != Move.NOMOVE) {
+      if (result.bestMove != Move.NOMOVE) {
         abort = true;
       }
     }
@@ -237,6 +244,8 @@ public final class Search implements Runnable {
   }
 
   public void run() {
+    startTime = System.currentTimeMillis();
+    statusStartTime = startTime;
     if (timer != null) {
       timer.schedule(new SearchTimer(), searchTime);
     }
@@ -255,21 +264,14 @@ public final class Search implements Runnable {
     semaphore.release();
 
     //### BEGIN Iterative Deepening
-    for (int currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
-      Result currentResult = alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE, 0);
+    for (currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
+      sendStatus(true);
 
-      if (currentResult.bestMove != Move.NOMOVE) {
-        // Update the best result.
-        bestResult = currentResult;
+      alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE, 0);
 
-        checkStopConditions();
+      checkStopConditions();
 
-        if (abort) {
-          break;
-        }
-      } else {
-        // We found no best move.
-        // Perhaps we have a checkmate or we got a stop request?
+      if (abort) {
         break;
       }
     }
@@ -279,11 +281,11 @@ public final class Search implements Runnable {
       timer.cancel();
     }
 
-    if (bestResult.bestMove != Move.NOMOVE) {
-      if (bestResult.ponderMove != Move.NOMOVE) {
-        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(bestResult.bestMove), Move.toGenericMove(bestResult.ponderMove)));
+    if (result.bestMove != Move.NOMOVE) {
+      if (result.ponderMove != Move.NOMOVE) {
+        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(result.bestMove), Move.toGenericMove(result.ponderMove)));
       } else {
-        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(bestResult.bestMove), null));
+        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(result.bestMove), null));
       }
     } else {
       protocol.send(new ProtocolBestMoveCommand(null, null));
@@ -294,7 +296,7 @@ public final class Search implements Runnable {
     // We will check the stop conditions only if we are using time management,
     // that is if our timer != null. Also we cannot stop the search if we don't
     // have any result if using time management.
-    if (bestResult.bestMove != Move.NOMOVE && timer != null) {
+    if (result.bestMove != Move.NOMOVE && timer != null) {
       if (timerStopped) {
         abort = true;
       } else {
@@ -304,7 +306,7 @@ public final class Search implements Runnable {
         }
 
         // Check if we have a checkmate
-        else if (Math.abs(bestResult.bestValue) == Evaluation.CHECKMATE) {
+        else if (Math.abs(result.bestValue) > Evaluation.CHECKMATE_THRESHOLD) {
           abort = true;
         }
       }
@@ -318,22 +320,31 @@ public final class Search implements Runnable {
       // Hard stop on number of nodes
       abort = true;
     }
+
+    sendStatus(false);
   }
 
-  private Result alphaBetaRoot(int depth, int alpha, int beta, int height) {
-    Result result = new Result();
-
+  private void alphaBetaRoot(int depth, int alpha, int beta, int height) {
     updateSearch();
 
     // Abort conditions
     if (abort) {
-      return result;
+      return;
     }
+
+    // Initialize
+    int bestValue = -Evaluation.INFINITY;
+    int bestMove = Move.NOMOVE;
+    int bestPonderMove = Move.NOMOVE;
 
     for (int i = 0; i < rootMoves.size; ++i) {
       int move = rootMoves.moves[i];
 
-      ponderMove = Move.NOMOVE;
+      currentMove = move;
+      currentMoveNumber = i + 1;
+      sendStatus(true);
+
+      currentPonderMove = Move.NOMOVE;
 
       board.makeMove(move);
       int value = -alphaBeta(depth - 1, -beta, -alpha, height + 1);
@@ -346,10 +357,10 @@ public final class Search implements Runnable {
       rootMoves.values[i] = value;
 
       // Pruning
-      if (value > result.bestValue) {
-        result.bestValue = value;
-        result.bestMove = move;
-        result.ponderMove = ponderMove;
+      if (value > bestValue) {
+        bestValue = value;
+        bestMove = move;
+        bestPonderMove = currentPonderMove;
 
         // Do we have a better value?
         if (value > alpha) {
@@ -365,10 +376,27 @@ public final class Search implements Runnable {
     }
 
     if (!abort) {
-      rootMoves.sort();
-    }
+      // If we cannot move, check for checkmate and stalemate.
+      if (bestValue == -Evaluation.INFINITY) {
+        if (moveGenerator.isCheck()) {
+          // We have a check mate. This is bad for us, so return a -CHECKMATE.
+          bestValue = -Evaluation.CHECKMATE + height;
+        } else {
+          // We have a stale mate. Return the draw value.
+          bestValue = Evaluation.DRAW;
+        }
 
-    return result;
+        abort = true;
+      } else {
+        rootMoves.sort();
+      }
+
+      result.bestValue = bestValue;
+      result.bestMove = bestMove;
+      result.ponderMove = bestPonderMove;
+
+      sendSummary(result);
+    }
   }
 
   private int alphaBeta(int depth, int alpha, int beta, int height) {
@@ -423,24 +451,74 @@ public final class Search implements Runnable {
       }
     }
 
-    // If we cannot move, check for checkmate and stalemate.
-    if (bestValue == -Evaluation.INFINITY) {
-      if (moveGenerator.isCheck()) {
-        // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        bestValue = -Evaluation.CHECKMATE;
-      } else {
-        // We have a stale mate. Return the draw value.
-        bestValue = Evaluation.DRAW;
-      }
-    }
-
     if (!abort) {
+      // If we cannot move, check for checkmate and stalemate.
+      if (bestValue == -Evaluation.INFINITY) {
+        if (moveGenerator.isCheck()) {
+          // We have a check mate. This is bad for us, so return a -CHECKMATE.
+          bestValue = -Evaluation.CHECKMATE + height;
+        } else {
+          // We have a stale mate. Return the draw value.
+          bestValue = Evaluation.DRAW;
+        }
+      }
+
       if (height == 1 && bestMove != Move.NOMOVE) {
-        ponderMove = bestMove;
+        currentPonderMove = bestMove;
       }
     }
 
     return bestValue;
+  }
+
+  private void sendStatus(boolean force) {
+    long currentTime = System.currentTimeMillis();
+    if ((currentTime - startTime >= 1000)
+      && (force || (currentTime - statusStartTime) >= 1000)) {
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+      command.setDepth(currentDepth);
+      command.setNodes(totalNodes);
+      command.setTime(currentTime - startTime);
+      command.setNps(totalNodes * 1000 / (currentTime - startTime));
+      if (currentMove != Move.NOMOVE) {
+        command.setCurrentMove(Move.toGenericMove(currentMove));
+        command.setCurrentMoveNumber(currentMoveNumber);
+      }
+
+      protocol.send(command);
+
+      statusStartTime = System.currentTimeMillis();
+    }
+  }
+
+  private void sendSummary(Result result) {
+    long timeDelta = System.currentTimeMillis() - startTime;
+
+    ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+    command.setDepth(currentDepth);
+    command.setNodes(totalNodes);
+    command.setTime(timeDelta);
+    command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
+    if (Math.abs(result.bestValue) > Evaluation.CHECKMATE_THRESHOLD) {
+      // Calculate mate distance
+      int mateDepth = Evaluation.CHECKMATE - Math.abs(result.bestValue);
+      command.setMate(Integer.signum(result.bestValue) * (mateDepth + 1) / 2);
+    } else {
+      command.setCentipawns(result.bestValue);
+    }
+    if (result.bestMove != Move.NOMOVE) {
+      if (result.ponderMove != Move.NOMOVE) {
+        command.setMoveList(Arrays.asList(Move.toGenericMove(result.bestMove), Move.toGenericMove(result.ponderMove)));
+      } else {
+        command.setMoveList(Arrays.asList(Move.toGenericMove(result.bestMove)));
+      }
+    }
+
+    protocol.send(command);
+
+    statusStartTime = System.currentTimeMillis();
   }
 
 }
