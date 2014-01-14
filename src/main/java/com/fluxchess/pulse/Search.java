@@ -250,6 +250,7 @@ public final class Search implements Runnable {
       timer.schedule(new SearchTimer(), searchTime);
     }
 
+    // Populate root move list
     MoveList tempMoves;
     if (searchMoves.size == 0) {
       tempMoves = moveGenerator.getAll();
@@ -386,8 +387,12 @@ public final class Search implements Runnable {
           bestValue = Evaluation.DRAW;
         }
 
+        // The root position is a checkmate or stalemate. We cannot search
+        // further. Abort!
         abort = true;
       } else {
+        // Sort the root move list, so that the next iteration begins with the
+        // best move first.
         rootMoves.sort();
       }
 

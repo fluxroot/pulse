@@ -52,18 +52,18 @@ public final class Board {
 
   private final Set<Long> repetitionTable = new HashSet<>();
 
-  // We will save some board parameters in a StackEntry before making a move.
+  // We will save some board parameters in a State before making a move.
   // Later we will restore them before undoing a move.
-  private final StackEntry[] stack = new StackEntry[MAX_GAMEMOVES];
+  private final State[] stack = new State[MAX_GAMEMOVES];
   private int stackSize = 0;
 
-  private static final class StackEntry {
+  private static final class State {
     public long zobristCode = 0;
     public final int[][] castling = new int[IntColor.values.length][IntCastling.values.length];
     public int enPassant = Square.NOSQUARE;
     public int halfMoveClock = 0;
 
-    public StackEntry() {
+    public State() {
       for (int color : IntColor.values) {
         for (int castling : IntCastling.values) {
           this.castling[color][castling] = IntFile.NOFILE;
@@ -74,7 +74,7 @@ public final class Board {
 
   // Initialize the zobrist keys
   static {
-    Random random = new Random(0);
+    Random random = new Random();
 
     for (int piece : IntPiece.values) {
       for (int i = 0; i < BOARDSIZE; ++i) {
@@ -102,7 +102,7 @@ public final class Board {
 
     // Initialize stack
     for (int i = 0; i < stack.length; ++i) {
-      stack[i] = new StackEntry();
+      stack[i] = new State();
     }
 
     // Initialize chessman lists
@@ -293,7 +293,7 @@ public final class Board {
   }
 
   public void makeMove(int move) {
-    StackEntry entry = stack[stackSize];
+    State entry = stack[stackSize];
 
     // Get variables
     int type = Move.getType(move);
@@ -421,7 +421,7 @@ public final class Board {
     --stackSize;
     assert stackSize >= 0;
 
-    StackEntry entry = stack[stackSize];
+    State entry = stack[stackSize];
 
     // Get variables
     int type = Move.getType(move);

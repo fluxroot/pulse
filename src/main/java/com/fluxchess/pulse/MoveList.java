@@ -28,6 +28,9 @@ public final class MoveList {
   public final int[] values = new int[MAXSIZE];
   public int size = 0;
 
+  /**
+   * Sorts the move list using a stable insertion sort.
+   */
   public void sort() {
     for (int i = 1; i < size; ++i) {
       int move = moves[i];
@@ -45,6 +48,9 @@ public final class MoveList {
     }
   }
 
+  /**
+   * Rates the moves in the list according to "Most Valuable Victim - Least Valuable Aggressor".
+   */
   public void rateFromMVVLVA() {
     for (int i = 0; i < size; ++i) {
       int move = moves[i];
