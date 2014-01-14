@@ -9,7 +9,7 @@ apply plugin: 'coveralls'
 description = 'Pulse Chess Java Engine'
 
 group = 'com.fluxchess'
-version = '0.1.0-alpha'
+version = '1.0.0'
 ext.releaseBranch = 'master'
 
 if (!project.hasProperty('buildNumber') || !(project.hasProperty('branchName') && branchName == releaseBranch)) {

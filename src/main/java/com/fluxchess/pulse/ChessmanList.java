@@ -18,6 +18,10 @@
  */
 package com.fluxchess.pulse;
 
+/**
+ * ChessmanList stores chessman squares as a Bitboard in a 64-bit long. We
+ * provide methods to convert bit squares to 0x88 squares and vice versa.
+ */
 public final class ChessmanList {
 
   public long squares = 0;
