@@ -1,5 +1,5 @@
-Pulse Chess Java Engine
-=======================
+Pulse Chess
+===========
 
 Copyright 2013-2014 Flux Chess Project  
 http://fluxchess.com
