@@ -23,12 +23,34 @@ import com.fluxchess.jcpi.models.*;
 public final class MoveGenerator {
 
   // Move deltas
-  private static final int[] moveDeltaPawn = {16, 17, 15};
-  private static final int[] moveDeltaKnight = {+33, +18, -14, -31, -33, -18, +14, +31};
-  private static final int[] moveDeltaBishop = {+17, -15, -17, +15};
-  private static final int[] moveDeltaRook = {+16, +1, -16, -1};
-  private static final int[] moveDeltaQueen = {+16, +17, +1, -15, -16, -17, -1, +15};
-  private static final int[] moveDeltaKing = {+16, +17, +1, -15, -16, -17, -1, +15};
+  private static final int[][] moveDeltaPawn = {
+    {Square.deltaN, Square.deltaNE, Square.deltaNW}, // IntColor.WHITE
+    {Square.deltaS, Square.deltaSE, Square.deltaSW}  // IntColor.BLACK
+  };
+  private static final int[] moveDeltaKnight = {
+    Square.deltaN + Square.deltaN + Square.deltaE,
+    Square.deltaN + Square.deltaN + Square.deltaW,
+    Square.deltaN + Square.deltaE + Square.deltaE,
+    Square.deltaN + Square.deltaW + Square.deltaW,
+    Square.deltaS + Square.deltaS + Square.deltaE,
+    Square.deltaS + Square.deltaS + Square.deltaW,
+    Square.deltaS + Square.deltaE + Square.deltaE,
+    Square.deltaS + Square.deltaW + Square.deltaW
+  };
+  private static final int[] moveDeltaBishop = {
+    Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
+  };
+  private static final int[] moveDeltaRook = {
+    Square.deltaN, Square.deltaE, Square.deltaS, Square.deltaW
+  };
+  private static final int[] moveDeltaQueen = {
+    Square.deltaN, Square.deltaE, Square.deltaS, Square.deltaW,
+    Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
+  };
+  private static final int[] moveDeltaKing = {
+    Square.deltaN, Square.deltaE, Square.deltaS, Square.deltaW,
+    Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
+  };
 
   // Board
   private final Board board;
@@ -167,11 +189,8 @@ public final class MoveGenerator {
     int pawnColor = IntPiece.getColor(pawnPiece);
 
     // Generate only capturing moves first (i = 1)
-    for (int i = 1; i < moveDeltaPawn.length; ++i) {
-      int delta = moveDeltaPawn[i];
-      if (pawnColor == IntColor.BLACK) {
-        delta *= -1;
-      }
+    for (int i = 1; i < moveDeltaPawn[pawnColor].length; ++i) {
+      int delta = moveDeltaPawn[pawnColor][i];
 
       int targetSquare = pawnSquare + delta;
       if (Square.isLegal(targetSquare)) {
@@ -201,12 +220,7 @@ public final class MoveGenerator {
           assert (pawnColor == IntColor.BLACK && Square.getRank(targetSquare) == IntRank.R3)
             || (pawnColor == IntColor.WHITE && Square.getRank(targetSquare) == IntRank.R6);
 
-          int captureSquare;
-          if (pawnColor == IntColor.WHITE) {
-            captureSquare = targetSquare - 16;
-          } else {
-            captureSquare = targetSquare + 16;
-          }
+          int captureSquare = targetSquare + (pawnColor == IntColor.WHITE ? Square.deltaS : Square.deltaN);
           targetPiece = board.board[captureSquare];
           assert IntPiece.getChessman(targetPiece) == IntChessman.PAWN;
           assert IntPiece.getColor(targetPiece) == IntColor.opposite(pawnColor);
@@ -217,10 +231,7 @@ public final class MoveGenerator {
     }
 
     // Generate non-capturing moves
-    int delta = moveDeltaPawn[0];
-    if (pawnColor == IntColor.BLACK) {
-      delta *= -1;
-    }
+    int delta = moveDeltaPawn[pawnColor][0];
 
     // Move one rank forward
     int targetSquare = pawnSquare + delta;
@@ -321,17 +332,9 @@ public final class MoveGenerator {
     assert IntColor.isValid(attackerColor);
 
     // Pawn attacks
-    int pawnPiece;
-    int sign;
-    if (attackerColor == IntColor.WHITE) {
-      pawnPiece = IntPiece.WHITEPAWN;
-      sign = -1;
-    } else {
-      pawnPiece = IntPiece.BLACKPAWN;
-      sign = 1;
-    }
-    for (int i = 1; i < moveDeltaPawn.length; ++i) {
-      int attackerSquare = targetSquare + sign * moveDeltaPawn[i];
+    int pawnPiece = IntPiece.valueOf(IntChessman.PAWN, attackerColor);
+    for (int i = 1; i < moveDeltaPawn[attackerColor].length; ++i) {
+      int attackerSquare = targetSquare - moveDeltaPawn[attackerColor][i];
       if (Square.isLegal(attackerSquare)) {
         int attackerPawn = board.board[attackerSquare];
 
