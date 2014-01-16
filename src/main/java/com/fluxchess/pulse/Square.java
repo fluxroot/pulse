@@ -75,6 +75,15 @@ public final class Square {
     a8, b8, c8, d8, e8, f8, g8, h8
   };
 
+  public static final int deltaN = 16;
+  public static final int deltaE = 1;
+  public static final int deltaS = -16;
+  public static final int deltaW = -1;
+  public static final int deltaNE = deltaN + deltaE;
+  public static final int deltaSE = deltaS + deltaE;
+  public static final int deltaSW = deltaS + deltaW;
+  public static final int deltaNW = deltaN + deltaW;
+
   private Square() {
   }
 

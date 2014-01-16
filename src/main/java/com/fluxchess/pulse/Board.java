@@ -302,13 +302,9 @@ public final class Board {
     int originPiece = Move.getOriginPiece(move);
     int originColor = IntPiece.getColor(originPiece);
     int targetPiece = Move.getTargetPiece(move);
-    int captureSquare;
+    int captureSquare = targetSquare;
     if (type == Move.Type.ENPASSANT) {
-      if (originColor == IntColor.WHITE) {
-        captureSquare = targetSquare - 16;
-      } else {
-        captureSquare = targetSquare + 16;
-      }
+      captureSquare += (originColor == IntColor.WHITE ? Square.deltaS : Square.deltaN);
     } else {
       captureSquare = targetSquare;
     }
@@ -388,11 +384,7 @@ public final class Board {
       zobristCode ^= zobristEnPassant[enPassant];
     }
     if (type == Move.Type.PAWNDOUBLE) {
-      if (originColor == IntColor.WHITE) {
-        enPassant = targetSquare - 16;
-      } else {
-        enPassant = targetSquare + 16;
-      }
+      enPassant = targetSquare + (originColor == IntColor.WHITE ? Square.deltaS : Square.deltaN);
       assert Square.isValid(enPassant);
       zobristCode ^= zobristEnPassant[enPassant];
     } else {
@@ -430,13 +422,9 @@ public final class Board {
     int originPiece = Move.getOriginPiece(move);
     int originColor = IntPiece.getColor(originPiece);
     int targetPiece = Move.getTargetPiece(move);
-    int captureSquare;
+    int captureSquare = targetSquare;
     if (type == Move.Type.ENPASSANT) {
-      if (originColor == IntColor.WHITE) {
-        captureSquare = targetSquare - 16;
-      } else {
-        captureSquare = targetSquare + 16;
-      }
+      captureSquare += (originColor == IntColor.WHITE ? Square.deltaS : Square.deltaN);
       assert Square.isValid(captureSquare);
     } else {
       captureSquare = targetSquare;
