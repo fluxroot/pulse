@@ -181,15 +181,16 @@ task exe(dependsOn: [jar, launch4j]) {
   ext.archivePath = file("${buildDir}/executables/${project.jar.baseName}-${project.jar.version}.exe")
 
   def launch4jCfg = 'launch4j.xml'
+  def launch4jCfgDir = "${rootDir}/config/launch4j"
 
-  inputs.file launch4jCfg
+  inputs.file "${launch4jCfgDir}/${launch4jCfg}"
   outputs.files "${buildDir}/${launch4jCfg}", archivePath
 
   doLast {
     archivePath.getParentFile().mkdirs()
 
     copy {
-      from launch4jCfg
+      from "${launch4jCfgDir}/${launch4jCfg}"
       into buildDir
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
         jarFile: project.jar.archivePath.toString(),
