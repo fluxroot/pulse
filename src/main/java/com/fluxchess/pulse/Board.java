@@ -447,7 +447,6 @@ public final class Board {
 
     // Update activeColor
     activeColor = IntColor.opposite(activeColor);
-    zobristCode ^= zobristActiveColor;
 
     // Undo move rook
     if (type == Move.Type.CASTLING) {
