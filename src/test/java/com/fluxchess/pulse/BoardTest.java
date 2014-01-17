@@ -82,6 +82,16 @@ public class BoardTest {
   }
 
   @Test
+  public void testToString() throws IllegalNotationException {
+    String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+    GenericBoard genericBoard = new GenericBoard(fen);
+    Board board = new Board(genericBoard);
+
+    assertEquals(fen, board.toString());
+  }
+
+  @Test
   public void testActiveColor() {
     GenericBoard genericBoard = new GenericBoard(GenericBoard.STANDARDSETUP);
     Board board = new Board(genericBoard);
