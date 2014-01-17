@@ -58,4 +58,14 @@ public class SquareTest {
     assertFalse(Square.isValid(Square.NOSQUARE));
   }
 
+  @Test
+  public void testX88Squares() {
+    int bitSquare = 0;
+    for (int x88Square : Square.values) {
+      assertEquals(bitSquare, Square.toBitSquare(x88Square));
+      assertEquals(x88Square, Square.toX88Square(bitSquare));
+      ++bitSquare;
+    }
+  }
+
 }

@@ -102,6 +102,18 @@ public final class Square {
     return GenericPosition.valueOf(IntFile.toGenericFile(getFile(square)), IntRank.toGenericRank(getRank(square)));
   }
 
+  public static int toX88Square(int square) {
+    assert square >= 0 && square < Long.SIZE;
+
+    return ((square & ~7) << 1) | (square & 7);
+  }
+
+  public static int toBitSquare(int square) {
+    assert isValid(square);
+
+    return ((square & ~7) >>> 1) | (square & 7);
+  }
+
   public static boolean isValid(int square) {
     if (isLegal(square)) {
       return true;

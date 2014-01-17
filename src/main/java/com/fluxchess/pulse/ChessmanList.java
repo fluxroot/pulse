@@ -26,20 +26,8 @@ public final class ChessmanList {
 
   public long squares = 0;
 
-  public static int toX88Square(int square) {
-    assert square >= 0 && square < Long.SIZE;
-
-    return ((square & ~7) << 1) | (square & 7);
-  }
-
-  public static int toBitSquare(int square) {
-    assert Square.isValid(square);
-
-    return ((square & ~7) >>> 1) | (square & 7);
-  }
-
   public static int next(long squares) {
-    return ChessmanList.toX88Square(Long.numberOfTrailingZeros(squares));
+    return Square.toX88Square(Long.numberOfTrailingZeros(squares));
   }
 
   public int size() {
@@ -48,16 +36,16 @@ public final class ChessmanList {
 
   public void add(int square) {
     assert Square.isValid(square);
-    assert (squares & (1L << toBitSquare(square))) == 0 : String.format("squares = %d, 0x88 square = %d, bit square = %d", squares, square, toBitSquare(square));
+    assert (squares & (1L << Square.toBitSquare(square))) == 0 : String.format("squares = %d, 0x88 square = %d, bit square = %d", squares, square, Square.toBitSquare(square));
 
-    squares |= 1L << toBitSquare(square);
+    squares |= 1L << Square.toBitSquare(square);
   }
 
   public void remove(int square) {
     assert Square.isValid(square);
-    assert (squares & (1L << toBitSquare(square))) != 0 : String.format("squares = %d, 0x88 square = %d, bit square = %d", squares, square, toBitSquare(square));
+    assert (squares & (1L << Square.toBitSquare(square))) != 0 : String.format("squares = %d, 0x88 square = %d, bit square = %d", squares, square, Square.toBitSquare(square));
 
-    squares &= ~(1L << toBitSquare(square));
+    squares &= ~(1L << Square.toBitSquare(square));
   }
 
 }
