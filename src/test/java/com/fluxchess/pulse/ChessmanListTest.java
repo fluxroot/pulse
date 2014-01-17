@@ -45,16 +45,6 @@ public class ChessmanListTest {
   }
 
   @Test
-  public void testX88Squares() {
-    int bitSquare = 0;
-    for (int x88Square : Square.values) {
-      assertEquals(bitSquare, ChessmanList.toBitSquare(x88Square));
-      assertEquals(x88Square, ChessmanList.toX88Square(bitSquare));
-      ++bitSquare;
-    }
-  }
-
-  @Test
   public void testAdd() {
     ChessmanList list = new ChessmanList();
 

@@ -65,6 +65,11 @@ the following steps.
 `cp build/distributions/pulse-<version>.zip <installation directory>`
 
 
+Acknowledgments
+---------------
+The Pulse Chess logo was created by Ruxy Sylwyka. Thanks a lot!
+
+
 License
 -------
 Pulse Chess is released under version 3 of the [LGPL].

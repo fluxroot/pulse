@@ -305,8 +305,6 @@ public final class Board {
     int captureSquare = targetSquare;
     if (type == Move.Type.ENPASSANT) {
       captureSquare += (originColor == IntColor.WHITE ? Square.deltaS : Square.deltaN);
-    } else {
-      captureSquare = targetSquare;
     }
 
     // Update repetition table
@@ -426,8 +424,6 @@ public final class Board {
     if (type == Move.Type.ENPASSANT) {
       captureSquare += (originColor == IntColor.WHITE ? Square.deltaS : Square.deltaN);
       assert Square.isValid(captureSquare);
-    } else {
-      captureSquare = targetSquare;
     }
 
     // Update fullMoveNumber
