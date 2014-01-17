@@ -218,6 +218,7 @@ task dist(type: Zip) {
     from 'README.md'
     from 'COPYING'
     from 'COPYING.LESSER'
+    from 'src/dist/pulse.png'
 
     from jar
     from sourcesJar
