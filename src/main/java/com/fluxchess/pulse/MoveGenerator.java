@@ -69,7 +69,7 @@ public final class MoveGenerator {
   }
 
   public MoveList getAll() {
-    MoveList moveList = new MoveList();
+    MoveList list = new MoveList();
     tempList.size = 0;
 
     addDefaultMoves(tempList);
@@ -82,18 +82,18 @@ public final class MoveGenerator {
     for (int i = 0; i < tempList.size; ++i) {
       int move = tempList.moves[i];
       if (isLegal(move)) {
-        moveList.moves[moveList.size++] = move;
+        list.moves[list.size++] = move;
       }
     }
 
-    moveList.rateFromMVVLVA();
-    moveList.sort();
+    list.rateFromMVVLVA();
+    list.sort();
 
-    return moveList;
+    return list;
   }
 
   public MoveList getAllQuiescent() {
-    MoveList moveList = new MoveList();
+    MoveList list = new MoveList();
     tempList.size = 0;
 
     addDefaultMoves(tempList);
@@ -104,14 +104,14 @@ public final class MoveGenerator {
     for (int i = 0; i < tempList.size; ++i) {
       int move = tempList.moves[i];
       if (isLegal(move) && (isCheck || Move.getTargetPiece(move) != IntPiece.NOPIECE)) {
-        moveList.moves[moveList.size++] = move;
+        list.moves[list.size++] = move;
       }
     }
 
-    moveList.rateFromMVVLVA();
-    moveList.sort();
+    list.rateFromMVVLVA();
+    list.sort();
 
-    return moveList;
+    return list;
   }
 
   private void addDefaultMoves(MoveList list) {
