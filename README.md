@@ -14,6 +14,27 @@ The source code should be easy to read, so that new developers can
 learn, how to build a chess engine. If you want to roll your own, just 
 fork it and start coding! :) 
 
+There are three branches available in the repository.
+
+- *skeleton*  
+The skeleton branch contains just the basic code to hook up with the 
+Java Chess Protocol Interface. Start from here if you want to build your 
+own chess engine. Create a all your classes and integrate them into the 
+Search class. 
+
+
+- *master*  
+The master branch contains a very basic chess engine. It knows all the 
+rules and plays chess, but lacks more sophisticated features. Start from 
+the skeleton branch and try to beat the master branch. :) 
+
+
+- *transpositiontable*  
+The transpositiontable branch adds a very useful feature called 
+Transposition Table. They could speed up your search if done right. 
+However if implemented the wrong way they could also lead to wrong 
+results. Look at this code if you have beaten the master branch. 
+
 
 Features
 --------
