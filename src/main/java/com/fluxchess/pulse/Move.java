@@ -43,18 +43,26 @@ public final class Move {
     public static final int CASTLING = 4;
     public static final int NOTYPE = 5;
 
-    public static final int[] values = {
-      NORMAL,
-      PAWNDOUBLE,
-      PAWNPROMOTION,
-      ENPASSANT,
-      CASTLING
-    };
-
     private Type() {
+    }
+
+    public static boolean isValid(int type) {
+      switch (type) {
+        case NORMAL:
+        case PAWNDOUBLE:
+        case PAWNPROMOTION:
+        case ENPASSANT:
+        case CASTLING:
+          return true;
+        case NOTYPE:
+          return false;
+        default:
+          throw new IllegalArgumentException();
+      }
     }
   }
 
+  // These are our bit masks
   private static final int TYPE_SHIFT = 0;
   private static final int TYPE_MASK = Type.MASK << TYPE_SHIFT;
   private static final int ORIGINSQUARE_SHIFT = 3;
@@ -68,6 +76,7 @@ public final class Move {
   private static final int PROMOTION_SHIFT = 27;
   private static final int PROMOTION_MASK = IntChessman.MASK << PROMOTION_SHIFT;
 
+  // We don't use 0 as a null value to protect against errors.
   public static final int NOMOVE = (Type.NOTYPE << TYPE_SHIFT)
     | (Square.NOSQUARE << ORIGINSQUARE_SHIFT)
     | (Square.NOSQUARE << TARGETSQUARE_SHIFT)
@@ -78,6 +87,14 @@ public final class Move {
   private Move() {
   }
 
+  /**
+   * Converts a GenericMove to our internal move representation.
+   *
+   * @param genericMove the GenericMove.
+   * @param board the Board. We need the board to figure out what type of move
+   *              we're dealing with.
+   * @return the internal move representation.
+   */
   public static int valueOf(GenericMove genericMove, Board board) {
     assert genericMove != null;
     assert board != null;
@@ -140,11 +157,7 @@ public final class Move {
     int move = 0;
 
     // Encode type
-    assert type == Type.NORMAL
-      || type == Type.PAWNDOUBLE
-      || type == Type.PAWNPROMOTION
-      || type == Type.ENPASSANT
-      || type == Type.CASTLING;
+    assert Type.isValid(type);
     move |= type << TYPE_SHIFT;
 
     // Encode origin square
@@ -198,11 +211,7 @@ public final class Move {
 
   public static int getType(int move) {
     int type = (move & TYPE_MASK) >>> TYPE_SHIFT;
-    assert type == Type.NORMAL
-      || type == Type.PAWNDOUBLE
-      || type == Type.PAWNPROMOTION
-      || type == Type.ENPASSANT
-      || type == Type.CASTLING;
+    assert Type.isValid(type);
 
     return type;
   }

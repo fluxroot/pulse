@@ -315,7 +315,7 @@ public final class Search implements Runnable {
   private void checkStopConditions() {
     // We will check the stop conditions only if we are using time management,
     // that is if our timer != null. Also we cannot stop the search if we don't
-    // have any result if using time management.
+    // have any result if using time management. (currentDepth > 1)
     if (currentDepth > 1 && timer != null) {
       if (timerStopped) {
         abort = true;
@@ -532,7 +532,7 @@ public final class Search implements Runnable {
       board.undoMove(move);
 
       if (abort) {
-        break;
+        return bestValue;
       }
 
       // Pruning
@@ -552,14 +552,12 @@ public final class Search implements Runnable {
       }
     }
 
-    if (!abort) {
-      // If we cannot move, check for checkmate.
-      if (bestValue == -Evaluation.INFINITY) {
-        assert isCheck;
+    // If we cannot move, check for checkmate.
+    if (bestValue == -Evaluation.INFINITY) {
+      assert isCheck;
 
-        // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        bestValue = -Evaluation.CHECKMATE + height;
-      }
+      // We have a check mate. This is bad for us, so return a -CHECKMATE.
+      bestValue = -Evaluation.CHECKMATE + height;
     }
 
     return bestValue;

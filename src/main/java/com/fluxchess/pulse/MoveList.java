@@ -20,11 +20,16 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.IntPiece;
 
+/**
+ * This class stores our moves for a specific position most likely returned
+ * from our MoveGenerator. For the root node we we will populate pv for every
+ * root move.
+ */
 public final class MoveList {
 
-  private static final int MAXSIZE = 256;
+  private static final int MAX_MOVES = 256;
 
-  public final Entry[] entries = new Entry[MAXSIZE];
+  public final Entry[] entries = new Entry[MAX_MOVES];
   public int size = 0;
 
   public static final class Entry {
@@ -32,6 +37,9 @@ public final class MoveList {
     public int value = -Evaluation.INFINITY;
     public MoveVariation pv = new MoveVariation();
 
+    // Before each iteration of the Iterative Deepening we will save the
+    // current value of each root move in case we have an abort. In that case
+    // we will restore all values.
     private int oldValue = -Evaluation.INFINITY;
 
     public void save() {
@@ -49,7 +57,7 @@ public final class MoveList {
   }
 
   public MoveList() {
-    for (int i = 0; i < MAXSIZE; ++i) {
+    for (int i = 0; i < MAX_MOVES; ++i) {
       entries[i] = new Entry();
     }
   }

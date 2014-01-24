@@ -224,6 +224,13 @@ public final class Board {
     return repetitionTable.contains(zobristCode);
   }
 
+  /**
+   * Puts a piece at the square. We need to update our board and the appropriate
+   * chessman list.
+   *
+   * @param piece the IntPiece.
+   * @param square the Square.
+   */
   private void put(int piece, int square) {
     assert IntPiece.isValid(piece);
     assert Square.isValid(square);
@@ -261,6 +268,13 @@ public final class Board {
     zobristCode ^= zobristPiece[IntPiece.ordinal(piece)][square];
   }
 
+  /**
+   * Removes a piece from the square. We need to update our board and the
+   * appropriate chessman list.
+   *
+   * @param square the Square.
+   * @return the IntPiece which was removed.
+   */
   private int remove(int square) {
     assert Square.isValid(square);
     assert IntPiece.isValid(board[square]);
@@ -547,6 +561,14 @@ public final class Board {
     return isAttacked(ChessmanList.next(kings[activeColor].squares), IntColor.opposite(activeColor));
   }
 
+  /**
+   * Returns whether the targetSquare is attacked by any piece from the
+   * attackerColor. We will backtrack from the targetSquare to find the piece.
+   *
+   * @param targetSquare the target Square.
+   * @param attackerColor the attacker IntColor.
+   * @return whether the targetSquare is attacked.
+   */
   public boolean isAttacked(int targetSquare, int attackerColor) {
     assert Square.isValid(targetSquare);
     assert IntColor.isValid(attackerColor);

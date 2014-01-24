@@ -52,7 +52,12 @@ public final class MoveGenerator {
     Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
   };
 
+  // We will store a MoveGenerator for each ply so we don't have to create them
+  // in search. (which is expensive)
   private static final MoveGenerator[] moveGenerators = new MoveGenerator[Search.MAX_HEIGHT];
+
+  // We will use a staged move generation so we can easily extend it with
+  // other features like transposition tables.
   private static final State[] mainStates = {State.BEGIN, State.MAIN, State.END};
   private static final State[] quiescentStates = {State.BEGIN, State.QUIESCENT, State.END};
 
@@ -111,13 +116,21 @@ public final class MoveGenerator {
   private MoveGenerator() {
   }
 
+  /**
+   * Returns the next legal move. We will go through our states and generate
+   * the appropriate moves for the current state.
+   *
+   * @return the next legal move, or Move.NOMOVE if there's is no next move.
+   */
   public int next() {
     while (true) {
+      // Check whether we have any move in the list
       if (currentMoveIndex < moveList.size) {
         int move = moveList.entries[currentMoveIndex++].move;
 
         switch (states[currentStateIndex]) {
           case MAIN:
+            // Discard all non-legal moves
             if (!isLegal(move)) {
               continue;
             }
@@ -136,8 +149,14 @@ public final class MoveGenerator {
         return move;
       }
 
+      // If we don't have any move in the list, lets generate the moves for the
+      // next state.
       ++currentStateIndex;
+      currentMoveIndex = 0;
+      moveList.size = 0;
 
+      // We simply generate all moves at once here. However we could also
+      // generate capturing moves first and then all non-capturing moves.
       switch (states[currentStateIndex]) {
         case MAIN:
           addDefaultMoves(moveList);

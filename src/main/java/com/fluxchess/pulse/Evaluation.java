@@ -64,6 +64,8 @@ public final class Evaluation {
       VALUE_KING * board.kings[oppositeColor].size();
     total += myMaterial - oppositeMaterial;
 
+    // This is just a safe guard to protect against overflow in our evaluation
+    // function.
     if (total < -CHECKMATE_THRESHOLD) {
       total = -CHECKMATE_THRESHOLD;
     } else if (total > CHECKMATE_THRESHOLD) {
