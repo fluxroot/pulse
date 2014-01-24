@@ -90,15 +90,49 @@ public final class Move {
       } else {
         promotion = IntChessman.valueOf(genericMove.promotion);
       }
-      return valueOf(Type.PAWNPROMOTION, Square.valueOf(genericMove.from), Square.valueOf(genericMove.to), board.board[Square.valueOf(genericMove.from)], board.board[Square.valueOf(genericMove.to)], promotion);
+      return valueOf(
+        Type.PAWNPROMOTION,
+        Square.valueOf(genericMove.from),
+        Square.valueOf(genericMove.to),
+        board.board[Square.valueOf(genericMove.from)],
+        board.board[Square.valueOf(genericMove.to)],
+        promotion
+      );
     } else if (isPawnDouble(genericMove, board)) {
-      return valueOf(Type.PAWNDOUBLE, Square.valueOf(genericMove.from), Square.valueOf(genericMove.to), board.board[Square.valueOf(genericMove.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+      return valueOf(
+        Type.PAWNDOUBLE,
+        Square.valueOf(genericMove.from),
+        Square.valueOf(genericMove.to),
+        board.board[Square.valueOf(genericMove.from)],
+        IntPiece.NOPIECE,
+        IntChessman.NOCHESSMAN
+      );
     } else if (isEnPassant(genericMove, board)) {
-      return valueOf(Type.ENPASSANT, Square.valueOf(genericMove.from), Square.valueOf(genericMove.to), board.board[Square.valueOf(genericMove.from)], board.board[Square.valueOf(GenericPosition.valueOf(genericMove.to.file, genericMove.from.rank))], IntChessman.NOCHESSMAN);
+      return valueOf(
+        Type.ENPASSANT,
+        Square.valueOf(genericMove.from),
+        Square.valueOf(genericMove.to),
+        board.board[Square.valueOf(genericMove.from)],
+        board.board[Square.valueOf(GenericPosition.valueOf(genericMove.to.file, genericMove.from.rank))],
+        IntChessman.NOCHESSMAN
+      );
     } else if (isCastling(genericMove, board)) {
-      return valueOf(Type.CASTLING, Square.valueOf(genericMove.from), Square.valueOf(genericMove.to), board.board[Square.valueOf(genericMove.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+      return valueOf(
+        Type.CASTLING, Square.valueOf(genericMove.from),
+        Square.valueOf(genericMove.to),
+        board.board[Square.valueOf(genericMove.from)],
+        IntPiece.NOPIECE,
+        IntChessman.NOCHESSMAN
+      );
     } else {
-      return valueOf(Type.NORMAL, Square.valueOf(genericMove.from), Square.valueOf(genericMove.to), board.board[Square.valueOf(genericMove.from)], board.board[Square.valueOf(genericMove.to)], IntChessman.NOCHESSMAN);
+      return valueOf(
+        Type.NORMAL,
+        Square.valueOf(genericMove.from),
+        Square.valueOf(genericMove.to),
+        board.board[Square.valueOf(genericMove.from)],
+        board.board[Square.valueOf(genericMove.to)],
+        IntChessman.NOCHESSMAN
+      );
     }
   }
 
@@ -147,9 +181,16 @@ public final class Move {
       case Type.PAWNDOUBLE:
       case Type.ENPASSANT:
       case Type.CASTLING:
-        return new GenericMove(Square.toGenericPosition(originSquare), Square.toGenericPosition(targetSquare));
+        return new GenericMove(
+          Square.toGenericPosition(originSquare),
+          Square.toGenericPosition(targetSquare)
+        );
       case Type.PAWNPROMOTION:
-        return new GenericMove(Square.toGenericPosition(originSquare), Square.toGenericPosition(targetSquare), IntChessman.toGenericChessman(getPromotion(move)));
+        return new GenericMove(
+          Square.toGenericPosition(originSquare),
+          Square.toGenericPosition(targetSquare),
+          IntChessman.toGenericChessman(getPromotion(move))
+        );
       default:
         throw new IllegalArgumentException();
     }

@@ -99,7 +99,8 @@ public final class MoveList {
         value += 10 * Evaluation.getChessmanValue(IntPiece.getChessman(target));
       }
 
-      assert value >= (Evaluation.VALUE_KING / Evaluation.VALUE_KING) && value <= (Evaluation.VALUE_KING / Evaluation.VALUE_PAWN) + 10 * Evaluation.VALUE_QUEEN;
+      assert value >= (Evaluation.VALUE_KING / Evaluation.VALUE_KING)
+        && value <= (Evaluation.VALUE_KING / Evaluation.VALUE_PAWN) + 10 * Evaluation.VALUE_QUEEN;
 
       entries[i].value = value;
     }

@@ -145,15 +145,24 @@ public final class Search implements Runnable {
     return new Search(board, protocol);
   }
 
-  public static Search newClockSearch(Board board, IProtocol protocol, long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
-    Search search = newPonderSearch(board, protocol, whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo);
+  public static Search newClockSearch(
+    Board board, IProtocol protocol,
+    long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
+  ) {
+    Search search = newPonderSearch(
+      board, protocol,
+      whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
+    );
 
     search.timer = new Timer(true);
 
     return search;
   }
 
-  public static Search newPonderSearch(Board board, IProtocol protocol, long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
+  public static Search newPonderSearch(
+    Board board, IProtocol protocol,
+    long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
+  ) {
     if (board == null) throw new IllegalArgumentException();
     if (protocol == null) throw new IllegalArgumentException();
     if (whiteTimeLeft < 1) throw new IllegalArgumentException();

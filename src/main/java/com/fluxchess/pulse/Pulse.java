@@ -252,9 +252,15 @@ public final class Pulse extends AbstractEngine {
       }
 
       if (command.getPonder()) {
-        search = Search.newPonderSearch(board, getProtocol(), whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
+        search = Search.newPonderSearch(
+          board, getProtocol(),
+          whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo
+        );
       } else {
-        search = Search.newClockSearch(board, getProtocol(), whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
+        search = Search.newClockSearch(
+          board, getProtocol(),
+          whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo
+        );
       }
     }
 

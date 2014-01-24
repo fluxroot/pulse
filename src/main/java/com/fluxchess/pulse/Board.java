@@ -132,7 +132,9 @@ public final class Board {
     // Initialize castling
     for (int color : IntColor.values) {
       for (int castling : IntCastling.values) {
-        GenericFile genericFile = genericBoard.getCastling(IntColor.toGenericColor(color), IntCastling.toGenericCastling(castling));
+        GenericFile genericFile = genericBoard.getCastling(
+          IntColor.toGenericColor(color), IntCastling.toGenericCastling(castling)
+        );
         if (genericFile != null) {
           this.castling[color][castling] = IntFile.valueOf(genericFile);
           zobristCode ^= zobristCastling[color][castling];
@@ -175,7 +177,11 @@ public final class Board {
     for (int color : IntColor.values) {
       for (int castling : IntCastling.values) {
         if (this.castling[color][castling] != IntFile.NOFILE) {
-          genericBoard.setCastling(IntColor.toGenericColor(color), IntCastling.toGenericCastling(castling), IntFile.toGenericFile(this.castling[color][castling]));
+          genericBoard.setCastling(
+            IntColor.toGenericColor(color),
+            IntCastling.toGenericCastling(castling),
+            IntFile.toGenericFile(this.castling[color][castling])
+          );
         }
       }
     }
