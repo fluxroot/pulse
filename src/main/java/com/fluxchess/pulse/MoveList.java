@@ -36,19 +36,6 @@ public final class MoveList {
     public int move = Move.NOMOVE;
     public int value = -Evaluation.INFINITY;
     public MoveVariation pv = new MoveVariation();
-
-    // Before each iteration of the Iterative Deepening we will save the
-    // current value of each root move in case we have an abort. In that case
-    // we will restore all values.
-    private int oldValue = -Evaluation.INFINITY;
-
-    public void save() {
-      oldValue = value;
-    }
-
-    public void restore() {
-      value = oldValue;
-    }
   }
 
   public static final class MoveVariation {
@@ -59,18 +46,6 @@ public final class MoveList {
   public MoveList() {
     for (int i = 0; i < MAX_MOVES; ++i) {
       entries[i] = new Entry();
-    }
-  }
-
-  public void save() {
-    for (Entry entry : entries) {
-      entry.save();
-    }
-  }
-
-  public void restore() {
-    for (Entry entry : entries) {
-      entry.restore();
     }
   }
 

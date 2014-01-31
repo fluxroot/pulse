@@ -281,14 +281,11 @@ public final class Search implements Runnable {
     for (currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
       sendStatus(true);
 
-      rootMoves.save();
-
       alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE, 0, isCheck);
 
       checkStopConditions();
 
       if (abort) {
-        rootMoves.restore();
         break;
       }
     }
