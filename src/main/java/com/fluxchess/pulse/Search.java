@@ -262,7 +262,7 @@ public final class Search implements Runnable {
     // Populate root move list
     boolean isCheck = board.isCheck();
     if (searchMoves.size == 0) {
-      MoveGenerator moveGenerator = MoveGenerator.getMainGenerator(board, 0, isCheck);
+      MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(1, board, 0, isCheck);
       int move;
       while ((move = moveGenerator.next()) != Move.NOMOVE) {
         rootMoves.entries[rootMoves.size].move = move;
@@ -422,7 +422,7 @@ public final class Search implements Runnable {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
       // Descend into quiescent
-      return quiescent(alpha, beta, height);
+      return quiescent(0, alpha, beta, height);
     }
 
     updateSearch(height);
@@ -444,7 +444,7 @@ public final class Search implements Runnable {
 
     boolean isCheck = board.isCheck();
 
-    MoveGenerator moveGenerator = MoveGenerator.getMainGenerator(board, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(depth, board, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       ++searchedMoves;
@@ -493,7 +493,7 @@ public final class Search implements Runnable {
     return bestValue;
   }
 
-  private int quiescent(int alpha, int beta, int height) {
+  private int quiescent(int depth, int alpha, int beta, int height) {
     updateSearch(height);
 
     // Abort conditions
@@ -530,13 +530,13 @@ public final class Search implements Runnable {
     //### ENDOF Stand pat
 
     // Only generate capturing moves or evasion moves, in case we are in check.
-    MoveGenerator moveGenerator = MoveGenerator.getQuiescentGenerator(board, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(depth, board, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       ++searchedMoves;
 
       board.makeMove(move);
-      int value = -quiescent(-beta, -alpha, height + 1);
+      int value = -quiescent(depth - 1, -beta, -alpha, height + 1);
       board.undoMove(move);
 
       if (abort) {
