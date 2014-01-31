@@ -451,11 +451,11 @@ public final class Search implements Runnable {
       // Pruning
       if (value > bestValue) {
         bestValue = value;
-        bestMove = move;
 
         // Do we have a better value?
         if (value > alpha) {
           alpha = value;
+          bestMove = move;
 
           // Is the value higher than beta?
           if (value >= beta) {
