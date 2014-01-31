@@ -281,7 +281,7 @@ public final class Search implements Runnable {
     for (currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
       sendStatus(true);
 
-      alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE, isCheck);
+      alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE);
 
       checkStopConditions();
 
@@ -342,7 +342,7 @@ public final class Search implements Runnable {
     sendStatus(false);
   }
 
-  private void alphaBetaRoot(int depth, int alpha, int beta, boolean isCheck) {
+  private void alphaBetaRoot(int depth, int alpha, int beta) {
     int height = 0;
 
     updateSearch();
@@ -395,20 +395,11 @@ public final class Search implements Runnable {
       }
     }
 
-    // If we cannot move, check for checkmate and stalemate.
-    if (bestValue == -Evaluation.INFINITY) {
-      if (isCheck) {
-        // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        bestValue = -Evaluation.CHECKMATE + height;
-      } else {
-        // We have a stale mate. Return the draw value.
-        bestValue = Evaluation.DRAW;
-      }
-      rootMoves.entries[0].value = bestValue;
-
+    if (rootMoves.size == 0) {
       // The root position is a checkmate or stalemate. We cannot search
       // further. Abort!
       abort = true;
+      return;
     }
 
     // Sort the root move list, so that the next iteration begins with the
@@ -585,31 +576,33 @@ public final class Search implements Runnable {
   }
 
   private void sendSummary() {
-    long timeDelta = System.currentTimeMillis() - startTime;
-    MoveList.Entry bestEntry = rootMoves.entries[0];
+    if (rootMoves.size > 0) {
+      long timeDelta = System.currentTimeMillis() - startTime;
+      MoveList.Entry bestEntry = rootMoves.entries[0];
 
-    ProtocolInformationCommand command = new ProtocolInformationCommand();
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
 
-    command.setDepth(currentDepth);
-    command.setNodes(totalNodes);
-    command.setTime(timeDelta);
-    command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-    if (Math.abs(bestEntry.value) > Evaluation.CHECKMATE_THRESHOLD) {
-      // Calculate mate distance
-      int mateDepth = Evaluation.CHECKMATE - Math.abs(bestEntry.value);
-      command.setMate(Integer.signum(bestEntry.value) * (mateDepth + 1) / 2);
-    } else {
-      command.setCentipawns(bestEntry.value);
+      command.setDepth(currentDepth);
+      command.setNodes(totalNodes);
+      command.setTime(timeDelta);
+      command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
+      if (Math.abs(bestEntry.value) > Evaluation.CHECKMATE_THRESHOLD) {
+        // Calculate mate distance
+        int mateDepth = Evaluation.CHECKMATE - Math.abs(bestEntry.value);
+        command.setMate(Integer.signum(bestEntry.value) * (mateDepth + 1) / 2);
+      } else {
+        command.setCentipawns(bestEntry.value);
+      }
+      List<GenericMove> pv = new ArrayList<>();
+      for (int i = 0; i < bestEntry.pv.size; ++i) {
+        pv.add(Move.toGenericMove(bestEntry.pv.moves[i]));
+      }
+      command.setMoveList(pv);
+
+      protocol.send(command);
+
+      statusStartTime = System.currentTimeMillis();
     }
-    List<GenericMove> pv = new ArrayList<>();
-    for (int i = 0; i < bestEntry.pv.size; ++i) {
-      pv.add(Move.toGenericMove(bestEntry.pv.moves[i]));
-    }
-    command.setMoveList(pv);
-
-    protocol.send(command);
-
-    statusStartTime = System.currentTimeMillis();
   }
 
 }
