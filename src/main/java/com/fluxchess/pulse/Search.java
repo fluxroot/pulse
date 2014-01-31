@@ -281,7 +281,7 @@ public final class Search implements Runnable {
     for (currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
       sendStatus(true);
 
-      alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE, 0, isCheck);
+      alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE, isCheck);
 
       checkStopConditions();
 
@@ -341,7 +341,9 @@ public final class Search implements Runnable {
     sendStatus(false);
   }
 
-  private void alphaBetaRoot(int depth, int alpha, int beta, int height, boolean isCheck) {
+  private void alphaBetaRoot(int depth, int alpha, int beta, boolean isCheck) {
+    int height = 0;
+
     updateSearch();
 
     // Abort conditions
