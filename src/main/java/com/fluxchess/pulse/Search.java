@@ -431,11 +431,15 @@ public final class Search implements Runnable {
     // Initialize
     int bestValue = -Evaluation.INFINITY;
     int bestMove = Move.NOMOVE;
+    int searchedMoves = 0;
+
     boolean isCheck = board.isCheck();
 
     MoveGenerator moveGenerator = MoveGenerator.getMainGenerator(board, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
+      ++searchedMoves;
+
       board.makeMove(move);
       int value = -alphaBeta(depth - 1, -beta, -alpha, height + 1);
       board.undoMove(move);
@@ -463,13 +467,13 @@ public final class Search implements Runnable {
     }
 
     // If we cannot move, check for checkmate and stalemate.
-    if (bestValue == -Evaluation.INFINITY) {
+    if (searchedMoves == 0) {
       if (isCheck) {
         // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        bestValue = -Evaluation.CHECKMATE + height;
+        return -Evaluation.CHECKMATE + height;
       } else {
         // We have a stale mate. Return the draw value.
-        bestValue = Evaluation.DRAW;
+        return Evaluation.DRAW;
       }
     }
 
@@ -495,6 +499,8 @@ public final class Search implements Runnable {
 
     // Initialize
     int bestValue = -Evaluation.INFINITY;
+    int searchedMoves = 0;
+
     boolean isCheck = board.isCheck();
 
     //### BEGIN Stand pat
@@ -518,6 +524,8 @@ public final class Search implements Runnable {
     MoveGenerator moveGenerator = MoveGenerator.getQuiescentGenerator(board, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
+      ++searchedMoves;
+
       board.makeMove(move);
       int value = -quiescent(-beta, -alpha, height + 1);
       board.undoMove(move);
@@ -544,11 +552,9 @@ public final class Search implements Runnable {
     }
 
     // If we cannot move, check for checkmate.
-    if (bestValue == -Evaluation.INFINITY) {
-      assert isCheck;
-
+    if (searchedMoves == 0 && isCheck) {
       // We have a check mate. This is bad for us, so return a -CHECKMATE.
-      bestValue = -Evaluation.CHECKMATE + height;
+      return -Evaluation.CHECKMATE + height;
     }
 
     return bestValue;
