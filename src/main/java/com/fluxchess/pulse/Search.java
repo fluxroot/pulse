@@ -66,7 +66,8 @@ public final class Search implements Runnable {
   private long startTime = 0;
   private long statusStartTime = 0;
   private long totalNodes = 0;
-  private int currentDepth = 0;
+  private int currentDepth = 1;
+  private int currentMaxDepth = currentDepth;
   private int currentMove = Move.NOMOVE;
   private int currentMoveNumber = 0;
   private int currentPonderMove = Move.NOMOVE;
@@ -242,7 +243,11 @@ public final class Search implements Runnable {
       timer = new Timer(true);
       timer.schedule(new SearchTimer(), searchTime);
 
-      checkStopConditions();
+      // If we finished the first iteration, we should have a result.
+      // In this case check the stop conditions.
+      if (currentDepth > 1) {
+        checkStopConditions();
+      }
     }
   }
 
@@ -257,7 +262,7 @@ public final class Search implements Runnable {
     // Populate root move list
     boolean isCheck = board.isCheck();
     if (searchMoves.size == 0) {
-      MoveGenerator moveGenerator = MoveGenerator.getMainGenerator(board, 0, isCheck);
+      MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(1, board, 0, isCheck);
       int move;
       while ((move = moveGenerator.next()) != Move.NOMOVE) {
         rootMoves.entries[rootMoves.size].move = move;
@@ -279,16 +284,14 @@ public final class Search implements Runnable {
 
     //### BEGIN Iterative Deepening
     for (currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
+      currentMaxDepth = currentDepth;
       sendStatus(true);
 
-      rootMoves.save();
-
-      alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE, 0, isCheck);
+      alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE);
 
       checkStopConditions();
 
       if (abort) {
-        rootMoves.restore();
         break;
       }
     }
@@ -314,9 +317,8 @@ public final class Search implements Runnable {
 
   private void checkStopConditions() {
     // We will check the stop conditions only if we are using time management,
-    // that is if our timer != null. Also we cannot stop the search if we don't
-    // have any result if using time management. (currentDepth > 1)
-    if (currentDepth > 1 && timer != null) {
+    // that is if our timer != null.
+    if (timer != null) {
       if (timerStopped) {
         abort = true;
       } else {
@@ -326,15 +328,20 @@ public final class Search implements Runnable {
         }
 
         // Check if we have a checkmate
-        else if (Math.abs(rootMoves.entries[0].value) > Evaluation.CHECKMATE_THRESHOLD) {
+        else if (Math.abs(rootMoves.entries[0].value) > Evaluation.CHECKMATE_THRESHOLD
+          && currentDepth >= (Evaluation.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
           abort = true;
         }
       }
     }
   }
 
-  private void updateSearch() {
+  private void updateSearch(int height) {
     ++totalNodes;
+
+    if (height > currentMaxDepth) {
+      currentMaxDepth = height;
+    }
 
     if (searchNodes <= totalNodes) {
       // Hard stop on number of nodes
@@ -344,8 +351,10 @@ public final class Search implements Runnable {
     sendStatus(false);
   }
 
-  private void alphaBetaRoot(int depth, int alpha, int beta, int height, boolean isCheck) {
-    updateSearch();
+  private void alphaBetaRoot(int depth, int alpha, int beta) {
+    int height = 0;
+
+    updateSearch(height);
 
     // Abort conditions
     if (abort) {
@@ -395,20 +404,11 @@ public final class Search implements Runnable {
       }
     }
 
-    // If we cannot move, check for checkmate and stalemate.
-    if (bestValue == -Evaluation.INFINITY) {
-      if (isCheck) {
-        // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        bestValue = -Evaluation.CHECKMATE + height;
-      } else {
-        // We have a stale mate. Return the draw value.
-        bestValue = Evaluation.DRAW;
-      }
-      rootMoves.entries[0].value = bestValue;
-
+    if (rootMoves.size == 0) {
       // The root position is a checkmate or stalemate. We cannot search
       // further. Abort!
       abort = true;
+      return;
     }
 
     // Sort the root move list, so that the next iteration begins with the
@@ -422,10 +422,10 @@ public final class Search implements Runnable {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
       // Descend into quiescent
-      return quiescent(alpha, beta, height);
+      return quiescent(0, alpha, beta, height);
     }
 
-    updateSearch();
+    updateSearch(height);
 
     // Abort conditions
     if (abort || height == MAX_HEIGHT) {
@@ -440,11 +440,15 @@ public final class Search implements Runnable {
     // Initialize
     int bestValue = -Evaluation.INFINITY;
     int bestMove = Move.NOMOVE;
+    int searchedMoves = 0;
+
     boolean isCheck = board.isCheck();
 
-    MoveGenerator moveGenerator = MoveGenerator.getMainGenerator(board, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(depth, board, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
+      ++searchedMoves;
+
       board.makeMove(move);
       int value = -alphaBeta(depth - 1, -beta, -alpha, height + 1);
       board.undoMove(move);
@@ -456,11 +460,11 @@ public final class Search implements Runnable {
       // Pruning
       if (value > bestValue) {
         bestValue = value;
-        bestMove = move;
 
         // Do we have a better value?
         if (value > alpha) {
           alpha = value;
+          bestMove = move;
 
           // Is the value higher than beta?
           if (value >= beta) {
@@ -472,13 +476,13 @@ public final class Search implements Runnable {
     }
 
     // If we cannot move, check for checkmate and stalemate.
-    if (bestValue == -Evaluation.INFINITY) {
+    if (searchedMoves == 0) {
       if (isCheck) {
         // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        bestValue = -Evaluation.CHECKMATE + height;
+        return -Evaluation.CHECKMATE + height;
       } else {
         // We have a stale mate. Return the draw value.
-        bestValue = Evaluation.DRAW;
+        return Evaluation.DRAW;
       }
     }
 
@@ -489,8 +493,8 @@ public final class Search implements Runnable {
     return bestValue;
   }
 
-  private int quiescent(int alpha, int beta, int height) {
-    updateSearch();
+  private int quiescent(int depth, int alpha, int beta, int height) {
+    updateSearch(height);
 
     // Abort conditions
     if (abort || height == MAX_HEIGHT) {
@@ -504,6 +508,8 @@ public final class Search implements Runnable {
 
     // Initialize
     int bestValue = -Evaluation.INFINITY;
+    int searchedMoves = 0;
+
     boolean isCheck = board.isCheck();
 
     //### BEGIN Stand pat
@@ -524,11 +530,13 @@ public final class Search implements Runnable {
     //### ENDOF Stand pat
 
     // Only generate capturing moves or evasion moves, in case we are in check.
-    MoveGenerator moveGenerator = MoveGenerator.getQuiescentGenerator(board, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(depth, board, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
+      ++searchedMoves;
+
       board.makeMove(move);
-      int value = -quiescent(-beta, -alpha, height + 1);
+      int value = -quiescent(depth - 1, -beta, -alpha, height + 1);
       board.undoMove(move);
 
       if (abort) {
@@ -553,11 +561,9 @@ public final class Search implements Runnable {
     }
 
     // If we cannot move, check for checkmate.
-    if (bestValue == -Evaluation.INFINITY) {
-      assert isCheck;
-
+    if (searchedMoves == 0 && isCheck) {
       // We have a check mate. This is bad for us, so return a -CHECKMATE.
-      bestValue = -Evaluation.CHECKMATE + height;
+      return -Evaluation.CHECKMATE + height;
     }
 
     return bestValue;
@@ -570,6 +576,7 @@ public final class Search implements Runnable {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
 
       command.setDepth(currentDepth);
+      command.setMaxDepth(currentMaxDepth);
       command.setNodes(totalNodes);
       command.setTime(currentTime - startTime);
       command.setNps(totalNodes * 1000 / (currentTime - startTime));
@@ -585,31 +592,34 @@ public final class Search implements Runnable {
   }
 
   private void sendSummary() {
-    long timeDelta = System.currentTimeMillis() - startTime;
-    MoveList.Entry bestEntry = rootMoves.entries[0];
+    if (rootMoves.size > 0) {
+      long timeDelta = System.currentTimeMillis() - startTime;
+      MoveList.Entry bestEntry = rootMoves.entries[0];
 
-    ProtocolInformationCommand command = new ProtocolInformationCommand();
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
 
-    command.setDepth(currentDepth);
-    command.setNodes(totalNodes);
-    command.setTime(timeDelta);
-    command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-    if (Math.abs(bestEntry.value) > Evaluation.CHECKMATE_THRESHOLD) {
-      // Calculate mate distance
-      int mateDepth = Evaluation.CHECKMATE - Math.abs(bestEntry.value);
-      command.setMate(Integer.signum(bestEntry.value) * (mateDepth + 1) / 2);
-    } else {
-      command.setCentipawns(bestEntry.value);
+      command.setDepth(currentDepth);
+      command.setMaxDepth(currentMaxDepth);
+      command.setNodes(totalNodes);
+      command.setTime(timeDelta);
+      command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
+      if (Math.abs(bestEntry.value) > Evaluation.CHECKMATE_THRESHOLD) {
+        // Calculate mate distance
+        int mateDepth = Evaluation.CHECKMATE - Math.abs(bestEntry.value);
+        command.setMate(Integer.signum(bestEntry.value) * (mateDepth + 1) / 2);
+      } else {
+        command.setCentipawns(bestEntry.value);
+      }
+      List<GenericMove> pv = new ArrayList<>();
+      for (int i = 0; i < bestEntry.pv.size; ++i) {
+        pv.add(Move.toGenericMove(bestEntry.pv.moves[i]));
+      }
+      command.setMoveList(pv);
+
+      protocol.send(command);
+
+      statusStartTime = System.currentTimeMillis();
     }
-    List<GenericMove> pv = new ArrayList<>();
-    for (int i = 0; i < bestEntry.pv.size; ++i) {
-      pv.add(Move.toGenericMove(bestEntry.pv.moves[i]));
-    }
-    command.setMoveList(pv);
-
-    protocol.send(command);
-
-    statusStartTime = System.currentTimeMillis();
   }
 
 }

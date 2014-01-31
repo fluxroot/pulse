@@ -51,9 +51,9 @@ public class MoveGeneratorTest {
             GenericBoard genericBoard = new GenericBoard(tokens[0].trim());
             Board board = new Board(genericBoard);
 
-            long result = miniMax(board, depth, 0);
+            long result = miniMax(depth, board, 0);
             if (nodes != result) {
-              throw new AssertionError(findMissingMoves(board, depth, 0));
+              throw new AssertionError(findMissingMoves(depth, board, 0));
             }
           }
 
@@ -63,10 +63,10 @@ public class MoveGeneratorTest {
     }
   }
 
-  private long miniMax(Board board, int depth, int height) {
+  private long miniMax(int depth, Board board, int height) {
     long totalNodes = 0;
 
-    MoveList moves = getAll(board, height);
+    MoveList moves = getAll(depth, board, height);
 
     if (depth <= 1) {
       return moves.size;
@@ -76,14 +76,14 @@ public class MoveGeneratorTest {
       int move = moves.entries[i].move;
 
       board.makeMove(move);
-      totalNodes += miniMax(board, depth - 1, height + 1);
+      totalNodes += miniMax(depth - 1, board, height + 1);
       board.undoMove(move);
     }
 
     return totalNodes;
   }
 
-  private String findMissingMoves(Board board, int depth, int height) {
+  private String findMissingMoves(int depth, Board board, int height) {
     String message = "";
 
     // Get expected moves from JCPI
@@ -93,7 +93,7 @@ public class MoveGeneratorTest {
     ));
 
     // Get actual moves
-    MoveList moves = getAll(board, height);
+    MoveList moves = getAll(depth, board, height);
     Collection<GenericMove> actualMoves = new HashSet<>();
     for (int i = 0; i < moves.size; ++i) {
       actualMoves.add(Move.toGenericMove(moves.entries[i].move));
@@ -115,7 +115,7 @@ public class MoveGeneratorTest {
         int move = moves.entries[i].move;
 
         board.makeMove(move);
-        message += findMissingMoves(board, depth - 1, height + 1);
+        message += findMissingMoves(depth - 1, board, height + 1);
         board.undoMove(move);
 
         if (!message.isEmpty()) {
@@ -133,11 +133,11 @@ public class MoveGeneratorTest {
     return message;
   }
 
-  private MoveList getAll(Board board, int height) {
+  private MoveList getAll(int depth, Board board, int height) {
     MoveList moves = new MoveList();
 
     boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = MoveGenerator.getMainGenerator(board, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(depth, board, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       moves.entries[moves.size++].move = move;

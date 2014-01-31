@@ -40,7 +40,7 @@ public final class PerftPerformance {
 
     for (int i = 1; i < 4; ++i) {
       long startTime = System.currentTimeMillis();
-      int result = miniMax(board, depth, 0);
+      int result = miniMax(depth, board, 0);
       long endTime = System.currentTimeMillis();
 
       long duration = endTime - startTime;
@@ -60,7 +60,7 @@ public final class PerftPerformance {
     LOG.info(String.format("Total nodes per millisecond: %d", totalNodes / totalTime));
   }
 
-  private static int miniMax(Board board, int depth, int height) {
+  private static int miniMax(int depth, Board board, int height) {
     if (depth == 0) {
       return 1;
     }
@@ -68,11 +68,11 @@ public final class PerftPerformance {
     int totalNodes = 0;
 
     boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = MoveGenerator.getMainGenerator(board, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(depth, board, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       board.makeMove(move);
-      int nodes = miniMax(board, depth - 1, height + 1);
+      int nodes = miniMax(depth - 1, board, height + 1);
       board.undoMove(move);
 
       totalNodes += nodes;

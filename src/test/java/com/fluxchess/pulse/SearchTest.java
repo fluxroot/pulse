@@ -75,9 +75,6 @@ public class SearchTest {
 
     assertNull(bestMove[0]);
     assertNull(ponderMove[0]);
-    assertEquals(1, depth[0]);
-    assertEquals(0, mate[0]);
-    assertEquals(1, nodes[0]);
   }
 
   @Test
@@ -167,9 +164,6 @@ public class SearchTest {
 
     assertNull(bestMove[0]);
     assertNull(ponderMove[0]);
-    assertEquals(1, depth[0]);
-    assertEquals(0, value[0]);
-    assertEquals(1, nodes[0]);
   }
 
   @Test

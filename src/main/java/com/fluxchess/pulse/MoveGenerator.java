@@ -83,32 +83,22 @@ public final class MoveGenerator {
     }
   }
 
-  public static MoveGenerator getMainGenerator(Board board, int height, boolean isCheck) {
+  public static MoveGenerator getMoveGenerator(int depth, Board board, int height, boolean isCheck) {
     assert board != null;
     assert height >= 0 && height <= Search.MAX_HEIGHT;
 
     MoveGenerator moveGenerator = moveGenerators[height];
     moveGenerator.board = board;
     moveGenerator.isCheck = isCheck;
-    moveGenerator.states = mainStates;
     moveGenerator.currentStateIndex = 0;
     moveGenerator.moveList.size = 0;
     moveGenerator.currentMoveIndex = 0;
 
-    return moveGenerator;
-  }
-
-  public static MoveGenerator getQuiescentGenerator(Board board, int height, boolean isCheck) {
-    assert board != null;
-    assert height >= 0 && height <= Search.MAX_HEIGHT;
-
-    MoveGenerator moveGenerator = moveGenerators[height];
-    moveGenerator.board = board;
-    moveGenerator.isCheck = isCheck;
-    moveGenerator.states = quiescentStates;
-    moveGenerator.currentStateIndex = 0;
-    moveGenerator.moveList.size = 0;
-    moveGenerator.currentMoveIndex = 0;
+    if (depth > 0) {
+      moveGenerator.states = mainStates;
+    } else {
+      moveGenerator.states = quiescentStates;
+    }
 
     return moveGenerator;
   }

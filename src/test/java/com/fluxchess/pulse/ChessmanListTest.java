@@ -28,12 +28,11 @@ import static org.junit.Assert.assertEquals;
 
 public class ChessmanListTest {
 
-  private Random random = null;
   private LinkedList<Integer> pool = null;
 
   @Before
   public void setUp() {
-    random = new Random();
+    Random random = new Random();
     pool = new LinkedList<>();
 
     while (pool.size() < Long.SIZE) {
