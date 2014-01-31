@@ -80,7 +80,9 @@ public final class Board {
 
     byte[] result() {
       // Generate some random bytes for our keys
-      return random.generateSeed(16);
+      byte[] bytes = new byte[16];
+      random.nextBytes(bytes);
+      return bytes;
     }
 
     public long next() {
