@@ -243,7 +243,11 @@ public final class Search implements Runnable {
       timer = new Timer(true);
       timer.schedule(new SearchTimer(), searchTime);
 
-      checkStopConditions();
+      // If we finished the first iteration, we should have a result.
+      // In this case check the stop conditions.
+      if (currentDepth > 1) {
+        checkStopConditions();
+      }
     }
   }
 
@@ -313,9 +317,8 @@ public final class Search implements Runnable {
 
   private void checkStopConditions() {
     // We will check the stop conditions only if we are using time management,
-    // that is if our timer != null. Also we cannot stop the search if we don't
-    // have any result if using time management. (currentDepth > 1)
-    if (currentDepth > 1 && timer != null) {
+    // that is if our timer != null.
+    if (timer != null) {
       if (timerStopped) {
         abort = true;
       } else {
