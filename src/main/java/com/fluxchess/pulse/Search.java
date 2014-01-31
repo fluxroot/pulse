@@ -66,7 +66,8 @@ public final class Search implements Runnable {
   private long startTime = 0;
   private long statusStartTime = 0;
   private long totalNodes = 0;
-  private int currentDepth = 0;
+  private int currentDepth = 1;
+  private int currentMaxDepth = currentDepth;
   private int currentMove = Move.NOMOVE;
   private int currentMoveNumber = 0;
   private int currentPonderMove = Move.NOMOVE;
@@ -279,6 +280,7 @@ public final class Search implements Runnable {
 
     //### BEGIN Iterative Deepening
     for (currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
+      currentMaxDepth = currentDepth;
       sendStatus(true);
 
       alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE);
@@ -331,8 +333,12 @@ public final class Search implements Runnable {
     }
   }
 
-  private void updateSearch() {
+  private void updateSearch(int height) {
     ++totalNodes;
+
+    if (height > currentMaxDepth) {
+      currentMaxDepth = height;
+    }
 
     if (searchNodes <= totalNodes) {
       // Hard stop on number of nodes
@@ -345,7 +351,7 @@ public final class Search implements Runnable {
   private void alphaBetaRoot(int depth, int alpha, int beta) {
     int height = 0;
 
-    updateSearch();
+    updateSearch(height);
 
     // Abort conditions
     if (abort) {
@@ -416,7 +422,7 @@ public final class Search implements Runnable {
       return quiescent(alpha, beta, height);
     }
 
-    updateSearch();
+    updateSearch(height);
 
     // Abort conditions
     if (abort || height == MAX_HEIGHT) {
@@ -485,7 +491,7 @@ public final class Search implements Runnable {
   }
 
   private int quiescent(int alpha, int beta, int height) {
-    updateSearch();
+    updateSearch(height);
 
     // Abort conditions
     if (abort || height == MAX_HEIGHT) {
@@ -567,6 +573,7 @@ public final class Search implements Runnable {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
 
       command.setDepth(currentDepth);
+      command.setMaxDepth(currentMaxDepth);
       command.setNodes(totalNodes);
       command.setTime(currentTime - startTime);
       command.setNps(totalNodes * 1000 / (currentTime - startTime));
@@ -589,6 +596,7 @@ public final class Search implements Runnable {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
 
       command.setDepth(currentDepth);
+      command.setMaxDepth(currentMaxDepth);
       command.setNodes(totalNodes);
       command.setTime(timeDelta);
       command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
