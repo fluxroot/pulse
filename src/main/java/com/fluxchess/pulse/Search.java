@@ -323,7 +323,8 @@ public final class Search implements Runnable {
         }
 
         // Check if we have a checkmate
-        else if (Math.abs(rootMoves.entries[0].value) > Evaluation.CHECKMATE_THRESHOLD) {
+        else if (Math.abs(rootMoves.entries[0].value) > Evaluation.CHECKMATE_THRESHOLD
+          && currentDepth >= (Evaluation.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
           abort = true;
         }
       }
