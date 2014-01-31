@@ -20,8 +20,8 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.*;
 
+import java.security.SecureRandom;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -75,26 +75,46 @@ public final class Board {
     }
   }
 
+  private static final class Zobrist {
+    SecureRandom random = new SecureRandom();
+
+    byte[] result() {
+      // Generate some random bytes for our keys
+      return random.generateSeed(16);
+    }
+
+    public long next() {
+      byte[] result = result();
+
+      long hash = 0L;
+      for (int i = 0; i < result.length; ++i) {
+        hash ^= ((long) (result[i] & 0xFF)) << ((i * 8) % 64);
+      }
+
+      return hash;
+    }
+  }
+
   // Initialize the zobrist keys
   static {
-    Random random = new Random();
+    Zobrist zobrist = new Zobrist();
 
     for (int piece : IntPiece.values) {
       for (int i = 0; i < BOARDSIZE; ++i) {
-        zobristPiece[IntPiece.ordinal(piece)][i] = Math.abs(random.nextLong());
+        zobristPiece[IntPiece.ordinal(piece)][i] = Math.abs(zobrist.next());
       }
     }
 
-    zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE] = Math.abs(random.nextLong());
+    zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE] = Math.abs(zobrist.next());
+    zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE] = Math.abs(zobrist.next());
+    zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE] = Math.abs(zobrist.next());
+    zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE] = Math.abs(zobrist.next());
 
     for (int i = 0; i < BOARDSIZE; ++i) {
-      zobristEnPassant[i] = Math.abs(random.nextLong());
+      zobristEnPassant[i] = Math.abs(zobrist.next());
     }
 
-    zobristActiveColor = Math.abs(random.nextLong());
+    zobristActiveColor = Math.abs(zobrist.next());
   }
 
   public Board(GenericBoard genericBoard) {
