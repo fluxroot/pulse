@@ -29,7 +29,7 @@ import com.fluxchess.jcpi.models.*;
  * 10 - 16: target square
  * 17 - 21: origin piece
  * 22 - 26: target piece
- * 27 - 29: promotion chessman
+ * 27 - 29: promotion piece type
  */
 public final class Move {
 
