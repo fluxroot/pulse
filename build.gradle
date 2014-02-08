@@ -38,14 +38,6 @@ if (version.contains('-') && !(project.hasProperty('branchName') && branchName =
 
 afterEvaluate { println "Building ${name} version ${version}" }
 
-if (!project.hasProperty('s3AccessKeyId_password')) {
-  ext.s3AccessKeyId_password = 'n/a'
-}
-
-if (!project.hasProperty('s3SecretAccessKey_password')) {
-  ext.s3SecretAccessKey_password = 'n/a'
-}
-
 ext.os = System.getProperty('os.name').toLowerCase()
 
 buildscript {
@@ -244,39 +236,6 @@ artifacts {
   archives testsJar
   archives sourcesJar
   archives javadocJar
-}
-
-uploadArchives {
-  if (project.hasProperty('branchName')) {
-    if (branchName == releaseBranch) {
-      if (version.contains('-')) {
-        ext.repositoryName = 'staging'
-      } else {
-        ext.repositoryName = 'release'
-      }
-
-      configurations {
-        deployerJars
-      }
-
-      dependencies {
-        deployerJars 'org.springframework.build:aws-maven:4.+'
-      }
-
-      repositories {
-        mavenDeployer {
-          configuration = configurations.deployerJars
-          repository(url: "s3://maven.fluxchess.com/${repositoryName}") {
-            authentication(userName: s3AccessKeyId_password, passphrase: s3SecretAccessKey_password)
-          }
-        }
-      }
-    } else {
-      doLast { println "Skipping upload. Not on ${releaseBranch} branch (${branchName})." }
-    }
-  } else {
-    doLast { println "Skipping upload. No branch name defined." }
-  }
 }
 
 def downloadFile(srcUrl, destUrl) {
