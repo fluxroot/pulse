@@ -152,7 +152,7 @@ public final class MoveGenerator {
           addDefaultMoves(moveList);
 
           if (!isCheck) {
-            int square = PieceTypeList.next(board.kings[board.activeColor].squares);
+            int square = Bitboard.next(board.kings[board.activeColor].squares);
             addCastlingMoves(moveList, square);
           }
 
@@ -180,26 +180,26 @@ public final class MoveGenerator {
     int activeColor = board.activeColor;
 
     for (long squares = board.pawns[activeColor].squares; squares != 0; squares &= squares - 1) {
-      int square = PieceTypeList.next(squares);
+      int square = Bitboard.next(squares);
       addPawnMoves(list, square);
     }
     for (long squares = board.knights[activeColor].squares; squares != 0; squares &= squares - 1) {
-      int square = PieceTypeList.next(squares);
+      int square = Bitboard.next(squares);
       addMoves(list, square, moveDeltaKnight);
     }
     for (long squares = board.bishops[activeColor].squares; squares != 0; squares &= squares - 1) {
-      int square = PieceTypeList.next(squares);
+      int square = Bitboard.next(squares);
       addMoves(list, square, moveDeltaBishop);
     }
     for (long squares = board.rooks[activeColor].squares; squares != 0; squares &= squares - 1) {
-      int square = PieceTypeList.next(squares);
+      int square = Bitboard.next(squares);
       addMoves(list, square, moveDeltaRook);
     }
     for (long squares = board.queens[activeColor].squares; squares != 0; squares &= squares - 1) {
-      int square = PieceTypeList.next(squares);
+      int square = Bitboard.next(squares);
       addMoves(list, square, moveDeltaQueen);
     }
-    int square = PieceTypeList.next(board.kings[activeColor].squares);
+    int square = Bitboard.next(board.kings[activeColor].squares);
     addMoves(list, square, moveDeltaKing);
   }
 
@@ -382,7 +382,7 @@ public final class MoveGenerator {
     int activeColor = board.activeColor;
 
     board.makeMove(move);
-    boolean isCheck = board.isAttacked(PieceTypeList.next(board.kings[activeColor].squares), IntColor.opposite(activeColor));
+    boolean isCheck = board.isAttacked(Bitboard.next(board.kings[activeColor].squares), IntColor.opposite(activeColor));
     board.undoMove(move);
 
     return !isCheck;
