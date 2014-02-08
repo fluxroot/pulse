@@ -75,10 +75,10 @@ public final class Evaluation {
     return total;
   }
 
-  public static int getChessmanValue(int chessman) {
-    assert IntChessman.isValid(chessman);
+  public static int getPieceTypeValue(int pieceType) {
+    assert IntChessman.isValid(pieceType);
 
-    switch (chessman) {
+    switch (pieceType) {
       case IntChessman.PAWN:
         return VALUE_PAWN;
       case IntChessman.KNIGHT:

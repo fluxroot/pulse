@@ -74,12 +74,12 @@ public final class MoveList {
       int move = entries[i].move;
       int value = 0;
 
-      int chessmanValue = Evaluation.getChessmanValue(IntPiece.getChessman(Move.getOriginPiece(move)));
-      value += Evaluation.VALUE_KING / chessmanValue;
+      int pieceTypeValue = Evaluation.getPieceTypeValue(IntPiece.getChessman(Move.getOriginPiece(move)));
+      value += Evaluation.VALUE_KING / pieceTypeValue;
 
       int target = Move.getTargetPiece(move);
       if (IntPiece.isValid(target)) {
-        value += 10 * Evaluation.getChessmanValue(IntPiece.getChessman(target));
+        value += 10 * Evaluation.getPieceTypeValue(IntPiece.getChessman(target));
       }
 
       assert value >= (Evaluation.VALUE_KING / Evaluation.VALUE_KING)
