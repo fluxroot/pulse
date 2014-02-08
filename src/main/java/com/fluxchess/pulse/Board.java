@@ -34,12 +34,12 @@ public final class Board {
 
   public final int[] board = new int[BOARDSIZE];
 
-  public final PieceTypeList[] pawns = new PieceTypeList[IntColor.values.length];
-  public final PieceTypeList[] knights = new PieceTypeList[IntColor.values.length];
-  public final PieceTypeList[] bishops = new PieceTypeList[IntColor.values.length];
-  public final PieceTypeList[] rooks = new PieceTypeList[IntColor.values.length];
-  public final PieceTypeList[] queens = new PieceTypeList[IntColor.values.length];
-  public final PieceTypeList[] kings = new PieceTypeList[IntColor.values.length];
+  public final Bitboard[] pawns = new Bitboard[IntColor.values.length];
+  public final Bitboard[] knights = new Bitboard[IntColor.values.length];
+  public final Bitboard[] bishops = new Bitboard[IntColor.values.length];
+  public final Bitboard[] rooks = new Bitboard[IntColor.values.length];
+  public final Bitboard[] queens = new Bitboard[IntColor.values.length];
+  public final Bitboard[] kings = new Bitboard[IntColor.values.length];
 
   public final int[][] castling = new int[IntColor.values.length][IntCastling.values.length];
   public int enPassant = Square.NOSQUARE;
@@ -132,12 +132,12 @@ public final class Board {
 
     // Initialize piece type lists
     for (int color : IntColor.values) {
-      pawns[color] = new PieceTypeList();
-      knights[color] = new PieceTypeList();
-      bishops[color] = new PieceTypeList();
-      rooks[color] = new PieceTypeList();
-      queens[color] = new PieceTypeList();
-      kings[color] = new PieceTypeList();
+      pawns[color] = new Bitboard();
+      knights[color] = new Bitboard();
+      bishops[color] = new Bitboard();
+      rooks[color] = new Bitboard();
+      queens[color] = new Bitboard();
+      kings[color] = new Bitboard();
     }
 
     // Initialize board
@@ -580,7 +580,7 @@ public final class Board {
 
   public boolean isCheck() {
     // Check whether our king is attacked by any opponent piece
-    return isAttacked(PieceTypeList.next(kings[activeColor].squares), IntColor.opposite(activeColor));
+    return isAttacked(Bitboard.next(kings[activeColor].squares), IntColor.opposite(activeColor));
   }
 
   /**
