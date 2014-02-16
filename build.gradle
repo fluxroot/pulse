@@ -110,9 +110,9 @@ targetCompatibility = 1.7
 
 processResources {
   filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-    version: project.version,
-    buildNumber: project.buildNumber,
-    revisionNumber: project.revisionNumber
+      version: project.version,
+      buildNumber: project.buildNumber,
+      revisionNumber: project.revisionNumber
   ])
 }
 
@@ -172,7 +172,12 @@ task launch4j(dependsOn: vendor) {
 task exe(dependsOn: [jar, launch4j]) {
   ext.archivePath = file("${buildDir}/executables/${project.jar.baseName}-${project.jar.version}.exe")
 
-  def launch4jCfg = 'launch4j.xml'
+  def launch4jCfg;
+  if (project.buildNumber == 'dev' && project.revisionNumber == 'dev') {
+    launch4jCfg = 'launch4j-debug.xml'
+  } else {
+    launch4jCfg = 'launch4j.xml'
+  }
   def launch4jCfgDir = "${rootDir}/config/launch4j"
 
   inputs.file "${launch4jCfgDir}/${launch4jCfg}"
@@ -185,8 +190,8 @@ task exe(dependsOn: [jar, launch4j]) {
       from "${launch4jCfgDir}/${launch4jCfg}"
       into buildDir
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-        jarFile: project.jar.archivePath.toString(),
-        exeFile: archivePath.toString()
+          jarFile: project.jar.archivePath.toString(),
+          exeFile: archivePath.toString()
       ])
     }
 
@@ -207,7 +212,11 @@ task dist(type: Zip) {
   }
 
   into("$baseDir") {
-    from 'README.md'
+    from('README.md') {
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+          version: project.version
+      ])
+    }
     from 'COPYING'
     from 'COPYING.LESSER'
     from 'src/dist/pulse.png'
@@ -218,11 +227,12 @@ task dist(type: Zip) {
 
     from exe.archivePath
 
-    from('src/dist/Pulse') {
+    from('src/dist/pulse') {
       fileMode = 0755
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-        version: project.version
+          version: project.version
       ])
+      rename 'pulse', "pulse-${project.jar.version}"
     }
   }
 }
@@ -245,7 +255,7 @@ def downloadFile(srcUrl, destUrl) {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '1.8'
+  gradleVersion = '1.10'
 }
 
 apply plugin: 'idea'
