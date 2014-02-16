@@ -65,7 +65,7 @@ public final class MoveGenerator {
   private State[] states = null;
   private int currentStateIndex = 0;
 
-  private MoveList moveList = new MoveList();
+  private final MoveList moveList = new MoveList();
   private int currentMoveIndex = 0;
 
   private static enum State {

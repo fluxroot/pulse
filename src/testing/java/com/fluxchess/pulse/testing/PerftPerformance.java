@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public final class PerftPerformance {
+final class PerftPerformance {
 
   private static final Logger LOG = LoggerFactory.getLogger(PerftPerformance.class);
 

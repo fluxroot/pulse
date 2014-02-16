@@ -33,7 +33,7 @@ public final class MoveList {
   public static final class Entry {
     public int move = Move.NOMOVE;
     public int value = -Evaluation.INFINITY;
-    public MoveVariation pv = new MoveVariation();
+    public final MoveVariation pv = new MoveVariation();
   }
 
   public static final class MoveVariation {

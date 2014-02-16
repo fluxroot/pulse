@@ -32,7 +32,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public final class SearchPerformance {
+final class SearchPerformance {
 
   private static final Logger LOG = LoggerFactory.getLogger(SearchPerformance.class);
 
