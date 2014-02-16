@@ -16,9 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Pulse Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.pulse;
+package com.fluxchess.pulse.testing;
 
 import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.pulse.Board;
+import com.fluxchess.pulse.Move;
+import com.fluxchess.pulse.MoveGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
