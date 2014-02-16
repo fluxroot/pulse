@@ -34,12 +34,12 @@ public final class Board {
 
   public final int[] board = new int[BOARDSIZE];
 
-  public final ChessmanList[] pawns = new ChessmanList[IntColor.values.length];
-  public final ChessmanList[] knights = new ChessmanList[IntColor.values.length];
-  public final ChessmanList[] bishops = new ChessmanList[IntColor.values.length];
-  public final ChessmanList[] rooks = new ChessmanList[IntColor.values.length];
-  public final ChessmanList[] queens = new ChessmanList[IntColor.values.length];
-  public final ChessmanList[] kings = new ChessmanList[IntColor.values.length];
+  public final PieceTypeList[] pawns = new PieceTypeList[IntColor.values.length];
+  public final PieceTypeList[] knights = new PieceTypeList[IntColor.values.length];
+  public final PieceTypeList[] bishops = new PieceTypeList[IntColor.values.length];
+  public final PieceTypeList[] rooks = new PieceTypeList[IntColor.values.length];
+  public final PieceTypeList[] queens = new PieceTypeList[IntColor.values.length];
+  public final PieceTypeList[] kings = new PieceTypeList[IntColor.values.length];
 
   public final int[][] castling = new int[IntColor.values.length][IntCastling.values.length];
   public int enPassant = Square.NOSQUARE;
@@ -130,14 +130,14 @@ public final class Board {
       stack[i] = new State();
     }
 
-    // Initialize chessman lists
+    // Initialize piece type lists
     for (int color : IntColor.values) {
-      pawns[color] = new ChessmanList();
-      knights[color] = new ChessmanList();
-      bishops[color] = new ChessmanList();
-      rooks[color] = new ChessmanList();
-      queens[color] = new ChessmanList();
-      kings[color] = new ChessmanList();
+      pawns[color] = new PieceTypeList();
+      knights[color] = new PieceTypeList();
+      bishops[color] = new PieceTypeList();
+      rooks[color] = new PieceTypeList();
+      queens[color] = new PieceTypeList();
+      kings[color] = new PieceTypeList();
     }
 
     // Initialize board
@@ -248,7 +248,7 @@ public final class Board {
 
   /**
    * Puts a piece at the square. We need to update our board and the appropriate
-   * chessman list.
+   * piece type list.
    *
    * @param piece the IntPiece.
    * @param square the Square.
@@ -258,10 +258,10 @@ public final class Board {
     assert Square.isValid(square);
     assert board[square] == IntPiece.NOPIECE;
 
-    int chessman = IntPiece.getChessman(piece);
+    int pieceType = IntPiece.getChessman(piece);
     int color = IntPiece.getColor(piece);
 
-    switch (chessman) {
+    switch (pieceType) {
       case IntChessman.PAWN:
         pawns[color].add(square);
         break;
@@ -281,7 +281,7 @@ public final class Board {
         kings[color].add(square);
         break;
       default:
-        assert false : chessman;
+        assert false : pieceType;
         break;
     }
 
@@ -292,7 +292,7 @@ public final class Board {
 
   /**
    * Removes a piece from the square. We need to update our board and the
-   * appropriate chessman list.
+   * appropriate piece type list.
    *
    * @param square the Square.
    * @return the IntPiece which was removed.
@@ -303,10 +303,10 @@ public final class Board {
 
     int piece = board[square];
 
-    int chessman = IntPiece.getChessman(piece);
+    int pieceType = IntPiece.getChessman(piece);
     int color = IntPiece.getColor(piece);
 
-    switch (chessman) {
+    switch (pieceType) {
       case IntChessman.PAWN:
         pawns[color].remove(square);
         break;
@@ -326,7 +326,7 @@ public final class Board {
         kings[color].remove(square);
         break;
       default:
-        assert false : chessman;
+        assert false : pieceType;
         break;
     }
 
@@ -580,7 +580,7 @@ public final class Board {
 
   public boolean isCheck() {
     // Check whether our king is attacked by any opponent piece
-    return isAttacked(ChessmanList.next(kings[activeColor].squares), IntColor.opposite(activeColor));
+    return isAttacked(PieceTypeList.next(kings[activeColor].squares), IntColor.opposite(activeColor));
   }
 
   /**
@@ -615,13 +615,13 @@ public final class Board {
       || isAttacked(targetSquare, attackerColor, IntChessman.KING, MoveGenerator.moveDeltaKing);
   }
 
-  private boolean isAttacked(int targetSquare, int attackerColor, int attackerChessman, int[] moveDelta) {
+  private boolean isAttacked(int targetSquare, int attackerColor, int attackerPieceType, int[] moveDelta) {
     assert Square.isValid(targetSquare);
     assert IntColor.isValid(attackerColor);
-    assert IntChessman.isValid(attackerChessman);
+    assert IntChessman.isValid(attackerPieceType);
     assert moveDelta != null;
 
-    boolean sliding = IntChessman.isSliding(attackerChessman);
+    boolean sliding = IntChessman.isSliding(attackerPieceType);
 
     for (int delta : moveDelta) {
       int attackerSquare = targetSquare + delta;
@@ -630,7 +630,7 @@ public final class Board {
         int attackerPiece = board[attackerSquare];
 
         if (IntPiece.isValid(attackerPiece)) {
-          if (IntPiece.getChessman(attackerPiece) == attackerChessman
+          if (IntPiece.getChessman(attackerPiece) == attackerPieceType
             && IntPiece.getColor(attackerPiece) == attackerColor) {
             return true;
           }
