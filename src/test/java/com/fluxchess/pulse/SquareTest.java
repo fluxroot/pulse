@@ -19,8 +19,6 @@
 package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericPosition;
-import com.fluxchess.jcpi.models.IntFile;
-import com.fluxchess.jcpi.models.IntRank;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -44,14 +42,14 @@ public class SquareTest {
       assertEquals(genericPosition, Square.toGenericPosition(square));
 
       int file = Square.getFile(square);
-      assertTrue(IntFile.isValid(file));
+      assertTrue(File.isValid(file));
       assertEquals(genericPosition.file.ordinal(), file);
-      assertEquals(genericPosition.file, IntFile.toGenericFile(file));
+      assertEquals(genericPosition.file, File.toGenericFile(file));
 
       int rank = Square.getRank(square);
-      assertTrue(IntRank.isValid(rank));
+      assertTrue(Rank.isValid(rank));
       assertEquals(genericPosition.rank.ordinal(), rank);
-      assertEquals(genericPosition.rank, IntRank.toGenericRank(rank));
+      assertEquals(genericPosition.rank, Rank.toGenericRank(rank));
     }
 
     assertFalse(Square.isLegal(Square.NOSQUARE));

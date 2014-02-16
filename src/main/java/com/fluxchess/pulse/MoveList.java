@@ -18,8 +18,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.IntPiece;
-
 /**
  * This class stores our moves for a specific position most likely returned
  * from our MoveGenerator. For the root node we we will populate pv for every
@@ -74,12 +72,12 @@ public final class MoveList {
       int move = entries[i].move;
       int value = 0;
 
-      int pieceTypeValue = Evaluation.getPieceTypeValue(IntPiece.getChessman(Move.getOriginPiece(move)));
+      int pieceTypeValue = Evaluation.getPieceTypeValue(Piece.getChessman(Move.getOriginPiece(move)));
       value += Evaluation.VALUE_KING / pieceTypeValue;
 
       int target = Move.getTargetPiece(move);
-      if (IntPiece.isValid(target)) {
-        value += 10 * Evaluation.getPieceTypeValue(IntPiece.getChessman(target));
+      if (Piece.isValid(target)) {
+        value += 10 * Evaluation.getPieceTypeValue(Piece.getChessman(target));
       }
 
       assert value >= (Evaluation.VALUE_KING / Evaluation.VALUE_KING)

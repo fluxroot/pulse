@@ -18,9 +18,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.IntChessman;
-import com.fluxchess.jcpi.models.IntColor;
-
 public final class Evaluation {
 
   public static final int INFINITY = 200000;
@@ -46,7 +43,7 @@ public final class Evaluation {
 
     // Initialize
     int myColor = board.activeColor;
-    int oppositeColor = IntColor.opposite(myColor);
+    int oppositeColor = Color.opposite(myColor);
     int total = 0;
 
     // Evaluate material
@@ -76,20 +73,20 @@ public final class Evaluation {
   }
 
   public static int getPieceTypeValue(int pieceType) {
-    assert IntChessman.isValid(pieceType);
+    assert PieceType.isValid(pieceType);
 
     switch (pieceType) {
-      case IntChessman.PAWN:
+      case PieceType.PAWN:
         return VALUE_PAWN;
-      case IntChessman.KNIGHT:
+      case PieceType.KNIGHT:
         return VALUE_KNIGHT;
-      case IntChessman.BISHOP:
+      case PieceType.BISHOP:
         return VALUE_BISHOP;
-      case IntChessman.ROOK:
+      case PieceType.ROOK:
         return VALUE_ROOK;
-      case IntChessman.QUEEN:
+      case PieceType.QUEEN:
         return VALUE_QUEEN;
-      case IntChessman.KING:
+      case PieceType.KING:
         return VALUE_KING;
       default:
         throw new IllegalArgumentException();
