@@ -15,38 +15,176 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.jcpi.models.GenericChessman;
 import com.fluxchess.jcpi.models.GenericPiece;
 
 /**
  * This class encodes piece information as an int value. The data is
  * encoded as follows:<br/>
  * <br/>
- * <code>Bit 0 - 2</code>: the chessman (required)<br/>
+ * <code>Bit 0 - 2</code>: the type (required)<br/>
  * <code>Bit 3 - 4</code>: the color (required)<br/>
  */
 public final class Piece {
 
+  /**
+   * This class encodes type information as an int value. The data is
+   * encoded as follows:<br/>
+   * <br/>
+   * <code>Bit 0 - 2</code>: the type (required)<br/>
+   */
+  public static final class Type {
+    public static final int MASK = 0x7;
+
+    public static final int PAWN = 0;
+    public static final int KNIGHT = 1;
+    public static final int BISHOP = 2;
+    public static final int ROOK = 3;
+    public static final int QUEEN = 4;
+    public static final int KING = 5;
+    public static final int NOTYPE = 6;
+
+    public static final int[] values = {
+        PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
+    };
+
+    public static final int[] promotions = {
+        KNIGHT, BISHOP, ROOK, QUEEN
+    };
+
+    private Type() {
+    }
+
+    public static int valueOf(GenericChessman genericChessman) {
+      if (genericChessman == null) throw new IllegalArgumentException();
+
+      switch (genericChessman) {
+        case PAWN:
+          return PAWN;
+        case KNIGHT:
+          return KNIGHT;
+        case BISHOP:
+          return BISHOP;
+        case ROOK:
+          return ROOK;
+        case QUEEN:
+          return QUEEN;
+        case KING:
+          return KING;
+        default:
+          throw new IllegalArgumentException();
+      }
+    }
+
+    public static int valueOfPromotion(GenericChessman genericChessman) {
+      if (genericChessman == null) throw new IllegalArgumentException();
+
+      switch (genericChessman) {
+        case KNIGHT:
+          return KNIGHT;
+        case BISHOP:
+          return BISHOP;
+        case ROOK:
+          return ROOK;
+        case QUEEN:
+          return QUEEN;
+        case PAWN:
+        case KING:
+        default:
+          throw new IllegalArgumentException();
+      }
+    }
+
+    public static GenericChessman toGenericChessman(int pieceType) {
+      switch (pieceType) {
+        case PAWN:
+          return GenericChessman.PAWN;
+        case KNIGHT:
+          return GenericChessman.KNIGHT;
+        case BISHOP:
+          return GenericChessman.BISHOP;
+        case ROOK:
+          return GenericChessman.ROOK;
+        case QUEEN:
+          return GenericChessman.QUEEN;
+        case KING:
+          return GenericChessman.KING;
+        case NOTYPE:
+        default:
+          throw new IllegalArgumentException();
+      }
+    }
+
+    public static boolean isValid(int pieceType) {
+      switch (pieceType) {
+        case PAWN:
+        case KNIGHT:
+        case BISHOP:
+        case ROOK:
+        case QUEEN:
+        case KING:
+          return true;
+        case NOTYPE:
+          return false;
+        default:
+          throw new IllegalArgumentException();
+      }
+    }
+
+    public static boolean isValidPromotion(int pieceType) {
+      switch (pieceType) {
+        case KNIGHT:
+        case BISHOP:
+        case ROOK:
+        case QUEEN:
+          return true;
+        case PAWN:
+        case KING:
+          return false;
+        case NOTYPE:
+        default:
+          throw new IllegalArgumentException();
+      }
+    }
+
+    public static boolean isSliding(int pieceType) {
+      switch (pieceType) {
+        case BISHOP:
+        case ROOK:
+        case QUEEN:
+          return true;
+        case PAWN:
+        case KNIGHT:
+        case KING:
+          return false;
+        case NOTYPE:
+        default:
+          throw new IllegalArgumentException();
+      }
+    }
+  }
+
   public static final int MASK = 0x1F;
 
-  private static final int CHESSMAN_SHIFT = 0;
-  private static final int CHESSMAN_MASK = PieceType.MASK << CHESSMAN_SHIFT;
+  private static final int TYPE_SHIFT = 0;
+  private static final int TYPE_MASK = Type.MASK << TYPE_SHIFT;
   private static final int COLOR_SHIFT = 3;
   private static final int COLOR_MASK = Color.MASK << COLOR_SHIFT;
 
-  public static final int NOPIECE = (PieceType.NOCHESSMAN << CHESSMAN_SHIFT) | (Color.NOCOLOR << COLOR_SHIFT);
+  public static final int NOPIECE = (Type.NOTYPE << TYPE_SHIFT) | (Color.NOCOLOR << COLOR_SHIFT);
 
-  public static final int WHITEPAWN = (PieceType.PAWN << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEKNIGHT = (PieceType.KNIGHT << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEBISHOP = (PieceType.BISHOP << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEROOK = (PieceType.ROOK << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEQUEEN = (PieceType.QUEEN << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEKING = (PieceType.KING << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int BLACKPAWN = (PieceType.PAWN << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKKNIGHT = (PieceType.KNIGHT << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKBISHOP = (PieceType.BISHOP << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKROOK = (PieceType.ROOK << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKQUEEN = (PieceType.QUEEN << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKKING = (PieceType.KING << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int WHITEPAWN = (Type.PAWN << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITEKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITEBISHOP = (Type.BISHOP << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITEROOK = (Type.ROOK << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITEQUEEN = (Type.QUEEN << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITEKING = (Type.KING << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int BLACKPAWN = (Type.PAWN << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACKKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACKBISHOP = (Type.BISHOP << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACKROOK = (Type.ROOK << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACKQUEEN = (Type.QUEEN << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACKKING = (Type.KING << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
 
   public static final int[] values = {
     WHITEPAWN, WHITEKNIGHT, WHITEBISHOP, WHITEROOK, WHITEQUEEN, WHITEKING,
@@ -89,41 +227,41 @@ public final class Piece {
     }
   }
 
-  public static int valueOf(int chessman, int color) {
+  public static int valueOf(int pieceType, int color) {
     switch (color) {
       case Color.WHITE:
-        switch (chessman) {
-          case PieceType.PAWN:
+        switch (pieceType) {
+          case Type.PAWN:
             return WHITEPAWN;
-          case PieceType.KNIGHT:
+          case Type.KNIGHT:
             return WHITEKNIGHT;
-          case PieceType.BISHOP:
+          case Type.BISHOP:
             return WHITEBISHOP;
-          case PieceType.ROOK:
+          case Type.ROOK:
             return WHITEROOK;
-          case PieceType.QUEEN:
+          case Type.QUEEN:
             return WHITEQUEEN;
-          case PieceType.KING:
+          case Type.KING:
             return WHITEKING;
-          case PieceType.NOCHESSMAN:
+          case Type.NOTYPE:
           default:
             throw new IllegalArgumentException();
         }
       case Color.BLACK:
-        switch (chessman) {
-          case PieceType.PAWN:
+        switch (pieceType) {
+          case Type.PAWN:
             return BLACKPAWN;
-          case PieceType.KNIGHT:
+          case Type.KNIGHT:
             return BLACKKNIGHT;
-          case PieceType.BISHOP:
+          case Type.BISHOP:
             return BLACKBISHOP;
-          case PieceType.ROOK:
+          case Type.ROOK:
             return BLACKROOK;
-          case PieceType.QUEEN:
+          case Type.QUEEN:
             return BLACKQUEEN;
-          case PieceType.KING:
+          case Type.KING:
             return BLACKKING;
-          case PieceType.NOCHESSMAN:
+          case Type.NOTYPE:
           default:
             throw new IllegalArgumentException();
         }
@@ -219,26 +357,26 @@ public final class Piece {
     }
   }
 
-  public static int getChessman(int piece) {
+  public static int getType(int piece) {
     switch (piece) {
       case WHITEPAWN:
       case BLACKPAWN:
-        return PieceType.PAWN;
+        return Type.PAWN;
       case WHITEKNIGHT:
       case BLACKKNIGHT:
-        return PieceType.KNIGHT;
+        return Type.KNIGHT;
       case WHITEBISHOP:
       case BLACKBISHOP:
-        return PieceType.BISHOP;
+        return Type.BISHOP;
       case WHITEROOK:
       case BLACKROOK:
-        return PieceType.ROOK;
+        return Type.ROOK;
       case WHITEQUEEN:
       case BLACKQUEEN:
-        return PieceType.QUEEN;
+        return Type.QUEEN;
       case WHITEKING:
       case BLACKKING:
-        return PieceType.KING;
+        return Type.KING;
       case NOPIECE:
       default:
         throw new IllegalArgumentException();

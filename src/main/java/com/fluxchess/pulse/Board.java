@@ -261,26 +261,26 @@ public final class Board {
     assert Square.isValid(square);
     assert board[square] == Piece.NOPIECE;
 
-    int pieceType = Piece.getChessman(piece);
+    int pieceType = Piece.getType(piece);
     int color = Piece.getColor(piece);
 
     switch (pieceType) {
-      case PieceType.PAWN:
+      case Piece.Type.PAWN:
         pawns[color].add(square);
         break;
-      case PieceType.KNIGHT:
+      case Piece.Type.KNIGHT:
         knights[color].add(square);
         break;
-      case PieceType.BISHOP:
+      case Piece.Type.BISHOP:
         bishops[color].add(square);
         break;
-      case PieceType.ROOK:
+      case Piece.Type.ROOK:
         rooks[color].add(square);
         break;
-      case PieceType.QUEEN:
+      case Piece.Type.QUEEN:
         queens[color].add(square);
         break;
-      case PieceType.KING:
+      case Piece.Type.KING:
         kings[color].add(square);
         break;
       default:
@@ -306,26 +306,26 @@ public final class Board {
 
     int piece = board[square];
 
-    int pieceType = Piece.getChessman(piece);
+    int pieceType = Piece.getType(piece);
     int color = Piece.getColor(piece);
 
     switch (pieceType) {
-      case PieceType.PAWN:
+      case Piece.Type.PAWN:
         pawns[color].remove(square);
         break;
-      case PieceType.KNIGHT:
+      case Piece.Type.KNIGHT:
         knights[color].remove(square);
         break;
-      case PieceType.BISHOP:
+      case Piece.Type.BISHOP:
         bishops[color].remove(square);
         break;
-      case PieceType.ROOK:
+      case Piece.Type.ROOK:
         rooks[color].remove(square);
         break;
-      case PieceType.QUEEN:
+      case Piece.Type.QUEEN:
         queens[color].remove(square);
         break;
-      case PieceType.KING:
+      case Piece.Type.KING:
         kings[color].remove(square);
         break;
       default:
@@ -417,7 +417,7 @@ public final class Board {
           break;
       }
 
-      assert Piece.getChessman(board[rookOriginSquare]) == PieceType.ROOK;
+      assert Piece.getType(board[rookOriginSquare]) == Piece.Type.ROOK;
       int rookPiece = remove(rookOriginSquare);
       put(rookPiece, rookTargetSquare);
     }
@@ -442,7 +442,7 @@ public final class Board {
     zobristCode ^= zobristActiveColor;
 
     // Update halfMoveClock
-    if (Piece.getChessman(originPiece) == PieceType.PAWN || targetPiece != Piece.NOPIECE) {
+    if (Piece.getType(originPiece) == Piece.Type.PAWN || targetPiece != Piece.NOPIECE) {
       halfMoveClock = 0;
     } else {
       ++halfMoveClock;
@@ -506,7 +506,7 @@ public final class Board {
           break;
       }
 
-      assert Piece.getChessman(board[rookTargetSquare]) == PieceType.ROOK;
+      assert Piece.getType(board[rookTargetSquare]) == Piece.Type.ROOK;
       int rookPiece = remove(rookTargetSquare);
       put(rookPiece, rookOriginSquare);
     }
@@ -599,7 +599,7 @@ public final class Board {
     assert Color.isValid(attackerColor);
 
     // Pawn attacks
-    int pawnPiece = Piece.valueOf(PieceType.PAWN, attackerColor);
+    int pawnPiece = Piece.valueOf(Piece.Type.PAWN, attackerColor);
     for (int i = 1; i < MoveGenerator.moveDeltaPawn[attackerColor].length; ++i) {
       int attackerSquare = targetSquare - MoveGenerator.moveDeltaPawn[attackerColor][i];
       if (Square.isLegal(attackerSquare)) {
@@ -611,20 +611,20 @@ public final class Board {
       }
     }
 
-    return isAttacked(targetSquare, attackerColor, PieceType.KNIGHT, MoveGenerator.moveDeltaKnight)
-      || isAttacked(targetSquare, attackerColor, PieceType.BISHOP, MoveGenerator.moveDeltaBishop)
-      || isAttacked(targetSquare, attackerColor, PieceType.ROOK, MoveGenerator.moveDeltaRook)
-      || isAttacked(targetSquare, attackerColor, PieceType.QUEEN, MoveGenerator.moveDeltaQueen)
-      || isAttacked(targetSquare, attackerColor, PieceType.KING, MoveGenerator.moveDeltaKing);
+    return isAttacked(targetSquare, attackerColor, Piece.Type.KNIGHT, MoveGenerator.moveDeltaKnight)
+      || isAttacked(targetSquare, attackerColor, Piece.Type.BISHOP, MoveGenerator.moveDeltaBishop)
+      || isAttacked(targetSquare, attackerColor, Piece.Type.ROOK, MoveGenerator.moveDeltaRook)
+      || isAttacked(targetSquare, attackerColor, Piece.Type.QUEEN, MoveGenerator.moveDeltaQueen)
+      || isAttacked(targetSquare, attackerColor, Piece.Type.KING, MoveGenerator.moveDeltaKing);
   }
 
   private boolean isAttacked(int targetSquare, int attackerColor, int attackerPieceType, int[] moveDelta) {
     assert Square.isValid(targetSquare);
     assert Color.isValid(attackerColor);
-    assert PieceType.isValid(attackerPieceType);
+    assert Piece.Type.isValid(attackerPieceType);
     assert moveDelta != null;
 
-    boolean sliding = PieceType.isSliding(attackerPieceType);
+    boolean sliding = Piece.Type.isSliding(attackerPieceType);
 
     for (int delta : moveDelta) {
       int attackerSquare = targetSquare + delta;
@@ -633,7 +633,7 @@ public final class Board {
         int attackerPiece = board[attackerSquare];
 
         if (Piece.isValid(attackerPiece)) {
-          if (Piece.getChessman(attackerPiece) == attackerPieceType
+          if (Piece.getType(attackerPiece) == attackerPieceType
             && Piece.getColor(attackerPiece) == attackerColor) {
             return true;
           }

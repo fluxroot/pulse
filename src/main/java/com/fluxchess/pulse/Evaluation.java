@@ -73,20 +73,20 @@ public final class Evaluation {
   }
 
   public static int getPieceTypeValue(int pieceType) {
-    assert PieceType.isValid(pieceType);
+    assert Piece.Type.isValid(pieceType);
 
     switch (pieceType) {
-      case PieceType.PAWN:
+      case Piece.Type.PAWN:
         return VALUE_PAWN;
-      case PieceType.KNIGHT:
+      case Piece.Type.KNIGHT:
         return VALUE_KNIGHT;
-      case PieceType.BISHOP:
+      case Piece.Type.BISHOP:
         return VALUE_BISHOP;
-      case PieceType.ROOK:
+      case Piece.Type.ROOK:
         return VALUE_ROOK;
-      case PieceType.QUEEN:
+      case Piece.Type.QUEEN:
         return VALUE_QUEEN;
-      case PieceType.KING:
+      case Piece.Type.KING:
         return VALUE_KING;
       default:
         throw new IllegalArgumentException();
