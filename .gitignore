@@ -1,6 +1,7 @@
 # Gradle
 .gradle/
 build/
+vendor/
 
 # Maven
 target/
