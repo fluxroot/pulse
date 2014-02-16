@@ -145,7 +145,7 @@ task integration(type: Test) {
   classpath = sourceSets.integration.runtimeClasspath
 }
 
-ext.vendorDir = file("${buildDir}/vendor")
+ext.vendorDir = file("${rootDir}/vendor")
 task vendor << {
   vendorDir.mkdirs()
 }
