@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Pulse Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.pulse;
+package com.fluxchess.pulse.testing;
 
 import com.fluxchess.jcpi.commands.*;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
+import com.fluxchess.pulse.Pulse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public final class SearchPerformance {
+final class SearchPerformance {
 
   private static final Logger LOG = LoggerFactory.getLogger(SearchPerformance.class);
 

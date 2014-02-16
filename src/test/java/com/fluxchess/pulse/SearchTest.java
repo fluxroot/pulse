@@ -36,9 +36,6 @@ public class SearchTest {
   public void testMate() throws IllegalNotationException, InterruptedException {
     final GenericMove[] bestMove = {null};
     final GenericMove[] ponderMove = {null};
-    final int[] depth = {0};
-    final int[] mate = {-Evaluation.INFINITY};
-    final long[] nodes = {0};
 
     final Semaphore semaphore = new Semaphore(0);
 
@@ -63,9 +60,6 @@ public class SearchTest {
 
         @Override
         public void send(ProtocolInformationCommand command) {
-          depth[0] = command.getDepth();
-          mate[0] = command.getMate();
-          nodes[0] = command.getNodes();
         }
       },
       1
@@ -125,9 +119,6 @@ public class SearchTest {
   public void testStalemate() throws IllegalNotationException, InterruptedException {
     final GenericMove[] bestMove = {null};
     final GenericMove[] ponderMove = {null};
-    final int[] depth = {0};
-    final int[] value = {-Evaluation.INFINITY};
-    final long[] nodes = {0};
 
     final Semaphore semaphore = new Semaphore(0);
 
@@ -152,9 +143,6 @@ public class SearchTest {
 
         @Override
         public void send(ProtocolInformationCommand command) {
-          depth[0] = command.getDepth();
-          value[0] = command.getCentipawns();
-          nodes[0] = command.getNodes();
         }
       },
       1

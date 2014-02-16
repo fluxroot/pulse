@@ -34,7 +34,7 @@ public class PieceTest {
   public void testValues() {
     for (GenericPiece genericPiece : GenericPiece.values()) {
       assertEquals(genericPiece, Piece.toGenericPiece(Piece.valueOf(genericPiece)));
-      assertEquals(genericPiece, Piece.toGenericPiece(Piece.valueOf(PieceType.valueOf(genericPiece.chessman), Color.valueOf(genericPiece.color))));
+      assertEquals(genericPiece, Piece.toGenericPiece(Piece.valueOf(Piece.Type.valueOf(genericPiece.chessman), Color.valueOf(genericPiece.color))));
     }
   }
 
@@ -78,23 +78,23 @@ public class PieceTest {
 
   @Test
   public void testGetChessman() {
-    assertEquals(PieceType.PAWN, Piece.getChessman(Piece.WHITEPAWN));
-    assertEquals(PieceType.PAWN, Piece.getChessman(Piece.BLACKPAWN));
-    assertEquals(PieceType.KNIGHT, Piece.getChessman(Piece.WHITEKNIGHT));
-    assertEquals(PieceType.KNIGHT, Piece.getChessman(Piece.BLACKKNIGHT));
-    assertEquals(PieceType.BISHOP, Piece.getChessman(Piece.WHITEBISHOP));
-    assertEquals(PieceType.BISHOP, Piece.getChessman(Piece.BLACKBISHOP));
-    assertEquals(PieceType.ROOK, Piece.getChessman(Piece.WHITEROOK));
-    assertEquals(PieceType.ROOK, Piece.getChessman(Piece.BLACKROOK));
-    assertEquals(PieceType.QUEEN, Piece.getChessman(Piece.WHITEQUEEN));
-    assertEquals(PieceType.QUEEN, Piece.getChessman(Piece.BLACKQUEEN));
-    assertEquals(PieceType.KING, Piece.getChessman(Piece.WHITEKING));
-    assertEquals(PieceType.KING, Piece.getChessman(Piece.BLACKKING));
+    assertEquals(Piece.Type.PAWN, Piece.getType(Piece.WHITEPAWN));
+    assertEquals(Piece.Type.PAWN, Piece.getType(Piece.BLACKPAWN));
+    assertEquals(Piece.Type.KNIGHT, Piece.getType(Piece.WHITEKNIGHT));
+    assertEquals(Piece.Type.KNIGHT, Piece.getType(Piece.BLACKKNIGHT));
+    assertEquals(Piece.Type.BISHOP, Piece.getType(Piece.WHITEBISHOP));
+    assertEquals(Piece.Type.BISHOP, Piece.getType(Piece.BLACKBISHOP));
+    assertEquals(Piece.Type.ROOK, Piece.getType(Piece.WHITEROOK));
+    assertEquals(Piece.Type.ROOK, Piece.getType(Piece.BLACKROOK));
+    assertEquals(Piece.Type.QUEEN, Piece.getType(Piece.WHITEQUEEN));
+    assertEquals(Piece.Type.QUEEN, Piece.getType(Piece.BLACKQUEEN));
+    assertEquals(Piece.Type.KING, Piece.getType(Piece.WHITEKING));
+    assertEquals(Piece.Type.KING, Piece.getType(Piece.BLACKKING));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidGetChessman() {
-    Piece.getChessman(Piece.NOPIECE);
+    Piece.getType(Piece.NOPIECE);
   }
 
   @Test
