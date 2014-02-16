@@ -26,7 +26,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
-public class ChessmanListTest {
+public class BitboardTest {
 
   private LinkedList<Integer> pool = null;
 
@@ -45,7 +45,7 @@ public class ChessmanListTest {
 
   @Test
   public void testAdd() {
-    ChessmanList list = new ChessmanList();
+    Bitboard list = new Bitboard();
 
     for (int x88square : pool) {
       list.add(x88square);
@@ -56,7 +56,7 @@ public class ChessmanListTest {
 
   @Test
   public void testRemove() {
-    ChessmanList list = new ChessmanList();
+    Bitboard list = new Bitboard();
     list.squares = -1;
 
     for (int x88square : pool) {

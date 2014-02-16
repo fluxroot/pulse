@@ -19,8 +19,6 @@
 package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericPosition;
-import com.fluxchess.jcpi.models.IntFile;
-import com.fluxchess.jcpi.models.IntRank;
 
 public final class Square {
 
@@ -92,7 +90,7 @@ public final class Square {
   public static int valueOf(GenericPosition genericPosition) {
     assert genericPosition != null;
 
-    int square = IntRank.valueOf(genericPosition.rank) * 16 + IntFile.valueOf(genericPosition.file);
+    int square = Rank.valueOf(genericPosition.rank) * 16 + File.valueOf(genericPosition.file);
     assert isValid(square);
 
     return square;
@@ -101,7 +99,7 @@ public final class Square {
   public static GenericPosition toGenericPosition(int square) {
     assert isValid(square);
 
-    return GenericPosition.valueOf(IntFile.toGenericFile(getFile(square)), IntRank.toGenericRank(getRank(square)));
+    return GenericPosition.valueOf(File.toGenericFile(getFile(square)), Rank.toGenericRank(getRank(square)));
   }
 
   public static int toX88Square(int square) {
@@ -134,7 +132,7 @@ public final class Square {
     assert isValid(square);
 
     int file = square % 16;
-    assert IntFile.isValid(file);
+    assert File.isValid(file);
 
     return file;
   }
@@ -143,7 +141,7 @@ public final class Square {
     assert isValid(square);
 
     int rank = square >>> 4;
-    assert IntRank.isValid(rank);
+    assert Rank.isValid(rank);
 
     return rank;
   }

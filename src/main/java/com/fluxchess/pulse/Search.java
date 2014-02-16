@@ -22,7 +22,6 @@ import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
 import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
 import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.jcpi.models.IntColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,7 +175,7 @@ public final class Search implements Runnable {
 
     long timeLeft;
     long timeIncrement;
-    if (board.activeColor == IntColor.WHITE) {
+    if (board.activeColor == Color.WHITE) {
       timeLeft = whiteTimeLeft;
       timeIncrement = whiteTimeIncrement;
     } else {
