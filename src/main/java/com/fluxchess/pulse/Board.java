@@ -56,8 +56,6 @@ public final class Board {
   private static final long[] zobristEnPassant = new long[BOARDSIZE];
   private static final long zobristActiveColor;
 
-  private final Set<Long> repetitionTable = new HashSet<>();
-
   // We will save some board parameters in a State before making a move.
   // Later we will restore them before undoing a move.
   private final State[] stack = new State[MAX_GAMEMOVES];
@@ -124,9 +122,6 @@ public final class Board {
 
   public Board(GenericBoard genericBoard) {
     assert genericBoard != null;
-
-    // Initialize repetition table
-    repetitionTable.clear();
 
     // Initialize stack
     for (int i = 0; i < stack.length; ++i) {
@@ -246,7 +241,14 @@ public final class Board {
   }
 
   public boolean isRepetition() {
-    return repetitionTable.contains(zobristCode);
+    int j = Math.max(0, stackSize - halfMoveClock);
+    for (int i = stackSize - 2; i >= j; i -= 2) {
+      if (zobristCode == stack[i].zobristCode) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -354,9 +356,6 @@ public final class Board {
     if (type == Move.Type.ENPASSANT) {
       captureSquare += (originColor == Color.WHITE ? Square.deltaS : Square.deltaN);
     }
-
-    // Update repetition table
-    repetitionTable.add(zobristCode);
 
     // Save zobristCode
     entry.zobristCode = zobristCode;
@@ -537,9 +536,6 @@ public final class Board {
 
     // Restore zobristCode
     zobristCode = entry.zobristCode;
-
-    // Update repetition table
-    repetitionTable.remove(zobristCode);
   }
 
   private void clearCastling(int color, int castling) {
