@@ -170,9 +170,7 @@ final class Piece {
   public static final int MASK = 0x1F;
 
   private static final int TYPE_SHIFT = 0;
-  private static final int TYPE_MASK = Type.MASK << TYPE_SHIFT;
   private static final int COLOR_SHIFT = 3;
-  private static final int COLOR_MASK = Color.MASK << COLOR_SHIFT;
 
   public static final int NOPIECE = (Type.NOTYPE << TYPE_SHIFT) | (Color.NOCOLOR << COLOR_SHIFT);
 

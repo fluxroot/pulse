@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.util.Objects;
 import java.util.Properties;
 
-public class VersionInfo {
+public final class VersionInfo {
 
   private static final String versionInfoProperty = "/com/fluxchess/pulse/version-info.properties";
   private static final VersionInfo CURRENT;
