@@ -40,9 +40,9 @@ public class VersionInfo {
         properties.load(inputStream);
 
         CURRENT = new VersionInfo(
-          properties.getProperty("version", "n/a"),
-          properties.getProperty("buildNumber", "n/a"),
-          properties.getProperty("revisionNumber", "n/a")
+            properties.getProperty("version", "n/a"),
+            properties.getProperty("buildNumber", "n/a"),
+            properties.getProperty("revisionNumber", "n/a")
         );
       } else {
         throw new FileNotFoundException(String.format("Cannot find the properties file %s", versionInfoProperty));

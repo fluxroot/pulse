@@ -105,7 +105,7 @@ public final class Pulse extends AbstractEngine {
 
     // We must send an initialization answer back!
     ProtocolInitializeAnswerCommand answerCommand = new ProtocolInitializeAnswerCommand(
-      VersionInfo.current().toString(), "Flux Chess Project"
+        VersionInfo.current().toString(), "Flux Chess Project"
     );
 
     // For each supported option, add it to the command.
@@ -253,13 +253,13 @@ public final class Pulse extends AbstractEngine {
 
       if (command.getPonder()) {
         search = Search.newPonderSearch(
-          board, getProtocol(),
-          whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo
+            board, getProtocol(),
+            whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo
         );
       } else {
         search = Search.newClockSearch(
-          board, getProtocol(),
-          whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo
+            board, getProtocol(),
+            whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo
         );
       }
     }

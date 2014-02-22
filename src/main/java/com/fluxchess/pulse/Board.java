@@ -158,7 +158,7 @@ public final class Board {
     for (int color : Color.values) {
       for (int castling : Castling.values) {
         GenericFile genericFile = genericBoard.getCastling(
-          Color.toGenericColor(color), Castling.toGenericCastling(castling)
+            Color.toGenericColor(color), Castling.toGenericCastling(castling)
         );
         if (genericFile != null) {
           this.castling[color][castling] = File.valueOf(genericFile);
@@ -203,9 +203,9 @@ public final class Board {
       for (int castling : Castling.values) {
         if (this.castling[color][castling] != File.NOFILE) {
           genericBoard.setCastling(
-            Color.toGenericColor(color),
-            Castling.toGenericCastling(castling),
-            File.toGenericFile(this.castling[color][castling])
+              Color.toGenericColor(color),
+              Castling.toGenericCastling(castling),
+              File.toGenericFile(this.castling[color][castling])
           );
         }
       }
@@ -253,7 +253,7 @@ public final class Board {
    * Puts a piece at the square. We need to update our board and the appropriate
    * piece type list.
    *
-   * @param piece the Piece.
+   * @param piece  the Piece.
    * @param square the Square.
    */
   private void put(int piece, int square) {
@@ -590,7 +590,7 @@ public final class Board {
    * Returns whether the targetSquare is attacked by any piece from the
    * attackerColor. We will backtrack from the targetSquare to find the piece.
    *
-   * @param targetSquare the target Square.
+   * @param targetSquare  the target Square.
    * @param attackerColor the attacker Color.
    * @return whether the targetSquare is attacked.
    */
@@ -612,10 +612,10 @@ public final class Board {
     }
 
     return isAttacked(targetSquare, attackerColor, Piece.Type.KNIGHT, MoveGenerator.moveDeltaKnight)
-      || isAttacked(targetSquare, attackerColor, Piece.Type.BISHOP, MoveGenerator.moveDeltaBishop)
-      || isAttacked(targetSquare, attackerColor, Piece.Type.ROOK, MoveGenerator.moveDeltaRook)
-      || isAttacked(targetSquare, attackerColor, Piece.Type.QUEEN, MoveGenerator.moveDeltaQueen)
-      || isAttacked(targetSquare, attackerColor, Piece.Type.KING, MoveGenerator.moveDeltaKing);
+        || isAttacked(targetSquare, attackerColor, Piece.Type.BISHOP, MoveGenerator.moveDeltaBishop)
+        || isAttacked(targetSquare, attackerColor, Piece.Type.ROOK, MoveGenerator.moveDeltaRook)
+        || isAttacked(targetSquare, attackerColor, Piece.Type.QUEEN, MoveGenerator.moveDeltaQueen)
+        || isAttacked(targetSquare, attackerColor, Piece.Type.KING, MoveGenerator.moveDeltaKing);
   }
 
   private boolean isAttacked(int targetSquare, int attackerColor, int attackerPieceType, int[] moveDelta) {
@@ -634,7 +634,7 @@ public final class Board {
 
         if (Piece.isValid(attackerPiece)) {
           if (Piece.getType(attackerPiece) == attackerPieceType
-            && Piece.getColor(attackerPiece) == attackerColor) {
+              && Piece.getColor(attackerPiece) == attackerColor) {
             return true;
           }
 

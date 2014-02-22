@@ -35,7 +35,7 @@ public final class Castling {
   public static final int NOCASTLING = 2;
 
   public static final int[] values = {
-    KINGSIDE, QUEENSIDE
+      KINGSIDE, QUEENSIDE
   };
 
   private Castling() {

@@ -51,12 +51,12 @@ final class PerftPerformance {
       totalTime += duration;
 
       LOG.info(String.format(
-        "Duration iteration %d: %02d:%02d:%02d.%03d",
-        i,
-        TimeUnit.MILLISECONDS.toHours(duration),
-        TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
-        TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)),
-        duration - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration))
+          "Duration iteration %d: %02d:%02d:%02d.%03d",
+          i,
+          TimeUnit.MILLISECONDS.toHours(duration),
+          TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
+          TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)),
+          duration - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration))
       ));
     }
 

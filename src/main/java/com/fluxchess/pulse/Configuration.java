@@ -30,7 +30,7 @@ public final class Configuration {
   public static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
 
   public static final AbstractOption[] options = new AbstractOption[]{
-    ponderOption
+      ponderOption
   };
 
   private Configuration() {

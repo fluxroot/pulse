@@ -41,7 +41,7 @@ public final class File {
   public static final int NOFILE = 8;
 
   public static final int[] values = {
-    Fa, Fb, Fc, Fd, Fe, Ff, Fg, Fh
+      Fa, Fb, Fc, Fd, Fe, Ff, Fg, Fh
   };
 
   private File() {

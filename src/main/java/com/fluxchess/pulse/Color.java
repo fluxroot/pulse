@@ -35,7 +35,7 @@ public final class Color {
   public static final int NOCOLOR = 2;
 
   public static final int[] values = {
-    WHITE, BLACK
+      WHITE, BLACK
   };
 
   private Color() {
