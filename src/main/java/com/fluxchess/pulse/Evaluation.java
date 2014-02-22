@@ -18,7 +18,7 @@
  */
 package com.fluxchess.pulse;
 
-public final class Evaluation {
+final class Evaluation {
 
   public static final int INFINITY = 200000;
   public static final int DRAW = 0;

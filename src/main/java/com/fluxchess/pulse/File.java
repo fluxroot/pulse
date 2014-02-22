@@ -26,7 +26,7 @@ import com.fluxchess.jcpi.models.GenericFile;
  * <br/>
  * <code>Bit 0 - 3</code>: the file (required)<br/>
  */
-public final class File {
+final class File {
 
   public static final int MASK = 0xF;
 

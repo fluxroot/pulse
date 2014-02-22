@@ -22,7 +22,7 @@ import com.fluxchess.jcpi.options.AbstractOption;
 import com.fluxchess.jcpi.options.CheckboxOption;
 import com.fluxchess.jcpi.options.Options;
 
-public final class Configuration {
+final class Configuration {
 
   public static boolean debug = false;
 

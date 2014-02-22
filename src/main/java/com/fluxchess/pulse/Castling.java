@@ -26,7 +26,7 @@ import com.fluxchess.jcpi.models.GenericCastling;
  * <br/>
  * <code>Bit 0 - 1</code>: the castling (required)<br/>
  */
-public final class Castling {
+final class Castling {
 
   public static final int MASK = 0x3;
 

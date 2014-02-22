@@ -28,7 +28,7 @@ import com.fluxchess.jcpi.models.GenericPiece;
  * <code>Bit 0 - 2</code>: the type (required)<br/>
  * <code>Bit 3 - 4</code>: the color (required)<br/>
  */
-public final class Piece {
+final class Piece {
 
   /**
    * This class encodes type information as an int value. The data is

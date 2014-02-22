@@ -20,7 +20,7 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericPosition;
 
-public final class Square {
+final class Square {
 
   public static final int MASK = 0x7F;
 
