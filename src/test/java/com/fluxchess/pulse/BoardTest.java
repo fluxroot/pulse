@@ -47,7 +47,7 @@ public class BoardTest {
     for (GenericColor genericColor : GenericColor.values()) {
       for (GenericCastling genericCastling : GenericCastling.values()) {
         GenericFile genericFile = genericBoard.getCastling(genericColor, genericCastling);
-        int file = board.castling[Color.valueOf(genericColor)][Castling.valueOf(genericCastling)];
+        int file = board.colorCastling[Color.valueOf(genericColor)][Castling.valueOf(genericCastling)];
         if (genericFile == null) {
           assertEquals(File.NOFILE, file);
         } else {
@@ -248,7 +248,7 @@ public class BoardTest {
     int move = Move.valueOf(Move.Type.CASTLING, Square.e1, Square.c1, Piece.WHITEKING, Piece.NOPIECE, Piece.Type.NOTYPE);
     board.makeMove(move);
 
-    assertEquals(File.NOFILE, board.castling[Color.WHITE][Castling.QUEENSIDE]);
+    assertEquals(File.NOFILE, board.colorCastling[Color.WHITE][Castling.QUEENSIDE]);
 
     board.undoMove(move);
 
@@ -262,7 +262,7 @@ public class BoardTest {
     move = Move.valueOf(Move.Type.CASTLING, Square.e1, Square.g1, Piece.WHITEKING, Piece.NOPIECE, Piece.Type.NOTYPE);
     board.makeMove(move);
 
-    assertEquals(File.NOFILE, board.castling[Color.WHITE][Castling.KINGSIDE]);
+    assertEquals(File.NOFILE, board.colorCastling[Color.WHITE][Castling.KINGSIDE]);
 
     board.undoMove(move);
 

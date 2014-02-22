@@ -36,6 +36,9 @@ final class SearchPerformance {
 
   private static final Logger LOG = LoggerFactory.getLogger(SearchPerformance.class);
 
+  private SearchPerformance() {
+  }
+
   public static void main(String[] args) throws InterruptedException {
     final GenericBoard genericBoard = new GenericBoard(GenericBoard.STANDARDSETUP);
     final int depth = 8;

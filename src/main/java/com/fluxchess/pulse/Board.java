@@ -43,7 +43,7 @@ public final class Board {
   public final Bitboard[] queens = new Bitboard[Color.values.length];
   public final Bitboard[] kings = new Bitboard[Color.values.length];
 
-  public final int[][] castling = new int[Color.values.length][Castling.values.length];
+  public final int[][] colorCastling = new int[Color.values.length][Castling.values.length];
   public int enPassant = Square.NOSQUARE;
   public int activeColor = Color.WHITE;
   public int halfMoveClock = 0;
@@ -155,10 +155,10 @@ public final class Board {
             Color.toGenericColor(color), Castling.toGenericCastling(castling)
         );
         if (genericFile != null) {
-          this.castling[color][castling] = File.valueOf(genericFile);
+          colorCastling[color][castling] = File.valueOf(genericFile);
           zobristCode ^= zobristCastling[color][castling];
         } else {
-          this.castling[color][castling] = File.NOFILE;
+          colorCastling[color][castling] = File.NOFILE;
         }
       }
     }
@@ -195,11 +195,11 @@ public final class Board {
     // Set castling
     for (int color : Color.values) {
       for (int castling : Castling.values) {
-        if (this.castling[color][castling] != File.NOFILE) {
+        if (colorCastling[color][castling] != File.NOFILE) {
           genericBoard.setCastling(
               Color.toGenericColor(color),
               Castling.toGenericCastling(castling),
-              File.toGenericFile(this.castling[color][castling])
+              File.toGenericFile(colorCastling[color][castling])
           );
         }
       }
@@ -362,7 +362,7 @@ public final class Board {
     // Save castling rights
     for (int color : Color.values) {
       for (int castling : Castling.values) {
-        entry.castling[color][castling] = this.castling[color][castling];
+        entry.castling[color][castling] = colorCastling[color][castling];
       }
     }
 
@@ -527,8 +527,8 @@ public final class Board {
     // Restore castling rights
     for (int color : Color.values) {
       for (int castling : Castling.values) {
-        if (entry.castling[color][castling] != this.castling[color][castling]) {
-          this.castling[color][castling] = entry.castling[color][castling];
+        if (entry.castling[color][castling] != colorCastling[color][castling]) {
+          colorCastling[color][castling] = entry.castling[color][castling];
         }
       }
     }
@@ -541,8 +541,8 @@ public final class Board {
     assert Color.isValid(color);
     assert Castling.isValid(castling);
 
-    if (this.castling[color][castling] != File.NOFILE) {
-      this.castling[color][castling] = File.NOFILE;
+    if (colorCastling[color][castling] != File.NOFILE) {
+      colorCastling[color][castling] = File.NOFILE;
       zobristCode ^= zobristCastling[color][castling];
     }
   }

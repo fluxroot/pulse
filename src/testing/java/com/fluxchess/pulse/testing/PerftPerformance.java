@@ -31,6 +31,9 @@ final class PerftPerformance {
 
   private static final Logger LOG = LoggerFactory.getLogger(PerftPerformance.class);
 
+  private PerftPerformance() {
+  }
+
   public static void main(String[] args) {
     long totalNodes = 0;
     long totalTime = 0;

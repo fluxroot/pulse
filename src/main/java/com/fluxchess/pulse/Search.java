@@ -324,10 +324,10 @@ public final class Search implements Runnable {
         // Check if we have only one move to make
         if (rootMoves.size == 1) {
           abort = true;
-        }
+        } else
 
         // Check if we have a checkmate
-        else if (Math.abs(rootMoves.entries[0].value) > Evaluation.CHECKMATE_THRESHOLD
+        if (Math.abs(rootMoves.entries[0].value) > Evaluation.CHECKMATE_THRESHOLD
             && currentDepth >= (Evaluation.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
           abort = true;
         }

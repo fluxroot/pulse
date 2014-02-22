@@ -331,7 +331,7 @@ public final class MoveGenerator {
 
     if (Piece.getColor(kingPiece) == Color.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
-      if (board.castling[Color.WHITE][Castling.KINGSIDE] != File.NOFILE
+      if (board.colorCastling[Color.WHITE][Castling.KINGSIDE] != File.NOFILE
           && board.board[Square.f1] == Piece.NOPIECE
           && board.board[Square.g1] == Piece.NOPIECE
           && !board.isAttacked(Square.f1, Color.BLACK)) {
@@ -341,7 +341,7 @@ public final class MoveGenerator {
         list.entries[list.size++].move = Move.valueOf(Move.Type.CASTLING, kingSquare, Square.g1, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
-      if (board.castling[Color.WHITE][Castling.QUEENSIDE] != File.NOFILE
+      if (board.colorCastling[Color.WHITE][Castling.QUEENSIDE] != File.NOFILE
           && board.board[Square.b1] == Piece.NOPIECE
           && board.board[Square.c1] == Piece.NOPIECE
           && board.board[Square.d1] == Piece.NOPIECE
@@ -353,7 +353,7 @@ public final class MoveGenerator {
       }
     } else {
       // Do not test g8 whether it is attacked as we will test it in isLegal()
-      if (board.castling[Color.BLACK][Castling.KINGSIDE] != File.NOFILE
+      if (board.colorCastling[Color.BLACK][Castling.KINGSIDE] != File.NOFILE
           && board.board[Square.f8] == Piece.NOPIECE
           && board.board[Square.g8] == Piece.NOPIECE
           && !board.isAttacked(Square.f8, Color.WHITE)) {
@@ -363,7 +363,7 @@ public final class MoveGenerator {
         list.entries[list.size++].move = Move.valueOf(Move.Type.CASTLING, kingSquare, Square.g8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
-      if (board.castling[Color.BLACK][Castling.QUEENSIDE] != File.NOFILE
+      if (board.colorCastling[Color.BLACK][Castling.QUEENSIDE] != File.NOFILE
           && board.board[Square.b8] == Piece.NOPIECE
           && board.board[Square.c8] == Piece.NOPIECE
           && board.board[Square.d8] == Piece.NOPIECE
@@ -380,10 +380,10 @@ public final class MoveGenerator {
     int activeColor = board.activeColor;
 
     board.makeMove(move);
-    boolean isCheck = board.isAttacked(Bitboard.next(board.kings[activeColor].squares), Color.opposite(activeColor));
+    boolean isAttacked = board.isAttacked(Bitboard.next(board.kings[activeColor].squares), Color.opposite(activeColor));
     board.undoMove(move);
 
-    return !isCheck;
+    return !isAttacked;
   }
 
 }
