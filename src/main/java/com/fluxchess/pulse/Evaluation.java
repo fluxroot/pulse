@@ -23,7 +23,7 @@ public final class Evaluation {
   public static final int INFINITY = 200000;
   public static final int DRAW = 0;
   public static final int CHECKMATE = 100000;
-  public static final int CHECKMATE_THRESHOLD = CHECKMATE - 1000;
+  public static final int CHECKMATE_THRESHOLD = CHECKMATE - Search.MAX_HEIGHT;
 
   public static final int VALUE_PAWN = 100;
   public static final int VALUE_KNIGHT = 325;

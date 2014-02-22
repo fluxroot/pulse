@@ -24,16 +24,15 @@ import com.fluxchess.jcpi.models.GenericFile;
 import com.fluxchess.jcpi.models.GenericPiece;
 
 import java.security.SecureRandom;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * This is our internal board.
  */
 public final class Board {
 
+  private static final int MAX_GAMEMOVES = Search.MAX_HEIGHT + 1024;
+
   private static final int BOARDSIZE = 128;
-  private static final int MAX_GAMEMOVES = 4096;
 
   public final int[] board = new int[BOARDSIZE];
 
