@@ -171,17 +171,14 @@ task launch4j(dependsOn: vendor) {
 
 task exe(dependsOn: [jar, launch4j]) {
   ext.archivePath = file("${buildDir}/executables/${project.jar.baseName}-${project.jar.version}.exe")
+  ext.debugArchivePath = file("${buildDir}/executables/${project.jar.baseName}-${project.jar.version}-debug.exe")
 
-  def launch4jCfg;
-  if (project.buildNumber == 'dev' && project.revisionNumber == 'dev') {
-    launch4jCfg = 'launch4j-debug.xml'
-  } else {
-    launch4jCfg = 'launch4j.xml'
-  }
+  def launch4jCfg = 'launch4j.xml'
+  def launch4jDebugCfg = 'launch4j-debug.xml'
   def launch4jCfgDir = "${rootDir}/config/launch4j"
 
-  inputs.file "${launch4jCfgDir}/${launch4jCfg}"
-  outputs.files "${buildDir}/${launch4jCfg}", archivePath
+  inputs.files "${launch4jCfgDir}/${launch4jCfg}", "${launch4jCfgDir}/${launch4jDebugCfg}"
+  outputs.files "${buildDir}/${launch4jCfg}", "${buildDir}/${launch4jDebugCfg}", archivePath, debugArchivePath
 
   doLast {
     archivePath.getParentFile().mkdirs()
@@ -194,10 +191,22 @@ task exe(dependsOn: [jar, launch4j]) {
           exeFile: archivePath.toString()
       ])
     }
-
     exec {
       workingDir = buildDir
       commandLine "${launch4j.launch4jDir}/launch4jc.exe", "${buildDir}/${launch4jCfg}"
+    }
+
+    copy {
+      from "${launch4jCfgDir}/${launch4jDebugCfg}"
+      into buildDir
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+          jarFile: project.jar.archivePath.toString(),
+          exeFile: debugArchivePath.toString()
+      ])
+    }
+    exec {
+      workingDir = buildDir
+      commandLine "${launch4j.launch4jDir}/launch4jc.exe", "${buildDir}/${launch4jDebugCfg}"
     }
   }
 }
