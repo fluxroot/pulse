@@ -43,11 +43,6 @@ public class RankTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testInvalidValueOf() {
-    Rank.valueOf(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericRank() {
     Rank.toGenericRank(Rank.NORANK);
   }

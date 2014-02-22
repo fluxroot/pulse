@@ -48,7 +48,7 @@ public final class File {
   }
 
   public static int valueOf(GenericFile genericFile) {
-    if (genericFile == null) throw new IllegalArgumentException();
+    assert genericFile != null;
 
     switch (genericFile) {
       case Fa:

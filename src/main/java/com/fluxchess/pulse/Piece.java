@@ -59,7 +59,7 @@ public final class Piece {
     }
 
     public static int valueOf(GenericChessman genericChessman) {
-      if (genericChessman == null) throw new IllegalArgumentException();
+      assert genericChessman != null;
 
       switch (genericChessman) {
         case PAWN:
@@ -80,7 +80,7 @@ public final class Piece {
     }
 
     public static int valueOfPromotion(GenericChessman genericChessman) {
-      if (genericChessman == null) throw new IllegalArgumentException();
+      assert genericChessman != null;
 
       switch (genericChessman) {
         case KNIGHT:
@@ -198,7 +198,7 @@ public final class Piece {
   }
 
   public static int valueOf(GenericPiece genericPiece) {
-    if (genericPiece == null) throw new IllegalArgumentException();
+    assert genericPiece != null;
 
     switch (genericPiece) {
       case WHITEPAWN:

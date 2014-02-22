@@ -43,11 +43,6 @@ public class PieceTypeTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testInvalidValueOf() {
-    Piece.Type.valueOf(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericChessman() {
     Piece.Type.toGenericChessman(Piece.Type.NOTYPE);
   }

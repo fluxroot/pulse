@@ -43,11 +43,6 @@ public class ColorTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testInvalidValueOf() {
-    Color.valueOf(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericColor() {
     Color.toGenericColor(Color.NOCOLOR);
   }

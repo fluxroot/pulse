@@ -42,11 +42,6 @@ public class PieceTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testInvalidValueOf() {
-    Piece.valueOf(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericPiece() {
     Piece.toGenericPiece(Piece.NOPIECE);
   }

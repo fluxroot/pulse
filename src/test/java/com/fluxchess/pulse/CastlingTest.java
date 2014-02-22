@@ -43,11 +43,6 @@ public class CastlingTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testInvalidValueOf() {
-    Castling.valueOf(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericCastling() {
     Castling.toGenericCastling(Castling.NOCASTLING);
   }

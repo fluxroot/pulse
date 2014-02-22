@@ -48,7 +48,7 @@ public final class Rank {
   }
 
   public static int valueOf(GenericRank genericRank) {
-    if (genericRank == null) throw new IllegalArgumentException();
+    assert genericRank != null;
 
     switch (genericRank) {
       case R1:

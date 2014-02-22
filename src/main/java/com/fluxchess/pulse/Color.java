@@ -42,7 +42,7 @@ public final class Color {
   }
 
   public static int valueOf(GenericColor genericColor) {
-    if (genericColor == null) throw new IllegalArgumentException();
+    assert genericColor != null;
 
     switch (genericColor) {
       case WHITE:

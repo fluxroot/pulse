@@ -42,7 +42,7 @@ public final class Castling {
   }
 
   public static int valueOf(GenericCastling genericCastling) {
-    if (genericCastling == null) throw new IllegalArgumentException();
+    assert genericCastling != null;
 
     switch (genericCastling) {
       case KINGSIDE:

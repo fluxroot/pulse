@@ -43,11 +43,6 @@ public class FileTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testInvalidValueOf() {
-    File.valueOf(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericFile() {
     File.toGenericFile(File.NOFILE);
   }
