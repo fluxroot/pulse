@@ -40,29 +40,29 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newDepthSearch(
-      new Board(new GenericBoard("3K3r/8/3k4/8/8/8/8/8 w - - 0 1")),
-      new IProtocol() {
-        @Override
-        public void send(ProtocolInitializeAnswerCommand command) {
-        }
+        new Board(new GenericBoard("3K3r/8/3k4/8/8/8/8/8 w - - 0 1")),
+        new IProtocol() {
+          @Override
+          public void send(ProtocolInitializeAnswerCommand command) {
+          }
 
-        @Override
-        public void send(ProtocolReadyAnswerCommand command) {
-        }
+          @Override
+          public void send(ProtocolReadyAnswerCommand command) {
+          }
 
-        @Override
-        public void send(ProtocolBestMoveCommand command) {
-          bestMove[0] = command.bestMove;
-          ponderMove[0] = command.ponderMove;
+          @Override
+          public void send(ProtocolBestMoveCommand command) {
+            bestMove[0] = command.bestMove;
+            ponderMove[0] = command.ponderMove;
 
-          semaphore.release();
-        }
+            semaphore.release();
+          }
 
-        @Override
-        public void send(ProtocolInformationCommand command) {
-        }
-      },
-      1
+          @Override
+          public void send(ProtocolInformationCommand command) {
+          }
+        },
+        1
     ).start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
@@ -80,32 +80,32 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newDepthSearch(
-      new Board(new GenericBoard("8/8/1R1P4/2B2p2/k1K2P2/4P3/8/8 w - - 3 101")),
-      new IProtocol() {
-        @Override
-        public void send(ProtocolInitializeAnswerCommand command) {
-        }
-
-        @Override
-        public void send(ProtocolReadyAnswerCommand command) {
-        }
-
-        @Override
-        public void send(ProtocolBestMoveCommand command) {
-          bestMove[0] = command.bestMove;
-          ponderMove[0] = command.ponderMove;
-
-          semaphore.release();
-        }
-
-        @Override
-        public void send(ProtocolInformationCommand command) {
-          if (command.getMate() != null) {
-            mate[0] = command.getMate();
+        new Board(new GenericBoard("8/8/1R1P4/2B2p2/k1K2P2/4P3/8/8 w - - 3 101")),
+        new IProtocol() {
+          @Override
+          public void send(ProtocolInitializeAnswerCommand command) {
           }
-        }
-      },
-      2
+
+          @Override
+          public void send(ProtocolReadyAnswerCommand command) {
+          }
+
+          @Override
+          public void send(ProtocolBestMoveCommand command) {
+            bestMove[0] = command.bestMove;
+            ponderMove[0] = command.ponderMove;
+
+            semaphore.release();
+          }
+
+          @Override
+          public void send(ProtocolInformationCommand command) {
+            if (command.getMate() != null) {
+              mate[0] = command.getMate();
+            }
+          }
+        },
+        2
     ).start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
@@ -123,29 +123,29 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newDepthSearch(
-      new Board(new GenericBoard("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1")),
-      new IProtocol() {
-        @Override
-        public void send(ProtocolInitializeAnswerCommand command) {
-        }
+        new Board(new GenericBoard("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1")),
+        new IProtocol() {
+          @Override
+          public void send(ProtocolInitializeAnswerCommand command) {
+          }
 
-        @Override
-        public void send(ProtocolReadyAnswerCommand command) {
-        }
+          @Override
+          public void send(ProtocolReadyAnswerCommand command) {
+          }
 
-        @Override
-        public void send(ProtocolBestMoveCommand command) {
-          bestMove[0] = command.bestMove;
-          ponderMove[0] = command.ponderMove;
+          @Override
+          public void send(ProtocolBestMoveCommand command) {
+            bestMove[0] = command.bestMove;
+            ponderMove[0] = command.ponderMove;
 
-          semaphore.release();
-        }
+            semaphore.release();
+          }
 
-        @Override
-        public void send(ProtocolInformationCommand command) {
-        }
-      },
-      1
+          @Override
+          public void send(ProtocolInformationCommand command) {
+          }
+        },
+        1
     ).start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
@@ -161,28 +161,28 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newClockSearch(
-      new Board(new GenericBoard("3K4/7r/3k4/8/8/8/8/8 b - - 0 1")),
-      new IProtocol() {
-        @Override
-        public void send(ProtocolInitializeAnswerCommand command) {
-        }
+        new Board(new GenericBoard("3K4/7r/3k4/8/8/8/8/8 b - - 0 1")),
+        new IProtocol() {
+          @Override
+          public void send(ProtocolInitializeAnswerCommand command) {
+          }
 
-        @Override
-        public void send(ProtocolReadyAnswerCommand command) {
-        }
+          @Override
+          public void send(ProtocolReadyAnswerCommand command) {
+          }
 
-        @Override
-        public void send(ProtocolBestMoveCommand command) {
-          bestMove[0] = command.bestMove;
+          @Override
+          public void send(ProtocolBestMoveCommand command) {
+            bestMove[0] = command.bestMove;
 
-          semaphore.release();
-        }
+            semaphore.release();
+          }
 
-        @Override
-        public void send(ProtocolInformationCommand command) {
-        }
-      },
-      10000, 0, 10000, 0, 40
+          @Override
+          public void send(ProtocolInformationCommand command) {
+          }
+        },
+        10000, 0, 10000, 0, 40
     ).start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
@@ -197,28 +197,28 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newClockSearch(
-      new Board(new GenericBoard("K1k5/8/8/8/8/8/8/8 w - - 0 1")),
-      new IProtocol() {
-        @Override
-        public void send(ProtocolInitializeAnswerCommand command) {
-        }
+        new Board(new GenericBoard("K1k5/8/8/8/8/8/8/8 w - - 0 1")),
+        new IProtocol() {
+          @Override
+          public void send(ProtocolInitializeAnswerCommand command) {
+          }
 
-        @Override
-        public void send(ProtocolReadyAnswerCommand command) {
-        }
+          @Override
+          public void send(ProtocolReadyAnswerCommand command) {
+          }
 
-        @Override
-        public void send(ProtocolBestMoveCommand command) {
-          bestMove[0] = command.bestMove;
+          @Override
+          public void send(ProtocolBestMoveCommand command) {
+            bestMove[0] = command.bestMove;
 
-          semaphore.release();
-        }
+            semaphore.release();
+          }
 
-        @Override
-        public void send(ProtocolInformationCommand command) {
-        }
-      },
-      10000, 0, 10000, 0, 40
+          @Override
+          public void send(ProtocolInformationCommand command) {
+          }
+        },
+        10000, 0, 10000, 0, 40
     ).start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));

@@ -85,11 +85,11 @@ final class SearchPerformance {
         long duration = endTime[0] - startTime[0];
 
         LOG.info(String.format(
-          "Duration: %02d:%02d:%02d.%03d",
-          TimeUnit.MILLISECONDS.toHours(duration),
-          TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
-          TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)),
-          duration - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration))
+            "Duration: %02d:%02d:%02d.%03d",
+            TimeUnit.MILLISECONDS.toHours(duration),
+            TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
+            TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)),
+            duration - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration))
         ));
 
         LOG.info(String.format("Total nodes per millisecond: %d", nps[0]));

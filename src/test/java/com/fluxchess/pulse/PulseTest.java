@@ -52,16 +52,16 @@ public class PulseTest {
     commands.add(new EngineInitializeRequestCommand());
     CheckboxOption ponderOption = Options.newPonderOption(true);
     commands.add(new EngineSetOptionCommand(
-      ponderOption.name,
-      ponderOption.defaultValue)
+        ponderOption.name,
+        ponderOption.defaultValue)
     );
     commands.add(new EngineDebugCommand(false, true));
     commands.add(new EngineDebugCommand(true, false));
     commands.add(new EngineReadyRequestCommand("test"));
     commands.add(new EngineNewGameCommand());
     commands.add(new EngineAnalyzeCommand(
-      new GenericBoard(GenericBoard.STANDARDSETUP),
-      Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4)))
+        new GenericBoard(GenericBoard.STANDARDSETUP),
+        Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4)))
     );
   }
 
@@ -150,8 +150,8 @@ public class PulseTest {
     // Test searching only specific moves
     EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
     command.setSearchMoveList(Arrays.asList(
-      new GenericMove(GenericPosition.b7, GenericPosition.b6),
-      new GenericMove(GenericPosition.f7, GenericPosition.f5)
+        new GenericMove(GenericPosition.b7, GenericPosition.b6),
+        new GenericMove(GenericPosition.f7, GenericPosition.f5)
     ));
     commands.add(command);
     new Timer(true).schedule(new TimerTask() {

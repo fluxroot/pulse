@@ -89,7 +89,7 @@ public class MoveGeneratorTest {
     // Get expected moves from JCPI
     GenericBoard genericBoard = board.toGenericBoard();
     Collection<GenericMove> expectedMoves = new HashSet<>(Arrays.asList(
-      com.fluxchess.jcpi.utils.MoveGenerator.getGenericMoves(genericBoard)
+        com.fluxchess.jcpi.utils.MoveGenerator.getGenericMoves(genericBoard)
     ));
 
     // Get actual moves

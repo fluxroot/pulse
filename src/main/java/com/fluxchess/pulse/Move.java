@@ -80,11 +80,11 @@ public final class Move {
 
   // We don't use 0 as a null value to protect against errors.
   public static final int NOMOVE = (Move.Type.NOTYPE << TYPE_SHIFT)
-    | (Square.NOSQUARE << ORIGINSQUARE_SHIFT)
-    | (Square.NOSQUARE << TARGETSQUARE_SHIFT)
-    | (Piece.NOPIECE << ORIGINPIECE_SHIFT)
-    | (Piece.NOPIECE << TARGETPIECE_SHIFT)
-    | (Piece.Type.NOTYPE << PROMOTION_SHIFT);
+      | (Square.NOSQUARE << ORIGINSQUARE_SHIFT)
+      | (Square.NOSQUARE << TARGETSQUARE_SHIFT)
+      | (Piece.NOPIECE << ORIGINPIECE_SHIFT)
+      | (Piece.NOPIECE << TARGETPIECE_SHIFT)
+      | (Piece.Type.NOTYPE << PROMOTION_SHIFT);
 
   private Move() {
   }
@@ -93,8 +93,8 @@ public final class Move {
    * Converts a GenericMove to our internal move representation.
    *
    * @param genericMove the GenericMove.
-   * @param board the Board. We need the board to figure out what type of move
-   *              we're dealing with.
+   * @param board       the Board. We need the board to figure out what type of move
+   *                    we're dealing with.
    * @return the internal move representation.
    */
   public static int valueOf(GenericMove genericMove, Board board) {
@@ -110,47 +110,47 @@ public final class Move {
         promotion = Piece.Type.valueOf(genericMove.promotion);
       }
       return valueOf(
-        Move.Type.PAWNPROMOTION,
-        Square.valueOf(genericMove.from),
-        Square.valueOf(genericMove.to),
-        board.board[Square.valueOf(genericMove.from)],
-        board.board[Square.valueOf(genericMove.to)],
-        promotion
+          Move.Type.PAWNPROMOTION,
+          Square.valueOf(genericMove.from),
+          Square.valueOf(genericMove.to),
+          board.board[Square.valueOf(genericMove.from)],
+          board.board[Square.valueOf(genericMove.to)],
+          promotion
       );
     } else if (isPawnDouble(genericMove, board)) {
       return valueOf(
-        Move.Type.PAWNDOUBLE,
-        Square.valueOf(genericMove.from),
-        Square.valueOf(genericMove.to),
-        board.board[Square.valueOf(genericMove.from)],
-        Piece.NOPIECE,
-        Piece.Type.NOTYPE
+          Move.Type.PAWNDOUBLE,
+          Square.valueOf(genericMove.from),
+          Square.valueOf(genericMove.to),
+          board.board[Square.valueOf(genericMove.from)],
+          Piece.NOPIECE,
+          Piece.Type.NOTYPE
       );
     } else if (isEnPassant(genericMove, board)) {
       return valueOf(
-        Move.Type.ENPASSANT,
-        Square.valueOf(genericMove.from),
-        Square.valueOf(genericMove.to),
-        board.board[Square.valueOf(genericMove.from)],
-        board.board[Square.valueOf(GenericPosition.valueOf(genericMove.to.file, genericMove.from.rank))],
-        Piece.Type.NOTYPE
+          Move.Type.ENPASSANT,
+          Square.valueOf(genericMove.from),
+          Square.valueOf(genericMove.to),
+          board.board[Square.valueOf(genericMove.from)],
+          board.board[Square.valueOf(GenericPosition.valueOf(genericMove.to.file, genericMove.from.rank))],
+          Piece.Type.NOTYPE
       );
     } else if (isCastling(genericMove, board)) {
       return valueOf(
-        Move.Type.CASTLING, Square.valueOf(genericMove.from),
-        Square.valueOf(genericMove.to),
-        board.board[Square.valueOf(genericMove.from)],
-        Piece.NOPIECE,
-        Piece.Type.NOTYPE
+          Move.Type.CASTLING, Square.valueOf(genericMove.from),
+          Square.valueOf(genericMove.to),
+          board.board[Square.valueOf(genericMove.from)],
+          Piece.NOPIECE,
+          Piece.Type.NOTYPE
       );
     } else {
       return valueOf(
-        Move.Type.NORMAL,
-        Square.valueOf(genericMove.from),
-        Square.valueOf(genericMove.to),
-        board.board[Square.valueOf(genericMove.from)],
-        board.board[Square.valueOf(genericMove.to)],
-        Piece.Type.NOTYPE
+          Move.Type.NORMAL,
+          Square.valueOf(genericMove.from),
+          Square.valueOf(genericMove.to),
+          board.board[Square.valueOf(genericMove.from)],
+          board.board[Square.valueOf(genericMove.to)],
+          Piece.Type.NOTYPE
       );
     }
   }
@@ -180,7 +180,7 @@ public final class Move {
 
     // Encode promotion
     assert (Piece.Type.isValid(promotion) && Piece.Type.isValidPromotion(promotion))
-      || promotion == Piece.Type.NOTYPE;
+        || promotion == Piece.Type.NOTYPE;
     move |= promotion << PROMOTION_SHIFT;
 
     return move;
@@ -197,14 +197,14 @@ public final class Move {
       case Move.Type.ENPASSANT:
       case Move.Type.CASTLING:
         return new GenericMove(
-          Square.toGenericPosition(originSquare),
-          Square.toGenericPosition(targetSquare)
+            Square.toGenericPosition(originSquare),
+            Square.toGenericPosition(targetSquare)
         );
       case Move.Type.PAWNPROMOTION:
         return new GenericMove(
-          Square.toGenericPosition(originSquare),
-          Square.toGenericPosition(targetSquare),
-          Piece.Type.toGenericChessman(getPromotion(move))
+            Square.toGenericPosition(originSquare),
+            Square.toGenericPosition(targetSquare),
+            Piece.Type.toGenericChessman(getPromotion(move))
         );
       default:
         throw new IllegalArgumentException();
@@ -249,7 +249,7 @@ public final class Move {
   public static int getPromotion(int move) {
     int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
     assert (Piece.Type.isValid(promotion) && Piece.Type.isValidPromotion(promotion))
-      || promotion == Piece.Type.NOTYPE;
+        || promotion == Piece.Type.NOTYPE;
 
     return promotion;
   }
@@ -261,7 +261,7 @@ public final class Move {
     int originPiece = board.board[Square.valueOf(move.from)];
 
     return (originPiece == Piece.WHITEPAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R8)
-      || (originPiece == Piece.BLACKPAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1);
+        || (originPiece == Piece.BLACKPAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1);
   }
 
   private static boolean isPawnDouble(GenericMove move, Board board) {
@@ -271,7 +271,7 @@ public final class Move {
     int originPiece = board.board[Square.valueOf(move.from)];
 
     return (originPiece == Piece.WHITEPAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R4)
-      || (originPiece == Piece.BLACKPAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5);
+        || (originPiece == Piece.BLACKPAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5);
   }
 
   private static boolean isEnPassant(GenericMove move, Board board) {
@@ -282,10 +282,10 @@ public final class Move {
     int targetPiece = board.board[Square.valueOf(GenericPosition.valueOf(move.to.file, move.from.rank))];
 
     return Piece.getType(originPiece) == Piece.Type.PAWN
-      && Piece.isValid(targetPiece)
-      && Piece.getType(targetPiece) == Piece.Type.PAWN
-      && Color.opposite(Piece.getColor(originPiece)) == Piece.getColor(targetPiece)
-      && board.enPassant == Square.valueOf(move.to);
+        && Piece.isValid(targetPiece)
+        && Piece.getType(targetPiece) == Piece.Type.PAWN
+        && Color.opposite(Piece.getColor(originPiece)) == Piece.getColor(targetPiece)
+        && board.enPassant == Square.valueOf(move.to);
   }
 
   private static boolean isCastling(GenericMove move, Board board) {
@@ -295,17 +295,17 @@ public final class Move {
     int originPiece = board.board[Square.valueOf(move.from)];
 
     return Piece.getType(originPiece) == Piece.Type.KING && (
-      // Castling WHITE kingside.
-      (move.from == GenericPosition.e1 && move.to == GenericPosition.g1)
+        // Castling WHITE kingside.
+        (move.from == GenericPosition.e1 && move.to == GenericPosition.g1)
 
-        // Castling WHITE queenside.
-        || (move.from == GenericPosition.e1 && move.to == GenericPosition.c1)
+            // Castling WHITE queenside.
+            || (move.from == GenericPosition.e1 && move.to == GenericPosition.c1)
 
-        // Castling BLACK kingside.
-        || (move.from == GenericPosition.e8 && move.to == GenericPosition.g8)
+            // Castling BLACK kingside.
+            || (move.from == GenericPosition.e8 && move.to == GenericPosition.g8)
 
-        // Castling BLACK queenside.
-        || (move.from == GenericPosition.e8 && move.to == GenericPosition.c8)
+            // Castling BLACK queenside.
+            || (move.from == GenericPosition.e8 && move.to == GenericPosition.c8)
     );
   }
 

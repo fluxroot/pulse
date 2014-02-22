@@ -22,32 +22,32 @@ public final class MoveGenerator {
 
   // Move deltas
   public static final int[][] moveDeltaPawn = {
-    {Square.deltaN, Square.deltaNE, Square.deltaNW}, // Color.WHITE
-    {Square.deltaS, Square.deltaSE, Square.deltaSW}  // Color.BLACK
+      {Square.deltaN, Square.deltaNE, Square.deltaNW}, // Color.WHITE
+      {Square.deltaS, Square.deltaSE, Square.deltaSW}  // Color.BLACK
   };
   public static final int[] moveDeltaKnight = {
-    Square.deltaN + Square.deltaN + Square.deltaE,
-    Square.deltaN + Square.deltaN + Square.deltaW,
-    Square.deltaN + Square.deltaE + Square.deltaE,
-    Square.deltaN + Square.deltaW + Square.deltaW,
-    Square.deltaS + Square.deltaS + Square.deltaE,
-    Square.deltaS + Square.deltaS + Square.deltaW,
-    Square.deltaS + Square.deltaE + Square.deltaE,
-    Square.deltaS + Square.deltaW + Square.deltaW
+      Square.deltaN + Square.deltaN + Square.deltaE,
+      Square.deltaN + Square.deltaN + Square.deltaW,
+      Square.deltaN + Square.deltaE + Square.deltaE,
+      Square.deltaN + Square.deltaW + Square.deltaW,
+      Square.deltaS + Square.deltaS + Square.deltaE,
+      Square.deltaS + Square.deltaS + Square.deltaW,
+      Square.deltaS + Square.deltaE + Square.deltaE,
+      Square.deltaS + Square.deltaW + Square.deltaW
   };
   public static final int[] moveDeltaBishop = {
-    Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
+      Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
   };
   public static final int[] moveDeltaRook = {
-    Square.deltaN, Square.deltaE, Square.deltaS, Square.deltaW
+      Square.deltaN, Square.deltaE, Square.deltaS, Square.deltaW
   };
   public static final int[] moveDeltaQueen = {
-    Square.deltaN, Square.deltaE, Square.deltaS, Square.deltaW,
-    Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
+      Square.deltaN, Square.deltaE, Square.deltaS, Square.deltaW,
+      Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
   };
   public static final int[] moveDeltaKing = {
-    Square.deltaN, Square.deltaE, Square.deltaS, Square.deltaW,
-    Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
+      Square.deltaN, Square.deltaE, Square.deltaS, Square.deltaW,
+      Square.deltaNE, Square.deltaNW, Square.deltaSE, Square.deltaSW
   };
 
   // We will store a MoveGenerator for each ply so we don't have to create them
@@ -227,7 +227,7 @@ public final class MoveGenerator {
           targetSquare += delta;
         } else {
           if (Piece.getColor(targetPiece) == oppositeColor
-            && Piece.getType(targetPiece) != Piece.Type.KING) {
+              && Piece.getType(targetPiece) != Piece.Type.KING) {
             list.entries[list.size++].move = Move.valueOf(Move.Type.NORMAL, originSquare, targetSquare, originPiece, targetPiece, Piece.Type.NOTYPE);
           }
 
@@ -256,11 +256,11 @@ public final class MoveGenerator {
 
         if (targetPiece != Piece.NOPIECE) {
           if (Piece.getColor(targetPiece) == Color.opposite(pawnColor)
-            && Piece.getType(targetPiece) != Piece.Type.KING) {
+              && Piece.getType(targetPiece) != Piece.Type.KING) {
             // Capturing move
 
             if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.R8)
-              || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R1)) {
+                || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R1)) {
               // Pawn promotion capturing move
 
               list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.QUEEN);
@@ -276,7 +276,7 @@ public final class MoveGenerator {
         } else if (targetSquare == board.enPassant) {
           // En passant move
           assert (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R3)
-            || (pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.R6);
+              || (pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.R6);
 
           int captureSquare = targetSquare + (pawnColor == Color.WHITE ? Square.deltaS : Square.deltaN);
           targetPiece = board.board[captureSquare];
@@ -295,7 +295,7 @@ public final class MoveGenerator {
     int targetSquare = pawnSquare + delta;
     if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
       if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.R8)
-        || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R1)) {
+          || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R1)) {
         // Pawn promotion move
 
         list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.QUEEN);
@@ -311,7 +311,7 @@ public final class MoveGenerator {
         targetSquare += delta;
         if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
           if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.R4)
-            || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R5)) {
+              || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R5)) {
             // Pawn double move
 
             list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNDOUBLE, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
@@ -332,9 +332,9 @@ public final class MoveGenerator {
     if (Piece.getColor(kingPiece) == Color.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
       if (board.castling[Color.WHITE][Castling.KINGSIDE] != File.NOFILE
-        && board.board[Square.f1] == Piece.NOPIECE
-        && board.board[Square.g1] == Piece.NOPIECE
-        && !board.isAttacked(Square.f1, Color.BLACK)) {
+          && board.board[Square.f1] == Piece.NOPIECE
+          && board.board[Square.g1] == Piece.NOPIECE
+          && !board.isAttacked(Square.f1, Color.BLACK)) {
         assert board.board[Square.e1] == Piece.WHITEKING;
         assert board.board[Square.h1] == Piece.WHITEROOK;
 
@@ -342,10 +342,10 @@ public final class MoveGenerator {
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
       if (board.castling[Color.WHITE][Castling.QUEENSIDE] != File.NOFILE
-        && board.board[Square.b1] == Piece.NOPIECE
-        && board.board[Square.c1] == Piece.NOPIECE
-        && board.board[Square.d1] == Piece.NOPIECE
-        && !board.isAttacked(Square.d1, Color.BLACK)) {
+          && board.board[Square.b1] == Piece.NOPIECE
+          && board.board[Square.c1] == Piece.NOPIECE
+          && board.board[Square.d1] == Piece.NOPIECE
+          && !board.isAttacked(Square.d1, Color.BLACK)) {
         assert board.board[Square.e1] == Piece.WHITEKING;
         assert board.board[Square.a1] == Piece.WHITEROOK;
 
@@ -354,9 +354,9 @@ public final class MoveGenerator {
     } else {
       // Do not test g8 whether it is attacked as we will test it in isLegal()
       if (board.castling[Color.BLACK][Castling.KINGSIDE] != File.NOFILE
-        && board.board[Square.f8] == Piece.NOPIECE
-        && board.board[Square.g8] == Piece.NOPIECE
-        && !board.isAttacked(Square.f8, Color.WHITE)) {
+          && board.board[Square.f8] == Piece.NOPIECE
+          && board.board[Square.g8] == Piece.NOPIECE
+          && !board.isAttacked(Square.f8, Color.WHITE)) {
         assert board.board[Square.e8] == Piece.BLACKKING;
         assert board.board[Square.h8] == Piece.BLACKROOK;
 
@@ -364,10 +364,10 @@ public final class MoveGenerator {
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
       if (board.castling[Color.BLACK][Castling.QUEENSIDE] != File.NOFILE
-        && board.board[Square.b8] == Piece.NOPIECE
-        && board.board[Square.c8] == Piece.NOPIECE
-        && board.board[Square.d8] == Piece.NOPIECE
-        && !board.isAttacked(Square.d8, Color.WHITE)) {
+          && board.board[Square.b8] == Piece.NOPIECE
+          && board.board[Square.c8] == Piece.NOPIECE
+          && board.board[Square.d8] == Piece.NOPIECE
+          && !board.isAttacked(Square.d8, Color.WHITE)) {
         assert board.board[Square.e8] == Piece.BLACKKING;
         assert board.board[Square.a8] == Piece.BLACKROOK;
 

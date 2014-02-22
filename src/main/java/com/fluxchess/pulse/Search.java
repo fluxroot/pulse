@@ -146,12 +146,12 @@ public final class Search implements Runnable {
   }
 
   public static Search newClockSearch(
-    Board board, IProtocol protocol,
-    long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
+      Board board, IProtocol protocol,
+      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
   ) {
     Search search = newPonderSearch(
-      board, protocol,
-      whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
+        board, protocol,
+        whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
     );
 
     search.timer = new Timer(true);
@@ -160,8 +160,8 @@ public final class Search implements Runnable {
   }
 
   public static Search newPonderSearch(
-    Board board, IProtocol protocol,
-    long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
+      Board board, IProtocol protocol,
+      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
   ) {
     if (board == null) throw new IllegalArgumentException();
     if (protocol == null) throw new IllegalArgumentException();
@@ -328,7 +328,7 @@ public final class Search implements Runnable {
 
         // Check if we have a checkmate
         else if (Math.abs(rootMoves.entries[0].value) > Evaluation.CHECKMATE_THRESHOLD
-          && currentDepth >= (Evaluation.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
+            && currentDepth >= (Evaluation.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
           abort = true;
         }
       }
@@ -571,7 +571,7 @@ public final class Search implements Runnable {
   private void sendStatus(boolean force) {
     long currentTime = System.currentTimeMillis();
     if ((currentTime - startTime >= 1000)
-      && (force || (currentTime - statusStartTime) >= 1000)) {
+        && (force || (currentTime - statusStartTime) >= 1000)) {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
 
       command.setDepth(currentDepth);

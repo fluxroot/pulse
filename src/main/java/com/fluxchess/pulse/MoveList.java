@@ -81,7 +81,7 @@ public final class MoveList {
       }
 
       assert value >= (Evaluation.VALUE_KING / Evaluation.VALUE_KING)
-        && value <= (Evaluation.VALUE_KING / Evaluation.VALUE_PAWN) + 10 * Evaluation.VALUE_QUEEN;
+          && value <= (Evaluation.VALUE_KING / Evaluation.VALUE_PAWN) + 10 * Evaluation.VALUE_QUEEN;
 
       entries[i].value = value;
     }

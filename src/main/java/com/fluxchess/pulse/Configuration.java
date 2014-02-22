@@ -22,7 +22,7 @@ import com.fluxchess.jcpi.options.AbstractOption;
 import com.fluxchess.jcpi.options.CheckboxOption;
 import com.fluxchess.jcpi.options.Options;
 
-public final class Configuration {
+final class Configuration {
 
   public static boolean debug = false;
 
@@ -30,7 +30,7 @@ public final class Configuration {
   public static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
 
   public static final AbstractOption[] options = new AbstractOption[]{
-    ponderOption
+      ponderOption
   };
 
   private Configuration() {
