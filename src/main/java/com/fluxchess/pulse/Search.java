@@ -279,6 +279,10 @@ public final class Search implements Runnable {
 
       alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE);
 
+      // Sort the root move list, so that the next iteration begins with the
+      // best move first.
+      rootMoves.sort();
+
       checkStopConditions();
 
       if (abort) {
@@ -414,10 +418,6 @@ public final class Search implements Runnable {
       abort = true;
       return;
     }
-
-    // Sort the root move list, so that the next iteration begins with the
-    // best move first.
-    rootMoves.sort();
 
     sendSummary();
   }
