@@ -262,22 +262,13 @@ public final class Search implements Runnable {
 
     // Populate root move list
     boolean isCheck = board.isCheck();
-    if (searchMoves.size == 0) {
-      MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(1, board, 0, isCheck);
-      int move;
-      while ((move = moveGenerator.next()) != Move.NOMOVE) {
-        rootMoves.entries[rootMoves.size].move = move;
-        rootMoves.entries[rootMoves.size].pv.moves[0] = move;
-        rootMoves.entries[rootMoves.size].pv.size = 1;
-        ++rootMoves.size;
-      }
-    } else {
-      for (int i = 0; i < searchMoves.size; ++i) {
-        rootMoves.entries[rootMoves.size].move = searchMoves.entries[i].move;
-        rootMoves.entries[rootMoves.size].pv.moves[0] = searchMoves.entries[i].move;
-        rootMoves.entries[rootMoves.size].pv.size = 1;
-        ++rootMoves.size;
-      }
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(1, board, 0, isCheck);
+    int move;
+    while ((move = moveGenerator.next()) != Move.NOMOVE) {
+      rootMoves.entries[rootMoves.size].move = move;
+      rootMoves.entries[rootMoves.size].pv.moves[0] = move;
+      rootMoves.entries[rootMoves.size].pv.size = 1;
+      ++rootMoves.size;
     }
 
     // Go...
@@ -367,6 +358,20 @@ public final class Search implements Runnable {
 
     for (int i = 0; i < rootMoves.size; ++i) {
       int move = rootMoves.entries[i].move;
+
+      // Search only moves specified in searchedMoves
+      if (searchMoves.size > 0) {
+        boolean found = false;
+        for (int j = 0; j < searchMoves.size; ++j) {
+          if (move == searchMoves.entries[j].move) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          continue;
+        }
+      }
 
       currentMove = move;
       currentMoveNumber = i + 1;
