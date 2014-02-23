@@ -295,6 +295,9 @@ public final class Search implements Runnable {
       timer.cancel();
     }
 
+    // Update all stats
+    sendStatus(true);
+
     // Get the best move and convert it to a GenericMove
     GenericMove bestMove = null;
     GenericMove ponderMove = null;
