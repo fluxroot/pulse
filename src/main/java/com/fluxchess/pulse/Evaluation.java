@@ -63,10 +63,10 @@ final class Evaluation {
 
     // This is just a safe guard to protect against overflow in our evaluation
     // function.
-    if (total < -CHECKMATE_THRESHOLD) {
-      total = -CHECKMATE_THRESHOLD;
-    } else if (total > CHECKMATE_THRESHOLD) {
-      total = CHECKMATE_THRESHOLD;
+    if (total <= -CHECKMATE_THRESHOLD) {
+      total = -CHECKMATE_THRESHOLD + 1;
+    } else if (total >= CHECKMATE_THRESHOLD) {
+      total = CHECKMATE_THRESHOLD - 1;
     }
 
     return total;

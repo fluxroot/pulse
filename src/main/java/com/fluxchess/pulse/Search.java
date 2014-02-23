@@ -325,7 +325,7 @@ public final class Search implements Runnable {
         } else
 
         // Check if we have a checkmate
-        if (Math.abs(rootMoves.entries[0].value) > Evaluation.CHECKMATE_THRESHOLD
+        if (Math.abs(rootMoves.entries[0].value) >= Evaluation.CHECKMATE_THRESHOLD
             && currentDepth >= (Evaluation.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
           abort = true;
         }
@@ -605,7 +605,7 @@ public final class Search implements Runnable {
     command.setNodes(totalNodes);
     command.setTime(timeDelta);
     command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-    if (Math.abs(entry.value) > Evaluation.CHECKMATE_THRESHOLD) {
+    if (Math.abs(entry.value) >= Evaluation.CHECKMATE_THRESHOLD) {
       // Calculate mate distance
       int mateDepth = Evaluation.CHECKMATE - Math.abs(entry.value);
       command.setMate(Integer.signum(entry.value) * (mateDepth + 1) / 2);
