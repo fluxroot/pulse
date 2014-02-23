@@ -277,7 +277,7 @@ public final class Search implements Runnable {
       currentMaxDepth = currentDepth;
       sendStatus(true);
 
-      alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE);
+      alphaBetaRoot(currentDepth, -Evaluation.INFINITY, Evaluation.INFINITY);
 
       // Sort the root move list, so that the next iteration begins with the
       // best move first.
@@ -410,12 +410,6 @@ public final class Search implements Runnable {
             rootMoves.entries[i].pv.moves[rootMoves.entries[i].pv.size++] = currentPonderMove;
           }
 
-          // Is the value higher than beta?
-          if (value >= beta) {
-            // Cut-off
-            break;
-          }
-
           sendMove(rootMoves.entries[i]);
         }
       }
@@ -425,7 +419,6 @@ public final class Search implements Runnable {
       // The root position is a checkmate or stalemate. We cannot search
       // further. Abort!
       abort = true;
-      return;
     }
   }
 
