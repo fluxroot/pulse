@@ -137,7 +137,7 @@ public class MoveGeneratorTest {
     MoveList moves = new MoveList();
 
     boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(depth, board, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       moves.entries[moves.size++].move = move;
