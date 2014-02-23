@@ -412,6 +412,8 @@ public final class Search implements Runnable {
             // Cut-off
             break;
           }
+
+          sendMove(rootMoves.entries[i]);
         }
       }
     }
@@ -422,8 +424,6 @@ public final class Search implements Runnable {
       abort = true;
       return;
     }
-
-    sendSummary();
   }
 
   private int alphaBeta(int depth, int alpha, int beta, int height) {
@@ -599,35 +599,32 @@ public final class Search implements Runnable {
     }
   }
 
-  private void sendSummary() {
-    if (rootMoves.size > 0) {
-      long timeDelta = System.currentTimeMillis() - startTime;
-      MoveList.Entry bestEntry = rootMoves.entries[0];
+  private void sendMove(MoveList.Entry entry) {
+    long timeDelta = System.currentTimeMillis() - startTime;
 
-      ProtocolInformationCommand command = new ProtocolInformationCommand();
+    ProtocolInformationCommand command = new ProtocolInformationCommand();
 
-      command.setDepth(currentDepth);
-      command.setMaxDepth(currentMaxDepth);
-      command.setNodes(totalNodes);
-      command.setTime(timeDelta);
-      command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-      if (Math.abs(bestEntry.value) > Evaluation.CHECKMATE_THRESHOLD) {
-        // Calculate mate distance
-        int mateDepth = Evaluation.CHECKMATE - Math.abs(bestEntry.value);
-        command.setMate(Integer.signum(bestEntry.value) * (mateDepth + 1) / 2);
-      } else {
-        command.setCentipawns(bestEntry.value);
-      }
-      List<GenericMove> pv = new ArrayList<>();
-      for (int i = 0; i < bestEntry.pv.size; ++i) {
-        pv.add(Move.toGenericMove(bestEntry.pv.moves[i]));
-      }
-      command.setMoveList(pv);
-
-      protocol.send(command);
-
-      statusStartTime = System.currentTimeMillis();
+    command.setDepth(currentDepth);
+    command.setMaxDepth(currentMaxDepth);
+    command.setNodes(totalNodes);
+    command.setTime(timeDelta);
+    command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
+    if (Math.abs(entry.value) > Evaluation.CHECKMATE_THRESHOLD) {
+      // Calculate mate distance
+      int mateDepth = Evaluation.CHECKMATE - Math.abs(entry.value);
+      command.setMate(Integer.signum(entry.value) * (mateDepth + 1) / 2);
+    } else {
+      command.setCentipawns(entry.value);
     }
+    List<GenericMove> pv = new ArrayList<>();
+    for (int i = 0; i < entry.pv.size; ++i) {
+      pv.add(Move.toGenericMove(entry.pv.moves[i]));
+    }
+    command.setMoveList(pv);
+
+    protocol.send(command);
+
+    statusStartTime = System.currentTimeMillis();
   }
 
 }
