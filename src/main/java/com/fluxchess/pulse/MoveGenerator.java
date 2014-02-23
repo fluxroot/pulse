@@ -83,7 +83,7 @@ public final class MoveGenerator {
 
   public static MoveGenerator getMoveGenerator(Board board, int depth, int height, boolean isCheck) {
     assert board != null;
-    assert height >= 0 && height <= Search.MAX_HEIGHT;
+    assert height >= 0 && height < Search.MAX_HEIGHT;
 
     MoveGenerator moveGenerator = moveGenerators[height];
     moveGenerator.board = board;
