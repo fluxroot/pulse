@@ -65,8 +65,9 @@ public final class Search implements Runnable {
   private long startTime = 0;
   private long statusStartTime = 0;
   private long totalNodes = 0;
-  private int currentDepth = 1;
-  private int currentMaxDepth = currentDepth;
+  private int initialDepth = 1;
+  private int currentDepth = initialDepth;
+  private int currentMaxDepth = initialDepth;
   private int currentMove = Move.NOMOVE;
   private int currentMoveNumber = 0;
   private int currentPonderMove = Move.NOMOVE;
@@ -81,7 +82,7 @@ public final class Search implements Runnable {
 
       // If we finished the first iteration, we should have a result.
       // In this case abort the search.
-      if (currentDepth > 1) {
+      if (currentDepth > initialDepth) {
         abort = true;
       }
     }
@@ -244,7 +245,7 @@ public final class Search implements Runnable {
 
       // If we finished the first iteration, we should have a result.
       // In this case check the stop conditions.
-      if (currentDepth > 1) {
+      if (currentDepth > initialDepth) {
         checkStopConditions();
       }
     }
@@ -282,7 +283,7 @@ public final class Search implements Runnable {
     semaphore.release();
 
     //### BEGIN Iterative Deepening
-    for (currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
+    for (currentDepth = initialDepth; currentDepth <= searchDepth; ++currentDepth) {
       currentMaxDepth = currentDepth;
       sendStatus(true);
 
