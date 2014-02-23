@@ -88,36 +88,36 @@ public final class Search implements Runnable {
     }
   }
 
-  public static Search newDepthSearch(Board board, IProtocol protocol, int searchDepth) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newDepthSearch(IProtocol protocol, Board board, int searchDepth) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (searchDepth < 1 || searchDepth > MAX_DEPTH) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     search.searchDepth = searchDepth;
 
     return search;
   }
 
-  public static Search newNodesSearch(Board board, IProtocol protocol, long searchNodes) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newNodesSearch(IProtocol protocol, Board board, long searchNodes) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (searchNodes < 1) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     search.searchNodes = searchNodes;
 
     return search;
   }
 
-  public static Search newTimeSearch(Board board, IProtocol protocol, long searchTime) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newTimeSearch(IProtocol protocol, Board board, long searchTime) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (searchTime < 1) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     search.searchTime = searchTime;
     search.timer = new Timer(true);
@@ -125,12 +125,12 @@ public final class Search implements Runnable {
     return search;
   }
 
-  public static Search newMovesSearch(Board board, IProtocol protocol, List<GenericMove> searchMoves) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newMovesSearch(IProtocol protocol, Board board, List<GenericMove> searchMoves) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (searchMoves == null) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     for (GenericMove move : searchMoves) {
       search.searchMoves.entries[search.searchMoves.size++].move = Move.valueOf(move, board);
@@ -139,19 +139,18 @@ public final class Search implements Runnable {
     return search;
   }
 
-  public static Search newInfiniteSearch(Board board, IProtocol protocol) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newInfiniteSearch(IProtocol protocol, Board board) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
 
-    return new Search(board, protocol);
+    return new Search(protocol, board);
   }
 
   public static Search newClockSearch(
-      Board board, IProtocol protocol,
-      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
-  ) {
+      IProtocol protocol, Board board,
+      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
     Search search = newPonderSearch(
-        board, protocol,
+        protocol, board,
         whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
     );
 
@@ -161,18 +160,17 @@ public final class Search implements Runnable {
   }
 
   public static Search newPonderSearch(
-      Board board, IProtocol protocol,
-      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
-  ) {
-    if (board == null) throw new IllegalArgumentException();
+      IProtocol protocol, Board board,
+      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (whiteTimeLeft < 1) throw new IllegalArgumentException();
     if (whiteTimeIncrement < 0) throw new IllegalArgumentException();
     if (blackTimeLeft < 1) throw new IllegalArgumentException();
     if (blackTimeIncrement < 0) throw new IllegalArgumentException();
     if (movesToGo < 0) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     long timeLeft;
     long timeIncrement;
@@ -203,12 +201,12 @@ public final class Search implements Runnable {
     return search;
   }
 
-  private Search(Board board, IProtocol protocol) {
-    assert board != null;
+  private Search(IProtocol protocol, Board board) {
     assert protocol != null;
+    assert board != null;
 
-    this.board = board;
     this.protocol = protocol;
+    this.board = board;
   }
 
   public void start() {
