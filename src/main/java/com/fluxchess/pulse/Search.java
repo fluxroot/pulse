@@ -213,6 +213,7 @@ public final class Search implements Runnable {
 
   public void start() {
     if (!thread.isAlive()) {
+      thread.setDaemon(true);
       thread.start();
       try {
         // Wait for initialization
@@ -230,7 +231,7 @@ public final class Search implements Runnable {
 
       try {
         // Wait for the thread to die
-        thread.join();
+        thread.join(5000);
       } catch (InterruptedException e) {
         // Do nothing
       }
