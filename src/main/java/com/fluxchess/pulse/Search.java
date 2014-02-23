@@ -65,8 +65,9 @@ public final class Search implements Runnable {
   private long startTime = 0;
   private long statusStartTime = 0;
   private long totalNodes = 0;
-  private int currentDepth = 1;
-  private int currentMaxDepth = currentDepth;
+  private int initialDepth = 1;
+  private int currentDepth = initialDepth;
+  private int currentMaxDepth = initialDepth;
   private int currentMove = Move.NOMOVE;
   private int currentMoveNumber = 0;
   private int currentPonderMove = Move.NOMOVE;
@@ -81,42 +82,42 @@ public final class Search implements Runnable {
 
       // If we finished the first iteration, we should have a result.
       // In this case abort the search.
-      if (currentDepth > 1) {
+      if (currentDepth > initialDepth) {
         abort = true;
       }
     }
   }
 
-  public static Search newDepthSearch(Board board, IProtocol protocol, int searchDepth) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newDepthSearch(IProtocol protocol, Board board, int searchDepth) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (searchDepth < 1 || searchDepth > MAX_DEPTH) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     search.searchDepth = searchDepth;
 
     return search;
   }
 
-  public static Search newNodesSearch(Board board, IProtocol protocol, long searchNodes) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newNodesSearch(IProtocol protocol, Board board, long searchNodes) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (searchNodes < 1) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     search.searchNodes = searchNodes;
 
     return search;
   }
 
-  public static Search newTimeSearch(Board board, IProtocol protocol, long searchTime) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newTimeSearch(IProtocol protocol, Board board, long searchTime) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (searchTime < 1) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     search.searchTime = searchTime;
     search.timer = new Timer(true);
@@ -124,12 +125,12 @@ public final class Search implements Runnable {
     return search;
   }
 
-  public static Search newMovesSearch(Board board, IProtocol protocol, List<GenericMove> searchMoves) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newMovesSearch(IProtocol protocol, Board board, List<GenericMove> searchMoves) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (searchMoves == null) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     for (GenericMove move : searchMoves) {
       search.searchMoves.entries[search.searchMoves.size++].move = Move.valueOf(move, board);
@@ -138,19 +139,18 @@ public final class Search implements Runnable {
     return search;
   }
 
-  public static Search newInfiniteSearch(Board board, IProtocol protocol) {
-    if (board == null) throw new IllegalArgumentException();
+  public static Search newInfiniteSearch(IProtocol protocol, Board board) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
 
-    return new Search(board, protocol);
+    return new Search(protocol, board);
   }
 
   public static Search newClockSearch(
-      Board board, IProtocol protocol,
-      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
-  ) {
+      IProtocol protocol, Board board,
+      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
     Search search = newPonderSearch(
-        board, protocol,
+        protocol, board,
         whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
     );
 
@@ -160,18 +160,17 @@ public final class Search implements Runnable {
   }
 
   public static Search newPonderSearch(
-      Board board, IProtocol protocol,
-      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo
-  ) {
-    if (board == null) throw new IllegalArgumentException();
+      IProtocol protocol, Board board,
+      long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
     if (protocol == null) throw new IllegalArgumentException();
+    if (board == null) throw new IllegalArgumentException();
     if (whiteTimeLeft < 1) throw new IllegalArgumentException();
     if (whiteTimeIncrement < 0) throw new IllegalArgumentException();
     if (blackTimeLeft < 1) throw new IllegalArgumentException();
     if (blackTimeIncrement < 0) throw new IllegalArgumentException();
     if (movesToGo < 0) throw new IllegalArgumentException();
 
-    Search search = new Search(board, protocol);
+    Search search = new Search(protocol, board);
 
     long timeLeft;
     long timeIncrement;
@@ -202,16 +201,17 @@ public final class Search implements Runnable {
     return search;
   }
 
-  private Search(Board board, IProtocol protocol) {
-    assert board != null;
+  private Search(IProtocol protocol, Board board) {
     assert protocol != null;
+    assert board != null;
 
-    this.board = board;
     this.protocol = protocol;
+    this.board = board;
   }
 
   public void start() {
     if (!thread.isAlive()) {
+      thread.setDaemon(true);
       thread.start();
       try {
         // Wait for initialization
@@ -229,7 +229,7 @@ public final class Search implements Runnable {
 
       try {
         // Wait for the thread to die
-        thread.join();
+        thread.join(5000);
       } catch (InterruptedException e) {
         // Do nothing
       }
@@ -244,7 +244,7 @@ public final class Search implements Runnable {
 
       // If we finished the first iteration, we should have a result.
       // In this case check the stop conditions.
-      if (currentDepth > 1) {
+      if (currentDepth > initialDepth) {
         checkStopConditions();
       }
     }
@@ -260,33 +260,28 @@ public final class Search implements Runnable {
 
     // Populate root move list
     boolean isCheck = board.isCheck();
-    if (searchMoves.size == 0) {
-      MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(1, board, 0, isCheck);
-      int move;
-      while ((move = moveGenerator.next()) != Move.NOMOVE) {
-        rootMoves.entries[rootMoves.size].move = move;
-        rootMoves.entries[rootMoves.size].pv.moves[0] = move;
-        rootMoves.entries[rootMoves.size].pv.size = 1;
-        ++rootMoves.size;
-      }
-    } else {
-      for (int i = 0; i < searchMoves.size; ++i) {
-        rootMoves.entries[rootMoves.size].move = searchMoves.entries[i].move;
-        rootMoves.entries[rootMoves.size].pv.moves[0] = searchMoves.entries[i].move;
-        rootMoves.entries[rootMoves.size].pv.size = 1;
-        ++rootMoves.size;
-      }
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, 1, 0, isCheck);
+    int move;
+    while ((move = moveGenerator.next()) != Move.NOMOVE) {
+      rootMoves.entries[rootMoves.size].move = move;
+      rootMoves.entries[rootMoves.size].pv.moves[0] = move;
+      rootMoves.entries[rootMoves.size].pv.size = 1;
+      ++rootMoves.size;
     }
 
     // Go...
     semaphore.release();
 
     //### BEGIN Iterative Deepening
-    for (currentDepth = 1; currentDepth <= searchDepth; ++currentDepth) {
+    for (currentDepth = initialDepth; currentDepth <= searchDepth; ++currentDepth) {
       currentMaxDepth = currentDepth;
       sendStatus(true);
 
-      alphaBetaRoot(currentDepth, -Evaluation.CHECKMATE, Evaluation.CHECKMATE);
+      alphaBetaRoot(currentDepth, -Evaluation.INFINITY, Evaluation.INFINITY);
+
+      // Sort the root move list, so that the next iteration begins with the
+      // best move first.
+      rootMoves.sort();
 
       checkStopConditions();
 
@@ -299,6 +294,9 @@ public final class Search implements Runnable {
     if (timer != null) {
       timer.cancel();
     }
+
+    // Update all stats
+    sendStatus(true);
 
     // Get the best move and convert it to a GenericMove
     GenericMove bestMove = null;
@@ -364,7 +362,25 @@ public final class Search implements Runnable {
     int bestValue = -Evaluation.INFINITY;
 
     for (int i = 0; i < rootMoves.size; ++i) {
+      rootMoves.entries[i].value = -Evaluation.INFINITY;
+    }
+
+    for (int i = 0; i < rootMoves.size; ++i) {
       int move = rootMoves.entries[i].move;
+
+      // Search only moves specified in searchedMoves
+      if (searchMoves.size > 0) {
+        boolean found = false;
+        for (int j = 0; j < searchMoves.size; ++j) {
+          if (move == searchMoves.entries[j].move) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          continue;
+        }
+      }
 
       currentMove = move;
       currentMoveNumber = i + 1;
@@ -380,12 +396,6 @@ public final class Search implements Runnable {
         return;
       }
 
-      rootMoves.entries[i].value = value;
-      rootMoves.entries[i].pv.size = 1;
-      if (currentPonderMove != Move.NOMOVE) {
-        rootMoves.entries[i].pv.moves[rootMoves.entries[i].pv.size++] = currentPonderMove;
-      }
-
       // Pruning
       if (value > bestValue) {
         bestValue = value;
@@ -394,11 +404,13 @@ public final class Search implements Runnable {
         if (value > alpha) {
           alpha = value;
 
-          // Is the value higher than beta?
-          if (value >= beta) {
-            // Cut-off
-            break;
+          rootMoves.entries[i].value = value;
+          rootMoves.entries[i].pv.size = 1;
+          if (currentPonderMove != Move.NOMOVE) {
+            rootMoves.entries[i].pv.moves[rootMoves.entries[i].pv.size++] = currentPonderMove;
           }
+
+          sendMove(rootMoves.entries[i]);
         }
       }
     }
@@ -407,14 +419,7 @@ public final class Search implements Runnable {
       // The root position is a checkmate or stalemate. We cannot search
       // further. Abort!
       abort = true;
-      return;
     }
-
-    // Sort the root move list, so that the next iteration begins with the
-    // best move first.
-    rootMoves.sort();
-
-    sendSummary();
   }
 
   private int alphaBeta(int depth, int alpha, int beta, int height) {
@@ -443,7 +448,7 @@ public final class Search implements Runnable {
 
     boolean isCheck = board.isCheck();
 
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(depth, board, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       ++searchedMoves;
@@ -529,7 +534,7 @@ public final class Search implements Runnable {
     //### ENDOF Stand pat
 
     // Only generate capturing moves or evasion moves, in case we are in check.
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(depth, board, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, height, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       ++searchedMoves;
@@ -590,35 +595,32 @@ public final class Search implements Runnable {
     }
   }
 
-  private void sendSummary() {
-    if (rootMoves.size > 0) {
-      long timeDelta = System.currentTimeMillis() - startTime;
-      MoveList.Entry bestEntry = rootMoves.entries[0];
+  private void sendMove(MoveList.Entry entry) {
+    long timeDelta = System.currentTimeMillis() - startTime;
 
-      ProtocolInformationCommand command = new ProtocolInformationCommand();
+    ProtocolInformationCommand command = new ProtocolInformationCommand();
 
-      command.setDepth(currentDepth);
-      command.setMaxDepth(currentMaxDepth);
-      command.setNodes(totalNodes);
-      command.setTime(timeDelta);
-      command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-      if (Math.abs(bestEntry.value) > Evaluation.CHECKMATE_THRESHOLD) {
-        // Calculate mate distance
-        int mateDepth = Evaluation.CHECKMATE - Math.abs(bestEntry.value);
-        command.setMate(Integer.signum(bestEntry.value) * (mateDepth + 1) / 2);
-      } else {
-        command.setCentipawns(bestEntry.value);
-      }
-      List<GenericMove> pv = new ArrayList<>();
-      for (int i = 0; i < bestEntry.pv.size; ++i) {
-        pv.add(Move.toGenericMove(bestEntry.pv.moves[i]));
-      }
-      command.setMoveList(pv);
-
-      protocol.send(command);
-
-      statusStartTime = System.currentTimeMillis();
+    command.setDepth(currentDepth);
+    command.setMaxDepth(currentMaxDepth);
+    command.setNodes(totalNodes);
+    command.setTime(timeDelta);
+    command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
+    if (Math.abs(entry.value) > Evaluation.CHECKMATE_THRESHOLD) {
+      // Calculate mate distance
+      int mateDepth = Evaluation.CHECKMATE - Math.abs(entry.value);
+      command.setMate(Integer.signum(entry.value) * (mateDepth + 1) / 2);
+    } else {
+      command.setCentipawns(entry.value);
     }
+    List<GenericMove> pv = new ArrayList<>();
+    for (int i = 0; i < entry.pv.size; ++i) {
+      pv.add(Move.toGenericMove(entry.pv.moves[i]));
+    }
+    command.setMoveList(pv);
+
+    protocol.send(command);
+
+    statusStartTime = System.currentTimeMillis();
   }
 
 }

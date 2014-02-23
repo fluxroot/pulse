@@ -76,7 +76,7 @@ public final class Board {
   }
 
   private static final class Zobrist {
-    final SecureRandom random = new SecureRandom();
+    private final SecureRandom random = new SecureRandom();
 
     byte[] result() {
       // Generate some random bytes for our keys

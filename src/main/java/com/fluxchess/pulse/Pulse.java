@@ -82,7 +82,7 @@ public final class Pulse extends AbstractEngine {
 
   private void initialize() {
     board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
-    search = Search.newInfiniteSearch(board, getProtocol());
+    search = Search.newInfiniteSearch(getProtocol(), board);
   }
 
   protected void quit() {
@@ -176,7 +176,7 @@ public final class Pulse extends AbstractEngine {
 
     // Initialize per-game settings here.
     board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
-    search = Search.newInfiniteSearch(board, getProtocol());
+    search = Search.newInfiniteSearch(getProtocol(), board);
   }
 
   public void receive(EngineAnalyzeCommand command) {
@@ -216,15 +216,15 @@ public final class Pulse extends AbstractEngine {
     // We received a start calculating command. Extract all parameters from the
     // command and start the search.
     if (command.getDepth() != null) {
-      search = Search.newDepthSearch(board, getProtocol(), command.getDepth());
+      search = Search.newDepthSearch(getProtocol(), board, command.getDepth());
     } else if (command.getNodes() != null) {
-      search = Search.newNodesSearch(board, getProtocol(), command.getNodes());
+      search = Search.newNodesSearch(getProtocol(), board, command.getNodes());
     } else if (command.getMoveTime() != null) {
-      search = Search.newTimeSearch(board, getProtocol(), command.getMoveTime());
+      search = Search.newTimeSearch(getProtocol(), board, command.getMoveTime());
     } else if (command.getSearchMoveList() != null) {
-      search = Search.newMovesSearch(board, getProtocol(), command.getSearchMoveList());
+      search = Search.newMovesSearch(getProtocol(), board, command.getSearchMoveList());
     } else if (command.getInfinite()) {
-      search = Search.newInfiniteSearch(board, getProtocol());
+      search = Search.newInfiniteSearch(getProtocol(), board);
     } else {
       long whiteTimeLeft = 1;
       if (command.getClock(GenericColor.WHITE) != null) {
@@ -253,14 +253,12 @@ public final class Pulse extends AbstractEngine {
 
       if (command.getPonder()) {
         search = Search.newPonderSearch(
-            board, getProtocol(),
-            whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo
-        );
+            getProtocol(), board,
+            whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
       } else {
         search = Search.newClockSearch(
-            board, getProtocol(),
-            whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo
-        );
+            getProtocol(), board,
+            whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
       }
     }
 

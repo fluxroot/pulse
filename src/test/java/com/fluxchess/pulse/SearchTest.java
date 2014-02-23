@@ -40,7 +40,6 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newDepthSearch(
-        new Board(new GenericBoard("3K3r/8/3k4/8/8/8/8/8 w - - 0 1")),
         new IProtocol() {
           @Override
           public void send(ProtocolInitializeAnswerCommand command) {
@@ -61,7 +60,7 @@ public class SearchTest {
           @Override
           public void send(ProtocolInformationCommand command) {
           }
-        },
+        }, new Board(new GenericBoard("3K3r/8/3k4/8/8/8/8/8 w - - 0 1")),
         1
     ).start();
 
@@ -80,7 +79,6 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newDepthSearch(
-        new Board(new GenericBoard("8/8/1R1P4/2B2p2/k1K2P2/4P3/8/8 w - - 3 101")),
         new IProtocol() {
           @Override
           public void send(ProtocolInitializeAnswerCommand command) {
@@ -104,7 +102,7 @@ public class SearchTest {
               mate[0] = command.getMate();
             }
           }
-        },
+        }, new Board(new GenericBoard("8/8/1R1P4/2B2p2/k1K2P2/4P3/8/8 w - - 3 101")),
         2
     ).start();
 
@@ -123,7 +121,6 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newDepthSearch(
-        new Board(new GenericBoard("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1")),
         new IProtocol() {
           @Override
           public void send(ProtocolInitializeAnswerCommand command) {
@@ -144,7 +141,7 @@ public class SearchTest {
           @Override
           public void send(ProtocolInformationCommand command) {
           }
-        },
+        }, new Board(new GenericBoard("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1")),
         1
     ).start();
 
@@ -161,7 +158,6 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newClockSearch(
-        new Board(new GenericBoard("3K4/7r/3k4/8/8/8/8/8 b - - 0 1")),
         new IProtocol() {
           @Override
           public void send(ProtocolInitializeAnswerCommand command) {
@@ -181,7 +177,7 @@ public class SearchTest {
           @Override
           public void send(ProtocolInformationCommand command) {
           }
-        },
+        }, new Board(new GenericBoard("3K4/7r/3k4/8/8/8/8/8 b - - 0 1")),
         10000, 0, 10000, 0, 40
     ).start();
 
@@ -197,7 +193,6 @@ public class SearchTest {
     final Semaphore semaphore = new Semaphore(0);
 
     Search.newClockSearch(
-        new Board(new GenericBoard("K1k5/8/8/8/8/8/8/8 w - - 0 1")),
         new IProtocol() {
           @Override
           public void send(ProtocolInitializeAnswerCommand command) {
@@ -217,7 +212,7 @@ public class SearchTest {
           @Override
           public void send(ProtocolInformationCommand command) {
           }
-        },
+        }, new Board(new GenericBoard("K1k5/8/8/8/8/8/8/8 w - - 0 1")),
         10000, 0, 10000, 0, 40
     ).start();
 
