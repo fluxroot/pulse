@@ -103,20 +103,20 @@ public final class Board {
 
     for (int piece : Piece.values) {
       for (int i = 0; i < BOARDSIZE; ++i) {
-        zobristPiece[Piece.ordinal(piece)][i] = Math.abs(zobrist.next());
+        zobristPiece[Piece.ordinal(piece)][i] = zobrist.next();
       }
     }
 
-    zobristCastling[Color.WHITE][Castling.KINGSIDE] = Math.abs(zobrist.next());
-    zobristCastling[Color.WHITE][Castling.QUEENSIDE] = Math.abs(zobrist.next());
-    zobristCastling[Color.BLACK][Castling.KINGSIDE] = Math.abs(zobrist.next());
-    zobristCastling[Color.BLACK][Castling.QUEENSIDE] = Math.abs(zobrist.next());
+    zobristCastling[Color.WHITE][Castling.KINGSIDE] = zobrist.next();
+    zobristCastling[Color.WHITE][Castling.QUEENSIDE] = zobrist.next();
+    zobristCastling[Color.BLACK][Castling.KINGSIDE] = zobrist.next();
+    zobristCastling[Color.BLACK][Castling.QUEENSIDE] = zobrist.next();
 
     for (int i = 0; i < BOARDSIZE; ++i) {
-      zobristEnPassant[i] = Math.abs(zobrist.next());
+      zobristEnPassant[i] = zobrist.next();
     }
 
-    zobristActiveColor = Math.abs(zobrist.next());
+    zobristActiveColor = zobrist.next();
   }
 
   public Board(GenericBoard genericBoard) {
