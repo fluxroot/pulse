@@ -105,7 +105,7 @@ public final class Pulse extends AbstractEngine {
 
     // We must send an initialization answer back!
     ProtocolInitializeAnswerCommand answerCommand = new ProtocolInitializeAnswerCommand(
-        VersionInfo.current().toString(), "Flux Chess Project"
+        VersionInfo.current().toString(), "Phokham Nonava"
     );
 
     // For each supported option, add it to the command.
