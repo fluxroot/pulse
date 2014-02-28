@@ -30,6 +30,7 @@ import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
 import static com.fluxchess.pulse.Color.WHITE;
+import static com.fluxchess.pulse.MoveList.MoveVariation;
 
 /**
  * This class implements our search in a separate thread to keep the main
@@ -72,7 +73,7 @@ public final class Search implements Runnable {
   private int currentMaxDepth = initialDepth;
   private int currentMove = Move.NOMOVE;
   private int currentMoveNumber = 0;
-  private int currentPonderMove = Move.NOMOVE;
+  private final MoveVariation[] pv = new MoveVariation[MAX_PLY + 1];
 
   /**
    * This is our search timer for time & clock & ponder searches.
@@ -209,6 +210,10 @@ public final class Search implements Runnable {
 
     this.protocol = protocol;
     this.board = board;
+
+    for (int i = 0; i < pv.length; ++i) {
+      pv[i] = new MoveVariation();
+    }
   }
 
   public void start() {
@@ -347,6 +352,8 @@ public final class Search implements Runnable {
       abort = true;
     }
 
+    pv[ply].size = 0;
+
     sendStatus(false);
   }
 
@@ -385,8 +392,6 @@ public final class Search implements Runnable {
       currentMoveNumber = i + 1;
       sendStatus(true);
 
-      currentPonderMove = Move.NOMOVE;
-
       board.makeMove(move);
       int value = -search(depth - 1, -beta, -alpha, ply + 1);
       board.undoMove(move);
@@ -400,10 +405,7 @@ public final class Search implements Runnable {
         alpha = value;
 
         rootMoves.entries[i].value = value;
-        rootMoves.entries[i].pv.size = 1;
-        if (currentPonderMove != Move.NOMOVE) {
-          rootMoves.entries[i].pv.moves[rootMoves.entries[i].pv.size++] = currentPonderMove;
-        }
+        savePV(move, pv[ply + 1], rootMoves.entries[i].pv);
 
         sendMove(rootMoves.entries[i]);
       }
@@ -437,7 +439,6 @@ public final class Search implements Runnable {
 
     // Initialize
     int bestValue = -Evaluation.INFINITY;
-    int bestMove = Move.NOMOVE;
     int searchedMoves = 0;
 
     boolean isCheck = board.isCheck();
@@ -462,7 +463,7 @@ public final class Search implements Runnable {
         // Do we have a better value?
         if (value > alpha) {
           alpha = value;
-          bestMove = move;
+          savePV(move, pv[ply + 1], pv[ply]);
 
           // Is the value higher than beta?
           if (value >= beta) {
@@ -482,10 +483,6 @@ public final class Search implements Runnable {
         // We have a stale mate. Return the draw value.
         return Evaluation.DRAW;
       }
-    }
-
-    if (ply == 1 && bestMove != Move.NOMOVE) {
-      currentPonderMove = bestMove;
     }
 
     return bestValue;
@@ -548,6 +545,7 @@ public final class Search implements Runnable {
         // Do we have a better value?
         if (value > alpha) {
           alpha = value;
+          savePV(move, pv[ply + 1], pv[ply]);
 
           // Is the value higher than beta?
           if (value >= beta) {
@@ -565,6 +563,12 @@ public final class Search implements Runnable {
     }
 
     return bestValue;
+  }
+
+  private void savePV(int move, MoveVariation src, MoveVariation dest) {
+    dest.moves[0] = move;
+    System.arraycopy(src.moves, 0, dest.moves, 1, src.size);
+    dest.size = src.size + 1;
   }
 
   private void sendStatus(boolean force) {
