@@ -360,9 +360,6 @@ public final class Search implements Runnable {
       return;
     }
 
-    // Initialize
-    int bestValue = -Evaluation.INFINITY;
-
     for (int i = 0; i < rootMoves.size; ++i) {
       rootMoves.entries[i].value = -Evaluation.INFINITY;
     }
@@ -398,22 +395,17 @@ public final class Search implements Runnable {
         return;
       }
 
-      // Pruning
-      if (value > bestValue) {
-        bestValue = value;
+      // Do we have a better value?
+      if (value > alpha) {
+        alpha = value;
 
-        // Do we have a better value?
-        if (value > alpha) {
-          alpha = value;
-
-          rootMoves.entries[i].value = value;
-          rootMoves.entries[i].pv.size = 1;
-          if (currentPonderMove != Move.NOMOVE) {
-            rootMoves.entries[i].pv.moves[rootMoves.entries[i].pv.size++] = currentPonderMove;
-          }
-
-          sendMove(rootMoves.entries[i]);
+        rootMoves.entries[i].value = value;
+        rootMoves.entries[i].pv.size = 1;
+        if (currentPonderMove != Move.NOMOVE) {
+          rootMoves.entries[i].pv.moves[rootMoves.entries[i].pv.size++] = currentPonderMove;
         }
+
+        sendMove(rootMoves.entries[i]);
       }
     }
 
