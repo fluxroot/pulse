@@ -351,10 +351,6 @@ public final class Board {
     int originPiece = Move.getOriginPiece(move);
     int originColor = Piece.getColor(originPiece);
     int targetPiece = Move.getTargetPiece(move);
-    int captureSquare = targetSquare;
-    if (type == Move.Type.ENPASSANT) {
-      captureSquare += (originColor == Color.WHITE ? Square.deltaS : Square.deltaN);
-    }
 
     // Save zobristCode
     entry.zobristCode = zobristCode;
@@ -374,6 +370,10 @@ public final class Board {
 
     // Remove target piece and update castling rights
     if (targetPiece != Piece.NOPIECE) {
+      int captureSquare = targetSquare;
+      if (type == Move.Type.ENPASSANT) {
+        captureSquare += (originColor == Color.WHITE ? Square.deltaS : Square.deltaN);
+      }
       assert targetPiece == board[captureSquare];
       remove(captureSquare);
 
@@ -466,11 +466,6 @@ public final class Board {
     int originPiece = Move.getOriginPiece(move);
     int originColor = Piece.getColor(originPiece);
     int targetPiece = Move.getTargetPiece(move);
-    int captureSquare = targetSquare;
-    if (type == Move.Type.ENPASSANT) {
-      captureSquare += (originColor == Color.WHITE ? Square.deltaS : Square.deltaN);
-      assert Square.isValid(captureSquare);
-    }
 
     // Update fullMoveNumber
     --halfMoveNumber;
@@ -515,6 +510,11 @@ public final class Board {
 
     // Restore target piece
     if (targetPiece != Piece.NOPIECE) {
+      int captureSquare = targetSquare;
+      if (type == Move.Type.ENPASSANT) {
+        captureSquare += (originColor == Color.WHITE ? Square.deltaS : Square.deltaN);
+        assert Square.isValid(captureSquare);
+      }
       put(targetPiece, captureSquare);
     }
 
