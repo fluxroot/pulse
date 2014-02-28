@@ -47,7 +47,7 @@ public class BoardTest {
     for (GenericColor genericColor : GenericColor.values()) {
       for (GenericCastling genericCastling : GenericCastling.values()) {
         GenericFile genericFile = genericBoard.getCastling(genericColor, genericCastling);
-        int file = board.colorCastling[Color.valueOf(genericColor)][Castling.valueOf(genericCastling)];
+        int file = board.castlingRights[Color.valueOf(genericColor)][Castling.valueOf(genericCastling)];
         if (genericFile == null) {
           assertEquals(File.NOFILE, file);
         } else {
@@ -175,21 +175,21 @@ public class BoardTest {
   public void testNormalMove() {
     GenericBoard genericBoard = new GenericBoard(GenericBoard.STANDARDSETUP);
     Board board = new Board(genericBoard);
-    long zobristCode = board.zobristCode;
+    long zobristKey = board.zobristKey;
 
     int move = Move.valueOf(Move.Type.NORMAL, Square.a2, Square.a3, Piece.WHITEPAWN, Piece.NOPIECE, Piece.Type.NOTYPE);
     board.makeMove(move);
     board.undoMove(move);
 
     assertEquals(genericBoard, board.toGenericBoard());
-    assertEquals(zobristCode, board.zobristCode);
+    assertEquals(zobristKey, board.zobristKey);
   }
 
   @Test
   public void testPawnDoubleMove() {
     GenericBoard genericBoard = new GenericBoard(GenericBoard.STANDARDSETUP);
     Board board = new Board(genericBoard);
-    long zobristCode = board.zobristCode;
+    long zobristKey = board.zobristKey;
 
     int move = Move.valueOf(Move.Type.PAWNDOUBLE, Square.a2, Square.a4, Piece.WHITEPAWN, Piece.NOPIECE, Piece.Type.NOTYPE);
     board.makeMove(move);
@@ -199,14 +199,14 @@ public class BoardTest {
     board.undoMove(move);
 
     assertEquals(genericBoard, board.toGenericBoard());
-    assertEquals(zobristCode, board.zobristCode);
+    assertEquals(zobristKey, board.zobristKey);
   }
 
   @Test
   public void testPawnPromotionMove() throws IllegalNotationException {
     GenericBoard genericBoard = new GenericBoard("8/P5k1/8/8/2K5/8/8/8 w - - 0 1");
     Board board = new Board(genericBoard);
-    long zobristCode = board.zobristCode;
+    long zobristKey = board.zobristKey;
 
     int move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.a7, Square.a8, Piece.WHITEPAWN, Piece.NOPIECE, Piece.Type.QUEEN);
     board.makeMove(move);
@@ -216,14 +216,14 @@ public class BoardTest {
     board.undoMove(move);
 
     assertEquals(genericBoard, board.toGenericBoard());
-    assertEquals(zobristCode, board.zobristCode);
+    assertEquals(zobristKey, board.zobristKey);
   }
 
   @Test
   public void testEnPassantMove() throws IllegalNotationException {
     GenericBoard genericBoard = new GenericBoard("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1");
     Board board = new Board(genericBoard);
-    long zobristCode = board.zobristCode;
+    long zobristKey = board.zobristKey;
 
     // Make en passant move
     int move = Move.valueOf(Move.Type.ENPASSANT, Square.e4, Square.d3, Piece.BLACKPAWN, Piece.WHITEPAWN, Piece.Type.NOTYPE);
@@ -236,38 +236,38 @@ public class BoardTest {
     board.undoMove(move);
 
     assertEquals(genericBoard, board.toGenericBoard());
-    assertEquals(zobristCode, board.zobristCode);
+    assertEquals(zobristKey, board.zobristKey);
   }
 
   @Test
   public void testCastlingMove() throws IllegalNotationException {
     GenericBoard genericBoard = new GenericBoard("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
     Board board = new Board(genericBoard);
-    long zobristCode = board.zobristCode;
+    long zobristKey = board.zobristKey;
 
     int move = Move.valueOf(Move.Type.CASTLING, Square.e1, Square.c1, Piece.WHITEKING, Piece.NOPIECE, Piece.Type.NOTYPE);
     board.makeMove(move);
 
-    assertEquals(File.NOFILE, board.colorCastling[Color.WHITE][Castling.QUEENSIDE]);
+    assertEquals(File.NOFILE, board.castlingRights[Color.WHITE][Castling.QUEENSIDE]);
 
     board.undoMove(move);
 
     assertEquals(genericBoard, board.toGenericBoard());
-    assertEquals(zobristCode, board.zobristCode);
+    assertEquals(zobristKey, board.zobristKey);
 
     genericBoard = new GenericBoard("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
     board = new Board(genericBoard);
-    zobristCode = board.zobristCode;
+    zobristKey = board.zobristKey;
 
     move = Move.valueOf(Move.Type.CASTLING, Square.e1, Square.g1, Piece.WHITEKING, Piece.NOPIECE, Piece.Type.NOTYPE);
     board.makeMove(move);
 
-    assertEquals(File.NOFILE, board.colorCastling[Color.WHITE][Castling.KINGSIDE]);
+    assertEquals(File.NOFILE, board.castlingRights[Color.WHITE][Castling.KINGSIDE]);
 
     board.undoMove(move);
 
     assertEquals(genericBoard, board.toGenericBoard());
-    assertEquals(zobristCode, board.zobristCode);
+    assertEquals(zobristKey, board.zobristKey);
   }
 
 }

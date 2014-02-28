@@ -66,7 +66,7 @@ final class PerftPerformance {
     LOG.info(String.format("Total nodes per millisecond: %d", totalNodes / totalTime));
   }
 
-  private static int miniMax(int depth, Board board, int height) {
+  private static int miniMax(int depth, Board board, int ply) {
     if (depth == 0) {
       return 1;
     }
@@ -74,11 +74,11 @@ final class PerftPerformance {
     int totalNodes = 0;
 
     boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       board.makeMove(move);
-      int nodes = miniMax(depth - 1, board, height + 1);
+      int nodes = miniMax(depth - 1, board, ply + 1);
       board.undoMove(move);
 
       totalNodes += nodes;
