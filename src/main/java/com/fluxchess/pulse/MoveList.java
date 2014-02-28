@@ -37,7 +37,7 @@ public final class MoveList {
   }
 
   public static final class MoveVariation {
-    public final int[] moves = new int[Search.MAX_HEIGHT];
+    public final int[] moves = new int[Search.MAX_PLY];
     public int size = 0;
   }
 

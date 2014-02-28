@@ -75,7 +75,7 @@ public class PieceTest {
   }
 
   @Test
-  public void testGetChessman() {
+  public void testGetType() {
     assertEquals(Piece.Type.PAWN, Piece.getType(Piece.WHITEPAWN));
     assertEquals(Piece.Type.PAWN, Piece.getType(Piece.BLACKPAWN));
     assertEquals(Piece.Type.KNIGHT, Piece.getType(Piece.WHITEKNIGHT));
@@ -91,7 +91,7 @@ public class PieceTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testInvalidGetChessman() {
+  public void testInvalidGetType() {
     Piece.getType(Piece.NOPIECE);
   }
 

@@ -25,12 +25,17 @@ import com.fluxchess.jcpi.models.GenericPiece;
 
 import java.security.SecureRandom;
 
+import static com.fluxchess.pulse.Castling.KINGSIDE;
+import static com.fluxchess.pulse.Castling.QUEENSIDE;
+import static com.fluxchess.pulse.Color.BLACK;
+import static com.fluxchess.pulse.Color.WHITE;
+
 /**
  * This is our internal board.
  */
 public final class Board {
 
-  private static final int MAX_GAMEMOVES = Search.MAX_HEIGHT + 1024;
+  private static final int MAX_GAMEMOVES = Search.MAX_PLY + 1024;
 
   private static final int BOARDSIZE = 128;
 
@@ -43,13 +48,13 @@ public final class Board {
   public final Bitboard[] queens = new Bitboard[Color.values.length];
   public final Bitboard[] kings = new Bitboard[Color.values.length];
 
-  public final int[][] colorCastling = new int[Color.values.length][Castling.values.length];
+  public final int[][] castlingRights = new int[Color.values.length][Castling.values.length];
   public int enPassant = Square.NOSQUARE;
-  public int activeColor = Color.WHITE;
+  public int activeColor = WHITE;
   public int halfMoveClock = 0;
   private int halfMoveNumber;
 
-  public long zobristCode = 0;
+  public long zobristKey = 0;
   private static final long[][] zobristPiece = new long[Piece.values.length][BOARDSIZE];
   private static final long[][] zobristCastling = new long[Color.values.length][Castling.values.length];
   private static final long[] zobristEnPassant = new long[BOARDSIZE];
@@ -61,15 +66,15 @@ public final class Board {
   private int stackSize = 0;
 
   private static final class State {
-    public long zobristCode = 0;
-    public final int[][] castling = new int[Color.values.length][Castling.values.length];
+    public long zobristKey = 0;
+    public final int[][] castlingRights = new int[Color.values.length][Castling.values.length];
     public int enPassant = Square.NOSQUARE;
     public int halfMoveClock = 0;
 
     public State() {
       for (int color : Color.values) {
         for (int castling : Castling.values) {
-          this.castling[color][castling] = File.NOFILE;
+          castlingRights[color][castling] = File.NOFILE;
         }
       }
     }
@@ -103,20 +108,20 @@ public final class Board {
 
     for (int piece : Piece.values) {
       for (int i = 0; i < BOARDSIZE; ++i) {
-        zobristPiece[Piece.ordinal(piece)][i] = Math.abs(zobrist.next());
+        zobristPiece[Piece.ordinal(piece)][i] = zobrist.next();
       }
     }
 
-    zobristCastling[Color.WHITE][Castling.KINGSIDE] = Math.abs(zobrist.next());
-    zobristCastling[Color.WHITE][Castling.QUEENSIDE] = Math.abs(zobrist.next());
-    zobristCastling[Color.BLACK][Castling.KINGSIDE] = Math.abs(zobrist.next());
-    zobristCastling[Color.BLACK][Castling.QUEENSIDE] = Math.abs(zobrist.next());
+    zobristCastling[WHITE][KINGSIDE] = zobrist.next();
+    zobristCastling[WHITE][QUEENSIDE] = zobrist.next();
+    zobristCastling[BLACK][KINGSIDE] = zobrist.next();
+    zobristCastling[BLACK][QUEENSIDE] = zobrist.next();
 
     for (int i = 0; i < BOARDSIZE; ++i) {
-      zobristEnPassant[i] = Math.abs(zobrist.next());
+      zobristEnPassant[i] = zobrist.next();
     }
 
-    zobristActiveColor = Math.abs(zobrist.next());
+    zobristActiveColor = zobrist.next();
   }
 
   public Board(GenericBoard genericBoard) {
@@ -155,10 +160,10 @@ public final class Board {
             Color.toGenericColor(color), Castling.toGenericCastling(castling)
         );
         if (genericFile != null) {
-          colorCastling[color][castling] = File.valueOf(genericFile);
-          zobristCode ^= zobristCastling[color][castling];
+          castlingRights[color][castling] = File.valueOf(genericFile);
+          zobristKey ^= zobristCastling[color][castling];
         } else {
-          colorCastling[color][castling] = File.NOFILE;
+          castlingRights[color][castling] = File.NOFILE;
         }
       }
     }
@@ -166,13 +171,13 @@ public final class Board {
     // Initialize en passant
     if (genericBoard.getEnPassant() != null) {
       enPassant = Square.valueOf(genericBoard.getEnPassant());
-      zobristCode ^= zobristEnPassant[enPassant];
+      zobristKey ^= zobristEnPassant[enPassant];
     }
 
     // Initialize active color
     if (activeColor != Color.valueOf(genericBoard.getActiveColor())) {
       activeColor = Color.valueOf(genericBoard.getActiveColor());
-      zobristCode ^= zobristActiveColor;
+      zobristKey ^= zobristActiveColor;
     }
 
     // Initialize half move clock
@@ -195,11 +200,11 @@ public final class Board {
     // Set castling
     for (int color : Color.values) {
       for (int castling : Castling.values) {
-        if (colorCastling[color][castling] != File.NOFILE) {
+        if (castlingRights[color][castling] != File.NOFILE) {
           genericBoard.setCastling(
               Color.toGenericColor(color),
               Castling.toGenericCastling(castling),
-              File.toGenericFile(colorCastling[color][castling])
+              File.toGenericFile(castlingRights[color][castling])
           );
         }
       }
@@ -242,7 +247,7 @@ public final class Board {
   public boolean isRepetition() {
     int j = Math.max(0, stackSize - halfMoveClock);
     for (int i = stackSize - 2; i >= j; i -= 2) {
-      if (zobristCode == stack[i].zobristCode) {
+      if (zobristKey == stack[i].zobristKey) {
         return true;
       }
     }
@@ -291,7 +296,7 @@ public final class Board {
 
     board[square] = piece;
 
-    zobristCode ^= zobristPiece[Piece.ordinal(piece)][square];
+    zobristKey ^= zobristPiece[Piece.ordinal(piece)][square];
   }
 
   /**
@@ -336,7 +341,7 @@ public final class Board {
 
     board[square] = Piece.NOPIECE;
 
-    zobristCode ^= zobristPiece[Piece.ordinal(piece)][square];
+    zobristKey ^= zobristPiece[Piece.ordinal(piece)][square];
 
     return piece;
   }
@@ -351,18 +356,14 @@ public final class Board {
     int originPiece = Move.getOriginPiece(move);
     int originColor = Piece.getColor(originPiece);
     int targetPiece = Move.getTargetPiece(move);
-    int captureSquare = targetSquare;
-    if (type == Move.Type.ENPASSANT) {
-      captureSquare += (originColor == Color.WHITE ? Square.deltaS : Square.deltaN);
-    }
 
-    // Save zobristCode
-    entry.zobristCode = zobristCode;
+    // Save zobristKey
+    entry.zobristKey = zobristKey;
 
     // Save castling rights
     for (int color : Color.values) {
       for (int castling : Castling.values) {
-        entry.castling[color][castling] = colorCastling[color][castling];
+        entry.castlingRights[color][castling] = castlingRights[color][castling];
       }
     }
 
@@ -374,6 +375,10 @@ public final class Board {
 
     // Remove target piece and update castling rights
     if (targetPiece != Piece.NOPIECE) {
+      int captureSquare = targetSquare;
+      if (type == Move.Type.ENPASSANT) {
+        captureSquare += (originColor == WHITE ? Square.S : Square.N);
+      }
       assert targetPiece == board[captureSquare];
       remove(captureSquare);
 
@@ -425,19 +430,19 @@ public final class Board {
 
     // Update enPassant
     if (enPassant != Square.NOSQUARE) {
-      zobristCode ^= zobristEnPassant[enPassant];
+      zobristKey ^= zobristEnPassant[enPassant];
     }
     if (type == Move.Type.PAWNDOUBLE) {
-      enPassant = targetSquare + (originColor == Color.WHITE ? Square.deltaS : Square.deltaN);
+      enPassant = targetSquare + (originColor == WHITE ? Square.S : Square.N);
       assert Square.isValid(enPassant);
-      zobristCode ^= zobristEnPassant[enPassant];
+      zobristKey ^= zobristEnPassant[enPassant];
     } else {
       enPassant = Square.NOSQUARE;
     }
 
     // Update activeColor
     activeColor = Color.opposite(activeColor);
-    zobristCode ^= zobristActiveColor;
+    zobristKey ^= zobristActiveColor;
 
     // Update halfMoveClock
     if (Piece.getType(originPiece) == Piece.Type.PAWN || targetPiece != Piece.NOPIECE) {
@@ -466,11 +471,6 @@ public final class Board {
     int originPiece = Move.getOriginPiece(move);
     int originColor = Piece.getColor(originPiece);
     int targetPiece = Move.getTargetPiece(move);
-    int captureSquare = targetSquare;
-    if (type == Move.Type.ENPASSANT) {
-      captureSquare += (originColor == Color.WHITE ? Square.deltaS : Square.deltaN);
-      assert Square.isValid(captureSquare);
-    }
 
     // Update fullMoveNumber
     --halfMoveNumber;
@@ -515,6 +515,11 @@ public final class Board {
 
     // Restore target piece
     if (targetPiece != Piece.NOPIECE) {
+      int captureSquare = targetSquare;
+      if (type == Move.Type.ENPASSANT) {
+        captureSquare += (originColor == WHITE ? Square.S : Square.N);
+        assert Square.isValid(captureSquare);
+      }
       put(targetPiece, captureSquare);
     }
 
@@ -527,23 +532,23 @@ public final class Board {
     // Restore castling rights
     for (int color : Color.values) {
       for (int castling : Castling.values) {
-        if (entry.castling[color][castling] != colorCastling[color][castling]) {
-          colorCastling[color][castling] = entry.castling[color][castling];
+        if (entry.castlingRights[color][castling] != castlingRights[color][castling]) {
+          castlingRights[color][castling] = entry.castlingRights[color][castling];
         }
       }
     }
 
-    // Restore zobristCode
-    zobristCode = entry.zobristCode;
+    // Restore zobristKey
+    zobristKey = entry.zobristKey;
   }
 
   private void clearCastling(int color, int castling) {
     assert Color.isValid(color);
     assert Castling.isValid(castling);
 
-    if (colorCastling[color][castling] != File.NOFILE) {
-      colorCastling[color][castling] = File.NOFILE;
-      zobristCode ^= zobristCastling[color][castling];
+    if (castlingRights[color][castling] != File.NOFILE) {
+      castlingRights[color][castling] = File.NOFILE;
+      zobristKey ^= zobristCastling[color][castling];
     }
   }
 
@@ -552,24 +557,24 @@ public final class Board {
 
     switch (square) {
       case Square.a1:
-        clearCastling(Color.WHITE, Castling.QUEENSIDE);
+        clearCastling(WHITE, QUEENSIDE);
         break;
       case Square.h1:
-        clearCastling(Color.WHITE, Castling.KINGSIDE);
+        clearCastling(WHITE, KINGSIDE);
         break;
       case Square.a8:
-        clearCastling(Color.BLACK, Castling.QUEENSIDE);
+        clearCastling(BLACK, QUEENSIDE);
         break;
       case Square.h8:
-        clearCastling(Color.BLACK, Castling.KINGSIDE);
+        clearCastling(BLACK, KINGSIDE);
         break;
       case Square.e1:
-        clearCastling(Color.WHITE, Castling.QUEENSIDE);
-        clearCastling(Color.WHITE, Castling.KINGSIDE);
+        clearCastling(WHITE, QUEENSIDE);
+        clearCastling(WHITE, KINGSIDE);
         break;
       case Square.e8:
-        clearCastling(Color.BLACK, Castling.QUEENSIDE);
-        clearCastling(Color.BLACK, Castling.KINGSIDE);
+        clearCastling(BLACK, QUEENSIDE);
+        clearCastling(BLACK, KINGSIDE);
         break;
       default:
         break;

@@ -61,9 +61,9 @@ public class PieceTypeTest {
 
   @Test
   public void testIsValid() {
-    for (int chessman : Piece.Type.values) {
-      assertTrue(Piece.Type.isValid(chessman));
-      assertEquals(chessman, chessman & Piece.Type.MASK);
+    for (int pieceType : Piece.Type.values) {
+      assertTrue(Piece.Type.isValid(pieceType));
+      assertEquals(pieceType, pieceType & Piece.Type.MASK);
     }
 
     assertFalse(Piece.Type.isValid(Piece.Type.NOTYPE));
@@ -76,9 +76,9 @@ public class PieceTypeTest {
 
   @Test
   public void testIsValidPromotion() {
-    for (int chessman : Piece.Type.promotions) {
-      assertTrue(Piece.Type.isValidPromotion(chessman));
-      assertEquals(chessman, chessman & Piece.Type.MASK);
+    for (int pieceType : Piece.Type.promotions) {
+      assertTrue(Piece.Type.isValidPromotion(pieceType));
+      assertEquals(pieceType, pieceType & Piece.Type.MASK);
     }
 
     assertFalse(Piece.Type.isValidPromotion(Piece.Type.PAWN));

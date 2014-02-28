@@ -63,10 +63,10 @@ public class MoveGeneratorTest {
     }
   }
 
-  private long miniMax(int depth, Board board, int height) {
+  private long miniMax(int depth, Board board, int ply) {
     long totalNodes = 0;
 
-    MoveList moves = getAll(depth, board, height);
+    MoveList moves = getAll(depth, board, ply);
 
     if (depth <= 1) {
       return moves.size;
@@ -76,14 +76,14 @@ public class MoveGeneratorTest {
       int move = moves.entries[i].move;
 
       board.makeMove(move);
-      totalNodes += miniMax(depth - 1, board, height + 1);
+      totalNodes += miniMax(depth - 1, board, ply + 1);
       board.undoMove(move);
     }
 
     return totalNodes;
   }
 
-  private String findMissingMoves(int depth, Board board, int height) {
+  private String findMissingMoves(int depth, Board board, int ply) {
     String message = "";
 
     // Get expected moves from JCPI
@@ -93,7 +93,7 @@ public class MoveGeneratorTest {
     ));
 
     // Get actual moves
-    MoveList moves = getAll(depth, board, height);
+    MoveList moves = getAll(depth, board, ply);
     Collection<GenericMove> actualMoves = new HashSet<>();
     for (int i = 0; i < moves.size; ++i) {
       actualMoves.add(Move.toGenericMove(moves.entries[i].move));
@@ -115,7 +115,7 @@ public class MoveGeneratorTest {
         int move = moves.entries[i].move;
 
         board.makeMove(move);
-        message += findMissingMoves(depth - 1, board, height + 1);
+        message += findMissingMoves(depth - 1, board, ply + 1);
         board.undoMove(move);
 
         if (!message.isEmpty()) {
@@ -133,11 +133,11 @@ public class MoveGeneratorTest {
     return message;
   }
 
-  private MoveList getAll(int depth, Board board, int height) {
+  private MoveList getAll(int depth, Board board, int ply) {
     MoveList moves = new MoveList();
 
     boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       moves.entries[moves.size++].move = move;

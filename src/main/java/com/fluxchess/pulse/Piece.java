@@ -21,6 +21,9 @@ package com.fluxchess.pulse;
 import com.fluxchess.jcpi.models.GenericChessman;
 import com.fluxchess.jcpi.models.GenericPiece;
 
+import static com.fluxchess.pulse.Color.BLACK;
+import static com.fluxchess.pulse.Color.WHITE;
+
 /**
  * This class encodes piece information as an int value. The data is
  * encoded as follows:<br/>
@@ -174,18 +177,18 @@ final class Piece {
 
   public static final int NOPIECE = (Type.NOTYPE << TYPE_SHIFT) | (Color.NOCOLOR << COLOR_SHIFT);
 
-  public static final int WHITEPAWN = (Type.PAWN << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEBISHOP = (Type.BISHOP << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEROOK = (Type.ROOK << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEQUEEN = (Type.QUEEN << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITEKING = (Type.KING << TYPE_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int BLACKPAWN = (Type.PAWN << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKBISHOP = (Type.BISHOP << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKROOK = (Type.ROOK << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKQUEEN = (Type.QUEEN << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACKKING = (Type.KING << TYPE_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int WHITEPAWN = (Type.PAWN << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  public static final int WHITEKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  public static final int WHITEBISHOP = (Type.BISHOP << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  public static final int WHITEROOK = (Type.ROOK << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  public static final int WHITEQUEEN = (Type.QUEEN << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  public static final int WHITEKING = (Type.KING << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  public static final int BLACKPAWN = (Type.PAWN << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  public static final int BLACKKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  public static final int BLACKBISHOP = (Type.BISHOP << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  public static final int BLACKROOK = (Type.ROOK << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  public static final int BLACKQUEEN = (Type.QUEEN << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  public static final int BLACKKING = (Type.KING << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
 
   public static final int[] values = {
       WHITEPAWN, WHITEKNIGHT, WHITEBISHOP, WHITEROOK, WHITEQUEEN, WHITEKING,
@@ -230,7 +233,7 @@ final class Piece {
 
   public static int valueOf(int pieceType, int color) {
     switch (color) {
-      case Color.WHITE:
+      case WHITE:
         switch (pieceType) {
           case Type.PAWN:
             return WHITEPAWN;
@@ -248,7 +251,7 @@ final class Piece {
           default:
             throw new IllegalArgumentException();
         }
-      case Color.BLACK:
+      case BLACK:
         switch (pieceType) {
           case Type.PAWN:
             return BLACKPAWN;
@@ -392,14 +395,14 @@ final class Piece {
       case WHITEROOK:
       case WHITEQUEEN:
       case WHITEKING:
-        return Color.WHITE;
+        return WHITE;
       case BLACKPAWN:
       case BLACKKNIGHT:
       case BLACKBISHOP:
       case BLACKROOK:
       case BLACKQUEEN:
       case BLACKKING:
-        return Color.BLACK;
+        return BLACK;
       case NOPIECE:
       default:
         throw new IllegalArgumentException();

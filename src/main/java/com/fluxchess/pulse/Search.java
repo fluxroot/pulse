@@ -29,13 +29,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
+import static com.fluxchess.pulse.Color.WHITE;
+import static com.fluxchess.pulse.MoveList.MoveVariation;
+
 /**
  * This class implements our search in a separate thread to keep the main
  * thread available for more commands.
  */
 public final class Search implements Runnable {
 
-  public static final int MAX_HEIGHT = 256;
+  public static final int MAX_PLY = 256;
   public static final int MAX_DEPTH = 64;
 
   private final Thread thread = new Thread(this);
@@ -70,7 +73,7 @@ public final class Search implements Runnable {
   private int currentMaxDepth = initialDepth;
   private int currentMove = Move.NOMOVE;
   private int currentMoveNumber = 0;
-  private int currentPonderMove = Move.NOMOVE;
+  private final MoveVariation[] pv = new MoveVariation[MAX_PLY + 1];
 
   /**
    * This is our search timer for time & clock & ponder searches.
@@ -174,7 +177,7 @@ public final class Search implements Runnable {
 
     long timeLeft;
     long timeIncrement;
-    if (board.activeColor == Color.WHITE) {
+    if (board.activeColor == WHITE) {
       timeLeft = whiteTimeLeft;
       timeIncrement = whiteTimeIncrement;
     } else {
@@ -207,6 +210,10 @@ public final class Search implements Runnable {
 
     this.protocol = protocol;
     this.board = board;
+
+    for (int i = 0; i < pv.length; ++i) {
+      pv[i] = new MoveVariation();
+    }
   }
 
   public void start() {
@@ -277,7 +284,7 @@ public final class Search implements Runnable {
       currentMaxDepth = currentDepth;
       sendStatus(true);
 
-      alphaBetaRoot(currentDepth, -Evaluation.INFINITY, Evaluation.INFINITY);
+      searchRoot(currentDepth, -Evaluation.INFINITY, Evaluation.INFINITY);
 
       // Sort the root move list, so that the next iteration begins with the
       // best move first.
@@ -333,11 +340,11 @@ public final class Search implements Runnable {
     }
   }
 
-  private void updateSearch(int height) {
+  private void updateSearch(int ply) {
     ++totalNodes;
 
-    if (height > currentMaxDepth) {
-      currentMaxDepth = height;
+    if (ply > currentMaxDepth) {
+      currentMaxDepth = ply;
     }
 
     if (searchNodes <= totalNodes) {
@@ -345,21 +352,20 @@ public final class Search implements Runnable {
       abort = true;
     }
 
+    pv[ply].size = 0;
+
     sendStatus(false);
   }
 
-  private void alphaBetaRoot(int depth, int alpha, int beta) {
-    int height = 0;
+  private void searchRoot(int depth, int alpha, int beta) {
+    int ply = 0;
 
-    updateSearch(height);
+    updateSearch(ply);
 
     // Abort conditions
     if (abort) {
       return;
     }
-
-    // Initialize
-    int bestValue = -Evaluation.INFINITY;
 
     for (int i = 0; i < rootMoves.size; ++i) {
       rootMoves.entries[i].value = -Evaluation.INFINITY;
@@ -386,32 +392,22 @@ public final class Search implements Runnable {
       currentMoveNumber = i + 1;
       sendStatus(true);
 
-      currentPonderMove = Move.NOMOVE;
-
       board.makeMove(move);
-      int value = -alphaBeta(depth - 1, -beta, -alpha, height + 1);
+      int value = -search(depth - 1, -beta, -alpha, ply + 1);
       board.undoMove(move);
 
       if (abort) {
         return;
       }
 
-      // Pruning
-      if (value > bestValue) {
-        bestValue = value;
+      // Do we have a better value?
+      if (value > alpha) {
+        alpha = value;
 
-        // Do we have a better value?
-        if (value > alpha) {
-          alpha = value;
+        rootMoves.entries[i].value = value;
+        savePV(move, pv[ply + 1], rootMoves.entries[i].pv);
 
-          rootMoves.entries[i].value = value;
-          rootMoves.entries[i].pv.size = 1;
-          if (currentPonderMove != Move.NOMOVE) {
-            rootMoves.entries[i].pv.moves[rootMoves.entries[i].pv.size++] = currentPonderMove;
-          }
-
-          sendMove(rootMoves.entries[i]);
-        }
+        sendMove(rootMoves.entries[i]);
       }
     }
 
@@ -422,17 +418,17 @@ public final class Search implements Runnable {
     }
   }
 
-  private int alphaBeta(int depth, int alpha, int beta, int height) {
+  private int search(int depth, int alpha, int beta, int ply) {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
       // Descend into quiescent
-      return quiescent(0, alpha, beta, height);
+      return quiescent(0, alpha, beta, ply);
     }
 
-    updateSearch(height);
+    updateSearch(ply);
 
     // Abort conditions
-    if (abort || height == MAX_HEIGHT) {
+    if (abort || ply == MAX_PLY) {
       return evaluation.evaluate(board);
     }
 
@@ -443,18 +439,17 @@ public final class Search implements Runnable {
 
     // Initialize
     int bestValue = -Evaluation.INFINITY;
-    int bestMove = Move.NOMOVE;
     int searchedMoves = 0;
 
     boolean isCheck = board.isCheck();
 
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       ++searchedMoves;
 
       board.makeMove(move);
-      int value = -alphaBeta(depth - 1, -beta, -alpha, height + 1);
+      int value = -search(depth - 1, -beta, -alpha, ply + 1);
       board.undoMove(move);
 
       if (abort) {
@@ -468,7 +463,7 @@ public final class Search implements Runnable {
         // Do we have a better value?
         if (value > alpha) {
           alpha = value;
-          bestMove = move;
+          savePV(move, pv[ply + 1], pv[ply]);
 
           // Is the value higher than beta?
           if (value >= beta) {
@@ -483,25 +478,21 @@ public final class Search implements Runnable {
     if (searchedMoves == 0) {
       if (isCheck) {
         // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        return -Evaluation.CHECKMATE + height;
+        return -Evaluation.CHECKMATE + ply;
       } else {
         // We have a stale mate. Return the draw value.
         return Evaluation.DRAW;
       }
     }
 
-    if (height == 1 && bestMove != Move.NOMOVE) {
-      currentPonderMove = bestMove;
-    }
-
     return bestValue;
   }
 
-  private int quiescent(int depth, int alpha, int beta, int height) {
-    updateSearch(height);
+  private int quiescent(int depth, int alpha, int beta, int ply) {
+    updateSearch(ply);
 
     // Abort conditions
-    if (abort || height == MAX_HEIGHT) {
+    if (abort || ply == MAX_PLY) {
       return evaluation.evaluate(board);
     }
 
@@ -534,13 +525,13 @@ public final class Search implements Runnable {
     //### ENDOF Stand pat
 
     // Only generate capturing moves or evasion moves, in case we are in check.
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, height, isCheck);
+    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       ++searchedMoves;
 
       board.makeMove(move);
-      int value = -quiescent(depth - 1, -beta, -alpha, height + 1);
+      int value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
       board.undoMove(move);
 
       if (abort) {
@@ -554,6 +545,7 @@ public final class Search implements Runnable {
         // Do we have a better value?
         if (value > alpha) {
           alpha = value;
+          savePV(move, pv[ply + 1], pv[ply]);
 
           // Is the value higher than beta?
           if (value >= beta) {
@@ -567,10 +559,16 @@ public final class Search implements Runnable {
     // If we cannot move, check for checkmate.
     if (searchedMoves == 0 && isCheck) {
       // We have a check mate. This is bad for us, so return a -CHECKMATE.
-      return -Evaluation.CHECKMATE + height;
+      return -Evaluation.CHECKMATE + ply;
     }
 
     return bestValue;
+  }
+
+  private void savePV(int move, MoveVariation src, MoveVariation dest) {
+    dest.moves[0] = move;
+    System.arraycopy(src.moves, 0, dest.moves, 1, src.size);
+    dest.size = src.size + 1;
   }
 
   private void sendStatus(boolean force) {

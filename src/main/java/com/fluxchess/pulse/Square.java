@@ -75,14 +75,14 @@ final class Square {
 
   // These are our move deltas.
   // N = north, E = east, S = south, W = west
-  public static final int deltaN = 16;
-  public static final int deltaE = 1;
-  public static final int deltaS = -16;
-  public static final int deltaW = -1;
-  public static final int deltaNE = deltaN + deltaE;
-  public static final int deltaSE = deltaS + deltaE;
-  public static final int deltaSW = deltaS + deltaW;
-  public static final int deltaNW = deltaN + deltaW;
+  public static final int N = 16;
+  public static final int E = 1;
+  public static final int S = -16;
+  public static final int W = -1;
+  public static final int NE = N + E;
+  public static final int SE = S + E;
+  public static final int SW = S + W;
+  public static final int NW = N + W;
 
   private Square() {
   }
