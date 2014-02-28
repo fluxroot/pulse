@@ -29,6 +29,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
+import static com.fluxchess.pulse.Color.WHITE;
+
 /**
  * This class implements our search in a separate thread to keep the main
  * thread available for more commands.
@@ -174,7 +176,7 @@ public final class Search implements Runnable {
 
     long timeLeft;
     long timeIncrement;
-    if (board.activeColor == Color.WHITE) {
+    if (board.activeColor == WHITE) {
       timeLeft = whiteTimeLeft;
       timeIncrement = whiteTimeIncrement;
     } else {

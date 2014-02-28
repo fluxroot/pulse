@@ -18,6 +18,11 @@
  */
 package com.fluxchess.pulse;
 
+import static com.fluxchess.pulse.Castling.KINGSIDE;
+import static com.fluxchess.pulse.Castling.QUEENSIDE;
+import static com.fluxchess.pulse.Color.BLACK;
+import static com.fluxchess.pulse.Color.WHITE;
+
 public final class MoveGenerator {
 
   // Move deltas
@@ -259,8 +264,8 @@ public final class MoveGenerator {
               && Piece.getType(targetPiece) != Piece.Type.KING) {
             // Capturing move
 
-            if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.R8)
-                || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R1)) {
+            if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R8)
+                || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R1)) {
               // Pawn promotion capturing move
 
               list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.QUEEN);
@@ -275,10 +280,10 @@ public final class MoveGenerator {
           }
         } else if (targetSquare == board.enPassant) {
           // En passant move
-          assert (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R3)
-              || (pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.R6);
+          assert (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R3)
+              || (pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R6);
 
-          int captureSquare = targetSquare + (pawnColor == Color.WHITE ? Square.S : Square.N);
+          int captureSquare = targetSquare + (pawnColor == WHITE ? Square.S : Square.N);
           targetPiece = board.board[captureSquare];
           assert Piece.getType(targetPiece) == Piece.Type.PAWN;
           assert Piece.getColor(targetPiece) == Color.opposite(pawnColor);
@@ -294,8 +299,8 @@ public final class MoveGenerator {
     // Move one rank forward
     int targetSquare = pawnSquare + delta;
     if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
-      if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.R8)
-          || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R1)) {
+      if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R8)
+          || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R1)) {
         // Pawn promotion move
 
         list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.QUEEN);
@@ -310,8 +315,8 @@ public final class MoveGenerator {
         // Move another rank forward
         targetSquare += delta;
         if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
-          if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.R4)
-              || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.R5)) {
+          if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R4)
+              || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R5)) {
             // Pawn double move
 
             list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNDOUBLE, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
@@ -329,23 +334,23 @@ public final class MoveGenerator {
     assert Piece.isValid(kingPiece);
     assert Piece.getType(kingPiece) == Piece.Type.KING;
 
-    if (Piece.getColor(kingPiece) == Color.WHITE) {
+    if (Piece.getColor(kingPiece) == WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[Color.WHITE][Castling.KINGSIDE] != File.NOFILE
+      if (board.castlingRights[WHITE][KINGSIDE] != File.NOFILE
           && board.board[Square.f1] == Piece.NOPIECE
           && board.board[Square.g1] == Piece.NOPIECE
-          && !board.isAttacked(Square.f1, Color.BLACK)) {
+          && !board.isAttacked(Square.f1, BLACK)) {
         assert board.board[Square.e1] == Piece.WHITEKING;
         assert board.board[Square.h1] == Piece.WHITEROOK;
 
         list.entries[list.size++].move = Move.valueOf(Move.Type.CASTLING, kingSquare, Square.g1, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[Color.WHITE][Castling.QUEENSIDE] != File.NOFILE
+      if (board.castlingRights[WHITE][QUEENSIDE] != File.NOFILE
           && board.board[Square.b1] == Piece.NOPIECE
           && board.board[Square.c1] == Piece.NOPIECE
           && board.board[Square.d1] == Piece.NOPIECE
-          && !board.isAttacked(Square.d1, Color.BLACK)) {
+          && !board.isAttacked(Square.d1, BLACK)) {
         assert board.board[Square.e1] == Piece.WHITEKING;
         assert board.board[Square.a1] == Piece.WHITEROOK;
 
@@ -353,21 +358,21 @@ public final class MoveGenerator {
       }
     } else {
       // Do not test g8 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[Color.BLACK][Castling.KINGSIDE] != File.NOFILE
+      if (board.castlingRights[BLACK][KINGSIDE] != File.NOFILE
           && board.board[Square.f8] == Piece.NOPIECE
           && board.board[Square.g8] == Piece.NOPIECE
-          && !board.isAttacked(Square.f8, Color.WHITE)) {
+          && !board.isAttacked(Square.f8, WHITE)) {
         assert board.board[Square.e8] == Piece.BLACKKING;
         assert board.board[Square.h8] == Piece.BLACKROOK;
 
         list.entries[list.size++].move = Move.valueOf(Move.Type.CASTLING, kingSquare, Square.g8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[Color.BLACK][Castling.QUEENSIDE] != File.NOFILE
+      if (board.castlingRights[BLACK][QUEENSIDE] != File.NOFILE
           && board.board[Square.b8] == Piece.NOPIECE
           && board.board[Square.c8] == Piece.NOPIECE
           && board.board[Square.d8] == Piece.NOPIECE
-          && !board.isAttacked(Square.d8, Color.WHITE)) {
+          && !board.isAttacked(Square.d8, WHITE)) {
         assert board.board[Square.e8] == Piece.BLACKKING;
         assert board.board[Square.a8] == Piece.BLACKROOK;
 
