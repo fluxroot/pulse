@@ -380,6 +380,7 @@ public final class Board {
         captureSquare += (originColor == WHITE ? Square.S : Square.N);
       }
       assert targetPiece == board[captureSquare];
+      assert Piece.getType(targetPiece) != Piece.Type.KING;
       remove(captureSquare);
 
       clearCastling(captureSquare);

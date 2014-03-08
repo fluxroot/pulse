@@ -232,8 +232,7 @@ public final class MoveGenerator {
 
           targetSquare += delta;
         } else {
-          if (Piece.getColor(targetPiece) == oppositeColor
-              && Piece.getType(targetPiece) != Piece.Type.KING) {
+          if (Piece.getColor(targetPiece) == oppositeColor) {
             list.entries[list.size++].move = Move.valueOf(
                 Move.Type.NORMAL, originSquare, targetSquare, originPiece, targetPiece, Piece.Type.NOTYPE);
           }
@@ -262,8 +261,7 @@ public final class MoveGenerator {
         int targetPiece = board.board[targetSquare];
 
         if (targetPiece != Piece.NOPIECE) {
-          if (Piece.getColor(targetPiece) == Color.opposite(pawnColor)
-              && Piece.getType(targetPiece) != Piece.Type.KING) {
+          if (Piece.getColor(targetPiece) == Color.opposite(pawnColor)) {
             // Capturing move
 
             if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r8)
