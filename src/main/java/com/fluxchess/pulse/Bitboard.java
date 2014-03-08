@@ -22,19 +22,19 @@ package com.fluxchess.pulse;
  * Bitboard stores squares as bits in a 64-bit long. We provide methods to
  * convert bit squares to 0x88 squares and vice versa.
  */
-public final class Bitboard {
+final class Bitboard {
 
-  public long squares = 0;
+  long squares = 0;
 
-  public static int next(long squares) {
+  static int next(long squares) {
     return Square.toX88Square(Long.numberOfTrailingZeros(squares));
   }
 
-  public int size() {
+  int size() {
     return Long.bitCount(squares);
   }
 
-  public void add(int square) {
+  void add(int square) {
     assert Square.isValid(square);
     assert (squares & (1L << Square.toBitSquare(square))) == 0
         : String.format("squares = %d, 0x88 square = %d, bit square = %d",
@@ -44,7 +44,7 @@ public final class Bitboard {
     squares |= 1L << Square.toBitSquare(square);
   }
 
-  public void remove(int square) {
+  void remove(int square) {
     assert Square.isValid(square);
     assert (squares & (1L << Square.toBitSquare(square))) != 0
         : String.format("squares = %d, 0x88 square = %d, bit square = %d",

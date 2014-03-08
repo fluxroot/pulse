@@ -24,12 +24,12 @@ import com.fluxchess.jcpi.options.Options;
 
 final class Configuration {
 
-  public static boolean debug = false;
+  static boolean debug = false;
 
-  public static boolean ponder = true;
-  public static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
+  static boolean ponder = true;
+  static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
 
-  public static final AbstractOption[] options = new AbstractOption[]{
+  static final AbstractOption[] options = new AbstractOption[]{
       ponderOption
   };
 

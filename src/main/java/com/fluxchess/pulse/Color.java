@@ -28,20 +28,20 @@ import com.fluxchess.jcpi.models.GenericColor;
  */
 final class Color {
 
-  public static final int MASK = 0x3;
+  static final int MASK = 0x3;
 
-  public static final int WHITE = 0;
-  public static final int BLACK = 1;
-  public static final int NOCOLOR = 2;
+  static final int WHITE = 0;
+  static final int BLACK = 1;
+  static final int NOCOLOR = 2;
 
-  public static final int[] values = {
+  static final int[] values = {
       WHITE, BLACK
   };
 
   private Color() {
   }
 
-  public static int valueOf(GenericColor genericColor) {
+  static int valueOf(GenericColor genericColor) {
     assert genericColor != null;
 
     switch (genericColor) {
@@ -54,7 +54,7 @@ final class Color {
     }
   }
 
-  public static GenericColor toGenericColor(int color) {
+  static GenericColor toGenericColor(int color) {
     switch (color) {
       case WHITE:
         return GenericColor.WHITE;
@@ -66,7 +66,7 @@ final class Color {
     }
   }
 
-  public static boolean isValid(int color) {
+  static boolean isValid(int color) {
     switch (color) {
       case WHITE:
       case BLACK:
@@ -78,7 +78,7 @@ final class Color {
     }
   }
 
-  public static int opposite(int color) {
+  static int opposite(int color) {
     switch (color) {
       case WHITE:
         return BLACK;

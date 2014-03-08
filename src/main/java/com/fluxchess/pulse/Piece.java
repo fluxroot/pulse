@@ -39,29 +39,29 @@ final class Piece {
    * <br/>
    * <code>Bit 0 - 2</code>: the type (required)<br/>
    */
-  public static final class Type {
-    public static final int MASK = 0x7;
+  static final class Type {
+    static final int MASK = 0x7;
 
-    public static final int PAWN = 0;
-    public static final int KNIGHT = 1;
-    public static final int BISHOP = 2;
-    public static final int ROOK = 3;
-    public static final int QUEEN = 4;
-    public static final int KING = 5;
-    public static final int NOTYPE = 6;
+    static final int PAWN = 0;
+    static final int KNIGHT = 1;
+    static final int BISHOP = 2;
+    static final int ROOK = 3;
+    static final int QUEEN = 4;
+    static final int KING = 5;
+    static final int NOTYPE = 6;
 
-    public static final int[] values = {
+    static final int[] values = {
         PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
     };
 
-    public static final int[] promotions = {
+    static final int[] promotions = {
         KNIGHT, BISHOP, ROOK, QUEEN
     };
 
     private Type() {
     }
 
-    public static int valueOf(GenericChessman genericChessman) {
+    static int valueOf(GenericChessman genericChessman) {
       assert genericChessman != null;
 
       switch (genericChessman) {
@@ -82,7 +82,7 @@ final class Piece {
       }
     }
 
-    public static int valueOfPromotion(GenericChessman genericChessman) {
+    static int valueOfPromotion(GenericChessman genericChessman) {
       assert genericChessman != null;
 
       switch (genericChessman) {
@@ -101,7 +101,7 @@ final class Piece {
       }
     }
 
-    public static GenericChessman toGenericChessman(int pieceType) {
+    static GenericChessman toGenericChessman(int pieceType) {
       switch (pieceType) {
         case PAWN:
           return GenericChessman.PAWN;
@@ -121,7 +121,7 @@ final class Piece {
       }
     }
 
-    public static boolean isValid(int pieceType) {
+    static boolean isValid(int pieceType) {
       switch (pieceType) {
         case PAWN:
         case KNIGHT:
@@ -137,7 +137,7 @@ final class Piece {
       }
     }
 
-    public static boolean isValidPromotion(int pieceType) {
+    static boolean isValidPromotion(int pieceType) {
       switch (pieceType) {
         case KNIGHT:
         case BISHOP:
@@ -153,7 +153,7 @@ final class Piece {
       }
     }
 
-    public static boolean isSliding(int pieceType) {
+    static boolean isSliding(int pieceType) {
       switch (pieceType) {
         case BISHOP:
         case ROOK:
@@ -170,27 +170,27 @@ final class Piece {
     }
   }
 
-  public static final int MASK = 0x1F;
+  static final int MASK = 0x1F;
 
   private static final int TYPE_SHIFT = 0;
   private static final int COLOR_SHIFT = 3;
 
-  public static final int NOPIECE = (Type.NOTYPE << TYPE_SHIFT) | (Color.NOCOLOR << COLOR_SHIFT);
+  static final int NOPIECE = (Type.NOTYPE << TYPE_SHIFT) | (Color.NOCOLOR << COLOR_SHIFT);
 
-  public static final int WHITEPAWN = (Type.PAWN << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  public static final int WHITEKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  public static final int WHITEBISHOP = (Type.BISHOP << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  public static final int WHITEROOK = (Type.ROOK << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  public static final int WHITEQUEEN = (Type.QUEEN << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  public static final int WHITEKING = (Type.KING << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  public static final int BLACKPAWN = (Type.PAWN << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  public static final int BLACKKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  public static final int BLACKBISHOP = (Type.BISHOP << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  public static final int BLACKROOK = (Type.ROOK << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  public static final int BLACKQUEEN = (Type.QUEEN << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  public static final int BLACKKING = (Type.KING << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  static final int WHITEPAWN = (Type.PAWN << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  static final int WHITEKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  static final int WHITEBISHOP = (Type.BISHOP << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  static final int WHITEROOK = (Type.ROOK << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  static final int WHITEQUEEN = (Type.QUEEN << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  static final int WHITEKING = (Type.KING << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
+  static final int BLACKPAWN = (Type.PAWN << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  static final int BLACKKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  static final int BLACKBISHOP = (Type.BISHOP << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  static final int BLACKROOK = (Type.ROOK << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  static final int BLACKQUEEN = (Type.QUEEN << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  static final int BLACKKING = (Type.KING << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
 
-  public static final int[] values = {
+  static final int[] values = {
       WHITEPAWN, WHITEKNIGHT, WHITEBISHOP, WHITEROOK, WHITEQUEEN, WHITEKING,
       BLACKPAWN, BLACKKNIGHT, BLACKBISHOP, BLACKROOK, BLACKQUEEN, BLACKKING
   };
@@ -198,7 +198,7 @@ final class Piece {
   private Piece() {
   }
 
-  public static int valueOf(GenericPiece genericPiece) {
+  static int valueOf(GenericPiece genericPiece) {
     assert genericPiece != null;
 
     switch (genericPiece) {
@@ -231,7 +231,7 @@ final class Piece {
     }
   }
 
-  public static int valueOf(int pieceType, int color) {
+  static int valueOf(int pieceType, int color) {
     switch (color) {
       case WHITE:
         switch (pieceType) {
@@ -275,7 +275,7 @@ final class Piece {
     }
   }
 
-  public static GenericPiece toGenericPiece(int piece) {
+  static GenericPiece toGenericPiece(int piece) {
     switch (piece) {
       case WHITEPAWN:
         return GenericPiece.WHITEPAWN;
@@ -307,7 +307,7 @@ final class Piece {
     }
   }
 
-  public static int ordinal(int piece) {
+  static int ordinal(int piece) {
     switch (piece) {
       case WHITEPAWN:
         return 0;
@@ -339,7 +339,7 @@ final class Piece {
     }
   }
 
-  public static boolean isValid(int piece) {
+  static boolean isValid(int piece) {
     switch (piece) {
       case WHITEPAWN:
       case WHITEKNIGHT:
@@ -361,7 +361,7 @@ final class Piece {
     }
   }
 
-  public static int getType(int piece) {
+  static int getType(int piece) {
     switch (piece) {
       case WHITEPAWN:
       case BLACKPAWN:
@@ -387,7 +387,7 @@ final class Piece {
     }
   }
 
-  public static int getColor(int piece) {
+  static int getColor(int piece) {
     switch (piece) {
       case WHITEPAWN:
       case WHITEKNIGHT:

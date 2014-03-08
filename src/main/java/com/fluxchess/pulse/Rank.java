@@ -28,26 +28,26 @@ import com.fluxchess.jcpi.models.GenericRank;
  */
 final class Rank {
 
-  public static final int MASK = 0xF;
+  static final int MASK = 0xF;
 
-  public static final int R1 = 0;
-  public static final int R2 = 1;
-  public static final int R3 = 2;
-  public static final int R4 = 3;
-  public static final int R5 = 4;
-  public static final int R6 = 5;
-  public static final int R7 = 6;
-  public static final int R8 = 7;
-  public static final int NORANK = 8;
+  static final int R1 = 0;
+  static final int R2 = 1;
+  static final int R3 = 2;
+  static final int R4 = 3;
+  static final int R5 = 4;
+  static final int R6 = 5;
+  static final int R7 = 6;
+  static final int R8 = 7;
+  static final int NORANK = 8;
 
-  public static final int[] values = {
+  static final int[] values = {
       R1, R2, R3, R4, R5, R6, R7, R8
   };
 
   private Rank() {
   }
 
-  public static int valueOf(GenericRank genericRank) {
+  static int valueOf(GenericRank genericRank) {
     assert genericRank != null;
 
     switch (genericRank) {
@@ -72,7 +72,7 @@ final class Rank {
     }
   }
 
-  public static GenericRank toGenericRank(int rank) {
+  static GenericRank toGenericRank(int rank) {
     switch (rank) {
       case R1:
         return GenericRank.R1;
@@ -96,7 +96,7 @@ final class Rank {
     }
   }
 
-  public static boolean isValid(int rank) {
+  static boolean isValid(int rank) {
     switch (rank) {
       case R1:
       case R2:

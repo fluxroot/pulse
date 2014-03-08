@@ -35,20 +35,20 @@ import com.fluxchess.jcpi.models.GenericRank;
  */
 public final class Move {
 
-  public static final class Type {
-    public static final int MASK = 0x7;
+  static final class Type {
+    static final int MASK = 0x7;
 
-    public static final int NORMAL = 0;
-    public static final int PAWNDOUBLE = 1;
-    public static final int PAWNPROMOTION = 2;
-    public static final int ENPASSANT = 3;
-    public static final int CASTLING = 4;
-    public static final int NOTYPE = 5;
+    static final int NORMAL = 0;
+    static final int PAWNDOUBLE = 1;
+    static final int PAWNPROMOTION = 2;
+    static final int ENPASSANT = 3;
+    static final int CASTLING = 4;
+    static final int NOTYPE = 5;
 
     private Type() {
     }
 
-    public static boolean isValid(int type) {
+    static boolean isValid(int type) {
       switch (type) {
         case NORMAL:
         case PAWNDOUBLE:
@@ -97,7 +97,7 @@ public final class Move {
    *                    we're dealing with.
    * @return the internal move representation.
    */
-  public static int valueOf(GenericMove genericMove, Board board) {
+  static int valueOf(GenericMove genericMove, Board board) {
     assert genericMove != null;
     assert board != null;
 
@@ -155,7 +155,7 @@ public final class Move {
     }
   }
 
-  public static int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion) {
+  static int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion) {
     int move = 0;
 
     // Encode type
@@ -186,7 +186,7 @@ public final class Move {
     return move;
   }
 
-  public static GenericMove toGenericMove(int move) {
+  static GenericMove toGenericMove(int move) {
     int type = getType(move);
     int originSquare = getOriginSquare(move);
     int targetSquare = getTargetSquare(move);
@@ -211,42 +211,42 @@ public final class Move {
     }
   }
 
-  public static int getType(int move) {
+  static int getType(int move) {
     int type = (move & TYPE_MASK) >>> TYPE_SHIFT;
     assert Move.Type.isValid(type);
 
     return type;
   }
 
-  public static int getOriginSquare(int move) {
+  static int getOriginSquare(int move) {
     int originSquare = (move & ORIGINSQUARE_MASK) >>> ORIGINSQUARE_SHIFT;
     assert Square.isValid(originSquare);
 
     return originSquare;
   }
 
-  public static int getTargetSquare(int move) {
+  static int getTargetSquare(int move) {
     int targetSquare = (move & TARGETSQUARE_MASK) >>> TARGETSQUARE_SHIFT;
     assert Square.isValid(targetSquare);
 
     return targetSquare;
   }
 
-  public static int getOriginPiece(int move) {
+  static int getOriginPiece(int move) {
     int originPiece = (move & ORIGINPIECE_MASK) >>> ORIGINPIECE_SHIFT;
     assert Piece.isValid(originPiece);
 
     return originPiece;
   }
 
-  public static int getTargetPiece(int move) {
+  static int getTargetPiece(int move) {
     int targetPiece = (move & TARGETPIECE_MASK) >>> TARGETPIECE_SHIFT;
     assert Piece.isValid(targetPiece) || targetPiece == Piece.NOPIECE;
 
     return targetPiece;
   }
 
-  public static int getPromotion(int move) {
+  static int getPromotion(int move) {
     int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
     assert (Piece.Type.isValid(promotion) && Piece.Type.isValidPromotion(promotion))
         || promotion == Piece.Type.NOTYPE;

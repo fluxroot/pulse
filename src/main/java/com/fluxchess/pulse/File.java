@@ -28,26 +28,26 @@ import com.fluxchess.jcpi.models.GenericFile;
  */
 final class File {
 
-  public static final int MASK = 0xF;
+  static final int MASK = 0xF;
 
-  public static final int Fa = 0;
-  public static final int Fb = 1;
-  public static final int Fc = 2;
-  public static final int Fd = 3;
-  public static final int Fe = 4;
-  public static final int Ff = 5;
-  public static final int Fg = 6;
-  public static final int Fh = 7;
-  public static final int NOFILE = 8;
+  static final int Fa = 0;
+  static final int Fb = 1;
+  static final int Fc = 2;
+  static final int Fd = 3;
+  static final int Fe = 4;
+  static final int Ff = 5;
+  static final int Fg = 6;
+  static final int Fh = 7;
+  static final int NOFILE = 8;
 
-  public static final int[] values = {
+  static final int[] values = {
       Fa, Fb, Fc, Fd, Fe, Ff, Fg, Fh
   };
 
   private File() {
   }
 
-  public static int valueOf(GenericFile genericFile) {
+  static int valueOf(GenericFile genericFile) {
     assert genericFile != null;
 
     switch (genericFile) {
@@ -72,7 +72,7 @@ final class File {
     }
   }
 
-  public static GenericFile toGenericFile(int file) {
+  static GenericFile toGenericFile(int file) {
     switch (file) {
       case Fa:
         return GenericFile.Fa;
@@ -96,7 +96,7 @@ final class File {
     }
   }
 
-  public static boolean isValid(int file) {
+  static boolean isValid(int file) {
     switch (file) {
       case Fa:
       case Fb:

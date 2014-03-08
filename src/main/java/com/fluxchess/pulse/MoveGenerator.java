@@ -26,11 +26,11 @@ import static com.fluxchess.pulse.Color.WHITE;
 public final class MoveGenerator {
 
   // Move deltas
-  public static final int[][] moveDeltaPawn = {
+  static final int[][] moveDeltaPawn = {
       {Square.N, Square.NE, Square.NW}, // Color.WHITE
       {Square.S, Square.SE, Square.SW}  // Color.BLACK
   };
-  public static final int[] moveDeltaKnight = {
+  static final int[] moveDeltaKnight = {
       Square.N + Square.N + Square.E,
       Square.N + Square.N + Square.W,
       Square.N + Square.E + Square.E,
@@ -40,17 +40,17 @@ public final class MoveGenerator {
       Square.S + Square.E + Square.E,
       Square.S + Square.W + Square.W
   };
-  public static final int[] moveDeltaBishop = {
+  static final int[] moveDeltaBishop = {
       Square.NE, Square.NW, Square.SE, Square.SW
   };
-  public static final int[] moveDeltaRook = {
+  static final int[] moveDeltaRook = {
       Square.N, Square.E, Square.S, Square.W
   };
-  public static final int[] moveDeltaQueen = {
+  static final int[] moveDeltaQueen = {
       Square.N, Square.E, Square.S, Square.W,
       Square.NE, Square.NW, Square.SE, Square.SW
   };
-  public static final int[] moveDeltaKing = {
+  static final int[] moveDeltaKing = {
       Square.N, Square.E, Square.S, Square.W,
       Square.NE, Square.NW, Square.SE, Square.SW
   };
