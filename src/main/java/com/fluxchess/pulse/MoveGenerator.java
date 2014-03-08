@@ -264,8 +264,8 @@ public final class MoveGenerator {
               && Piece.getType(targetPiece) != Piece.Type.KING) {
             // Capturing move
 
-            if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R8)
-                || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R1)) {
+            if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r8)
+                || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r1)) {
               // Pawn promotion capturing move
 
               list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.QUEEN);
@@ -280,8 +280,8 @@ public final class MoveGenerator {
           }
         } else if (targetSquare == board.enPassant) {
           // En passant move
-          assert (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R3)
-              || (pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R6);
+          assert (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r3)
+              || (pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r6);
 
           int captureSquare = targetSquare + (pawnColor == WHITE ? Square.S : Square.N);
           targetPiece = board.board[captureSquare];
@@ -299,8 +299,8 @@ public final class MoveGenerator {
     // Move one rank forward
     int targetSquare = pawnSquare + delta;
     if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
-      if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R8)
-          || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R1)) {
+      if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r8)
+          || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r1)) {
         // Pawn promotion move
 
         list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.QUEEN);
@@ -315,8 +315,8 @@ public final class MoveGenerator {
         // Move another rank forward
         targetSquare += delta;
         if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
-          if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R4)
-              || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R5)) {
+          if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r4)
+              || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r5)) {
             // Pawn double move
 
             list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNDOUBLE, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOTYPE);

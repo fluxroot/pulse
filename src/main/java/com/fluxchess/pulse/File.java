@@ -30,18 +30,18 @@ final class File {
 
   static final int MASK = 0xF;
 
-  static final int Fa = 0;
-  static final int Fb = 1;
-  static final int Fc = 2;
-  static final int Fd = 3;
-  static final int Fe = 4;
-  static final int Ff = 5;
-  static final int Fg = 6;
-  static final int Fh = 7;
+  static final int a = 0;
+  static final int b = 1;
+  static final int c = 2;
+  static final int d = 3;
+  static final int e = 4;
+  static final int f = 5;
+  static final int g = 6;
+  static final int h = 7;
   static final int NOFILE = 8;
 
   static final int[] values = {
-      Fa, Fb, Fc, Fd, Fe, Ff, Fg, Fh
+      a, b, c, d, e, f, g, h
   };
 
   private File() {
@@ -52,21 +52,21 @@ final class File {
 
     switch (genericFile) {
       case Fa:
-        return Fa;
+        return a;
       case Fb:
-        return Fb;
+        return b;
       case Fc:
-        return Fc;
+        return c;
       case Fd:
-        return Fd;
+        return d;
       case Fe:
-        return Fe;
+        return e;
       case Ff:
-        return Ff;
+        return f;
       case Fg:
-        return Fg;
+        return g;
       case Fh:
-        return Fh;
+        return h;
       default:
         throw new IllegalArgumentException();
     }
@@ -74,21 +74,21 @@ final class File {
 
   static GenericFile toGenericFile(int file) {
     switch (file) {
-      case Fa:
+      case a:
         return GenericFile.Fa;
-      case Fb:
+      case b:
         return GenericFile.Fb;
-      case Fc:
+      case c:
         return GenericFile.Fc;
-      case Fd:
+      case d:
         return GenericFile.Fd;
-      case Fe:
+      case e:
         return GenericFile.Fe;
-      case Ff:
+      case f:
         return GenericFile.Ff;
-      case Fg:
+      case g:
         return GenericFile.Fg;
-      case Fh:
+      case h:
         return GenericFile.Fh;
       case NOFILE:
       default:
@@ -98,14 +98,14 @@ final class File {
 
   static boolean isValid(int file) {
     switch (file) {
-      case Fa:
-      case Fb:
-      case Fc:
-      case Fd:
-      case Fe:
-      case Ff:
-      case Fg:
-      case Fh:
+      case a:
+      case b:
+      case c:
+      case d:
+      case e:
+      case f:
+      case g:
+      case h:
         return true;
       case NOFILE:
         return false;
