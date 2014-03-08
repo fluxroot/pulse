@@ -37,6 +37,7 @@ public class PieceTest {
   public void testValues() {
     for (GenericPiece genericPiece : GenericPiece.values()) {
       assertEquals(genericPiece, Piece.toGenericPiece(Piece.valueOf(genericPiece)));
+      assertEquals(genericPiece.ordinal(), Piece.valueOf(genericPiece));
       assertEquals(genericPiece, Piece.toGenericPiece(Piece.valueOf(Piece.Type.valueOf(genericPiece.chessman), Color.valueOf(genericPiece.color))));
     }
   }
@@ -44,19 +45,6 @@ public class PieceTest {
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericPiece() {
     Piece.toGenericPiece(Piece.NOPIECE);
-  }
-
-  @Test
-  public void testOrdinal() {
-    for (int piece : Piece.values) {
-      assertEquals(Piece.ordinal(piece), Piece.toGenericPiece(piece).ordinal());
-      assertEquals(piece, Piece.values[Piece.ordinal(piece)]);
-    }
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidOrdinal() {
-    Piece.ordinal(Piece.NOPIECE);
   }
 
   @Test
