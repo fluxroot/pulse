@@ -39,22 +39,22 @@ public final class Board {
 
   private static final int BOARDSIZE = 128;
 
-  public final int[] board = new int[BOARDSIZE];
+  final int[] board = new int[BOARDSIZE];
 
-  public final Bitboard[] pawns = new Bitboard[Color.values.length];
-  public final Bitboard[] knights = new Bitboard[Color.values.length];
-  public final Bitboard[] bishops = new Bitboard[Color.values.length];
-  public final Bitboard[] rooks = new Bitboard[Color.values.length];
-  public final Bitboard[] queens = new Bitboard[Color.values.length];
-  public final Bitboard[] kings = new Bitboard[Color.values.length];
+  final Bitboard[] pawns = new Bitboard[Color.values.length];
+  final Bitboard[] knights = new Bitboard[Color.values.length];
+  final Bitboard[] bishops = new Bitboard[Color.values.length];
+  final Bitboard[] rooks = new Bitboard[Color.values.length];
+  final Bitboard[] queens = new Bitboard[Color.values.length];
+  final Bitboard[] kings = new Bitboard[Color.values.length];
 
-  public final int[][] castlingRights = new int[Color.values.length][Castling.values.length];
-  public int enPassant = Square.NOSQUARE;
-  public int activeColor = WHITE;
-  public int halfMoveClock = 0;
+  final int[][] castlingRights = new int[Color.values.length][Castling.values.length];
+  int enPassant = Square.NOSQUARE;
+  int activeColor = WHITE;
+  int halfMoveClock = 0;
   private int halfMoveNumber;
 
-  public long zobristKey = 0;
+  long zobristKey = 0;
   private static final long[][] zobristPiece = new long[Piece.values.length][BOARDSIZE];
   private static final long[][] zobristCastling = new long[Color.values.length][Castling.values.length];
   private static final long[] zobristEnPassant = new long[BOARDSIZE];
@@ -66,12 +66,12 @@ public final class Board {
   private int stackSize = 0;
 
   private static final class State {
-    public long zobristKey = 0;
-    public final int[][] castlingRights = new int[Color.values.length][Castling.values.length];
-    public int enPassant = Square.NOSQUARE;
-    public int halfMoveClock = 0;
+    private long zobristKey = 0;
+    private final int[][] castlingRights = new int[Color.values.length][Castling.values.length];
+    private int enPassant = Square.NOSQUARE;
+    private int halfMoveClock = 0;
 
-    public State() {
+    private State() {
       for (int color : Color.values) {
         for (int castling : Castling.values) {
           castlingRights[color][castling] = File.NOFILE;
@@ -83,14 +83,14 @@ public final class Board {
   private static final class Zobrist {
     private final SecureRandom random = new SecureRandom();
 
-    byte[] result() {
+    private byte[] result() {
       // Generate some random bytes for our keys
       byte[] bytes = new byte[16];
       random.nextBytes(bytes);
       return bytes;
     }
 
-    public long next() {
+    private long next() {
       byte[] result = result();
 
       long hash = 0L;
@@ -187,7 +187,7 @@ public final class Board {
     setFullMoveNumber(genericBoard.getFullMoveNumber());
   }
 
-  public GenericBoard toGenericBoard() {
+  GenericBoard toGenericBoard() {
     GenericBoard genericBoard = new GenericBoard();
 
     // Set board
@@ -231,7 +231,7 @@ public final class Board {
     return toGenericBoard().toString();
   }
 
-  public int getFullMoveNumber() {
+  int getFullMoveNumber() {
     return halfMoveNumber / 2;
   }
 
@@ -244,7 +244,7 @@ public final class Board {
     }
   }
 
-  public boolean isRepetition() {
+  boolean isRepetition() {
     int j = Math.max(0, stackSize - halfMoveClock);
     for (int i = stackSize - 2; i >= j; i -= 2) {
       if (zobristKey == stack[i].zobristKey) {
@@ -380,6 +380,7 @@ public final class Board {
         captureSquare += (originColor == WHITE ? Square.S : Square.N);
       }
       assert targetPiece == board[captureSquare];
+      assert Piece.getType(targetPiece) != Piece.Type.KING;
       remove(captureSquare);
 
       clearCastling(captureSquare);
@@ -594,7 +595,7 @@ public final class Board {
    * @param attackerColor the attacker Color.
    * @return whether the targetSquare is attacked.
    */
-  public boolean isAttacked(int targetSquare, int attackerColor) {
+  boolean isAttacked(int targetSquare, int attackerColor) {
     assert Square.isValid(targetSquare);
     assert Color.isValid(attackerColor);
 

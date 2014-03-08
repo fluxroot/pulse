@@ -20,17 +20,17 @@ package com.fluxchess.pulse;
 
 final class Evaluation {
 
-  public static final int INFINITY = 200000;
-  public static final int DRAW = 0;
-  public static final int CHECKMATE = 100000;
-  public static final int CHECKMATE_THRESHOLD = CHECKMATE - Search.MAX_PLY;
+  static final int INFINITY = 200000;
+  static final int DRAW = 0;
+  static final int CHECKMATE = 100000;
+  static final int CHECKMATE_THRESHOLD = CHECKMATE - Search.MAX_PLY;
 
-  public static final int VALUE_PAWN = 100;
-  public static final int VALUE_KNIGHT = 325;
-  public static final int VALUE_BISHOP = 325;
-  public static final int VALUE_ROOK = 500;
-  public static final int VALUE_QUEEN = 975;
-  public static final int VALUE_KING = 20000;
+  static final int VALUE_PAWN = 100;
+  static final int VALUE_KNIGHT = 325;
+  static final int VALUE_BISHOP = 325;
+  static final int VALUE_ROOK = 500;
+  static final int VALUE_QUEEN = 975;
+  static final int VALUE_KING = 20000;
 
   /**
    * Evaluates the board.
@@ -38,7 +38,7 @@ final class Evaluation {
    * @param board the board.
    * @return the evaluation value in centipawns.
    */
-  public int evaluate(Board board) {
+  int evaluate(Board board) {
     assert board != null;
 
     // Initialize
@@ -72,7 +72,7 @@ final class Evaluation {
     return total;
   }
 
-  public static int getPieceTypeValue(int pieceType) {
+  static int getPieceTypeValue(int pieceType) {
     assert Piece.Type.isValid(pieceType);
 
     switch (pieceType) {

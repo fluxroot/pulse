@@ -26,11 +26,11 @@ import static com.fluxchess.pulse.Color.WHITE;
 public final class MoveGenerator {
 
   // Move deltas
-  public static final int[][] moveDeltaPawn = {
+  static final int[][] moveDeltaPawn = {
       {Square.N, Square.NE, Square.NW}, // Color.WHITE
       {Square.S, Square.SE, Square.SW}  // Color.BLACK
   };
-  public static final int[] moveDeltaKnight = {
+  static final int[] moveDeltaKnight = {
       Square.N + Square.N + Square.E,
       Square.N + Square.N + Square.W,
       Square.N + Square.E + Square.E,
@@ -40,17 +40,17 @@ public final class MoveGenerator {
       Square.S + Square.E + Square.E,
       Square.S + Square.W + Square.W
   };
-  public static final int[] moveDeltaBishop = {
+  static final int[] moveDeltaBishop = {
       Square.NE, Square.NW, Square.SE, Square.SW
   };
-  public static final int[] moveDeltaRook = {
+  static final int[] moveDeltaRook = {
       Square.N, Square.E, Square.S, Square.W
   };
-  public static final int[] moveDeltaQueen = {
+  static final int[] moveDeltaQueen = {
       Square.N, Square.E, Square.S, Square.W,
       Square.NE, Square.NW, Square.SE, Square.SW
   };
-  public static final int[] moveDeltaKing = {
+  static final int[] moveDeltaKing = {
       Square.N, Square.E, Square.S, Square.W,
       Square.NE, Square.NW, Square.SE, Square.SW
   };
@@ -223,7 +223,8 @@ public final class MoveGenerator {
         int targetPiece = board.board[targetSquare];
 
         if (targetPiece == Piece.NOPIECE) {
-          list.entries[list.size++].move = Move.valueOf(Move.Type.NORMAL, originSquare, targetSquare, originPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+          list.entries[list.size++].move = Move.valueOf(
+              Move.Type.NORMAL, originSquare, targetSquare, originPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
 
           if (!sliding) {
             break;
@@ -231,9 +232,9 @@ public final class MoveGenerator {
 
           targetSquare += delta;
         } else {
-          if (Piece.getColor(targetPiece) == oppositeColor
-              && Piece.getType(targetPiece) != Piece.Type.KING) {
-            list.entries[list.size++].move = Move.valueOf(Move.Type.NORMAL, originSquare, targetSquare, originPiece, targetPiece, Piece.Type.NOTYPE);
+          if (Piece.getColor(targetPiece) == oppositeColor) {
+            list.entries[list.size++].move = Move.valueOf(
+                Move.Type.NORMAL, originSquare, targetSquare, originPiece, targetPiece, Piece.Type.NOTYPE);
           }
 
           break;
@@ -260,35 +261,40 @@ public final class MoveGenerator {
         int targetPiece = board.board[targetSquare];
 
         if (targetPiece != Piece.NOPIECE) {
-          if (Piece.getColor(targetPiece) == Color.opposite(pawnColor)
-              && Piece.getType(targetPiece) != Piece.Type.KING) {
+          if (Piece.getColor(targetPiece) == Color.opposite(pawnColor)) {
             // Capturing move
 
-            if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R8)
-                || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R1)) {
+            if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r8)
+                || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r1)) {
               // Pawn promotion capturing move
 
-              list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.QUEEN);
-              list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.ROOK);
-              list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.BISHOP);
-              list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.KNIGHT);
+              list.entries[list.size++].move = Move.valueOf(
+                  Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.QUEEN);
+              list.entries[list.size++].move = Move.valueOf(
+                  Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.ROOK);
+              list.entries[list.size++].move = Move.valueOf(
+                  Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.BISHOP);
+              list.entries[list.size++].move = Move.valueOf(
+                  Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.KNIGHT);
             } else {
               // Normal capturing move
 
-              list.entries[list.size++].move = Move.valueOf(Move.Type.NORMAL, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.NOTYPE);
+              list.entries[list.size++].move = Move.valueOf(
+                  Move.Type.NORMAL, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.NOTYPE);
             }
           }
         } else if (targetSquare == board.enPassant) {
           // En passant move
-          assert (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R3)
-              || (pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R6);
+          assert (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r3)
+              || (pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r6);
 
           int captureSquare = targetSquare + (pawnColor == WHITE ? Square.S : Square.N);
           targetPiece = board.board[captureSquare];
           assert Piece.getType(targetPiece) == Piece.Type.PAWN;
           assert Piece.getColor(targetPiece) == Color.opposite(pawnColor);
 
-          list.entries[list.size++].move = Move.valueOf(Move.Type.ENPASSANT, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.NOTYPE);
+          list.entries[list.size++].move = Move.valueOf(
+              Move.Type.ENPASSANT, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.NOTYPE);
         }
       }
     }
@@ -299,27 +305,33 @@ public final class MoveGenerator {
     // Move one rank forward
     int targetSquare = pawnSquare + delta;
     if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
-      if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R8)
-          || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R1)) {
+      if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r8)
+          || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r1)) {
         // Pawn promotion move
 
-        list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.QUEEN);
-        list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.ROOK);
-        list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.BISHOP);
-        list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.KNIGHT);
+        list.entries[list.size++].move = Move.valueOf(
+            Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.QUEEN);
+        list.entries[list.size++].move = Move.valueOf(
+            Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.ROOK);
+        list.entries[list.size++].move = Move.valueOf(
+            Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.BISHOP);
+        list.entries[list.size++].move = Move.valueOf(
+            Move.Type.PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.KNIGHT);
       } else {
         // Normal move
 
-        list.entries[list.size++].move = Move.valueOf(Move.Type.NORMAL, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+        list.entries[list.size++].move = Move.valueOf(
+            Move.Type.NORMAL, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
 
         // Move another rank forward
         targetSquare += delta;
         if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
-          if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.R4)
-              || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.R5)) {
+          if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r4)
+              || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r5)) {
             // Pawn double move
 
-            list.entries[list.size++].move = Move.valueOf(Move.Type.PAWNDOUBLE, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+            list.entries[list.size++].move = Move.valueOf(
+                Move.Type.PAWNDOUBLE, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
           }
         }
       }
@@ -343,7 +355,8 @@ public final class MoveGenerator {
         assert board.board[Square.e1] == Piece.WHITEKING;
         assert board.board[Square.h1] == Piece.WHITEROOK;
 
-        list.entries[list.size++].move = Move.valueOf(Move.Type.CASTLING, kingSquare, Square.g1, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+        list.entries[list.size++].move = Move.valueOf(
+            Move.Type.CASTLING, kingSquare, Square.g1, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
       if (board.castlingRights[WHITE][QUEENSIDE] != File.NOFILE
@@ -354,7 +367,8 @@ public final class MoveGenerator {
         assert board.board[Square.e1] == Piece.WHITEKING;
         assert board.board[Square.a1] == Piece.WHITEROOK;
 
-        list.entries[list.size++].move = Move.valueOf(Move.Type.CASTLING, kingSquare, Square.c1, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+        list.entries[list.size++].move = Move.valueOf(
+            Move.Type.CASTLING, kingSquare, Square.c1, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
     } else {
       // Do not test g8 whether it is attacked as we will test it in isLegal()
@@ -365,7 +379,8 @@ public final class MoveGenerator {
         assert board.board[Square.e8] == Piece.BLACKKING;
         assert board.board[Square.h8] == Piece.BLACKROOK;
 
-        list.entries[list.size++].move = Move.valueOf(Move.Type.CASTLING, kingSquare, Square.g8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+        list.entries[list.size++].move = Move.valueOf(
+            Move.Type.CASTLING, kingSquare, Square.g8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
       if (board.castlingRights[BLACK][QUEENSIDE] != File.NOFILE
@@ -376,7 +391,8 @@ public final class MoveGenerator {
         assert board.board[Square.e8] == Piece.BLACKKING;
         assert board.board[Square.a8] == Piece.BLACKROOK;
 
-        list.entries[list.size++].move = Move.valueOf(Move.Type.CASTLING, kingSquare, Square.c8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+        list.entries[list.size++].move = Move.valueOf(
+            Move.Type.CASTLING, kingSquare, Square.c8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
     }
   }
@@ -385,7 +401,8 @@ public final class MoveGenerator {
     int activeColor = board.activeColor;
 
     board.makeMove(move);
-    boolean isAttacked = board.isAttacked(Bitboard.next(board.kings[activeColor].squares), Color.opposite(activeColor));
+    boolean isAttacked = board.isAttacked(
+        Bitboard.next(board.kings[activeColor].squares), Color.opposite(activeColor));
     board.undoMove(move);
 
     return !isAttacked;

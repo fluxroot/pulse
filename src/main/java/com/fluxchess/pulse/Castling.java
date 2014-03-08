@@ -28,20 +28,20 @@ import com.fluxchess.jcpi.models.GenericCastling;
  */
 final class Castling {
 
-  public static final int MASK = 0x3;
+  static final int MASK = 0x3;
 
-  public static final int KINGSIDE = 0;
-  public static final int QUEENSIDE = 1;
-  public static final int NOCASTLING = 2;
+  static final int KINGSIDE = 0;
+  static final int QUEENSIDE = 1;
+  static final int NOCASTLING = 2;
 
-  public static final int[] values = {
+  static final int[] values = {
       KINGSIDE, QUEENSIDE
   };
 
   private Castling() {
   }
 
-  public static int valueOf(GenericCastling genericCastling) {
+  static int valueOf(GenericCastling genericCastling) {
     assert genericCastling != null;
 
     switch (genericCastling) {
@@ -54,7 +54,7 @@ final class Castling {
     }
   }
 
-  public static GenericCastling toGenericCastling(int castling) {
+  static GenericCastling toGenericCastling(int castling) {
     switch (castling) {
       case KINGSIDE:
         return GenericCastling.KINGSIDE;
@@ -66,7 +66,7 @@ final class Castling {
     }
   }
 
-  public static boolean isValid(int castling) {
+  static boolean isValid(int castling) {
     switch (castling) {
       case KINGSIDE:
       case QUEENSIDE:

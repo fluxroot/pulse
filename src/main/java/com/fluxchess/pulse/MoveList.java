@@ -23,25 +23,25 @@ package com.fluxchess.pulse;
  * from our MoveGenerator. For the root node we we will populate pv for every
  * root move.
  */
-public final class MoveList {
+final class MoveList {
 
   private static final int MAX_MOVES = 256;
 
-  public final Entry[] entries = new Entry[MAX_MOVES];
-  public int size = 0;
+  final Entry[] entries = new Entry[MAX_MOVES];
+  int size = 0;
 
-  public static final class Entry {
-    public int move = Move.NOMOVE;
-    public int value = -Evaluation.INFINITY;
-    public final MoveVariation pv = new MoveVariation();
+  static final class Entry {
+    int move = Move.NOMOVE;
+    int value = -Evaluation.INFINITY;
+    final MoveVariation pv = new MoveVariation();
   }
 
-  public static final class MoveVariation {
-    public final int[] moves = new int[Search.MAX_PLY];
-    public int size = 0;
+  static final class MoveVariation {
+    final int[] moves = new int[Search.MAX_PLY];
+    int size = 0;
   }
 
-  public MoveList() {
+  MoveList() {
     for (int i = 0; i < MAX_MOVES; ++i) {
       entries[i] = new Entry();
     }
@@ -50,7 +50,7 @@ public final class MoveList {
   /**
    * Sorts the move list using a stable insertion sort.
    */
-  public void sort() {
+  void sort() {
     for (int i = 1; i < size; ++i) {
       Entry entry = entries[i];
 
@@ -67,7 +67,7 @@ public final class MoveList {
   /**
    * Rates the moves in the list according to "Most Valuable Victim - Least Valuable Aggressor".
    */
-  public void rateFromMVVLVA() {
+  void rateFromMVVLVA() {
     for (int i = 0; i < size; ++i) {
       int move = entries[i].move;
       int value = 0;

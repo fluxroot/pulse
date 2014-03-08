@@ -38,8 +38,8 @@ import static com.fluxchess.pulse.MoveList.MoveVariation;
  */
 public final class Search implements Runnable {
 
-  public static final int MAX_PLY = 256;
-  public static final int MAX_DEPTH = 64;
+  static final int MAX_PLY = 256;
+  static final int MAX_DEPTH = 64;
 
   private final Thread thread = new Thread(this);
   private final Semaphore semaphore = new Semaphore(0);
@@ -91,7 +91,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public static Search newDepthSearch(IProtocol protocol, Board board, int searchDepth) {
+  static Search newDepthSearch(IProtocol protocol, Board board, int searchDepth) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
     if (searchDepth < 1 || searchDepth > MAX_DEPTH) throw new IllegalArgumentException();
@@ -103,7 +103,7 @@ public final class Search implements Runnable {
     return search;
   }
 
-  public static Search newNodesSearch(IProtocol protocol, Board board, long searchNodes) {
+  static Search newNodesSearch(IProtocol protocol, Board board, long searchNodes) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
     if (searchNodes < 1) throw new IllegalArgumentException();
@@ -115,7 +115,7 @@ public final class Search implements Runnable {
     return search;
   }
 
-  public static Search newTimeSearch(IProtocol protocol, Board board, long searchTime) {
+  static Search newTimeSearch(IProtocol protocol, Board board, long searchTime) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
     if (searchTime < 1) throw new IllegalArgumentException();
@@ -128,7 +128,7 @@ public final class Search implements Runnable {
     return search;
   }
 
-  public static Search newMovesSearch(IProtocol protocol, Board board, List<GenericMove> searchMoves) {
+  static Search newMovesSearch(IProtocol protocol, Board board, List<GenericMove> searchMoves) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
     if (searchMoves == null) throw new IllegalArgumentException();
@@ -142,14 +142,14 @@ public final class Search implements Runnable {
     return search;
   }
 
-  public static Search newInfiniteSearch(IProtocol protocol, Board board) {
+  static Search newInfiniteSearch(IProtocol protocol, Board board) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
 
     return new Search(protocol, board);
   }
 
-  public static Search newClockSearch(
+  static Search newClockSearch(
       IProtocol protocol, Board board,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
     Search search = newPonderSearch(
@@ -162,7 +162,7 @@ public final class Search implements Runnable {
     return search;
   }
 
-  public static Search newPonderSearch(
+  static Search newPonderSearch(
       IProtocol protocol, Board board,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
     if (protocol == null) throw new IllegalArgumentException();
@@ -216,7 +216,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public void start() {
+  void start() {
     if (!thread.isAlive()) {
       thread.setDaemon(true);
       thread.start();
@@ -229,7 +229,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public void stop() {
+  void stop() {
     if (thread.isAlive()) {
       // Signal the search thread that we want to stop it
       abort = true;
@@ -243,7 +243,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public void ponderhit() {
+  void ponderhit() {
     if (thread.isAlive()) {
       // Enable time management
       timer = new Timer(true);
@@ -281,7 +281,7 @@ public final class Search implements Runnable {
 
     //### BEGIN Iterative Deepening
     for (currentDepth = initialDepth; currentDepth <= searchDepth; ++currentDepth) {
-      currentMaxDepth = currentDepth;
+      currentMaxDepth = 0;
       sendStatus(true);
 
       searchRoot(currentDepth, -Evaluation.INFINITY, Evaluation.INFINITY);
