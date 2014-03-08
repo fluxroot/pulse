@@ -1,7 +1,7 @@
 Pulse Chess
 ===========
 
-Copyright 2013-2014 Flux Chess Project  
+Copyright 2013-2014 Phokham Nonava  
 http://fluxchess.com
 
 [![Build Status](https://travis-ci.org/fluxroot/pulse.png?branch=master)](https://travis-ci.org/fluxroot/pulse) [![Coverage Status](https://coveralls.io/repos/fluxroot/pulse/badge.png?branch=master)](https://coveralls.io/r/fluxroot/pulse?branch=master)
