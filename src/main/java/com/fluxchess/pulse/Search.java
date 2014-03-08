@@ -281,7 +281,7 @@ public final class Search implements Runnable {
 
     //### BEGIN Iterative Deepening
     for (currentDepth = initialDepth; currentDepth <= searchDepth; ++currentDepth) {
-      currentMaxDepth = currentDepth;
+      currentMaxDepth = 0;
       sendStatus(true);
 
       searchRoot(currentDepth, -Evaluation.INFINITY, Evaluation.INFINITY);
