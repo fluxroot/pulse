@@ -172,23 +172,19 @@ final class Piece {
 
   static final int MASK = 0x1F;
 
-  private static final int TYPE_SHIFT = 0;
-  private static final int COLOR_SHIFT = 3;
-
-  static final int NOPIECE = (Type.NOTYPE << TYPE_SHIFT) | (Color.NOCOLOR << COLOR_SHIFT);
-
-  static final int WHITEPAWN = (Type.PAWN << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  static final int WHITEKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  static final int WHITEBISHOP = (Type.BISHOP << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  static final int WHITEROOK = (Type.ROOK << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  static final int WHITEQUEEN = (Type.QUEEN << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  static final int WHITEKING = (Type.KING << TYPE_SHIFT) | (WHITE << COLOR_SHIFT);
-  static final int BLACKPAWN = (Type.PAWN << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  static final int BLACKKNIGHT = (Type.KNIGHT << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  static final int BLACKBISHOP = (Type.BISHOP << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  static final int BLACKROOK = (Type.ROOK << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  static final int BLACKQUEEN = (Type.QUEEN << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
-  static final int BLACKKING = (Type.KING << TYPE_SHIFT) | (BLACK << COLOR_SHIFT);
+  static final int WHITEPAWN = 0;
+  static final int WHITEKNIGHT = 1;
+  static final int WHITEBISHOP = 2;
+  static final int WHITEROOK = 3;
+  static final int WHITEQUEEN = 4;
+  static final int WHITEKING = 5;
+  static final int BLACKPAWN = 6;
+  static final int BLACKKNIGHT = 7;
+  static final int BLACKBISHOP = 8;
+  static final int BLACKROOK = 9;
+  static final int BLACKQUEEN = 10;
+  static final int BLACKKING = 11;
+  static final int NOPIECE = 12;
 
   static final int[] values = {
       WHITEPAWN, WHITEKNIGHT, WHITEBISHOP, WHITEROOK, WHITEQUEEN, WHITEKING,
@@ -301,38 +297,6 @@ final class Piece {
         return GenericPiece.BLACKQUEEN;
       case BLACKKING:
         return GenericPiece.BLACKKING;
-      case NOPIECE:
-      default:
-        throw new IllegalArgumentException();
-    }
-  }
-
-  static int ordinal(int piece) {
-    switch (piece) {
-      case WHITEPAWN:
-        return 0;
-      case WHITEKNIGHT:
-        return 1;
-      case WHITEBISHOP:
-        return 2;
-      case WHITEROOK:
-        return 3;
-      case WHITEQUEEN:
-        return 4;
-      case WHITEKING:
-        return 5;
-      case BLACKPAWN:
-        return 6;
-      case BLACKKNIGHT:
-        return 7;
-      case BLACKBISHOP:
-        return 8;
-      case BLACKROOK:
-        return 9;
-      case BLACKQUEEN:
-        return 10;
-      case BLACKKING:
-        return 11;
       case NOPIECE:
       default:
         throw new IllegalArgumentException();

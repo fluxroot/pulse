@@ -108,7 +108,7 @@ public final class Board {
 
     for (int piece : Piece.values) {
       for (int i = 0; i < BOARDSIZE; ++i) {
-        zobristPiece[Piece.ordinal(piece)][i] = zobrist.next();
+        zobristPiece[piece][i] = zobrist.next();
       }
     }
 
@@ -296,7 +296,7 @@ public final class Board {
 
     board[square] = piece;
 
-    zobristKey ^= zobristPiece[Piece.ordinal(piece)][square];
+    zobristKey ^= zobristPiece[piece][square];
   }
 
   /**
@@ -341,7 +341,7 @@ public final class Board {
 
     board[square] = Piece.NOPIECE;
 
-    zobristKey ^= zobristPiece[Piece.ordinal(piece)][square];
+    zobristKey ^= zobristPiece[piece][square];
 
     return piece;
   }
