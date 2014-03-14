@@ -58,6 +58,7 @@ public final class Search implements Runnable {
   private long searchTime = 0;
   private Timer timer = null;
   private boolean timerStopped = false;
+  private boolean doTimeManagement = false;
 
   // Moves search
   private final MoveList searchMoves = new MoveList();
@@ -85,7 +86,7 @@ public final class Search implements Runnable {
 
       // If we finished the first iteration, we should have a result.
       // In this case abort the search.
-      if (currentDepth > initialDepth) {
+      if (!doTimeManagement || currentDepth > initialDepth) {
         abort = true;
       }
     }
@@ -200,6 +201,8 @@ public final class Search implements Runnable {
     if (search.searchTime > maxSearchTime) {
       search.searchTime = maxSearchTime;
     }
+
+    search.doTimeManagement = true;
 
     return search;
   }
@@ -322,7 +325,7 @@ public final class Search implements Runnable {
   private void checkStopConditions() {
     // We will check the stop conditions only if we are using time management,
     // that is if our timer != null.
-    if (timer != null) {
+    if (timer != null && doTimeManagement) {
       if (timerStopped) {
         abort = true;
       } else {
