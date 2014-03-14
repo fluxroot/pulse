@@ -283,7 +283,8 @@ public final class Search implements Runnable {
     semaphore.release();
 
     //### BEGIN Iterative Deepening
-    for (currentDepth = initialDepth; currentDepth <= searchDepth; ++currentDepth) {
+    for (int depth = initialDepth; depth <= searchDepth; ++depth) {
+      currentDepth = depth;
       currentMaxDepth = 0;
       sendStatus(false);
 
