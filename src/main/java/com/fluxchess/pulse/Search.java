@@ -285,7 +285,7 @@ public final class Search implements Runnable {
     //### BEGIN Iterative Deepening
     for (currentDepth = initialDepth; currentDepth <= searchDepth; ++currentDepth) {
       currentMaxDepth = 0;
-      sendStatus(true);
+      sendStatus(false);
 
       searchRoot(currentDepth, -Evaluation.INFINITY, Evaluation.INFINITY);
 
@@ -357,7 +357,7 @@ public final class Search implements Runnable {
 
     pv[ply].size = 0;
 
-    sendStatus(false);
+    sendStatus();
   }
 
   private void searchRoot(int depth, int alpha, int beta) {
@@ -393,7 +393,7 @@ public final class Search implements Runnable {
 
       currentMove = move;
       currentMoveNumber = i + 1;
-      sendStatus(true);
+      sendStatus(false);
 
       board.makeMove(move);
       int value = -search(depth - 1, -beta, -alpha, ply + 1);
@@ -574,17 +574,23 @@ public final class Search implements Runnable {
     dest.size = src.size + 1;
   }
 
+  private void sendStatus() {
+    if (System.currentTimeMillis() - statusStartTime >= 1000) {
+      sendStatus(false);
+    }
+  }
+
   private void sendStatus(boolean force) {
-    long currentTime = System.currentTimeMillis();
-    if ((currentTime - startTime >= 1000)
-        && (force || (currentTime - statusStartTime) >= 1000)) {
+    long timeDelta = System.currentTimeMillis() - startTime;
+
+    if (force || timeDelta >= 1000) {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
 
       command.setDepth(currentDepth);
       command.setMaxDepth(currentMaxDepth);
       command.setNodes(totalNodes);
-      command.setTime(currentTime - startTime);
-      command.setNps(totalNodes * 1000 / (currentTime - startTime));
+      command.setTime(timeDelta);
+      command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
       if (currentMove != Move.NOMOVE) {
         command.setCurrentMove(Move.toGenericMove(currentMove));
         command.setCurrentMoveNumber(currentMoveNumber);
