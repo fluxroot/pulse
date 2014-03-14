@@ -24,21 +24,8 @@ import com.fluxchess.jcpi.models.GenericPiece;
 import static com.fluxchess.pulse.Color.BLACK;
 import static com.fluxchess.pulse.Color.WHITE;
 
-/**
- * This class encodes piece information as an int value. The data is
- * encoded as follows:<br/>
- * <br/>
- * <code>Bit 0 - 2</code>: the type (required)<br/>
- * <code>Bit 3 - 4</code>: the color (required)<br/>
- */
 final class Piece {
 
-  /**
-   * This class encodes type information as an int value. The data is
-   * encoded as follows:<br/>
-   * <br/>
-   * <code>Bit 0 - 2</code>: the type (required)<br/>
-   */
   static final class Type {
     static final int MASK = 0x7;
 

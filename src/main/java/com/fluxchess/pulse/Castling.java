@@ -20,12 +20,6 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericCastling;
 
-/**
- * This class encodes castling information as an int value. The data is
- * encoded as follows:<br/>
- * <br/>
- * <code>Bit 0 - 1</code>: the castling (required)<br/>
- */
 final class Castling {
 
   static final int MASK = 0x3;

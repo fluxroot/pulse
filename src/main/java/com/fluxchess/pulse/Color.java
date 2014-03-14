@@ -20,12 +20,6 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericColor;
 
-/**
- * This class encodes color information as an int value. The data is
- * encoded as follows:<br/>
- * <br/>
- * <code>Bit 0 - 1</code>: the color (required)<br/>
- */
 final class Color {
 
   static final int MASK = 0x3;

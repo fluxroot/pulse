@@ -20,12 +20,6 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericFile;
 
-/**
- * This class encodes file information as an int value. The data is
- * encoded as follows:<br/>
- * <br/>
- * <code>Bit 0 - 3</code>: the file (required)<br/>
- */
 final class File {
 
   static final int MASK = 0xF;
