@@ -1,14 +1,21 @@
-Release Notes - Pulse - Version 1.3.0-alpha
--------------------------------------------
+Release Notes - Pulse - Version 1.3.0
+-------------------------------------
 
+* Refactor variables and methods to use common namings
+* Cleanup code to improve readability
+* Build release and debug binaries
+* Extract PV from search
+* Add more comments
+* Add Int* model classes from JCPI to show their implementation
+* Add mobility evaluation
+* Add hasInsufficientMaterial()
+* Add incremental material evaluation
+* Add pseudo-legal move generator
+* Remove repetitionTable and replace with stack search
+* Improve performance in isAttacked()
 * Fix best move update on abort
 * Fix MAX_PLY and CHECKMATE_THRESHOLD bound usage
-* Add more comments
-* Cleanup code to improve readability
-* Refactor variables and methods to use common namings
-* Add Int* model classes from JCPI to show their implementation
-* Extract PV from search
-* Build release and debug binaries
+* Fix time management with fixed time search
 
 Release Notes - Pulse - Version 1.2.0
 -------------------------------------
