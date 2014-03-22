@@ -228,7 +228,7 @@ task dist(type: Zip) {
     }
     from 'COPYING'
     from 'COPYING.LESSER'
-    from 'src/dist/pulse.png'
+    from 'src/dist/logo.png'
 
     from jar
     from sourcesJar
