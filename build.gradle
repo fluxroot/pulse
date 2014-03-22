@@ -80,14 +80,10 @@ tasks.withType(Checkstyle) {
 cobertura.coverageFormats = ['html', 'xml']
 
 sourceSets {
-  integration
   testing
 }
 
 configurations {
-  integrationCompile.extendsFrom testCompile
-  integrationRuntime.extendsFrom testRuntime
-
   testingCompile.extendsFrom testCompile
   testingRuntime.extendsFrom testRuntime
 }
@@ -100,8 +96,6 @@ dependencies {
   testCompile 'org.slf4j:slf4j-api:1.7.+'
   testCompile 'org.slf4j:slf4j-log4j12:1.7.+'
   testCompile 'log4j:log4j:1.2.+'
-
-  integrationCompile project(path: ':', configuration: 'testRuntime')
 
   testingCompile project(path: ':', configuration: 'testRuntime')
 }
@@ -141,9 +135,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   from javadoc.destinationDir
 }
 
-task integration(type: Test) {
-  testClassesDir = sourceSets.integration.output.classesDir
-  classpath = sourceSets.integration.runtimeClasspath
+task testing(type: Test) {
+  testClassesDir = sourceSets.testing.output.classesDir
+  classpath = sourceSets.testing.runtimeClasspath
 }
 
 ext.vendorDir = file("${rootDir}/vendor")
@@ -269,12 +263,3 @@ task wrapper(type: Wrapper) {
 }
 
 apply plugin: 'idea'
-
-idea {
-  module {
-    testSourceDirs += sourceSets.integration.java.srcDirs
-    testSourceDirs += sourceSets.integration.resources.srcDirs
-    testSourceDirs += sourceSets.testing.java.srcDirs
-    testSourceDirs += sourceSets.testing.resources.srcDirs
-  }
-}
