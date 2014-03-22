@@ -32,6 +32,13 @@ final class Evaluation {
   static final int QUEEN_VALUE = 975;
   static final int KING_VALUE = 20000;
 
+  private static final int PHASE_OPENING_MATERIAL = 2 * KNIGHT_VALUE
+      + 4 * BISHOP_VALUE
+      + 4 * ROOK_VALUE
+      + 2 * QUEEN_VALUE;
+  private static final int PHASE_ENDGAME_MATERIAL = ROOK_VALUE + QUEEN_VALUE;
+  private static final int PHASE_INTERVAL_MATERIAL = PHASE_OPENING_MATERIAL - PHASE_ENDGAME_MATERIAL;
+
   static int materialWeight = 100;
   static int mobilityWeight = 80;
   static final int MAX_WEIGHT = 100;
@@ -48,27 +55,34 @@ final class Evaluation {
     // Initialize
     int myColor = board.activeColor;
     int oppositeColor = Color.opposite(myColor);
-    int total = 0;
+    int opening = 0;
+    int endgame = 0;
 
     // Evaluate material
-    total += (evaluateMaterial(myColor, board) - evaluateMaterial(oppositeColor, board))
+    int materialScore = (evaluateMaterial(myColor, board) - evaluateMaterial(oppositeColor, board))
         * materialWeight / MAX_WEIGHT;
+    opening += materialScore;
+    endgame += materialScore;
 
     // Evaluate mobility
-    total += (evaluateMobility(myColor, board) - evaluateMobility(oppositeColor, board))
+    int mobilityScore = (evaluateMobility(myColor, board) - evaluateMobility(oppositeColor, board))
         * mobilityWeight / MAX_WEIGHT;
+    opening += mobilityScore;
+
+    // Interpolate opening and endgame
+    int value = interpolate(opening, endgame, board);
 
     // This is just a safe guard to protect against overflow in our evaluation
     // function.
-    if (total <= -CHECKMATE_THRESHOLD) {
+    if (value <= -CHECKMATE_THRESHOLD) {
       assert false;
-      total = -CHECKMATE_THRESHOLD + 1;
-    } else if (total >= CHECKMATE_THRESHOLD) {
+      value = -CHECKMATE_THRESHOLD + 1;
+    } else if (value >= CHECKMATE_THRESHOLD) {
       assert false;
-      total = CHECKMATE_THRESHOLD - 1;
+      value = CHECKMATE_THRESHOLD - 1;
     }
 
-    return total;
+    return value;
   }
 
   private int evaluateMaterial(int color, Board board) {
@@ -168,6 +182,22 @@ final class Evaluation {
       default:
         throw new IllegalArgumentException();
     }
+  }
+
+  static int interpolate(int opening, int endgame, Board board) {
+    assert board != null;
+
+    int phase;
+    int material = board.majorMinorMaterial[Color.WHITE] + board.majorMinorMaterial[Color.BLACK];
+    if (material >= PHASE_OPENING_MATERIAL) {
+      phase = PHASE_INTERVAL_MATERIAL;
+    } else if (material <= PHASE_ENDGAME_MATERIAL) {
+      phase = 0;
+    } else {
+      phase = material - PHASE_ENDGAME_MATERIAL;
+    }
+
+    return (opening * phase + endgame * (PHASE_INTERVAL_MATERIAL - phase)) / PHASE_INTERVAL_MATERIAL;
   }
 
 }

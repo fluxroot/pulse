@@ -49,6 +49,7 @@ public final class Board {
   final Bitboard[] kings = new Bitboard[Color.values.length];
 
   final int[] material = new int[Color.values.length];
+  final int[] majorMinorMaterial = new int[Color.values.length];
 
   final int[][] castlingRights = new int[Color.values.length][Castling.values.length];
   int enPassant = Square.NOSQUARE;
@@ -147,6 +148,7 @@ public final class Board {
     // Initialize material
     for (int color : Color.values) {
       material[color] = 0;
+      majorMinorMaterial[color] = 0;
     }
 
     // Initialize board
@@ -293,18 +295,22 @@ public final class Board {
       case Piece.Type.KNIGHT:
         knights[color].add(square);
         material[color] += Evaluation.KNIGHT_VALUE;
+        majorMinorMaterial[color] += Evaluation.KNIGHT_VALUE;
         break;
       case Piece.Type.BISHOP:
         bishops[color].add(square);
         material[color] += Evaluation.BISHOP_VALUE;
+        majorMinorMaterial[color] += Evaluation.BISHOP_VALUE;
         break;
       case Piece.Type.ROOK:
         rooks[color].add(square);
         material[color] += Evaluation.ROOK_VALUE;
+        majorMinorMaterial[color] += Evaluation.ROOK_VALUE;
         break;
       case Piece.Type.QUEEN:
         queens[color].add(square);
         material[color] += Evaluation.QUEEN_VALUE;
+        majorMinorMaterial[color] += Evaluation.QUEEN_VALUE;
         break;
       case Piece.Type.KING:
         kings[color].add(square);
@@ -344,18 +350,22 @@ public final class Board {
       case Piece.Type.KNIGHT:
         knights[color].remove(square);
         material[color] -= Evaluation.KNIGHT_VALUE;
+        majorMinorMaterial[color] -= Evaluation.KNIGHT_VALUE;
         break;
       case Piece.Type.BISHOP:
         bishops[color].remove(square);
         material[color] -= Evaluation.BISHOP_VALUE;
+        majorMinorMaterial[color] -= Evaluation.BISHOP_VALUE;
         break;
       case Piece.Type.ROOK:
         rooks[color].remove(square);
         material[color] -= Evaluation.ROOK_VALUE;
+        majorMinorMaterial[color] -= Evaluation.ROOK_VALUE;
         break;
       case Piece.Type.QUEEN:
         queens[color].remove(square);
         material[color] -= Evaluation.QUEEN_VALUE;
+        majorMinorMaterial[color] -= Evaluation.QUEEN_VALUE;
         break;
       case Piece.Type.KING:
         kings[color].remove(square);
