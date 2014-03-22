@@ -48,7 +48,7 @@ final class Evaluation {
 
   static int materialWeight = 100;
   static int mobilityWeight = 80;
-  static final int MAX_WEIGHT = 100;
+  private static final int MAX_WEIGHT = 100;
 
   /**
    * Evaluates the board.
@@ -75,6 +75,7 @@ final class Evaluation {
     int mobilityScore = (evaluateMobility(myColor, board) - evaluateMobility(oppositeColor, board))
         * mobilityWeight / MAX_WEIGHT;
     opening += mobilityScore;
+    endgame += mobilityScore;
 
     // Evaluate castling
     int castlingScore = (evaluateCastling(myColor, board) - evaluateCastling(oppositeColor, board));
@@ -114,26 +115,34 @@ final class Evaluation {
     assert Color.isValid(color);
     assert board != null;
 
-    int mobility = 0;
-
+    int knightMobility = 0;
     for (long squares = board.knights[color].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      mobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaKnight);
-    }
-    for (long squares = board.bishops[color].squares; squares != 0; squares &= squares - 1) {
-      int square = Bitboard.next(squares);
-      mobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaBishop);
-    }
-    for (long squares = board.rooks[color].squares; squares != 0; squares &= squares - 1) {
-      int square = Bitboard.next(squares);
-      mobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaRook);
-    }
-    for (long squares = board.queens[color].squares; squares != 0; squares &= squares - 1) {
-      int square = Bitboard.next(squares);
-      mobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaQueen);
+      knightMobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaKnight);
     }
 
-    return mobility;
+    int bishopMobility = 0;
+    for (long squares = board.bishops[color].squares; squares != 0; squares &= squares - 1) {
+      int square = Bitboard.next(squares);
+      bishopMobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaBishop);
+    }
+
+    int rookMobility = 0;
+    for (long squares = board.rooks[color].squares; squares != 0; squares &= squares - 1) {
+      int square = Bitboard.next(squares);
+      rookMobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaRook);
+    }
+
+    int queenMobility = 0;
+    for (long squares = board.queens[color].squares; squares != 0; squares &= squares - 1) {
+      int square = Bitboard.next(squares);
+      queenMobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaQueen);
+    }
+
+    return knightMobility * 4
+        + bishopMobility * 5
+        + rookMobility * 2
+        + queenMobility;
   }
 
   private int evaluateMobility(int color, Board board, int square, int[] moveDelta) {
@@ -143,29 +152,17 @@ final class Evaluation {
     assert moveDelta != null;
 
     int mobility = 0;
-
     boolean sliding = Piece.Type.isSliding(Piece.getType(board.board[square]));
-    int oppositeColor = Color.opposite(color);
 
     for (int delta : moveDelta) {
       int targetSquare = square + delta;
 
       while (Square.isLegal(targetSquare)) {
-        int targetPiece = board.board[targetSquare];
+        ++mobility;
 
-        if (targetPiece == Piece.NOPIECE) {
-          ++mobility;
-
-          if (!sliding) {
-            break;
-          }
-
+        if (sliding && board.board[targetSquare] == Piece.NOPIECE) {
           targetSquare += delta;
         } else {
-          if (Piece.getColor(targetPiece) == oppositeColor) {
-            ++mobility;
-          }
-
           break;
         }
       }
