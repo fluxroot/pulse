@@ -159,7 +159,7 @@ public class PulseTest {
     new Pulse(new ProtocolHandler()).run();
     long stopTime = System.currentTimeMillis();
 
-    assertTrue(stopTime - startTime > 1000L);
+    assertTrue(stopTime - startTime >= 1000L);
   }
 
   @Test
