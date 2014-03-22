@@ -22,6 +22,7 @@ import com.fluxchess.jcpi.models.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class BoardTest {
@@ -169,6 +170,21 @@ public class BoardTest {
     board.makeMove(move);
 
     assertTrue(board.isRepetition());
+  }
+
+  @Test
+  public void testHasInsufficientMaterial() throws IllegalNotationException {
+    GenericBoard genericBoard = new GenericBoard("8/4k3/8/8/8/8/2K5/8 w - - 4 1");
+    Board board = new Board(genericBoard);
+    assertTrue(board.hasInsufficientMaterial());
+
+    genericBoard = new GenericBoard("8/4k3/8/2B5/8/8/2K5/8 w - - 4 1");
+    board = new Board(genericBoard);
+    assertTrue(board.hasInsufficientMaterial());
+
+    genericBoard = new GenericBoard("8/4k3/8/2B3n1/8/8/2K5/8 w - - 4 1");
+    board = new Board(genericBoard);
+    assertFalse(board.hasInsufficientMaterial());
   }
 
   @Test

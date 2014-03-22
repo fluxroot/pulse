@@ -255,6 +255,14 @@ public final class Board {
     return false;
   }
 
+  boolean hasInsufficientMaterial() {
+    return pawns[Color.WHITE].size() == 0 && pawns[Color.BLACK].size() == 0
+        && rooks[Color.WHITE].size() == 0 && rooks[Color.BLACK].size() == 0
+        && queens[Color.WHITE].size() == 0 && queens[Color.BLACK].size() == 0
+        && (knights[Color.WHITE].size() + knights[Color.BLACK].size()
+        + bishops[Color.WHITE].size() + bishops[Color.BLACK].size() <= 1);
+  }
+
   /**
    * Puts a piece at the square. We need to update our board and the appropriate
    * piece type list.
