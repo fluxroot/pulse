@@ -65,6 +65,7 @@ tasks.withType(Pmd) {
 tasks.withType(FindBugs) {
   findbugs {
     ignoreFailures = true
+    excludeFilter = file("${rootDir}/config/findbugs/exclude.xml")
   }
 }
 
