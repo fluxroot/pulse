@@ -44,6 +44,21 @@ public class BoardTest {
       }
     }
 
+    assertEquals(8 * Evaluation.VALUE_PAWN
+        + 2 * Evaluation.VALUE_KNIGHT
+        + 2 * Evaluation.VALUE_BISHOP
+        + 2 * Evaluation.VALUE_ROOK
+        + Evaluation.VALUE_QUEEN
+        + Evaluation.VALUE_KING,
+        board.material[Color.WHITE]);
+    assertEquals(8 * Evaluation.VALUE_PAWN
+        + 2 * Evaluation.VALUE_KNIGHT
+        + 2 * Evaluation.VALUE_BISHOP
+        + 2 * Evaluation.VALUE_ROOK
+        + Evaluation.VALUE_QUEEN
+        + Evaluation.VALUE_KING,
+        board.material[Color.BLACK]);
+
     // Test castling
     for (GenericColor genericColor : GenericColor.values()) {
       for (GenericCastling genericCastling : GenericCastling.values()) {

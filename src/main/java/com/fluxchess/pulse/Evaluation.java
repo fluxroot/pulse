@@ -75,12 +75,7 @@ final class Evaluation {
     assert Color.isValid(color);
     assert board != null;
 
-    int material = VALUE_PAWN * board.pawns[color].size()
-        + VALUE_KNIGHT * board.knights[color].size()
-        + VALUE_BISHOP * board.bishops[color].size()
-        + VALUE_ROOK * board.rooks[color].size()
-        + VALUE_QUEEN * board.queens[color].size()
-        + VALUE_KING * board.kings[color].size();
+    int material = board.material[color];
 
     // Add bonus for bishop pair
     if (board.bishops[color].size() >= 2) {
