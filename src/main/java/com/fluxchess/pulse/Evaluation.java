@@ -25,6 +25,7 @@ final class Evaluation {
   static final int CHECKMATE = 100000;
   static final int CHECKMATE_THRESHOLD = CHECKMATE - Search.MAX_PLY;
 
+  // Piece values as defined by Larry Kaufman
   static final int PAWN_VALUE = 100;
   static final int KNIGHT_VALUE = 325;
   static final int BISHOP_VALUE = 325;
@@ -32,11 +33,17 @@ final class Evaluation {
   static final int QUEEN_VALUE = 975;
   static final int KING_VALUE = 20000;
 
+  // If there are two minor pieces captured, we are entering the middlegame
   private static final int PHASE_OPENING_MATERIAL = 2 * KNIGHT_VALUE
       + 4 * BISHOP_VALUE
       + 4 * ROOK_VALUE
       + 2 * QUEEN_VALUE;
+
+  // If our major/minor material is equal to a queen and a rook, we are entering the endgame
   private static final int PHASE_ENDGAME_MATERIAL = ROOK_VALUE + QUEEN_VALUE;
+
+  // Within the phase interval we are using the tapered eval to make a smooth transition
+  // from the opening to the endgame
   private static final int PHASE_INTERVAL_MATERIAL = PHASE_OPENING_MATERIAL - PHASE_ENDGAME_MATERIAL;
 
   static int materialWeight = 100;

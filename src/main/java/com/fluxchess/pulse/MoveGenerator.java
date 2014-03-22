@@ -228,13 +228,16 @@ public final class MoveGenerator {
     boolean sliding = Piece.Type.isSliding(Piece.getType(originPiece));
     int oppositeColor = Color.opposite(Piece.getColor(originPiece));
 
+    // Go through all move deltas for this piece
     for (int delta : moveDelta) {
       int targetSquare = originSquare + delta;
 
+      // Check if we're still on the board
       while (Square.isLegal(targetSquare)) {
         int targetPiece = board.board[targetSquare];
 
         if (targetPiece == Piece.NOPIECE) {
+          // quiet move
           list.entries[list.size++].move = Move.valueOf(
               Move.Type.NORMAL, originSquare, targetSquare, originPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
 
@@ -245,6 +248,7 @@ public final class MoveGenerator {
           targetSquare += delta;
         } else {
           if (Piece.getColor(targetPiece) == oppositeColor) {
+            // capturing move
             list.entries[list.size++].move = Move.valueOf(
                 Move.Type.NORMAL, originSquare, targetSquare, originPiece, targetPiece, Piece.Type.NOTYPE);
           }

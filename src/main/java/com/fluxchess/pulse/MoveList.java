@@ -19,9 +19,8 @@
 package com.fluxchess.pulse;
 
 /**
- * This class stores our moves for a specific position most likely returned
- * from our MoveGenerator. For the root node we we will populate pv for every
- * root move.
+ * This class stores our moves for a specific position. For the root node we
+ * will populate pv for every root move.
  */
 final class MoveList {
 

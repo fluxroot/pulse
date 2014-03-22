@@ -26,12 +26,12 @@ import com.fluxchess.jcpi.models.GenericRank;
  * This class represents a move as a int value. The fields are represented by
  * the following bits.
  * <p/>
- *  0 -  2: type (required)
- *  3 -  9: origin square (required)
- * 10 - 16: target square (required)
- * 17 - 21: origin piece (required)
- * 22 - 26: target piece (optional)
- * 27 - 29: promotion type (optional)
+ * <code> 0 -  2</code>: type (required)
+ * <code> 3 -  9</code>: origin square (required)
+ * <code>10 - 16</code>: target square (required)
+ * <code>17 - 21</code>: origin piece (required)
+ * <code>22 - 26</code>: target piece (optional)
+ * <code>27 - 29</code>: promotion type (optional)
  */
 public final class Move {
 

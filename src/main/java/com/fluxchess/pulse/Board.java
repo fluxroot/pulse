@@ -254,6 +254,7 @@ public final class Board {
   }
 
   boolean isRepetition() {
+    // Search back until the last halfMoveClock reset
     int j = Math.max(0, stackSize - halfMoveClock);
     for (int i = stackSize - 2; i >= j; i -= 2) {
       if (zobristKey == stack[i].zobristKey) {
@@ -265,6 +266,7 @@ public final class Board {
   }
 
   boolean hasInsufficientMaterial() {
+    // If there is only one minor left, we are unable to checkmate
     return pawns[Color.WHITE].size() == 0 && pawns[Color.BLACK].size() == 0
         && rooks[Color.WHITE].size() == 0 && rooks[Color.BLACK].size() == 0
         && queens[Color.WHITE].size() == 0 && queens[Color.BLACK].size() == 0
