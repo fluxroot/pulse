@@ -77,8 +77,10 @@ final class PerftPerformance {
     MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
-      board.makeMove(move);
-      int nodes = miniMax(depth - 1, board, ply + 1);
+      int nodes = 0;
+      if (board.makeMove(move)) {
+        nodes = miniMax(depth - 1, board, ply + 1);
+      }
       board.undoMove(move);
 
       totalNodes += nodes;

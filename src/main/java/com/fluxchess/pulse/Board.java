@@ -373,7 +373,13 @@ public final class Board {
     return piece;
   }
 
-  public void makeMove(int move) {
+  /**
+   * Makes a move on the board and returns whether this move is legal
+   * (does not leave the king in check).
+   *
+   * @return true if the move is legal
+   */
+  public boolean makeMove(int move) {
     State entry = stack[stackSize];
 
     // Get variables
@@ -484,6 +490,9 @@ public final class Board {
 
     ++stackSize;
     assert stackSize < MAX_GAMEMOVES;
+
+    return !isAttacked(
+        Bitboard.next(kings[Color.opposite(activeColor)].squares), activeColor);
   }
 
   public void undoMove(int move) {

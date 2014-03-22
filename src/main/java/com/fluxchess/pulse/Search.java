@@ -272,7 +272,7 @@ public final class Search implements Runnable {
     boolean isCheck = board.isCheck();
     MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, 1, 0, isCheck);
     int move;
-    while ((move = moveGenerator.next()) != Move.NOMOVE) {
+    while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
       rootMoves.entries[rootMoves.size].move = move;
       rootMoves.entries[rootMoves.size].pv.moves[0] = move;
       rootMoves.entries[rootMoves.size].pv.size = 1;
@@ -450,10 +450,11 @@ public final class Search implements Runnable {
     MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
-      ++searchedMoves;
-
-      board.makeMove(move);
-      int value = -search(depth - 1, -beta, -alpha, ply + 1);
+      int value = bestValue;
+      if (board.makeMove(move)) {
+        ++searchedMoves;
+        value = -search(depth - 1, -beta, -alpha, ply + 1);
+      }
       board.undoMove(move);
 
       if (abort) {
@@ -532,10 +533,11 @@ public final class Search implements Runnable {
     MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
-      ++searchedMoves;
-
-      board.makeMove(move);
-      int value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
+      int value = bestValue;
+      if (board.makeMove(move)) {
+        ++searchedMoves;
+        value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
+      }
       board.undoMove(move);
 
       if (abort) {

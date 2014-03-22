@@ -110,10 +110,26 @@ public final class MoveGenerator {
   }
 
   /**
-   * Returns the next legal move. We will go through our states and generate
-   * the appropriate moves for the current state.
+   * Returns the next legal move.
+   */
+  public int nextLegal() {
+    boolean isLegal = false;
+    int move = Move.NOMOVE;
+
+    while (!isLegal && (move = next()) != Move.NOMOVE) {
+      isLegal = board.makeMove(move);
+      board.undoMove(move);
+    }
+
+    return move;
+  }
+
+  /**
+   * Returns the next pseudo-legal move. We will go through our states and
+   * generate the appropriate moves for the current state.
    *
-   * @return the next legal move, or Move.NOMOVE if there's is no next move.
+   * @return the next pseudo-legal move,
+   * or Move.NOMOVE if there is no next move.
    */
   public int next() {
     while (true) {
@@ -123,14 +139,10 @@ public final class MoveGenerator {
 
         switch (states[stateIndex]) {
           case MAIN:
-            // Discard all non-legal moves
-            if (!isLegal(move)) {
-              continue;
-            }
             break;
           case QUIESCENT:
-            // Discard all non-legal moves. If not in check return only capturing moves.
-            if (!isLegal(move) || (!isCheck && Move.getTargetPiece(move) == Piece.NOPIECE)) {
+            // Return only capturing moves, if not in check
+            if (!isCheck && Move.getTargetPiece(move) == Piece.NOPIECE) {
               continue;
             }
             break;
@@ -395,17 +407,6 @@ public final class MoveGenerator {
             Move.Type.CASTLING, kingSquare, Square.c8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
     }
-  }
-
-  private boolean isLegal(int move) {
-    int activeColor = board.activeColor;
-
-    board.makeMove(move);
-    boolean isAttacked = board.isAttacked(
-        Bitboard.next(board.kings[activeColor].squares), Color.opposite(activeColor));
-    board.undoMove(move);
-
-    return !isAttacked;
   }
 
 }

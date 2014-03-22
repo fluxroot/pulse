@@ -139,7 +139,7 @@ public class MoveGeneratorTest {
     boolean isCheck = board.isCheck();
     MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
     int move;
-    while ((move = moveGenerator.next()) != Move.NOMOVE) {
+    while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
       moves.entries[moves.size++].move = move;
     }
 
