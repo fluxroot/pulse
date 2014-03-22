@@ -76,6 +76,10 @@ final class Evaluation {
         * mobilityWeight / MAX_WEIGHT;
     opening += mobilityScore;
 
+    // Evaluate castling
+    int castlingScore = (evaluateCastling(myColor, board) - evaluateCastling(oppositeColor, board));
+    opening += castlingScore;
+
     // Interpolate opening and endgame
     int value = interpolate(opening, endgame, board);
 
@@ -168,6 +172,22 @@ final class Evaluation {
     }
 
     return mobility;
+  }
+
+  private int evaluateCastling(int color, Board board) {
+    assert Color.isValid(color);
+    assert board != null;
+
+    int square = Bitboard.next(board.kings[color].squares);
+
+    // If the king is standing on a castling square we give a bonus.
+    // This is really a poor man's piece square table.
+    if ((color == Color.WHITE && (square == Square.g1 || square == Square.c1))
+        || (color == Color.BLACK && (square == Square.g8 || square == Square.c8))) {
+      return 30;
+    } else {
+      return 0;
+    }
   }
 
   static int getPieceTypeValue(int pieceType) {
