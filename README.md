@@ -43,19 +43,20 @@ To keep things simple Pulse Chess uses a 0x88 board representation. In
 addition piece lists are kept in Bitboards. For generating the board 
 hash Zobrist hashing is used. 
 
-- *Only material evaluation*  
-Currently only the material is used for calculating the evaluation 
-function. However it should be quite easy to extend it with other
-evaluation features. 
+- *Only material and mobility evaluation*  
+Currently only material and mobility (to add some variation) are used 
+for calculating the evaluation function. However it should be quite easy 
+to extend it with other evaluation features. 
 
 - *Using integers for type representation*  
 Although Java is quite efficient and fast in memory management, it is
 not fast enough for chess engines. Instead of using objects for 
 important data structures, Pulse Chess uses integers instead. 
 
-- *Legal move generator*  
-To keep the source code clean and simple, a basic legal move generator 
-is used, which generates all moves at once. 
+- *Staged, pseudo-legal move generator*  
+To keep the source code clean and simple, a staged, pseudo-legal move 
+generator is used. This has the advantage to skip writing a complicated 
+legal move checking method. 
 
 - *Basic search*  
 Pulse Chess uses a basic Alpha-beta pruning algorithm with iterative 
@@ -80,7 +81,7 @@ the following steps.
 
 Acknowledgments
 ---------------
-The Pulse Chess logo was created by Ruxy Sylwyka. Thanks a lot!
+The Pulse Chess logo was created by Silvian Sylwyka. Thanks a lot!
 
 
 License
