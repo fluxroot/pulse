@@ -44,19 +44,19 @@ public class BoardTest {
       }
     }
 
-    assertEquals(8 * Evaluation.VALUE_PAWN
-        + 2 * Evaluation.VALUE_KNIGHT
-        + 2 * Evaluation.VALUE_BISHOP
-        + 2 * Evaluation.VALUE_ROOK
-        + Evaluation.VALUE_QUEEN
-        + Evaluation.VALUE_KING,
+    assertEquals(8 * Evaluation.PAWN_VALUE
+        + 2 * Evaluation.KNIGHT_VALUE
+        + 2 * Evaluation.BISHOP_VALUE
+        + 2 * Evaluation.ROOK_VALUE
+        + Evaluation.QUEEN_VALUE
+        + Evaluation.KING_VALUE,
         board.material[Color.WHITE]);
-    assertEquals(8 * Evaluation.VALUE_PAWN
-        + 2 * Evaluation.VALUE_KNIGHT
-        + 2 * Evaluation.VALUE_BISHOP
-        + 2 * Evaluation.VALUE_ROOK
-        + Evaluation.VALUE_QUEEN
-        + Evaluation.VALUE_KING,
+    assertEquals(8 * Evaluation.PAWN_VALUE
+        + 2 * Evaluation.KNIGHT_VALUE
+        + 2 * Evaluation.BISHOP_VALUE
+        + 2 * Evaluation.ROOK_VALUE
+        + Evaluation.QUEEN_VALUE
+        + Evaluation.KING_VALUE,
         board.material[Color.BLACK]);
 
     // Test castling

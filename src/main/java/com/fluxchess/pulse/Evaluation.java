@@ -25,12 +25,12 @@ final class Evaluation {
   static final int CHECKMATE = 100000;
   static final int CHECKMATE_THRESHOLD = CHECKMATE - Search.MAX_PLY;
 
-  static final int VALUE_PAWN = 100;
-  static final int VALUE_KNIGHT = 325;
-  static final int VALUE_BISHOP = 325;
-  static final int VALUE_ROOK = 500;
-  static final int VALUE_QUEEN = 975;
-  static final int VALUE_KING = 20000;
+  static final int PAWN_VALUE = 100;
+  static final int KNIGHT_VALUE = 325;
+  static final int BISHOP_VALUE = 325;
+  static final int ROOK_VALUE = 500;
+  static final int QUEEN_VALUE = 975;
+  static final int KING_VALUE = 20000;
 
   static int materialWeight = 100;
   static int mobilityWeight = 80;
@@ -154,17 +154,17 @@ final class Evaluation {
 
     switch (pieceType) {
       case Piece.Type.PAWN:
-        return VALUE_PAWN;
+        return PAWN_VALUE;
       case Piece.Type.KNIGHT:
-        return VALUE_KNIGHT;
+        return KNIGHT_VALUE;
       case Piece.Type.BISHOP:
-        return VALUE_BISHOP;
+        return BISHOP_VALUE;
       case Piece.Type.ROOK:
-        return VALUE_ROOK;
+        return ROOK_VALUE;
       case Piece.Type.QUEEN:
-        return VALUE_QUEEN;
+        return QUEEN_VALUE;
       case Piece.Type.KING:
-        return VALUE_KING;
+        return KING_VALUE;
       default:
         throw new IllegalArgumentException();
     }

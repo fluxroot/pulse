@@ -288,27 +288,27 @@ public final class Board {
     switch (pieceType) {
       case Piece.Type.PAWN:
         pawns[color].add(square);
-        material[color] += Evaluation.VALUE_PAWN;
+        material[color] += Evaluation.PAWN_VALUE;
         break;
       case Piece.Type.KNIGHT:
         knights[color].add(square);
-        material[color] += Evaluation.VALUE_KNIGHT;
+        material[color] += Evaluation.KNIGHT_VALUE;
         break;
       case Piece.Type.BISHOP:
         bishops[color].add(square);
-        material[color] += Evaluation.VALUE_BISHOP;
+        material[color] += Evaluation.BISHOP_VALUE;
         break;
       case Piece.Type.ROOK:
         rooks[color].add(square);
-        material[color] += Evaluation.VALUE_ROOK;
+        material[color] += Evaluation.ROOK_VALUE;
         break;
       case Piece.Type.QUEEN:
         queens[color].add(square);
-        material[color] += Evaluation.VALUE_QUEEN;
+        material[color] += Evaluation.QUEEN_VALUE;
         break;
       case Piece.Type.KING:
         kings[color].add(square);
-        material[color] += Evaluation.VALUE_KING;
+        material[color] += Evaluation.KING_VALUE;
         break;
       default:
         assert false : pieceType;
@@ -339,27 +339,27 @@ public final class Board {
     switch (pieceType) {
       case Piece.Type.PAWN:
         pawns[color].remove(square);
-        material[color] -= Evaluation.VALUE_PAWN;
+        material[color] -= Evaluation.PAWN_VALUE;
         break;
       case Piece.Type.KNIGHT:
         knights[color].remove(square);
-        material[color] -= Evaluation.VALUE_KNIGHT;
+        material[color] -= Evaluation.KNIGHT_VALUE;
         break;
       case Piece.Type.BISHOP:
         bishops[color].remove(square);
-        material[color] -= Evaluation.VALUE_BISHOP;
+        material[color] -= Evaluation.BISHOP_VALUE;
         break;
       case Piece.Type.ROOK:
         rooks[color].remove(square);
-        material[color] -= Evaluation.VALUE_ROOK;
+        material[color] -= Evaluation.ROOK_VALUE;
         break;
       case Piece.Type.QUEEN:
         queens[color].remove(square);
-        material[color] -= Evaluation.VALUE_QUEEN;
+        material[color] -= Evaluation.QUEEN_VALUE;
         break;
       case Piece.Type.KING:
         kings[color].remove(square);
-        material[color] -= Evaluation.VALUE_KING;
+        material[color] -= Evaluation.KING_VALUE;
         break;
       default:
         assert false : pieceType;

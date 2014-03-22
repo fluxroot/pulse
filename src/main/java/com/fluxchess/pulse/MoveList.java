@@ -73,15 +73,15 @@ final class MoveList {
       int value = 0;
 
       int pieceTypeValue = Evaluation.getPieceTypeValue(Piece.getType(Move.getOriginPiece(move)));
-      value += Evaluation.VALUE_KING / pieceTypeValue;
+      value += Evaluation.KING_VALUE / pieceTypeValue;
 
       int target = Move.getTargetPiece(move);
       if (Piece.isValid(target)) {
         value += 10 * Evaluation.getPieceTypeValue(Piece.getType(target));
       }
 
-      assert value >= (Evaluation.VALUE_KING / Evaluation.VALUE_KING)
-          && value <= (Evaluation.VALUE_KING / Evaluation.VALUE_PAWN) + 10 * Evaluation.VALUE_QUEEN;
+      assert value >= (Evaluation.KING_VALUE / Evaluation.KING_VALUE)
+          && value <= (Evaluation.KING_VALUE / Evaluation.PAWN_VALUE) + 10 * Evaluation.QUEEN_VALUE;
 
       entries[i].value = value;
     }
