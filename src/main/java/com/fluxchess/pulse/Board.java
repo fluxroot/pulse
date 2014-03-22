@@ -639,39 +639,68 @@ public final class Board {
       }
     }
 
-    return isAttacked(targetSquare, attackerColor, Piece.Type.KNIGHT, MoveGenerator.moveDeltaKnight)
-        || isAttacked(targetSquare, attackerColor, Piece.Type.BISHOP, MoveGenerator.moveDeltaBishop)
-        || isAttacked(targetSquare, attackerColor, Piece.Type.ROOK, MoveGenerator.moveDeltaRook)
-        || isAttacked(targetSquare, attackerColor, Piece.Type.QUEEN, MoveGenerator.moveDeltaQueen)
-        || isAttacked(targetSquare, attackerColor, Piece.Type.KING, MoveGenerator.moveDeltaKing);
+    return isAttacked(targetSquare,
+        Piece.valueOf(Piece.Type.KNIGHT, attackerColor),
+        MoveGenerator.moveDeltaKnight)
+
+        // The queen moves like a bishop, so check both piece types
+        || isAttacked(targetSquare,
+        Piece.valueOf(Piece.Type.BISHOP, attackerColor),
+        Piece.valueOf(Piece.Type.QUEEN, attackerColor),
+        MoveGenerator.moveDeltaBishop)
+
+        // The queen moves like a rook, so check both piece types
+        || isAttacked(targetSquare,
+        Piece.valueOf(Piece.Type.ROOK, attackerColor),
+        Piece.valueOf(Piece.Type.QUEEN, attackerColor),
+        MoveGenerator.moveDeltaRook)
+
+        || isAttacked(targetSquare,
+        Piece.valueOf(Piece.Type.KING, attackerColor),
+        MoveGenerator.moveDeltaKing);
   }
 
-  private boolean isAttacked(int targetSquare, int attackerColor, int attackerPieceType, int[] moveDelta) {
+  /**
+   * Returns whether the targetSquare is attacked by a non-sliding piece.
+   */
+  private boolean isAttacked(int targetSquare, int attackerPiece, int[] moveDelta) {
     assert Square.isValid(targetSquare);
-    assert Color.isValid(attackerColor);
-    assert Piece.Type.isValid(attackerPieceType);
+    assert Piece.isValid(attackerPiece);
     assert moveDelta != null;
 
-    boolean sliding = Piece.Type.isSliding(attackerPieceType);
+    for (int delta : moveDelta) {
+      int attackerSquare = targetSquare + delta;
+
+      if (Square.isLegal(attackerSquare) && board[attackerSquare] == attackerPiece) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns whether the targetSquare is attacked by a sliding piece.
+   */
+  private boolean isAttacked(int targetSquare, int attackerPiece, int queenPiece, int[] moveDelta) {
+    assert Square.isValid(targetSquare);
+    assert Piece.isValid(attackerPiece);
+    assert Piece.isValid(queenPiece);
+    assert moveDelta != null;
 
     for (int delta : moveDelta) {
       int attackerSquare = targetSquare + delta;
 
       while (Square.isLegal(attackerSquare)) {
-        int attackerPiece = board[attackerSquare];
+        int piece = board[attackerSquare];
 
-        if (Piece.isValid(attackerPiece)) {
-          if (Piece.getType(attackerPiece) == attackerPieceType
-              && Piece.getColor(attackerPiece) == attackerColor) {
+        if (Piece.isValid(piece)) {
+          if (piece == attackerPiece || piece == queenPiece) {
             return true;
           }
 
           break;
         } else {
-          if (!sliding) {
-            break;
-          }
-
           attackerSquare += delta;
         }
       }
