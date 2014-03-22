@@ -620,11 +620,11 @@ public final class Search implements Runnable {
     } else {
       command.setCentipawns(entry.value);
     }
-    List<GenericMove> pv = new ArrayList<>();
+    List<GenericMove> moveList = new ArrayList<>();
     for (int i = 0; i < entry.pv.size; ++i) {
-      pv.add(Move.toGenericMove(entry.pv.moves[i]));
+      moveList.add(Move.toGenericMove(entry.pv.moves[i]));
     }
-    command.setMoveList(pv);
+    command.setMoveList(moveList);
 
     protocol.send(command);
 
