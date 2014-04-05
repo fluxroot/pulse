@@ -233,7 +233,7 @@ final class MoveGenerator {
       int targetSquare = originSquare + delta;
 
       // Check if we're still on the board
-      while (Square.isLegal(targetSquare)) {
+      while (Square.isValid(targetSquare)) {
         int targetPiece = board.board[targetSquare];
 
         if (targetPiece == Piece.NOPIECE) {
@@ -273,7 +273,7 @@ final class MoveGenerator {
       int delta = moveDeltaPawn[pawnColor][i];
 
       int targetSquare = pawnSquare + delta;
-      if (Square.isLegal(targetSquare)) {
+      if (Square.isValid(targetSquare)) {
         int targetPiece = board.board[targetSquare];
 
         if (targetPiece != Piece.NOPIECE) {
@@ -320,7 +320,7 @@ final class MoveGenerator {
 
     // Move one rank forward
     int targetSquare = pawnSquare + delta;
-    if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
+    if (Square.isValid(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
       if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r8)
           || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r1)) {
         // Pawn promotion move
@@ -341,7 +341,7 @@ final class MoveGenerator {
 
         // Move another rank forward
         targetSquare += delta;
-        if (Square.isLegal(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
+        if (Square.isValid(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
           if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r4)
               || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r5)) {
             // Pawn double move

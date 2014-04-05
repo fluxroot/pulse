@@ -102,9 +102,8 @@ final class File {
       case h:
         return true;
       case NOFILE:
-        return false;
       default:
-        throw new IllegalArgumentException();
+        return false;
     }
   }
 

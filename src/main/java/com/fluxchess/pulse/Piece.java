@@ -118,9 +118,8 @@ final class Piece {
         case KING:
           return true;
         case NOTYPE:
-          return false;
         default:
-          throw new IllegalArgumentException();
+          return false;
       }
     }
 
@@ -133,10 +132,9 @@ final class Piece {
           return true;
         case PAWN:
         case KING:
-          return false;
         case NOTYPE:
         default:
-          throw new IllegalArgumentException();
+          return false;
       }
     }
 
@@ -306,9 +304,8 @@ final class Piece {
       case BLACKKING:
         return true;
       case NOPIECE:
-        return false;
       default:
-        throw new IllegalArgumentException();
+        return false;
     }
   }
 

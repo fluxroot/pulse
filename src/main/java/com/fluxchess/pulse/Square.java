@@ -115,16 +115,6 @@ final class Square {
   }
 
   static boolean isValid(int square) {
-    if (isLegal(square)) {
-      return true;
-    } else if (square == NOSQUARE) {
-      return false;
-    } else {
-      throw new IllegalArgumentException();
-    }
-  }
-
-  static boolean isLegal(int square) {
     return (square & 0x88) == 0;
   }
 

@@ -57,9 +57,4 @@ public class CastlingTest {
     assertFalse(Castling.isValid(Castling.NOCASTLING));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidIsValid() {
-    Castling.isValid(-1);
-  }
-
 }

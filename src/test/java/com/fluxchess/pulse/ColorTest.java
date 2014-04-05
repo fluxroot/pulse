@@ -57,11 +57,6 @@ public class ColorTest {
     assertFalse(Color.isValid(Color.NOCOLOR));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidIsValid() {
-    Color.isValid(-1);
-  }
-
   @Test
   public void testOpposite() {
     assertEquals(Color.WHITE, Color.opposite(Color.BLACK));

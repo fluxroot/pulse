@@ -57,9 +57,4 @@ public class RankTest {
     assertFalse(Rank.isValid(Rank.NORANK));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidIsValid() {
-    Rank.isValid(-1);
-  }
-
 }

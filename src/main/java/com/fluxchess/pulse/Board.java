@@ -19,7 +19,6 @@
 package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericBoard;
-import com.fluxchess.jcpi.models.GenericColor;
 import com.fluxchess.jcpi.models.GenericFile;
 import com.fluxchess.jcpi.models.GenericPiece;
 
@@ -602,7 +601,7 @@ final class Board {
   }
 
   private void clearCastling(int square) {
-    assert Square.isLegal(square);
+    assert Square.isValid(square);
 
     switch (square) {
       case Square.a1:
@@ -651,7 +650,7 @@ final class Board {
     int pawnPiece = Piece.valueOf(Piece.Type.PAWN, attackerColor);
     for (int i = 1; i < MoveGenerator.moveDeltaPawn[attackerColor].length; ++i) {
       int attackerSquare = targetSquare - MoveGenerator.moveDeltaPawn[attackerColor][i];
-      if (Square.isLegal(attackerSquare)) {
+      if (Square.isValid(attackerSquare)) {
         int attackerPawn = board[attackerSquare];
 
         if (attackerPawn == pawnPiece) {
@@ -692,7 +691,7 @@ final class Board {
     for (int delta : moveDelta) {
       int attackerSquare = targetSquare + delta;
 
-      if (Square.isLegal(attackerSquare) && board[attackerSquare] == attackerPiece) {
+      if (Square.isValid(attackerSquare) && board[attackerSquare] == attackerPiece) {
         return true;
       }
     }
@@ -712,7 +711,7 @@ final class Board {
     for (int delta : moveDelta) {
       int attackerSquare = targetSquare + delta;
 
-      while (Square.isLegal(attackerSquare)) {
+      while (Square.isValid(attackerSquare)) {
         int piece = board[attackerSquare];
 
         if (Piece.isValid(piece)) {

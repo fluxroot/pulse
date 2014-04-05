@@ -66,9 +66,8 @@ final class Color {
       case BLACK:
         return true;
       case NOCOLOR:
-        return false;
       default:
-        throw new IllegalArgumentException();
+        return false;
     }
   }
 

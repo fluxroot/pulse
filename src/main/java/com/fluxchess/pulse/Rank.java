@@ -102,9 +102,8 @@ final class Rank {
       case r8:
         return true;
       case NORANK:
-        return false;
       default:
-        throw new IllegalArgumentException();
+        return false;
     }
   }
 

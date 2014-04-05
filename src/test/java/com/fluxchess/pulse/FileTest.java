@@ -57,9 +57,4 @@ public class FileTest {
     assertFalse(File.isValid(File.NOFILE));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidIsValid() {
-    File.isValid(-1);
-  }
-
 }

@@ -69,11 +69,6 @@ public class PieceTypeTest {
     assertFalse(Piece.Type.isValid(Piece.Type.NOTYPE));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidIsValid() {
-    Piece.Type.isValid(-1);
-  }
-
   @Test
   public void testIsValidPromotion() {
     for (int pieceType : Piece.Type.promotions) {
@@ -83,11 +78,7 @@ public class PieceTypeTest {
 
     assertFalse(Piece.Type.isValidPromotion(Piece.Type.PAWN));
     assertFalse(Piece.Type.isValidPromotion(Piece.Type.KING));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidIsValidPromotion() {
-    Piece.Type.isValidPromotion(Piece.Type.NOTYPE);
+    assertFalse(Piece.Type.isValidPromotion(Piece.Type.NOTYPE));
   }
 
   @Test

@@ -57,9 +57,8 @@ final class Move {
         case CASTLING:
           return true;
         case NOTYPE:
-          return false;
         default:
-          throw new IllegalArgumentException();
+          return false;
       }
     }
   }
@@ -179,8 +178,7 @@ final class Move {
     move |= targetPiece << TARGETPIECE_SHIFT;
 
     // Encode promotion
-    assert (Piece.Type.isValid(promotion) && Piece.Type.isValidPromotion(promotion))
-        || promotion == Piece.Type.NOTYPE;
+    assert Piece.Type.isValidPromotion(promotion) || promotion == Piece.Type.NOTYPE;
     move |= promotion << PROMOTION_SHIFT;
 
     return move;
@@ -248,8 +246,7 @@ final class Move {
 
   static int getPromotion(int move) {
     int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
-    assert (Piece.Type.isValid(promotion) && Piece.Type.isValidPromotion(promotion))
-        || promotion == Piece.Type.NOTYPE;
+    assert Piece.Type.isValidPromotion(promotion) || promotion == Piece.Type.NOTYPE;
 
     return promotion;
   }

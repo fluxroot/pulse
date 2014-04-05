@@ -37,7 +37,6 @@ public class SquareTest {
   public void testValues() {
     for (GenericPosition genericPosition : GenericPosition.values()) {
       int square = Square.valueOf(genericPosition);
-      assertTrue(Square.isLegal(square));
       assertTrue(Square.isValid(square));
       assertEquals(genericPosition, Square.toGenericPosition(square));
 
@@ -52,7 +51,6 @@ public class SquareTest {
       assertEquals(genericPosition.rank, Rank.toGenericRank(rank));
     }
 
-    assertFalse(Square.isLegal(Square.NOSQUARE));
     assertFalse(Square.isValid(Square.NOSQUARE));
   }
 

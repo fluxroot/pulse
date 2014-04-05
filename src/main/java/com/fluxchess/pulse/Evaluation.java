@@ -157,7 +157,7 @@ final class Evaluation {
     for (int delta : moveDelta) {
       int targetSquare = square + delta;
 
-      while (Square.isLegal(targetSquare)) {
+      while (Square.isValid(targetSquare)) {
         ++mobility;
 
         if (sliding && board.board[targetSquare] == Piece.NOPIECE) {

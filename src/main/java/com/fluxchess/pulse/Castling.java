@@ -66,9 +66,8 @@ final class Castling {
       case QUEENSIDE:
         return true;
       case NOCASTLING:
-        return false;
       default:
-        throw new IllegalArgumentException();
+        return false;
     }
   }
 

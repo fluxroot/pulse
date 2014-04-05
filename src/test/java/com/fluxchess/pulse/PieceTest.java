@@ -57,11 +57,6 @@ public class PieceTest {
     assertFalse(Piece.isValid(Piece.NOPIECE));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidIsValid() {
-    Piece.isValid(-1);
-  }
-
   @Test
   public void testGetType() {
     assertEquals(Piece.Type.PAWN, Piece.getType(Piece.WHITEPAWN));
