@@ -33,7 +33,7 @@ import static com.fluxchess.pulse.Color.WHITE;
 /**
  * This is our internal board.
  */
-public final class Board {
+final class Board {
 
   private static final int MAX_GAMEMOVES = Search.MAX_PLY + 1024;
 

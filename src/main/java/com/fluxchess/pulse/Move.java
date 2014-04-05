@@ -33,7 +33,7 @@ import com.fluxchess.jcpi.models.GenericRank;
  * <code>22 - 26</code>: target piece (optional)
  * <code>27 - 29</code>: promotion type (optional)
  */
-public final class Move {
+final class Move {
 
   static final class Type {
     static final int MASK = 0x7;

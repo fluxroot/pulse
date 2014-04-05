@@ -36,7 +36,7 @@ import static com.fluxchess.pulse.MoveList.MoveVariation;
  * This class implements our search in a separate thread to keep the main
  * thread available for more commands.
  */
-public final class Search implements Runnable {
+final class Search implements Runnable {
 
   static final int MAX_PLY = 256;
   static final int MAX_DEPTH = 64;

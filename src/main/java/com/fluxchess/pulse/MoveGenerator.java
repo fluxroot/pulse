@@ -23,7 +23,7 @@ import static com.fluxchess.pulse.Castling.QUEENSIDE;
 import static com.fluxchess.pulse.Color.BLACK;
 import static com.fluxchess.pulse.Color.WHITE;
 
-public final class MoveGenerator {
+final class MoveGenerator {
 
   // Move deltas
   static final int[][] moveDeltaPawn = {
