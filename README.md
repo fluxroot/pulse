@@ -19,7 +19,7 @@ There are two branches available in the repository.
 - *skeleton*  
 The skeleton branch contains just the basic code to hook up with the 
 Java Chess Protocol Interface. Start from here if you want to build your 
-own chess engine. Create a all your classes and integrate them into the 
+own chess engine. Create all your classes and integrate them into the 
 Search class. 
 
 - *master*  
