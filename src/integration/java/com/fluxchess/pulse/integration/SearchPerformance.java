@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Pulse Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.pulse.testing;
+package com.fluxchess.pulse.integration;
 
 import com.fluxchess.jcpi.commands.*;
 import com.fluxchess.jcpi.models.GenericBoard;
