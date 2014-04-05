@@ -86,7 +86,7 @@
             </goals>
             <configuration>
               <sources>
-                <source>src/testing/java</source>
+                <source>src/integration/java</source>
               </sources>
             </configuration>
           </execution>

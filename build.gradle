@@ -80,12 +80,12 @@ tasks.withType(Checkstyle) {
 cobertura.coverageFormats = ['html', 'xml']
 
 sourceSets {
-  testing
+  integration
 }
 
 configurations {
-  testingCompile.extendsFrom testCompile
-  testingRuntime.extendsFrom testRuntime
+  integrationCompile.extendsFrom testCompile
+  integrationRuntime.extendsFrom testRuntime
 }
 
 dependencies {
@@ -97,7 +97,7 @@ dependencies {
   testCompile 'org.slf4j:slf4j-log4j12:1.7.+'
   testCompile 'log4j:log4j:1.2.+'
 
-  testingCompile project(path: ':', configuration: 'testRuntime')
+  integrationCompile project(path: ':', configuration: 'testRuntime')
 }
 
 sourceCompatibility = 1.7
@@ -135,9 +135,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   from javadoc.destinationDir
 }
 
-task testing(type: Test) {
-  testClassesDir = sourceSets.testing.output.classesDir
-  classpath = sourceSets.testing.runtimeClasspath
+task integration(type: Test) {
+  testClassesDir = sourceSets.integration.output.classesDir
+  classpath = sourceSets.integration.runtimeClasspath
 }
 
 ext.vendorDir = file("${rootDir}/vendor")
@@ -261,5 +261,3 @@ def downloadFile(srcUrl, destUrl) {
 task wrapper(type: Wrapper) {
   gradleVersion = '1.10'
 }
-
-apply plugin: 'idea'
