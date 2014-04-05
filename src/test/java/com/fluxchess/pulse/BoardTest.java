@@ -189,17 +189,17 @@ public class BoardTest {
 
   @Test
   public void testHasInsufficientMaterial() throws IllegalNotationException {
-    GenericBoard genericBoard = new GenericBoard("8/4k3/8/8/8/8/2K5/8 w - - 4 1");
+    GenericBoard genericBoard = new GenericBoard("8/4k3/8/8/8/8/2K5/8 w - - 0 1");
     Board board = new Board(genericBoard);
     assertTrue(board.hasInsufficientMaterial());
 
-    genericBoard = new GenericBoard("8/4k3/8/2B5/8/8/2K5/8 w - - 4 1");
+    genericBoard = new GenericBoard("8/4k3/8/2B5/8/8/2K5/8 b - - 0 1");
     board = new Board(genericBoard);
     assertTrue(board.hasInsufficientMaterial());
 
-    genericBoard = new GenericBoard("8/4k3/8/2B3n1/8/8/2K5/8 w - - 4 1");
+    genericBoard = new GenericBoard("8/4k3/8/2B3n1/8/8/2K5/8 b - - 0 1");
     board = new Board(genericBoard);
-    assertFalse(board.hasInsufficientMaterial());
+    assertTrue(board.hasInsufficientMaterial());
   }
 
   @Test

@@ -269,8 +269,8 @@ final class Board {
     return pawns[Color.WHITE].size() == 0 && pawns[Color.BLACK].size() == 0
         && rooks[Color.WHITE].size() == 0 && rooks[Color.BLACK].size() == 0
         && queens[Color.WHITE].size() == 0 && queens[Color.BLACK].size() == 0
-        && (knights[Color.WHITE].size() + knights[Color.BLACK].size()
-        + bishops[Color.WHITE].size() + bishops[Color.BLACK].size() <= 1);
+        && (knights[Color.WHITE].size() + bishops[Color.WHITE].size() <= 1)
+        && (knights[Color.BLACK].size() + bishops[Color.BLACK].size() <= 1);
   }
 
   /**
