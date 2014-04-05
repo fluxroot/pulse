@@ -43,7 +43,7 @@ final class Move {
     static final int PAWNPROMOTION = 2;
     static final int ENPASSANT = 3;
     static final int CASTLING = 4;
-    static final int NOTYPE = 5;
+    static final int NOMOVETYPE = 5;
 
     private Type() {
     }
@@ -56,7 +56,7 @@ final class Move {
         case ENPASSANT:
         case CASTLING:
           return true;
-        case NOTYPE:
+        case NOMOVETYPE:
         default:
           return false;
       }
@@ -78,7 +78,7 @@ final class Move {
   private static final int PROMOTION_MASK = Piece.Type.MASK << PROMOTION_SHIFT;
 
   // We don't use 0 as a null value to protect against errors.
-  public static final int NOMOVE = (Move.Type.NOTYPE << TYPE_SHIFT)
+  public static final int NOMOVE = (Move.Type.NOMOVETYPE << TYPE_SHIFT)
       | (Square.NOSQUARE << ORIGINSQUARE_SHIFT)
       | (Square.NOSQUARE << TARGETSQUARE_SHIFT)
       | (Piece.NOPIECE << ORIGINPIECE_SHIFT)
