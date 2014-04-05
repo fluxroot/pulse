@@ -23,12 +23,20 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
+import static org.junit.Assert.assertEquals;
 
 public class CastlingTypeTest {
 
   @Test
   public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     assertUtilityClassWellDefined(Castling.Type.class);
+  }
+
+  @Test
+  public void testValues() {
+    for (int castlingType : Castling.Type.values) {
+      assertEquals(castlingType, Castling.Type.values[castlingType]);
+    }
   }
 
 }

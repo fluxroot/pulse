@@ -18,7 +18,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericPiece;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,26 +34,21 @@ public class PieceTest {
 
   @Test
   public void testValues() {
-    for (GenericPiece genericPiece : GenericPiece.values()) {
-      assertEquals(genericPiece, Piece.toGenericPiece(Piece.valueOf(genericPiece)));
-      assertEquals(genericPiece.ordinal(), Piece.valueOf(genericPiece));
-      assertEquals(genericPiece, Piece.toGenericPiece(Piece.valueOf(Piece.Type.valueOf(genericPiece.chessman), Color.valueOf(genericPiece.color))));
+    for (int color : Color.values) {
+      for (int pieceType : Piece.Type.values) {
+        int piece = Piece.valueOf(pieceType, color);
+
+        assertTrue(Piece.isValid(piece));
+        assertEquals(piece, Piece.values[piece]);
+      }
     }
+
+    assertFalse(Piece.isValid(Piece.NOPIECE));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericPiece() {
     Piece.toGenericPiece(Piece.NOPIECE);
-  }
-
-  @Test
-  public void testIsValid() {
-    for (int piece : Piece.values) {
-      assertTrue(Piece.isValid(piece));
-      assertEquals(piece, piece & Piece.MASK);
-    }
-
-    assertFalse(Piece.isValid(Piece.NOPIECE));
   }
 
   @Test

@@ -41,32 +41,7 @@ final class Piece {
         PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
     };
 
-    static final int[] promotions = {
-        KNIGHT, BISHOP, ROOK, QUEEN
-    };
-
     private Type() {
-    }
-
-    static int valueOf(GenericChessman genericChessman) {
-      assert genericChessman != null;
-
-      switch (genericChessman) {
-        case PAWN:
-          return PAWN;
-        case KNIGHT:
-          return KNIGHT;
-        case BISHOP:
-          return BISHOP;
-        case ROOK:
-          return ROOK;
-        case QUEEN:
-          return QUEEN;
-        case KING:
-          return KING;
-        default:
-          throw new IllegalArgumentException();
-      }
     }
 
     static int valueOfPromotion(GenericChessman genericChessman) {

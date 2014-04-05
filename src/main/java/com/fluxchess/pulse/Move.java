@@ -106,7 +106,7 @@ final class Move {
         // Promote to a queen if promotion is not set
         promotion = Piece.Type.QUEEN;
       } else {
-        promotion = Piece.Type.valueOf(genericMove.promotion);
+        promotion = Piece.Type.valueOfPromotion(genericMove.promotion);
       }
       return valueOf(
           Move.Type.PAWNPROMOTION,

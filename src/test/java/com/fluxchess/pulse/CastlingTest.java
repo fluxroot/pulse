@@ -18,7 +18,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericCastling;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,25 +34,16 @@ public class CastlingTest {
 
   @Test
   public void testValues() {
-    for (GenericCastling genericCastling : GenericCastling.values()) {
-      assertEquals(genericCastling, Castling.Type.toGenericCastling(Castling.Type.valueOf(genericCastling)));
-      assertEquals(genericCastling.ordinal(), Castling.Type.valueOf(genericCastling));
-      assertEquals(Castling.Type.valueOf(genericCastling), Castling.Type.values[Castling.Type.valueOf(genericCastling)]);
-    }
-  }
+    for (int color : Color.values) {
+      for (int castlingType : Castling.Type.values) {
+        int castling = Castling.valueOf(color, castlingType);
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidToGenericCastling() {
-    Castling.Type.toGenericCastling(Castling.Type.NOCASTLINGTYPE);
-  }
-
-  @Test
-  public void testIsValid() {
-    for (int castling : Castling.Type.values) {
-      assertTrue(Castling.Type.isValid(castling));
+        assertTrue(Castling.isValid(castling));
+        assertEquals(castling, Castling.values[castling]);
+      }
     }
 
-    assertFalse(Castling.Type.isValid(Castling.Type.NOCASTLINGTYPE));
+    assertFalse(Castling.isValid(Castling.NOCASTLING));
   }
 
 }

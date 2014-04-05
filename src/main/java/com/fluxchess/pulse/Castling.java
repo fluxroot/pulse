@@ -34,19 +34,6 @@ final class Castling {
     private Type() {
     }
 
-    static int valueOf(GenericCastling genericCastling) {
-      assert genericCastling != null;
-
-      switch (genericCastling) {
-        case KINGSIDE:
-          return KINGSIDE;
-        case QUEENSIDE:
-          return QUEENSIDE;
-        default:
-          throw new IllegalArgumentException();
-      }
-    }
-
     static GenericCastling toGenericCastling(int castlingType) {
       switch (castlingType) {
         case KINGSIDE:
@@ -56,17 +43,6 @@ final class Castling {
         case NOCASTLINGTYPE:
         default:
           throw new IllegalArgumentException();
-      }
-    }
-
-    static boolean isValid(int castlingType) {
-      switch (castlingType) {
-        case KINGSIDE:
-        case QUEENSIDE:
-          return true;
-        case NOCASTLINGTYPE:
-        default:
-          return false;
       }
     }
   }

@@ -35,11 +35,12 @@ public class PieceTypeTest {
 
   @Test
   public void testValues() {
-    for (GenericChessman genericChessman : GenericChessman.values()) {
-      assertEquals(genericChessman, Piece.Type.toGenericChessman(Piece.Type.valueOf(genericChessman)));
-      assertEquals(genericChessman.ordinal(), Piece.Type.valueOf(genericChessman));
-      assertEquals(Piece.Type.valueOf(genericChessman), Piece.Type.values[Piece.Type.valueOf(genericChessman)]);
+    for (int pieceType : Piece.Type.values) {
+      assertTrue(Piece.Type.isValid(pieceType));
+      assertEquals(pieceType, Piece.Type.values[pieceType]);
     }
+
+    assertFalse(Piece.Type.isValid(Piece.Type.NOPIECETYPE));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -60,22 +61,11 @@ public class PieceTypeTest {
   }
 
   @Test
-  public void testIsValid() {
-    for (int pieceType : Piece.Type.values) {
-      assertTrue(Piece.Type.isValid(pieceType));
-      assertEquals(pieceType, pieceType & Piece.Type.MASK);
-    }
-
-    assertFalse(Piece.Type.isValid(Piece.Type.NOPIECETYPE));
-  }
-
-  @Test
   public void testIsValidPromotion() {
-    for (int pieceType : Piece.Type.promotions) {
-      assertTrue(Piece.Type.isValidPromotion(pieceType));
-      assertEquals(pieceType, pieceType & Piece.Type.MASK);
-    }
-
+    assertTrue(Piece.Type.isValidPromotion(Piece.Type.KNIGHT));
+    assertTrue(Piece.Type.isValidPromotion(Piece.Type.BISHOP));
+    assertTrue(Piece.Type.isValidPromotion(Piece.Type.ROOK));
+    assertTrue(Piece.Type.isValidPromotion(Piece.Type.QUEEN));
     assertFalse(Piece.Type.isValidPromotion(Piece.Type.PAWN));
     assertFalse(Piece.Type.isValidPromotion(Piece.Type.KING));
     assertFalse(Piece.Type.isValidPromotion(Piece.Type.NOPIECETYPE));
