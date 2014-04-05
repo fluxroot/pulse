@@ -248,7 +248,7 @@ final class Board {
     assert fullMoveNumber > 0;
 
     halfMoveNumber = fullMoveNumber * 2;
-    if (activeColor == Color.valueOf(GenericColor.BLACK)) {
+    if (activeColor == Color.BLACK) {
       ++halfMoveNumber;
     }
   }
