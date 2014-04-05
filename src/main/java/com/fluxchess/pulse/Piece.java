@@ -35,7 +35,7 @@ final class Piece {
     static final int ROOK = 3;
     static final int QUEEN = 4;
     static final int KING = 5;
-    static final int NOTYPE = 6;
+    static final int NOPIECETYPE = 6;
 
     static final int[] values = {
         PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
@@ -102,7 +102,7 @@ final class Piece {
           return GenericChessman.QUEEN;
         case KING:
           return GenericChessman.KING;
-        case NOTYPE:
+        case NOPIECETYPE:
         default:
           throw new IllegalArgumentException();
       }
@@ -117,7 +117,7 @@ final class Piece {
         case QUEEN:
         case KING:
           return true;
-        case NOTYPE:
+        case NOPIECETYPE:
         default:
           return false;
       }
@@ -132,7 +132,7 @@ final class Piece {
           return true;
         case PAWN:
         case KING:
-        case NOTYPE:
+        case NOPIECETYPE:
         default:
           return false;
       }
@@ -148,7 +148,7 @@ final class Piece {
         case KNIGHT:
         case KING:
           return false;
-        case NOTYPE:
+        case NOPIECETYPE:
         default:
           throw new IllegalArgumentException();
       }
@@ -157,23 +157,23 @@ final class Piece {
 
   static final int MASK = 0x1F;
 
-  static final int WHITEPAWN = 0;
-  static final int WHITEKNIGHT = 1;
-  static final int WHITEBISHOP = 2;
-  static final int WHITEROOK = 3;
-  static final int WHITEQUEEN = 4;
-  static final int WHITEKING = 5;
-  static final int BLACKPAWN = 6;
-  static final int BLACKKNIGHT = 7;
-  static final int BLACKBISHOP = 8;
-  static final int BLACKROOK = 9;
-  static final int BLACKQUEEN = 10;
-  static final int BLACKKING = 11;
+  static final int WHITE_PAWN = 0;
+  static final int WHITE_KNIGHT = 1;
+  static final int WHITE_BISHOP = 2;
+  static final int WHITE_ROOK = 3;
+  static final int WHITE_QUEEN = 4;
+  static final int WHITE_KING = 5;
+  static final int BLACK_PAWN = 6;
+  static final int BLACK_KNIGHT = 7;
+  static final int BLACK_BISHOP = 8;
+  static final int BLACK_ROOK = 9;
+  static final int BLACK_QUEEN = 10;
+  static final int BLACK_KING = 11;
   static final int NOPIECE = 12;
 
   static final int[] values = {
-      WHITEPAWN, WHITEKNIGHT, WHITEBISHOP, WHITEROOK, WHITEQUEEN, WHITEKING,
-      BLACKPAWN, BLACKKNIGHT, BLACKBISHOP, BLACKROOK, BLACKQUEEN, BLACKKING
+      WHITE_PAWN, WHITE_KNIGHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING,
+      BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING
   };
 
   private Piece() {
@@ -184,29 +184,29 @@ final class Piece {
 
     switch (genericPiece) {
       case WHITEPAWN:
-        return WHITEPAWN;
+        return WHITE_PAWN;
       case WHITEKNIGHT:
-        return WHITEKNIGHT;
+        return WHITE_KNIGHT;
       case WHITEBISHOP:
-        return WHITEBISHOP;
+        return WHITE_BISHOP;
       case WHITEROOK:
-        return WHITEROOK;
+        return WHITE_ROOK;
       case WHITEQUEEN:
-        return WHITEQUEEN;
+        return WHITE_QUEEN;
       case WHITEKING:
-        return WHITEKING;
+        return WHITE_KING;
       case BLACKPAWN:
-        return BLACKPAWN;
+        return BLACK_PAWN;
       case BLACKKNIGHT:
-        return BLACKKNIGHT;
+        return BLACK_KNIGHT;
       case BLACKBISHOP:
-        return BLACKBISHOP;
+        return BLACK_BISHOP;
       case BLACKROOK:
-        return BLACKROOK;
+        return BLACK_ROOK;
       case BLACKQUEEN:
-        return BLACKQUEEN;
+        return BLACK_QUEEN;
       case BLACKKING:
-        return BLACKKING;
+        return BLACK_KING;
       default:
         throw new IllegalArgumentException();
     }
@@ -217,36 +217,36 @@ final class Piece {
       case WHITE:
         switch (pieceType) {
           case Type.PAWN:
-            return WHITEPAWN;
+            return WHITE_PAWN;
           case Type.KNIGHT:
-            return WHITEKNIGHT;
+            return WHITE_KNIGHT;
           case Type.BISHOP:
-            return WHITEBISHOP;
+            return WHITE_BISHOP;
           case Type.ROOK:
-            return WHITEROOK;
+            return WHITE_ROOK;
           case Type.QUEEN:
-            return WHITEQUEEN;
+            return WHITE_QUEEN;
           case Type.KING:
-            return WHITEKING;
-          case Type.NOTYPE:
+            return WHITE_KING;
+          case Type.NOPIECETYPE:
           default:
             throw new IllegalArgumentException();
         }
       case BLACK:
         switch (pieceType) {
           case Type.PAWN:
-            return BLACKPAWN;
+            return BLACK_PAWN;
           case Type.KNIGHT:
-            return BLACKKNIGHT;
+            return BLACK_KNIGHT;
           case Type.BISHOP:
-            return BLACKBISHOP;
+            return BLACK_BISHOP;
           case Type.ROOK:
-            return BLACKROOK;
+            return BLACK_ROOK;
           case Type.QUEEN:
-            return BLACKQUEEN;
+            return BLACK_QUEEN;
           case Type.KING:
-            return BLACKKING;
-          case Type.NOTYPE:
+            return BLACK_KING;
+          case Type.NOPIECETYPE:
           default:
             throw new IllegalArgumentException();
         }
@@ -258,29 +258,29 @@ final class Piece {
 
   static GenericPiece toGenericPiece(int piece) {
     switch (piece) {
-      case WHITEPAWN:
+      case WHITE_PAWN:
         return GenericPiece.WHITEPAWN;
-      case WHITEKNIGHT:
+      case WHITE_KNIGHT:
         return GenericPiece.WHITEKNIGHT;
-      case WHITEBISHOP:
+      case WHITE_BISHOP:
         return GenericPiece.WHITEBISHOP;
-      case WHITEROOK:
+      case WHITE_ROOK:
         return GenericPiece.WHITEROOK;
-      case WHITEQUEEN:
+      case WHITE_QUEEN:
         return GenericPiece.WHITEQUEEN;
-      case WHITEKING:
+      case WHITE_KING:
         return GenericPiece.WHITEKING;
-      case BLACKPAWN:
+      case BLACK_PAWN:
         return GenericPiece.BLACKPAWN;
-      case BLACKKNIGHT:
+      case BLACK_KNIGHT:
         return GenericPiece.BLACKKNIGHT;
-      case BLACKBISHOP:
+      case BLACK_BISHOP:
         return GenericPiece.BLACKBISHOP;
-      case BLACKROOK:
+      case BLACK_ROOK:
         return GenericPiece.BLACKROOK;
-      case BLACKQUEEN:
+      case BLACK_QUEEN:
         return GenericPiece.BLACKQUEEN;
-      case BLACKKING:
+      case BLACK_KING:
         return GenericPiece.BLACKKING;
       case NOPIECE:
       default:
@@ -290,18 +290,18 @@ final class Piece {
 
   static boolean isValid(int piece) {
     switch (piece) {
-      case WHITEPAWN:
-      case WHITEKNIGHT:
-      case WHITEBISHOP:
-      case WHITEROOK:
-      case WHITEQUEEN:
-      case WHITEKING:
-      case BLACKPAWN:
-      case BLACKKNIGHT:
-      case BLACKBISHOP:
-      case BLACKROOK:
-      case BLACKQUEEN:
-      case BLACKKING:
+      case WHITE_PAWN:
+      case WHITE_KNIGHT:
+      case WHITE_BISHOP:
+      case WHITE_ROOK:
+      case WHITE_QUEEN:
+      case WHITE_KING:
+      case BLACK_PAWN:
+      case BLACK_KNIGHT:
+      case BLACK_BISHOP:
+      case BLACK_ROOK:
+      case BLACK_QUEEN:
+      case BLACK_KING:
         return true;
       case NOPIECE:
       default:
@@ -311,23 +311,23 @@ final class Piece {
 
   static int getType(int piece) {
     switch (piece) {
-      case WHITEPAWN:
-      case BLACKPAWN:
+      case WHITE_PAWN:
+      case BLACK_PAWN:
         return Type.PAWN;
-      case WHITEKNIGHT:
-      case BLACKKNIGHT:
+      case WHITE_KNIGHT:
+      case BLACK_KNIGHT:
         return Type.KNIGHT;
-      case WHITEBISHOP:
-      case BLACKBISHOP:
+      case WHITE_BISHOP:
+      case BLACK_BISHOP:
         return Type.BISHOP;
-      case WHITEROOK:
-      case BLACKROOK:
+      case WHITE_ROOK:
+      case BLACK_ROOK:
         return Type.ROOK;
-      case WHITEQUEEN:
-      case BLACKQUEEN:
+      case WHITE_QUEEN:
+      case BLACK_QUEEN:
         return Type.QUEEN;
-      case WHITEKING:
-      case BLACKKING:
+      case WHITE_KING:
+      case BLACK_KING:
         return Type.KING;
       case NOPIECE:
       default:
@@ -337,19 +337,19 @@ final class Piece {
 
   static int getColor(int piece) {
     switch (piece) {
-      case WHITEPAWN:
-      case WHITEKNIGHT:
-      case WHITEBISHOP:
-      case WHITEROOK:
-      case WHITEQUEEN:
-      case WHITEKING:
+      case WHITE_PAWN:
+      case WHITE_KNIGHT:
+      case WHITE_BISHOP:
+      case WHITE_ROOK:
+      case WHITE_QUEEN:
+      case WHITE_KING:
         return WHITE;
-      case BLACKPAWN:
-      case BLACKKNIGHT:
-      case BLACKBISHOP:
-      case BLACKROOK:
-      case BLACKQUEEN:
-      case BLACKKING:
+      case BLACK_PAWN:
+      case BLACK_KNIGHT:
+      case BLACK_BISHOP:
+      case BLACK_ROOK:
+      case BLACK_QUEEN:
+      case BLACK_KING:
         return BLACK;
       case NOPIECE:
       default:

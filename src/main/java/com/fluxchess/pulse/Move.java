@@ -83,7 +83,7 @@ final class Move {
       | (Square.NOSQUARE << TARGETSQUARE_SHIFT)
       | (Piece.NOPIECE << ORIGINPIECE_SHIFT)
       | (Piece.NOPIECE << TARGETPIECE_SHIFT)
-      | (Piece.Type.NOTYPE << PROMOTION_SHIFT);
+      | (Piece.Type.NOPIECETYPE << PROMOTION_SHIFT);
 
   private Move() {
   }
@@ -123,7 +123,7 @@ final class Move {
           Square.valueOf(genericMove.to),
           board.board[Square.valueOf(genericMove.from)],
           Piece.NOPIECE,
-          Piece.Type.NOTYPE
+          Piece.Type.NOPIECETYPE
       );
     } else if (isEnPassant(genericMove, board)) {
       return valueOf(
@@ -132,7 +132,7 @@ final class Move {
           Square.valueOf(genericMove.to),
           board.board[Square.valueOf(genericMove.from)],
           board.board[Square.valueOf(GenericPosition.valueOf(genericMove.to.file, genericMove.from.rank))],
-          Piece.Type.NOTYPE
+          Piece.Type.NOPIECETYPE
       );
     } else if (isCastling(genericMove, board)) {
       return valueOf(
@@ -140,7 +140,7 @@ final class Move {
           Square.valueOf(genericMove.to),
           board.board[Square.valueOf(genericMove.from)],
           Piece.NOPIECE,
-          Piece.Type.NOTYPE
+          Piece.Type.NOPIECETYPE
       );
     } else {
       return valueOf(
@@ -149,7 +149,7 @@ final class Move {
           Square.valueOf(genericMove.to),
           board.board[Square.valueOf(genericMove.from)],
           board.board[Square.valueOf(genericMove.to)],
-          Piece.Type.NOTYPE
+          Piece.Type.NOPIECETYPE
       );
     }
   }
@@ -178,7 +178,7 @@ final class Move {
     move |= targetPiece << TARGETPIECE_SHIFT;
 
     // Encode promotion
-    assert Piece.Type.isValidPromotion(promotion) || promotion == Piece.Type.NOTYPE;
+    assert Piece.Type.isValidPromotion(promotion) || promotion == Piece.Type.NOPIECETYPE;
     move |= promotion << PROMOTION_SHIFT;
 
     return move;
@@ -246,7 +246,7 @@ final class Move {
 
   static int getPromotion(int move) {
     int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
-    assert Piece.Type.isValidPromotion(promotion) || promotion == Piece.Type.NOTYPE;
+    assert Piece.Type.isValidPromotion(promotion) || promotion == Piece.Type.NOPIECETYPE;
 
     return promotion;
   }
@@ -257,8 +257,8 @@ final class Move {
 
     int originPiece = board.board[Square.valueOf(move.from)];
 
-    return (originPiece == Piece.WHITEPAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R8)
-        || (originPiece == Piece.BLACKPAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1);
+    return (originPiece == Piece.WHITE_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R8)
+        || (originPiece == Piece.BLACK_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1);
   }
 
   private static boolean isPawnDouble(GenericMove move, Board board) {
@@ -267,8 +267,8 @@ final class Move {
 
     int originPiece = board.board[Square.valueOf(move.from)];
 
-    return (originPiece == Piece.WHITEPAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R4)
-        || (originPiece == Piece.BLACKPAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5);
+    return (originPiece == Piece.WHITE_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R4)
+        || (originPiece == Piece.BLACK_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5);
   }
 
   private static boolean isEnPassant(GenericMove move, Board board) {

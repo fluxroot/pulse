@@ -237,7 +237,7 @@ final class MoveGenerator {
         if (targetPiece == Piece.NOPIECE) {
           // quiet move
           list.entries[list.size++].move = Move.valueOf(
-              Move.Type.NORMAL, originSquare, targetSquare, originPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+              Move.Type.NORMAL, originSquare, targetSquare, originPiece, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
 
           if (!sliding) {
             break;
@@ -248,7 +248,7 @@ final class MoveGenerator {
           if (Piece.getColor(targetPiece) == oppositeColor) {
             // capturing move
             list.entries[list.size++].move = Move.valueOf(
-                Move.Type.NORMAL, originSquare, targetSquare, originPiece, targetPiece, Piece.Type.NOTYPE);
+                Move.Type.NORMAL, originSquare, targetSquare, originPiece, targetPiece, Piece.Type.NOPIECETYPE);
           }
 
           break;
@@ -294,7 +294,7 @@ final class MoveGenerator {
               // Normal capturing move
 
               list.entries[list.size++].move = Move.valueOf(
-                  Move.Type.NORMAL, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.NOTYPE);
+                  Move.Type.NORMAL, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.NOPIECETYPE);
             }
           }
         } else if (targetSquare == board.enPassant) {
@@ -308,7 +308,7 @@ final class MoveGenerator {
           assert Piece.getColor(targetPiece) == Color.opposite(pawnColor);
 
           list.entries[list.size++].move = Move.valueOf(
-              Move.Type.ENPASSANT, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.NOTYPE);
+              Move.Type.ENPASSANT, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.NOPIECETYPE);
         }
       }
     }
@@ -335,7 +335,7 @@ final class MoveGenerator {
         // Normal move
 
         list.entries[list.size++].move = Move.valueOf(
-            Move.Type.NORMAL, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+            Move.Type.NORMAL, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
 
         // Move another rank forward
         targetSquare += delta;
@@ -345,7 +345,7 @@ final class MoveGenerator {
             // Pawn double move
 
             list.entries[list.size++].move = Move.valueOf(
-                Move.Type.PAWNDOUBLE, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+                Move.Type.PAWNDOUBLE, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
           }
         }
       }
@@ -366,11 +366,11 @@ final class MoveGenerator {
           && board.board[Square.f1] == Piece.NOPIECE
           && board.board[Square.g1] == Piece.NOPIECE
           && !board.isAttacked(Square.f1, BLACK)) {
-        assert board.board[Square.e1] == Piece.WHITEKING;
-        assert board.board[Square.h1] == Piece.WHITEROOK;
+        assert board.board[Square.e1] == Piece.WHITE_KING;
+        assert board.board[Square.h1] == Piece.WHITE_ROOK;
 
         list.entries[list.size++].move = Move.valueOf(
-            Move.Type.CASTLING, kingSquare, Square.g1, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+            Move.Type.CASTLING, kingSquare, Square.g1, kingPiece, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
       if (board.castlingRights[Castling.WHITE_QUEENSIDE] != File.NOFILE
@@ -378,11 +378,11 @@ final class MoveGenerator {
           && board.board[Square.c1] == Piece.NOPIECE
           && board.board[Square.d1] == Piece.NOPIECE
           && !board.isAttacked(Square.d1, BLACK)) {
-        assert board.board[Square.e1] == Piece.WHITEKING;
-        assert board.board[Square.a1] == Piece.WHITEROOK;
+        assert board.board[Square.e1] == Piece.WHITE_KING;
+        assert board.board[Square.a1] == Piece.WHITE_ROOK;
 
         list.entries[list.size++].move = Move.valueOf(
-            Move.Type.CASTLING, kingSquare, Square.c1, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+            Move.Type.CASTLING, kingSquare, Square.c1, kingPiece, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
       }
     } else {
       // Do not test g8 whether it is attacked as we will test it in isLegal()
@@ -390,11 +390,11 @@ final class MoveGenerator {
           && board.board[Square.f8] == Piece.NOPIECE
           && board.board[Square.g8] == Piece.NOPIECE
           && !board.isAttacked(Square.f8, WHITE)) {
-        assert board.board[Square.e8] == Piece.BLACKKING;
-        assert board.board[Square.h8] == Piece.BLACKROOK;
+        assert board.board[Square.e8] == Piece.BLACK_KING;
+        assert board.board[Square.h8] == Piece.BLACK_ROOK;
 
         list.entries[list.size++].move = Move.valueOf(
-            Move.Type.CASTLING, kingSquare, Square.g8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+            Move.Type.CASTLING, kingSquare, Square.g8, kingPiece, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
       if (board.castlingRights[Castling.BLACK_QUEENSIDE] != File.NOFILE
@@ -402,11 +402,11 @@ final class MoveGenerator {
           && board.board[Square.c8] == Piece.NOPIECE
           && board.board[Square.d8] == Piece.NOPIECE
           && !board.isAttacked(Square.d8, WHITE)) {
-        assert board.board[Square.e8] == Piece.BLACKKING;
-        assert board.board[Square.a8] == Piece.BLACKROOK;
+        assert board.board[Square.e8] == Piece.BLACK_KING;
+        assert board.board[Square.a8] == Piece.BLACK_ROOK;
 
         list.entries[list.size++].move = Move.valueOf(
-            Move.Type.CASTLING, kingSquare, Square.c8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
+            Move.Type.CASTLING, kingSquare, Square.c8, kingPiece, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
       }
     }
   }

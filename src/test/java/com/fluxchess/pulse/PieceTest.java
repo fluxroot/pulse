@@ -59,18 +59,18 @@ public class PieceTest {
 
   @Test
   public void testGetType() {
-    assertEquals(Piece.Type.PAWN, Piece.getType(Piece.WHITEPAWN));
-    assertEquals(Piece.Type.PAWN, Piece.getType(Piece.BLACKPAWN));
-    assertEquals(Piece.Type.KNIGHT, Piece.getType(Piece.WHITEKNIGHT));
-    assertEquals(Piece.Type.KNIGHT, Piece.getType(Piece.BLACKKNIGHT));
-    assertEquals(Piece.Type.BISHOP, Piece.getType(Piece.WHITEBISHOP));
-    assertEquals(Piece.Type.BISHOP, Piece.getType(Piece.BLACKBISHOP));
-    assertEquals(Piece.Type.ROOK, Piece.getType(Piece.WHITEROOK));
-    assertEquals(Piece.Type.ROOK, Piece.getType(Piece.BLACKROOK));
-    assertEquals(Piece.Type.QUEEN, Piece.getType(Piece.WHITEQUEEN));
-    assertEquals(Piece.Type.QUEEN, Piece.getType(Piece.BLACKQUEEN));
-    assertEquals(Piece.Type.KING, Piece.getType(Piece.WHITEKING));
-    assertEquals(Piece.Type.KING, Piece.getType(Piece.BLACKKING));
+    assertEquals(Piece.Type.PAWN, Piece.getType(Piece.WHITE_PAWN));
+    assertEquals(Piece.Type.PAWN, Piece.getType(Piece.BLACK_PAWN));
+    assertEquals(Piece.Type.KNIGHT, Piece.getType(Piece.WHITE_KNIGHT));
+    assertEquals(Piece.Type.KNIGHT, Piece.getType(Piece.BLACK_KNIGHT));
+    assertEquals(Piece.Type.BISHOP, Piece.getType(Piece.WHITE_BISHOP));
+    assertEquals(Piece.Type.BISHOP, Piece.getType(Piece.BLACK_BISHOP));
+    assertEquals(Piece.Type.ROOK, Piece.getType(Piece.WHITE_ROOK));
+    assertEquals(Piece.Type.ROOK, Piece.getType(Piece.BLACK_ROOK));
+    assertEquals(Piece.Type.QUEEN, Piece.getType(Piece.WHITE_QUEEN));
+    assertEquals(Piece.Type.QUEEN, Piece.getType(Piece.BLACK_QUEEN));
+    assertEquals(Piece.Type.KING, Piece.getType(Piece.WHITE_KING));
+    assertEquals(Piece.Type.KING, Piece.getType(Piece.BLACK_KING));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -80,18 +80,18 @@ public class PieceTest {
 
   @Test
   public void testGetColor() {
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITEPAWN));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACKPAWN));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITEKNIGHT));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACKKNIGHT));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITEBISHOP));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACKBISHOP));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITEROOK));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACKROOK));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITEQUEEN));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACKQUEEN));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITEKING));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACKKING));
+    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_PAWN));
+    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_PAWN));
+    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_KNIGHT));
+    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_KNIGHT));
+    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_BISHOP));
+    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_BISHOP));
+    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_ROOK));
+    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_ROOK));
+    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_QUEEN));
+    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_QUEEN));
+    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_KING));
+    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_KING));
   }
 
   @Test(expected = IllegalArgumentException.class)

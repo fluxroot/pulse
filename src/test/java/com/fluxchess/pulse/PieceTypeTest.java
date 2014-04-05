@@ -44,7 +44,7 @@ public class PieceTypeTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericChessman() {
-    Piece.Type.toGenericChessman(Piece.Type.NOTYPE);
+    Piece.Type.toGenericChessman(Piece.Type.NOPIECETYPE);
   }
 
   @Test
@@ -66,7 +66,7 @@ public class PieceTypeTest {
       assertEquals(pieceType, pieceType & Piece.Type.MASK);
     }
 
-    assertFalse(Piece.Type.isValid(Piece.Type.NOTYPE));
+    assertFalse(Piece.Type.isValid(Piece.Type.NOPIECETYPE));
   }
 
   @Test
@@ -78,7 +78,7 @@ public class PieceTypeTest {
 
     assertFalse(Piece.Type.isValidPromotion(Piece.Type.PAWN));
     assertFalse(Piece.Type.isValidPromotion(Piece.Type.KING));
-    assertFalse(Piece.Type.isValidPromotion(Piece.Type.NOTYPE));
+    assertFalse(Piece.Type.isValidPromotion(Piece.Type.NOPIECETYPE));
   }
 
   @Test
@@ -93,7 +93,7 @@ public class PieceTypeTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidIsSliding() {
-    Piece.Type.isSliding(Piece.Type.NOTYPE);
+    Piece.Type.isSliding(Piece.Type.NOPIECETYPE);
   }
 
 }
