@@ -24,9 +24,6 @@ import com.fluxchess.jcpi.models.GenericPiece;
 
 import java.security.SecureRandom;
 
-import static com.fluxchess.pulse.Castling.KINGSIDE;
-import static com.fluxchess.pulse.Castling.QUEENSIDE;
-import static com.fluxchess.pulse.Color.BLACK;
 import static com.fluxchess.pulse.Color.WHITE;
 
 /**
@@ -50,7 +47,7 @@ final class Board {
   final int[] material = new int[Color.values.length];
   final int[] majorMinorMaterial = new int[Color.values.length];
 
-  final int[][] castlingRights = new int[Color.values.length][Castling.values.length];
+  final int[] castlingRights = new int[Castling.values.length];
   int enPassant = Square.NOSQUARE;
   int activeColor = WHITE;
   int halfMoveClock = 0;
@@ -58,7 +55,7 @@ final class Board {
 
   long zobristKey = 0;
   private static final long[][] zobristPiece = new long[Piece.values.length][BOARDSIZE];
-  private static final long[][] zobristCastling = new long[Color.values.length][Castling.values.length];
+  private static final long[] zobristCastling = new long[Castling.values.length];
   private static final long[] zobristEnPassant = new long[BOARDSIZE];
   private static final long zobristActiveColor;
 
@@ -69,15 +66,13 @@ final class Board {
 
   private static final class State {
     private long zobristKey = 0;
-    private final int[][] castlingRights = new int[Color.values.length][Castling.values.length];
+    private final int[] castlingRights = new int[Castling.values.length];
     private int enPassant = Square.NOSQUARE;
     private int halfMoveClock = 0;
 
     private State() {
-      for (int color : Color.values) {
-        for (int castling : Castling.values) {
-          castlingRights[color][castling] = File.NOFILE;
-        }
+      for (int castling : Castling.values) {
+        castlingRights[castling] = File.NOFILE;
       }
     }
   }
@@ -114,10 +109,9 @@ final class Board {
       }
     }
 
-    zobristCastling[WHITE][KINGSIDE] = zobrist.next();
-    zobristCastling[WHITE][QUEENSIDE] = zobrist.next();
-    zobristCastling[BLACK][KINGSIDE] = zobrist.next();
-    zobristCastling[BLACK][QUEENSIDE] = zobrist.next();
+    for (int castling : Castling.values) {
+      zobristCastling[castling] = zobrist.next();
+    }
 
     for (int i = 0; i < BOARDSIZE; ++i) {
       zobristEnPassant[i] = zobrist.next();
@@ -163,15 +157,15 @@ final class Board {
 
     // Initialize castling
     for (int color : Color.values) {
-      for (int castling : Castling.values) {
+      for (int castlingType : Castling.Type.values) {
         GenericFile genericFile = genericBoard.getCastling(
-            Color.toGenericColor(color), Castling.toGenericCastling(castling)
+            Color.toGenericColor(color), Castling.Type.toGenericCastling(castlingType)
         );
         if (genericFile != null) {
-          castlingRights[color][castling] = File.valueOf(genericFile);
-          zobristKey ^= zobristCastling[color][castling];
+          castlingRights[Castling.valueOf(color, castlingType)] = File.valueOf(genericFile);
+          zobristKey ^= zobristCastling[Castling.valueOf(color, castlingType)];
         } else {
-          castlingRights[color][castling] = File.NOFILE;
+          castlingRights[Castling.valueOf(color, castlingType)] = File.NOFILE;
         }
       }
     }
@@ -207,12 +201,12 @@ final class Board {
 
     // Set castling
     for (int color : Color.values) {
-      for (int castling : Castling.values) {
-        if (castlingRights[color][castling] != File.NOFILE) {
+      for (int castlingType : Castling.Type.values) {
+        if (castlingRights[Castling.valueOf(color, castlingType)] != File.NOFILE) {
           genericBoard.setCastling(
               Color.toGenericColor(color),
-              Castling.toGenericCastling(castling),
-              File.toGenericFile(castlingRights[color][castling])
+              Castling.Type.toGenericCastling(castlingType),
+              File.toGenericFile(castlingRights[Castling.valueOf(color, castlingType)])
           );
         }
       }
@@ -405,10 +399,8 @@ final class Board {
     entry.zobristKey = zobristKey;
 
     // Save castling rights
-    for (int color : Color.values) {
-      for (int castling : Castling.values) {
-        entry.castlingRights[color][castling] = castlingRights[color][castling];
-      }
+    for (int castling : Castling.values) {
+      entry.castlingRights[castling] = castlingRights[castling];
     }
 
     // Save enPassant
@@ -578,11 +570,9 @@ final class Board {
     enPassant = entry.enPassant;
 
     // Restore castling rights
-    for (int color : Color.values) {
-      for (int castling : Castling.values) {
-        if (entry.castlingRights[color][castling] != castlingRights[color][castling]) {
-          castlingRights[color][castling] = entry.castlingRights[color][castling];
-        }
+    for (int castling : Castling.values) {
+      if (entry.castlingRights[castling] != castlingRights[castling]) {
+        castlingRights[castling] = entry.castlingRights[castling];
       }
     }
 
@@ -590,13 +580,12 @@ final class Board {
     zobristKey = entry.zobristKey;
   }
 
-  private void clearCastling(int color, int castling) {
-    assert Color.isValid(color);
+  private void clearCastlingRights(int castling) {
     assert Castling.isValid(castling);
 
-    if (castlingRights[color][castling] != File.NOFILE) {
-      castlingRights[color][castling] = File.NOFILE;
-      zobristKey ^= zobristCastling[color][castling];
+    if (castlingRights[castling] != File.NOFILE) {
+      castlingRights[castling] = File.NOFILE;
+      zobristKey ^= zobristCastling[castling];
     }
   }
 
@@ -605,24 +594,24 @@ final class Board {
 
     switch (square) {
       case Square.a1:
-        clearCastling(WHITE, QUEENSIDE);
+        clearCastlingRights(Castling.WHITE_QUEENSIDE);
         break;
       case Square.h1:
-        clearCastling(WHITE, KINGSIDE);
+        clearCastlingRights(Castling.WHITE_KINGSIDE);
         break;
       case Square.a8:
-        clearCastling(BLACK, QUEENSIDE);
+        clearCastlingRights(Castling.BLACK_QUEENSIDE);
         break;
       case Square.h8:
-        clearCastling(BLACK, KINGSIDE);
+        clearCastlingRights(Castling.BLACK_KINGSIDE);
         break;
       case Square.e1:
-        clearCastling(WHITE, QUEENSIDE);
-        clearCastling(WHITE, KINGSIDE);
+        clearCastlingRights(Castling.WHITE_QUEENSIDE);
+        clearCastlingRights(Castling.WHITE_KINGSIDE);
         break;
       case Square.e8:
-        clearCastling(BLACK, QUEENSIDE);
-        clearCastling(BLACK, KINGSIDE);
+        clearCastlingRights(Castling.BLACK_QUEENSIDE);
+        clearCastlingRights(Castling.BLACK_KINGSIDE);
         break;
       default:
         break;

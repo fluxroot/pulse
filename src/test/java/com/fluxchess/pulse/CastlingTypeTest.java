@@ -18,42 +18,17 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericCastling;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.*;
 
-public class CastlingTest {
+public class CastlingTypeTest {
 
   @Test
   public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    assertUtilityClassWellDefined(Castling.class);
-  }
-
-  @Test
-  public void testValues() {
-    for (GenericCastling genericCastling : GenericCastling.values()) {
-      assertEquals(genericCastling, Castling.Type.toGenericCastling(Castling.Type.valueOf(genericCastling)));
-      assertEquals(genericCastling.ordinal(), Castling.Type.valueOf(genericCastling));
-      assertEquals(Castling.Type.valueOf(genericCastling), Castling.Type.values[Castling.Type.valueOf(genericCastling)]);
-    }
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidToGenericCastling() {
-    Castling.Type.toGenericCastling(Castling.Type.NOCASTLINGTYPE);
-  }
-
-  @Test
-  public void testIsValid() {
-    for (int castling : Castling.Type.values) {
-      assertTrue(Castling.Type.isValid(castling));
-    }
-
-    assertFalse(Castling.Type.isValid(Castling.Type.NOCASTLINGTYPE));
+    assertUtilityClassWellDefined(Castling.Type.class);
   }
 
 }

@@ -18,8 +18,6 @@
  */
 package com.fluxchess.pulse;
 
-import static com.fluxchess.pulse.Castling.KINGSIDE;
-import static com.fluxchess.pulse.Castling.QUEENSIDE;
 import static com.fluxchess.pulse.Color.BLACK;
 import static com.fluxchess.pulse.Color.WHITE;
 
@@ -364,7 +362,7 @@ final class MoveGenerator {
 
     if (Piece.getColor(kingPiece) == WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[WHITE][KINGSIDE] != File.NOFILE
+      if (board.castlingRights[Castling.WHITE_KINGSIDE] != File.NOFILE
           && board.board[Square.f1] == Piece.NOPIECE
           && board.board[Square.g1] == Piece.NOPIECE
           && !board.isAttacked(Square.f1, BLACK)) {
@@ -375,7 +373,7 @@ final class MoveGenerator {
             Move.Type.CASTLING, kingSquare, Square.g1, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[WHITE][QUEENSIDE] != File.NOFILE
+      if (board.castlingRights[Castling.WHITE_QUEENSIDE] != File.NOFILE
           && board.board[Square.b1] == Piece.NOPIECE
           && board.board[Square.c1] == Piece.NOPIECE
           && board.board[Square.d1] == Piece.NOPIECE
@@ -388,7 +386,7 @@ final class MoveGenerator {
       }
     } else {
       // Do not test g8 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[BLACK][KINGSIDE] != File.NOFILE
+      if (board.castlingRights[Castling.BLACK_KINGSIDE] != File.NOFILE
           && board.board[Square.f8] == Piece.NOPIECE
           && board.board[Square.g8] == Piece.NOPIECE
           && !board.isAttacked(Square.f8, WHITE)) {
@@ -399,7 +397,7 @@ final class MoveGenerator {
             Move.Type.CASTLING, kingSquare, Square.g8, kingPiece, Piece.NOPIECE, Piece.Type.NOTYPE);
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[BLACK][QUEENSIDE] != File.NOFILE
+      if (board.castlingRights[Castling.BLACK_QUEENSIDE] != File.NOFILE
           && board.board[Square.b8] == Piece.NOPIECE
           && board.board[Square.c8] == Piece.NOPIECE
           && board.board[Square.d8] == Piece.NOPIECE

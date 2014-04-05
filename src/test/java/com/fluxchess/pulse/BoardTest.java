@@ -22,7 +22,6 @@ import com.fluxchess.jcpi.models.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class BoardTest {
@@ -60,10 +59,10 @@ public class BoardTest {
         board.material[Color.BLACK]);
 
     // Test castling
-    for (GenericColor genericColor : GenericColor.values()) {
-      for (GenericCastling genericCastling : GenericCastling.values()) {
-        GenericFile genericFile = genericBoard.getCastling(genericColor, genericCastling);
-        int file = board.castlingRights[Color.valueOf(genericColor)][Castling.valueOf(genericCastling)];
+    for (int color : Color.values) {
+      for (int castlingType : Castling.Type.values) {
+        GenericFile genericFile = genericBoard.getCastling(Color.toGenericColor(color), Castling.Type.toGenericCastling(castlingType));
+        int file = board.castlingRights[Castling.valueOf(color, castlingType)];
         if (genericFile == null) {
           assertEquals(File.NOFILE, file);
         } else {
@@ -279,7 +278,7 @@ public class BoardTest {
     int move = Move.valueOf(Move.Type.CASTLING, Square.e1, Square.c1, Piece.WHITEKING, Piece.NOPIECE, Piece.Type.NOTYPE);
     board.makeMove(move);
 
-    assertEquals(File.NOFILE, board.castlingRights[Color.WHITE][Castling.QUEENSIDE]);
+    assertEquals(File.NOFILE, board.castlingRights[Castling.WHITE_QUEENSIDE]);
 
     board.undoMove(move);
 
@@ -293,7 +292,7 @@ public class BoardTest {
     move = Move.valueOf(Move.Type.CASTLING, Square.e1, Square.g1, Piece.WHITEKING, Piece.NOPIECE, Piece.Type.NOTYPE);
     board.makeMove(move);
 
-    assertEquals(File.NOFILE, board.castlingRights[Color.WHITE][Castling.KINGSIDE]);
+    assertEquals(File.NOFILE, board.castlingRights[Castling.WHITE_KINGSIDE]);
 
     board.undoMove(move);
 
