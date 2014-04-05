@@ -312,8 +312,7 @@ final class Board {
         material[color] += Evaluation.KING_VALUE;
         break;
       default:
-        assert false : pieceType;
-        break;
+        throw new IllegalArgumentException();
     }
 
     board[square] = piece;
@@ -367,8 +366,7 @@ final class Board {
         material[color] -= Evaluation.KING_VALUE;
         break;
       default:
-        assert false : pieceType;
-        break;
+        throw new IllegalArgumentException();
     }
 
     board[square] = Piece.NOPIECE;
@@ -433,8 +431,8 @@ final class Board {
 
     // Move rook and update castling rights
     if (type == Move.Type.CASTLING) {
-      int rookOriginSquare = Square.NOSQUARE;
-      int rookTargetSquare = Square.NOSQUARE;
+      int rookOriginSquare;
+      int rookTargetSquare;
       switch (targetSquare) {
         case Square.g1:
           rookOriginSquare = Square.h1;
@@ -453,8 +451,7 @@ final class Board {
           rookTargetSquare = Square.d8;
           break;
         default:
-          assert false : targetSquare;
-          break;
+          throw new IllegalArgumentException();
       }
 
       assert Piece.getType(board[rookOriginSquare]) == Piece.Type.ROOK;
@@ -520,8 +517,8 @@ final class Board {
 
     // Undo move rook
     if (type == Move.Type.CASTLING) {
-      int rookOriginSquare = Square.NOSQUARE;
-      int rookTargetSquare = Square.NOSQUARE;
+      int rookOriginSquare;
+      int rookTargetSquare;
       switch (targetSquare) {
         case Square.g1:
           rookOriginSquare = Square.h1;
@@ -540,8 +537,7 @@ final class Board {
           rookTargetSquare = Square.d8;
           break;
         default:
-          assert false : targetSquare;
-          break;
+          throw new IllegalArgumentException();
       }
 
       assert Piece.getType(board[rookTargetSquare]) == Piece.Type.ROOK;

@@ -145,8 +145,7 @@ final class MoveGenerator {
             }
             break;
           default:
-            assert false : states[stateIndex];
-            break;
+            throw new IllegalStateException();
         }
 
         return move;
@@ -181,8 +180,7 @@ final class MoveGenerator {
         case END:
           return Move.NOMOVE;
         default:
-          assert false;
-          break;
+          throw new IllegalStateException();
       }
     }
   }
