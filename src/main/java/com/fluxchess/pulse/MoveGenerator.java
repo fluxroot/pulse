@@ -18,9 +18,6 @@
  */
 package com.fluxchess.pulse;
 
-import static com.fluxchess.pulse.Color.BLACK;
-import static com.fluxchess.pulse.Color.WHITE;
-
 final class MoveGenerator {
 
   // Move deltas
@@ -276,8 +273,8 @@ final class MoveGenerator {
           if (Piece.getColor(targetPiece) == Color.opposite(pawnColor)) {
             // Capturing move
 
-            if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r8)
-                || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r1)) {
+            if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.r8)
+                || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.r1)) {
               // Pawn promotion capturing move
 
               list.entries[list.size++].move = Move.valueOf(
@@ -297,10 +294,10 @@ final class MoveGenerator {
           }
         } else if (targetSquare == board.enPassantSquare) {
           // En passant move
-          assert (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r3)
-              || (pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r6);
+          assert (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.r3)
+              || (pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.r6);
 
-          int captureSquare = targetSquare + (pawnColor == WHITE ? Square.S : Square.N);
+          int captureSquare = targetSquare + (pawnColor == Color.WHITE ? Square.S : Square.N);
           targetPiece = board.board[captureSquare];
           assert Piece.getType(targetPiece) == Piece.Type.PAWN;
           assert Piece.getColor(targetPiece) == Color.opposite(pawnColor);
@@ -317,8 +314,8 @@ final class MoveGenerator {
     // Move one rank forward
     int targetSquare = pawnSquare + delta;
     if (Square.isValid(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
-      if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r8)
-          || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r1)) {
+      if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.r8)
+          || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.r1)) {
         // Pawn promotion move
 
         list.entries[list.size++].move = Move.valueOf(
@@ -338,8 +335,8 @@ final class MoveGenerator {
         // Move another rank forward
         targetSquare += delta;
         if (Square.isValid(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
-          if ((pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r4)
-              || (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r5)) {
+          if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.r4)
+              || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.r5)) {
             // Pawn double move
 
             list.entries[list.size++].move = Move.valueOf(
@@ -358,12 +355,12 @@ final class MoveGenerator {
     assert Piece.isValid(kingPiece);
     assert Piece.getType(kingPiece) == Piece.Type.KING;
 
-    if (Piece.getColor(kingPiece) == WHITE) {
+    if (Piece.getColor(kingPiece) == Color.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
       if (board.castlingRights[Castling.WHITE_KINGSIDE] != File.NOFILE
           && board.board[Square.f1] == Piece.NOPIECE
           && board.board[Square.g1] == Piece.NOPIECE
-          && !board.isAttacked(Square.f1, BLACK)) {
+          && !board.isAttacked(Square.f1, Color.BLACK)) {
         assert board.board[Square.e1] == Piece.WHITE_KING;
         assert board.board[Square.h1] == Piece.WHITE_ROOK;
 
@@ -375,7 +372,7 @@ final class MoveGenerator {
           && board.board[Square.b1] == Piece.NOPIECE
           && board.board[Square.c1] == Piece.NOPIECE
           && board.board[Square.d1] == Piece.NOPIECE
-          && !board.isAttacked(Square.d1, BLACK)) {
+          && !board.isAttacked(Square.d1, Color.BLACK)) {
         assert board.board[Square.e1] == Piece.WHITE_KING;
         assert board.board[Square.a1] == Piece.WHITE_ROOK;
 
@@ -387,7 +384,7 @@ final class MoveGenerator {
       if (board.castlingRights[Castling.BLACK_KINGSIDE] != File.NOFILE
           && board.board[Square.f8] == Piece.NOPIECE
           && board.board[Square.g8] == Piece.NOPIECE
-          && !board.isAttacked(Square.f8, WHITE)) {
+          && !board.isAttacked(Square.f8, Color.WHITE)) {
         assert board.board[Square.e8] == Piece.BLACK_KING;
         assert board.board[Square.h8] == Piece.BLACK_ROOK;
 
@@ -399,7 +396,7 @@ final class MoveGenerator {
           && board.board[Square.b8] == Piece.NOPIECE
           && board.board[Square.c8] == Piece.NOPIECE
           && board.board[Square.d8] == Piece.NOPIECE
-          && !board.isAttacked(Square.d8, WHITE)) {
+          && !board.isAttacked(Square.d8, Color.WHITE)) {
         assert board.board[Square.e8] == Piece.BLACK_KING;
         assert board.board[Square.a8] == Piece.BLACK_ROOK;
 

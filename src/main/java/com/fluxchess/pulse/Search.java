@@ -29,7 +29,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
-import static com.fluxchess.pulse.Color.WHITE;
 import static com.fluxchess.pulse.MoveList.MoveVariation;
 
 /**
@@ -178,7 +177,7 @@ final class Search implements Runnable {
 
     long timeLeft;
     long timeIncrement;
-    if (board.activeColor == WHITE) {
+    if (board.activeColor == Color.WHITE) {
       timeLeft = whiteTimeLeft;
       timeIncrement = whiteTimeIncrement;
     } else {

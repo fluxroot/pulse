@@ -21,9 +21,6 @@ package com.fluxchess.pulse;
 import com.fluxchess.jcpi.models.GenericChessman;
 import com.fluxchess.jcpi.models.GenericPiece;
 
-import static com.fluxchess.pulse.Color.BLACK;
-import static com.fluxchess.pulse.Color.WHITE;
-
 final class Piece {
 
   static final class Type {
@@ -189,7 +186,7 @@ final class Piece {
 
   static int valueOf(int pieceType, int color) {
     switch (color) {
-      case WHITE:
+      case Color.WHITE:
         switch (pieceType) {
           case Type.PAWN:
             return WHITE_PAWN;
@@ -207,7 +204,7 @@ final class Piece {
           default:
             throw new IllegalArgumentException();
         }
-      case BLACK:
+      case Color.BLACK:
         switch (pieceType) {
           case Type.PAWN:
             return BLACK_PAWN;
@@ -318,14 +315,14 @@ final class Piece {
       case WHITE_ROOK:
       case WHITE_QUEEN:
       case WHITE_KING:
-        return WHITE;
+        return Color.WHITE;
       case BLACK_PAWN:
       case BLACK_KNIGHT:
       case BLACK_BISHOP:
       case BLACK_ROOK:
       case BLACK_QUEEN:
       case BLACK_KING:
-        return BLACK;
+        return Color.BLACK;
       case NOPIECE:
       default:
         throw new IllegalArgumentException();

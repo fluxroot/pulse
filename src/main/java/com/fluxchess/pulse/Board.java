@@ -24,8 +24,6 @@ import com.fluxchess.jcpi.models.GenericPiece;
 
 import java.security.SecureRandom;
 
-import static com.fluxchess.pulse.Color.WHITE;
-
 /**
  * This is our internal board.
  */
@@ -49,7 +47,7 @@ final class Board {
 
   final int[] castlingRights = new int[Castling.values.length];
   int enPassantSquare = Square.NOSQUARE;
-  int activeColor = WHITE;
+  int activeColor = Color.WHITE;
   int halfmoveClock = 0;
   private int halfmoveNumber;
 
@@ -411,7 +409,7 @@ final class Board {
     if (targetPiece != Piece.NOPIECE) {
       int captureSquare = targetSquare;
       if (type == Move.Type.ENPASSANT) {
-        captureSquare += (originColor == WHITE ? Square.S : Square.N);
+        captureSquare += (originColor == Color.WHITE ? Square.S : Square.N);
       }
       assert targetPiece == board[captureSquare];
       assert Piece.getType(targetPiece) != Piece.Type.KING;
@@ -467,7 +465,7 @@ final class Board {
       zobristKey ^= zobristEnPassantSquare[enPassantSquare];
     }
     if (type == Move.Type.PAWNDOUBLE) {
-      enPassantSquare = targetSquare + (originColor == WHITE ? Square.S : Square.N);
+      enPassantSquare = targetSquare + (originColor == Color.WHITE ? Square.S : Square.N);
       assert Square.isValid(enPassantSquare);
       zobristKey ^= zobristEnPassantSquare[enPassantSquare];
     } else {
@@ -553,7 +551,7 @@ final class Board {
     if (targetPiece != Piece.NOPIECE) {
       int captureSquare = targetSquare;
       if (type == Move.Type.ENPASSANT) {
-        captureSquare += (originColor == WHITE ? Square.S : Square.N);
+        captureSquare += (originColor == Color.WHITE ? Square.S : Square.N);
         assert Square.isValid(captureSquare);
       }
       put(targetPiece, captureSquare);
