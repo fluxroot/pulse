@@ -51,7 +51,6 @@ public class ColorTest {
   public void testIsValid() {
     for (int color : Color.values) {
       assertTrue(Color.isValid(color));
-      assertEquals(color, color & Color.MASK);
     }
 
     assertFalse(Color.isValid(Color.NOCOLOR));

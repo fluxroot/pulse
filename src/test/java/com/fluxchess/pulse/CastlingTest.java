@@ -51,7 +51,6 @@ public class CastlingTest {
   public void testIsValid() {
     for (int castling : Castling.values) {
       assertTrue(Castling.isValid(castling));
-      assertEquals(castling, castling & Castling.MASK);
     }
 
     assertFalse(Castling.isValid(Castling.NOCASTLING));

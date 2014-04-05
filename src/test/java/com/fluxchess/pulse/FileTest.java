@@ -51,7 +51,6 @@ public class FileTest {
   public void testIsValid() {
     for (int file : File.values) {
       assertTrue(File.isValid(file));
-      assertEquals(file, file & File.MASK);
     }
 
     assertFalse(File.isValid(File.NOFILE));

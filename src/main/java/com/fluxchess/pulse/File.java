@@ -22,8 +22,6 @@ import com.fluxchess.jcpi.models.GenericFile;
 
 final class File {
 
-  static final int MASK = 0xF;
-
   static final int a = 0;
   static final int b = 1;
   static final int c = 2;

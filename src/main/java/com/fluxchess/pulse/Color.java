@@ -22,8 +22,6 @@ import com.fluxchess.jcpi.models.GenericColor;
 
 final class Color {
 
-  static final int MASK = 0x3;
-
   static final int WHITE = 0;
   static final int BLACK = 1;
   static final int NOCOLOR = 2;

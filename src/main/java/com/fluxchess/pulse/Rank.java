@@ -22,8 +22,6 @@ import com.fluxchess.jcpi.models.GenericRank;
 
 final class Rank {
 
-  static final int MASK = 0xF;
-
   static final int r1 = 0;
   static final int r2 = 1;
   static final int r3 = 2;

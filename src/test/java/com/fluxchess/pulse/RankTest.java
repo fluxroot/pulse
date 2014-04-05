@@ -51,7 +51,6 @@ public class RankTest {
   public void testIsValid() {
     for (int rank : Rank.values) {
       assertTrue(Rank.isValid(rank));
-      assertEquals(rank, rank & Rank.MASK);
     }
 
     assertFalse(Rank.isValid(Rank.NORANK));

@@ -22,8 +22,6 @@ import com.fluxchess.jcpi.models.GenericCastling;
 
 final class Castling {
 
-  static final int MASK = 0x3;
-
   static final int KINGSIDE = 0;
   static final int QUEENSIDE = 1;
   static final int NOCASTLING = 2;
