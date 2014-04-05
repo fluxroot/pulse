@@ -282,7 +282,7 @@ final class Move {
         && Piece.isValid(targetPiece)
         && Piece.getType(targetPiece) == Piece.Type.PAWN
         && Color.opposite(Piece.getColor(originPiece)) == Piece.getColor(targetPiece)
-        && board.enPassant == Square.valueOf(move.to);
+        && board.enPassantSquare == Square.valueOf(move.to);
   }
 
   private static boolean isCastling(GenericMove move, Board board) {

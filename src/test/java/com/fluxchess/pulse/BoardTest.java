@@ -73,19 +73,19 @@ public class BoardTest {
 
     // Test en passant
     if (genericBoard.getEnPassant() == null) {
-      assertEquals(Square.NOSQUARE, board.enPassant);
+      assertEquals(Square.NOSQUARE, board.enPassantSquare);
     } else {
-      assertEquals(genericBoard.getEnPassant(), Square.toGenericPosition(board.enPassant));
+      assertEquals(genericBoard.getEnPassant(), Square.toGenericPosition(board.enPassantSquare));
     }
 
     // Test active color
     assertEquals(genericBoard.getActiveColor(), Color.toGenericColor(board.activeColor));
 
     // Test half move clock
-    assertEquals(genericBoard.getHalfMoveClock(), board.halfMoveClock);
+    assertEquals(genericBoard.getHalfMoveClock(), board.halfmoveClock);
 
     // Test full move number
-    assertEquals(genericBoard.getFullMoveNumber(), board.getFullMoveNumber());
+    assertEquals(genericBoard.getFullMoveNumber(), board.getFullmoveNumber());
   }
 
   @Test
@@ -130,7 +130,7 @@ public class BoardTest {
     // Move white pawn
     int move = Move.valueOf(Move.Type.NORMAL, Square.a2, Square.a3, Piece.WHITE_PAWN, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
     board.makeMove(move);
-    assertEquals(0, board.halfMoveClock);
+    assertEquals(0, board.halfmoveClock);
 
     // Move black pawn
     move = Move.valueOf(Move.Type.NORMAL, Square.b7, Square.b6, Piece.BLACK_PAWN, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
@@ -139,7 +139,7 @@ public class BoardTest {
     // Move white knight
     move = Move.valueOf(Move.Type.NORMAL, Square.b1, Square.c3, Piece.WHITE_KNIGHT, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
     board.makeMove(move);
-    assertEquals(1, board.halfMoveClock);
+    assertEquals(1, board.halfmoveClock);
   }
 
   @Test
@@ -150,12 +150,12 @@ public class BoardTest {
     // Move white pawn
     int move = Move.valueOf(Move.Type.NORMAL, Square.a2, Square.a3, Piece.WHITE_PAWN, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
     board.makeMove(move);
-    assertEquals(1, board.getFullMoveNumber());
+    assertEquals(1, board.getFullmoveNumber());
 
     // Move black pawn
     move = Move.valueOf(Move.Type.NORMAL, Square.b7, Square.b6, Piece.BLACK_PAWN, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
     board.makeMove(move);
-    assertEquals(2, board.getFullMoveNumber());
+    assertEquals(2, board.getFullmoveNumber());
   }
 
   @Test
@@ -224,7 +224,7 @@ public class BoardTest {
     int move = Move.valueOf(Move.Type.PAWNDOUBLE, Square.a2, Square.a4, Piece.WHITE_PAWN, Piece.NOPIECE, Piece.Type.NOPIECETYPE);
     board.makeMove(move);
 
-    assertEquals(Square.a3, board.enPassant);
+    assertEquals(Square.a3, board.enPassantSquare);
 
     board.undoMove(move);
 
@@ -261,7 +261,7 @@ public class BoardTest {
 
     assertEquals(Piece.NOPIECE, board.board[Square.d4]);
     assertEquals(Piece.BLACK_PAWN, board.board[Square.d3]);
-    assertEquals(Square.NOSQUARE, board.enPassant);
+    assertEquals(Square.NOSQUARE, board.enPassantSquare);
 
     board.undoMove(move);
 

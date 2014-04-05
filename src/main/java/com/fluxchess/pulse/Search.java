@@ -437,7 +437,7 @@ final class Search implements Runnable {
     }
 
     // Check the repetition table and fifty move rule
-    if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfMoveClock >= 100) {
+    if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfmoveClock >= 100) {
       return Evaluation.DRAW;
     }
 
@@ -502,7 +502,7 @@ final class Search implements Runnable {
     }
 
     // Check the repetition table and fifty move rule
-    if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfMoveClock >= 100) {
+    if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfmoveClock >= 100) {
       return Evaluation.DRAW;
     }
 

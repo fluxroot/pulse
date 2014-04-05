@@ -295,7 +295,7 @@ final class MoveGenerator {
                   Move.Type.NORMAL, pawnSquare, targetSquare, pawnPiece, targetPiece, Piece.Type.NOPIECETYPE);
             }
           }
-        } else if (targetSquare == board.enPassant) {
+        } else if (targetSquare == board.enPassantSquare) {
           // En passant move
           assert (pawnColor == BLACK && Square.getRank(targetSquare) == Rank.r3)
               || (pawnColor == WHITE && Square.getRank(targetSquare) == Rank.r6);

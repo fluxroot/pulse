@@ -48,15 +48,15 @@ final class Board {
   final int[] majorMinorMaterial = new int[Color.values.length];
 
   final int[] castlingRights = new int[Castling.values.length];
-  int enPassant = Square.NOSQUARE;
+  int enPassantSquare = Square.NOSQUARE;
   int activeColor = WHITE;
-  int halfMoveClock = 0;
-  private int halfMoveNumber;
+  int halfmoveClock = 0;
+  private int halfmoveNumber;
 
   long zobristKey = 0;
-  private static final long[][] zobristPiece = new long[Piece.values.length][BOARDSIZE];
-  private static final long[] zobristCastling = new long[Castling.values.length];
-  private static final long[] zobristEnPassant = new long[BOARDSIZE];
+  private static final long[][] zobristPieces = new long[Piece.values.length][BOARDSIZE];
+  private static final long[] zobristCastlingRights = new long[Castling.values.length];
+  private static final long[] zobristEnPassantSquare = new long[BOARDSIZE];
   private static final long zobristActiveColor;
 
   // We will save some board parameters in a State before making a move.
@@ -67,8 +67,8 @@ final class Board {
   private static final class State {
     private long zobristKey = 0;
     private final int[] castlingRights = new int[Castling.values.length];
-    private int enPassant = Square.NOSQUARE;
-    private int halfMoveClock = 0;
+    private int enPassantSquare = Square.NOSQUARE;
+    private int halfmoveClock = 0;
 
     private State() {
       for (int castling : Castling.values) {
@@ -105,16 +105,16 @@ final class Board {
 
     for (int piece : Piece.values) {
       for (int i = 0; i < BOARDSIZE; ++i) {
-        zobristPiece[piece][i] = zobrist.next();
+        zobristPieces[piece][i] = zobrist.next();
       }
     }
 
     for (int castling : Castling.values) {
-      zobristCastling[castling] = zobrist.next();
+      zobristCastlingRights[castling] = zobrist.next();
     }
 
     for (int i = 0; i < BOARDSIZE; ++i) {
-      zobristEnPassant[i] = zobrist.next();
+      zobristEnPassantSquare[i] = zobrist.next();
     }
 
     zobristActiveColor = zobrist.next();
@@ -163,7 +163,7 @@ final class Board {
         );
         if (genericFile != null) {
           castlingRights[Castling.valueOf(color, castlingType)] = File.valueOf(genericFile);
-          zobristKey ^= zobristCastling[Castling.valueOf(color, castlingType)];
+          zobristKey ^= zobristCastlingRights[Castling.valueOf(color, castlingType)];
         } else {
           castlingRights[Castling.valueOf(color, castlingType)] = File.NOFILE;
         }
@@ -172,8 +172,8 @@ final class Board {
 
     // Initialize en passant
     if (genericBoard.getEnPassant() != null) {
-      enPassant = Square.valueOf(genericBoard.getEnPassant());
-      zobristKey ^= zobristEnPassant[enPassant];
+      enPassantSquare = Square.valueOf(genericBoard.getEnPassant());
+      zobristKey ^= zobristEnPassantSquare[enPassantSquare];
     }
 
     // Initialize active color
@@ -183,10 +183,10 @@ final class Board {
     }
 
     // Initialize half move clock
-    halfMoveClock = genericBoard.getHalfMoveClock();
+    halfmoveClock = genericBoard.getHalfMoveClock();
 
     // Initialize the full move number
-    setFullMoveNumber(genericBoard.getFullMoveNumber());
+    setFullmoveNumber(genericBoard.getFullMoveNumber());
   }
 
   GenericBoard toGenericBoard() {
@@ -213,18 +213,18 @@ final class Board {
     }
 
     // Set en passant
-    if (enPassant != Square.NOSQUARE) {
-      genericBoard.setEnPassant(Square.toGenericPosition(enPassant));
+    if (enPassantSquare != Square.NOSQUARE) {
+      genericBoard.setEnPassant(Square.toGenericPosition(enPassantSquare));
     }
 
     // Set active color
     genericBoard.setActiveColor(Color.toGenericColor(activeColor));
 
     // Set half move clock
-    genericBoard.setHalfMoveClock(halfMoveClock);
+    genericBoard.setHalfMoveClock(halfmoveClock);
 
     // Set full move number
-    genericBoard.setFullMoveNumber(getFullMoveNumber());
+    genericBoard.setFullMoveNumber(getFullmoveNumber());
 
     return genericBoard;
   }
@@ -233,22 +233,22 @@ final class Board {
     return toGenericBoard().toString();
   }
 
-  int getFullMoveNumber() {
-    return halfMoveNumber / 2;
+  int getFullmoveNumber() {
+    return halfmoveNumber / 2;
   }
 
-  private void setFullMoveNumber(int fullMoveNumber) {
-    assert fullMoveNumber > 0;
+  private void setFullmoveNumber(int fullmoveNumber) {
+    assert fullmoveNumber > 0;
 
-    halfMoveNumber = fullMoveNumber * 2;
+    halfmoveNumber = fullmoveNumber * 2;
     if (activeColor == Color.BLACK) {
-      ++halfMoveNumber;
+      ++halfmoveNumber;
     }
   }
 
   boolean isRepetition() {
-    // Search back until the last halfMoveClock reset
-    int j = Math.max(0, stackSize - halfMoveClock);
+    // Search back until the last halfmoveClock reset
+    int j = Math.max(0, stackSize - halfmoveClock);
     for (int i = stackSize - 2; i >= j; i -= 2) {
       if (zobristKey == stack[i].zobristKey) {
         return true;
@@ -317,7 +317,7 @@ final class Board {
 
     board[square] = piece;
 
-    zobristKey ^= zobristPiece[piece][square];
+    zobristKey ^= zobristPieces[piece][square];
   }
 
   /**
@@ -371,7 +371,7 @@ final class Board {
 
     board[square] = Piece.NOPIECE;
 
-    zobristKey ^= zobristPiece[piece][square];
+    zobristKey ^= zobristPieces[piece][square];
 
     return piece;
   }
@@ -401,11 +401,11 @@ final class Board {
       entry.castlingRights[castling] = castlingRights[castling];
     }
 
-    // Save enPassant
-    entry.enPassant = enPassant;
+    // Save enPassantSquare
+    entry.enPassantSquare = enPassantSquare;
 
-    // Save halfMoveClock
-    entry.halfMoveClock = halfMoveClock;
+    // Save halfmoveClock
+    entry.halfmoveClock = halfmoveClock;
 
     // Remove target piece and update castling rights
     if (targetPiece != Piece.NOPIECE) {
@@ -462,31 +462,31 @@ final class Board {
     // Update castling
     clearCastling(originSquare);
 
-    // Update enPassant
-    if (enPassant != Square.NOSQUARE) {
-      zobristKey ^= zobristEnPassant[enPassant];
+    // Update enPassantSquare
+    if (enPassantSquare != Square.NOSQUARE) {
+      zobristKey ^= zobristEnPassantSquare[enPassantSquare];
     }
     if (type == Move.Type.PAWNDOUBLE) {
-      enPassant = targetSquare + (originColor == WHITE ? Square.S : Square.N);
-      assert Square.isValid(enPassant);
-      zobristKey ^= zobristEnPassant[enPassant];
+      enPassantSquare = targetSquare + (originColor == WHITE ? Square.S : Square.N);
+      assert Square.isValid(enPassantSquare);
+      zobristKey ^= zobristEnPassantSquare[enPassantSquare];
     } else {
-      enPassant = Square.NOSQUARE;
+      enPassantSquare = Square.NOSQUARE;
     }
 
     // Update activeColor
     activeColor = Color.opposite(activeColor);
     zobristKey ^= zobristActiveColor;
 
-    // Update halfMoveClock
+    // Update halfmoveClock
     if (Piece.getType(originPiece) == Piece.Type.PAWN || targetPiece != Piece.NOPIECE) {
-      halfMoveClock = 0;
+      halfmoveClock = 0;
     } else {
-      ++halfMoveClock;
+      ++halfmoveClock;
     }
 
     // Update fullMoveNumber
-    ++halfMoveNumber;
+    ++halfmoveNumber;
 
     ++stackSize;
     assert stackSize < MAX_GAMEMOVES;
@@ -510,7 +510,7 @@ final class Board {
     int targetPiece = Move.getTargetPiece(move);
 
     // Update fullMoveNumber
-    --halfMoveNumber;
+    --halfmoveNumber;
 
     // Update activeColor
     activeColor = Color.opposite(activeColor);
@@ -559,11 +559,11 @@ final class Board {
       put(targetPiece, captureSquare);
     }
 
-    // Restore halfMoveClock
-    halfMoveClock = entry.halfMoveClock;
+    // Restore halfmoveClock
+    halfmoveClock = entry.halfmoveClock;
 
-    // Restore enPassant
-    enPassant = entry.enPassant;
+    // Restore enPassantSquare
+    enPassantSquare = entry.enPassantSquare;
 
     // Restore castling rights
     for (int castling : Castling.values) {
@@ -581,7 +581,7 @@ final class Board {
 
     if (castlingRights[castling] != File.NOFILE) {
       castlingRights[castling] = File.NOFILE;
-      zobristKey ^= zobristCastling[castling];
+      zobristKey ^= zobristCastlingRights[castling];
     }
   }
 
