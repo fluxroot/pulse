@@ -29,8 +29,6 @@ import java.security.SecureRandom;
  */
 final class Board {
 
-  private static final int MAX_GAMEMOVES = Search.MAX_PLY + 1024;
-
   private static final int BOARDSIZE = 128;
 
   final int[] board = new int[BOARDSIZE];
@@ -59,7 +57,7 @@ final class Board {
 
   // We will save some board parameters in a State before making a move.
   // Later we will restore them before undoing a move.
-  private final State[] stack = new State[MAX_GAMEMOVES];
+  private final State[] stack = new State[Search.MAX_MOVES];
   private int stackSize = 0;
 
   private static final class State {
@@ -482,7 +480,7 @@ final class Board {
     ++halfmoveNumber;
 
     ++stackSize;
-    assert stackSize < MAX_GAMEMOVES;
+    assert stackSize < Search.MAX_MOVES;
 
     return !isAttacked(
         Bitboard.next(kings[Color.opposite(activeColor)].squares), activeColor);

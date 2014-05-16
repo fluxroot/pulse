@@ -74,7 +74,7 @@ public class SearchTest {
   public void testMate1() throws IllegalNotationException, InterruptedException {
     final GenericMove[] bestMove = {null};
     final GenericMove[] ponderMove = {null};
-    final int[] mate = {-Evaluation.INFINITY};
+    final int[] mate = {Evaluation.NOVALUE};
 
     final Semaphore semaphore = new Semaphore(0);
 

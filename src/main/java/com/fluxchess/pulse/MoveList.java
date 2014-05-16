@@ -31,7 +31,7 @@ final class MoveList {
 
   static final class Entry {
     int move = Move.NOMOVE;
-    int value = -Evaluation.INFINITY;
+    int value = Evaluation.NOVALUE;
     final MoveVariation pv = new MoveVariation();
   }
 

@@ -39,6 +39,7 @@ final class Search implements Runnable {
 
   static final int MAX_PLY = 256;
   static final int MAX_DEPTH = 64;
+  static final int MAX_MOVES = MAX_PLY + 1024;
 
   private final Thread thread = new Thread(this);
   private final Semaphore semaphore = new Semaphore(0);
@@ -287,7 +288,7 @@ final class Search implements Runnable {
       currentMaxDepth = 0;
       sendStatus(false);
 
-      searchRoot(currentDepth, -Evaluation.INFINITY, Evaluation.INFINITY);
+      searchRoot(currentDepth, -Evaluation.INFINITE, Evaluation.INFINITE);
 
       // Sort the root move list, so that the next iteration begins with the
       // best move first.
@@ -371,7 +372,7 @@ final class Search implements Runnable {
     }
 
     for (int i = 0; i < rootMoves.size; ++i) {
-      rootMoves.entries[i].value = -Evaluation.INFINITY;
+      rootMoves.entries[i].value = -Evaluation.INFINITE;
     }
 
     for (int i = 0; i < rootMoves.size; ++i) {
@@ -441,7 +442,7 @@ final class Search implements Runnable {
     }
 
     // Initialize
-    int bestValue = -Evaluation.INFINITY;
+    int bestValue = -Evaluation.INFINITE;
     int searchedMoves = 0;
 
     boolean isCheck = board.isCheck();
@@ -506,7 +507,7 @@ final class Search implements Runnable {
     }
 
     // Initialize
-    int bestValue = -Evaluation.INFINITY;
+    int bestValue = -Evaluation.INFINITE;
     int searchedMoves = 0;
 
     boolean isCheck = board.isCheck();

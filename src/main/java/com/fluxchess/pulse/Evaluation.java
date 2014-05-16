@@ -20,10 +20,11 @@ package com.fluxchess.pulse;
 
 final class Evaluation {
 
-  static final int INFINITY = 200000;
-  static final int DRAW = 0;
+  static final int INFINITE = 200000;
   static final int CHECKMATE = 100000;
   static final int CHECKMATE_THRESHOLD = CHECKMATE - Search.MAX_PLY;
+  static final int DRAW = 0;
+  static final int NOVALUE = 300000;
 
   // Piece values as defined by Larry Kaufman
   static final int PAWN_VALUE = 100;
