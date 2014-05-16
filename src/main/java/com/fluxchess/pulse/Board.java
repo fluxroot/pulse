@@ -76,21 +76,18 @@ final class Board {
   }
 
   private static final class Zobrist {
-    private final SecureRandom random = new SecureRandom();
+    private static final SecureRandom random = new SecureRandom();
 
-    private byte[] result() {
-      // Generate some random bytes for our keys
-      byte[] bytes = new byte[16];
-      random.nextBytes(bytes);
-      return bytes;
+    private Zobrist() {
     }
 
-    private long next() {
-      byte[] result = result();
+    private static long next() {
+      byte[] bytes = new byte[16];
+      random.nextBytes(bytes);
 
       long hash = 0L;
-      for (int i = 0; i < result.length; ++i) {
-        hash ^= ((long) (result[i] & 0xFF)) << ((i * 8) % 64);
+      for (int i = 0; i < bytes.length; ++i) {
+        hash ^= ((long) (bytes[i] & 0xFF)) << ((i * 8) % 64);
       }
 
       return hash;
@@ -99,23 +96,21 @@ final class Board {
 
   // Initialize the zobrist keys
   static {
-    Zobrist zobrist = new Zobrist();
-
     for (int piece : Piece.values) {
       for (int i = 0; i < BOARDSIZE; ++i) {
-        zobristPieces[piece][i] = zobrist.next();
+        zobristPieces[piece][i] = Zobrist.next();
       }
     }
 
     for (int castling : Castling.values) {
-      zobristCastlingRights[castling] = zobrist.next();
+      zobristCastlingRights[castling] = Zobrist.next();
     }
 
     for (int i = 0; i < BOARDSIZE; ++i) {
-      zobristEnPassantSquare[i] = zobrist.next();
+      zobristEnPassantSquare[i] = Zobrist.next();
     }
 
-    zobristActiveColor = zobrist.next();
+    zobristActiveColor = Zobrist.next();
   }
 
   public Board(GenericBoard genericBoard) {
