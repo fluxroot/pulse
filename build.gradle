@@ -221,8 +221,7 @@ task dist(type: Zip) {
           version: project.version
       ])
     }
-    from 'COPYING'
-    from 'COPYING.LESSER'
+    from 'LICENSE'
     from 'src/dist/logo.bmp'
 
     from jar

@@ -1,7 +1,7 @@
 Pulse Chess
 ===========
 
-Copyright 2013-2014 Phokham Nonava  
+Copyright (C) 2013-2014 Phokham Nonava  
 http://fluxchess.com
 
 [![Build Status](https://travis-ci.org/fluxroot/pulse.png?branch=master)](https://travis-ci.org/fluxroot/pulse) [![Coverage Status](https://coveralls.io/repos/fluxroot/pulse/badge.png?branch=master)](https://coveralls.io/r/fluxroot/pulse?branch=master)
@@ -86,9 +86,8 @@ The Pulse Chess logo was created by Silvian Sylwyka. Thanks a lot!
 
 License
 -------
-Pulse Chess is released under version 3 of the [LGPL].
+Pulse Chess is released under the MIT License.
 
 
 [JCPI]: https://github.com/fluxroot/jcpi
 [Gradle]: http://gradle.org/
-[LGPL]: http://www.gnu.org/copyleft/lgpl.html
