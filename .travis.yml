@@ -1,5 +1,8 @@
 language: java
 
+env:
+- TERM=dumb
+
 install: mvn install -DskipTests -DbuildNumber="${TRAVIS_BUILD_NUMBER}" -DrevisionNumber="${TRAVIS_COMMIT}"
 
 script: mvn test -DbuildNumber="${TRAVIS_BUILD_NUMBER}" -DrevisionNumber="${TRAVIS_COMMIT}"
