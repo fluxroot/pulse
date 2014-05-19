@@ -180,9 +180,19 @@ public final class Pulse extends AbstractEngine {
 
     // Make all moves
     for (GenericMove genericMove : command.moves) {
-      // Convert the GenericMove to our internal move representation and make
-      // the move on our internal board.
-      board.makeMove(Move.valueOf(genericMove, board));
+      // Verify moves
+      MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, 1, 0, board.isCheck());
+      int move;
+      while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
+        if (Move.toGenericMove(move).equals(genericMove)) {
+          board.makeMove(move);
+          break;
+        }
+      }
+
+      if (move == Move.NOMOVE) {
+        throw new IllegalArgumentException();
+      }
     }
 
     // Don't start calculating though!

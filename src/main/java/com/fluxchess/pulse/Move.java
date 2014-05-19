@@ -7,8 +7,6 @@
 package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.jcpi.models.GenericPosition;
-import com.fluxchess.jcpi.models.GenericRank;
 
 /**
  * This class represents a move as a int value. The fields are represented by
@@ -74,72 +72,6 @@ final class Move {
       | (Piece.Type.NOPIECETYPE << PROMOTION_SHIFT);
 
   private Move() {
-  }
-
-  /**
-   * Converts a GenericMove to our internal move representation.
-   *
-   * @param genericMove the GenericMove.
-   * @param board       the Board. We need the board to figure out what type of move
-   *                    we're dealing with.
-   * @return the internal move representation.
-   */
-  static int valueOf(GenericMove genericMove, Board board) {
-    assert genericMove != null;
-    assert board != null;
-
-    if (isPromotion(genericMove, board)) {
-      int promotion;
-      if (genericMove.promotion == null) {
-        // Promote to a queen if promotion is not set
-        promotion = Piece.Type.QUEEN;
-      } else {
-        promotion = Piece.Type.valueOfPromotion(genericMove.promotion);
-      }
-      return valueOf(
-          Move.Type.PAWNPROMOTION,
-          Square.valueOf(genericMove.from),
-          Square.valueOf(genericMove.to),
-          board.board[Square.valueOf(genericMove.from)],
-          board.board[Square.valueOf(genericMove.to)],
-          promotion
-      );
-    } else if (isPawnDouble(genericMove, board)) {
-      return valueOf(
-          Move.Type.PAWNDOUBLE,
-          Square.valueOf(genericMove.from),
-          Square.valueOf(genericMove.to),
-          board.board[Square.valueOf(genericMove.from)],
-          Piece.NOPIECE,
-          Piece.Type.NOPIECETYPE
-      );
-    } else if (isEnPassant(genericMove, board)) {
-      return valueOf(
-          Move.Type.ENPASSANT,
-          Square.valueOf(genericMove.from),
-          Square.valueOf(genericMove.to),
-          board.board[Square.valueOf(genericMove.from)],
-          board.board[Square.valueOf(GenericPosition.valueOf(genericMove.to.file, genericMove.from.rank))],
-          Piece.Type.NOPIECETYPE
-      );
-    } else if (isCastling(genericMove, board)) {
-      return valueOf(
-          Move.Type.CASTLING, Square.valueOf(genericMove.from),
-          Square.valueOf(genericMove.to),
-          board.board[Square.valueOf(genericMove.from)],
-          Piece.NOPIECE,
-          Piece.Type.NOPIECETYPE
-      );
-    } else {
-      return valueOf(
-          Move.Type.NORMAL,
-          Square.valueOf(genericMove.from),
-          Square.valueOf(genericMove.to),
-          board.board[Square.valueOf(genericMove.from)],
-          board.board[Square.valueOf(genericMove.to)],
-          Piece.Type.NOPIECETYPE
-      );
-    }
   }
 
   static int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion) {
@@ -237,61 +169,6 @@ final class Move {
     assert Piece.Type.isValidPromotion(promotion) || promotion == Piece.Type.NOPIECETYPE;
 
     return promotion;
-  }
-
-  private static boolean isPromotion(GenericMove move, Board board) {
-    assert move != null;
-    assert board != null;
-
-    int originPiece = board.board[Square.valueOf(move.from)];
-
-    return (originPiece == Piece.WHITE_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R8)
-        || (originPiece == Piece.BLACK_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1);
-  }
-
-  private static boolean isPawnDouble(GenericMove move, Board board) {
-    assert move != null;
-    assert board != null;
-
-    int originPiece = board.board[Square.valueOf(move.from)];
-
-    return (originPiece == Piece.WHITE_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R4)
-        || (originPiece == Piece.BLACK_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5);
-  }
-
-  private static boolean isEnPassant(GenericMove move, Board board) {
-    assert move != null;
-    assert board != null;
-
-    int originPiece = board.board[Square.valueOf(move.from)];
-    int targetPiece = board.board[Square.valueOf(GenericPosition.valueOf(move.to.file, move.from.rank))];
-
-    return Piece.getType(originPiece) == Piece.Type.PAWN
-        && Piece.isValid(targetPiece)
-        && Piece.getType(targetPiece) == Piece.Type.PAWN
-        && Color.opposite(Piece.getColor(originPiece)) == Piece.getColor(targetPiece)
-        && board.enPassantSquare == Square.valueOf(move.to);
-  }
-
-  private static boolean isCastling(GenericMove move, Board board) {
-    assert move != null;
-    assert board != null;
-
-    int originPiece = board.board[Square.valueOf(move.from)];
-
-    return Piece.getType(originPiece) == Piece.Type.KING && (
-        // Castling WHITE kingside.
-        (move.from == GenericPosition.e1 && move.to == GenericPosition.g1)
-
-            // Castling WHITE queenside.
-            || (move.from == GenericPosition.e1 && move.to == GenericPosition.c1)
-
-            // Castling BLACK kingside.
-            || (move.from == GenericPosition.e8 && move.to == GenericPosition.g8)
-
-            // Castling BLACK queenside.
-            || (move.from == GenericPosition.e8 && move.to == GenericPosition.c8)
-    );
   }
 
 }

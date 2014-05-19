@@ -124,8 +124,20 @@ final class Search implements Runnable {
 
     Search search = new Search(protocol, board);
 
-    for (GenericMove move : searchMoves) {
-      search.searchMoves.entries[search.searchMoves.size++].move = Move.valueOf(move, board);
+    for (GenericMove genericMove : searchMoves) {
+      // Verify moves
+      MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, 1, 0, board.isCheck());
+      int move;
+      while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
+        if (Move.toGenericMove(move).equals(genericMove)) {
+          search.searchMoves.entries[search.searchMoves.size++].move = move;
+          break;
+        }
+      }
+
+      if (move == Move.NOMOVE) {
+        throw new IllegalArgumentException();
+      }
     }
 
     return search;
