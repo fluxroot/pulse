@@ -1,18 +1,8 @@
 language: java
 
-jdk:
-- oraclejdk7
+install: mvn install -DskipTests -DbuildNumber="${TRAVIS_BUILD_NUMBER}" -DrevisionNumber="${TRAVIS_COMMIT}"
 
-env:
-- TERM=dumb ORG_GRADLE_PROJECT_buildNumber="${TRAVIS_BUILD_NUMBER}" ORG_GRADLE_PROJECT_revisionNumber="${TRAVIS_COMMIT}" ORG_GRADLE_PROJECT_branchName="${TRAVIS_BRANCH}"
-
-before_install:
-- chmod +x gradlew
-
-install: ./gradlew assemble
-
-script: ./gradlew test check dist integration
+script: mvn test -DbuildNumber="${TRAVIS_BUILD_NUMBER}" -DrevisionNumber="${TRAVIS_COMMIT}"
 
 after_success:
-- ./gradlew cobertura
-- ./gradlew coveralls
+- mvn clean cobertura:cobertura coveralls:cobertura
