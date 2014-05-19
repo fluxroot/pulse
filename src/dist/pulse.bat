@@ -1,3 +1,1 @@
-#!/usr/bin/env bash
-
 java -jar pulse-@version@-uber.jar

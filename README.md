@@ -4,7 +4,7 @@ Pulse Chess
 Copyright (C) 2013-2014 Phokham Nonava  
 http://fluxchess.com
 
-[![Build Status](https://travis-ci.org/fluxroot/pulse.png?branch=master)](https://travis-ci.org/fluxroot/pulse) [![Coverage Status](https://coveralls.io/repos/fluxroot/pulse/badge.png?branch=master)](https://coveralls.io/r/fluxroot/pulse?branch=master)
+[![Build Status](https://travis-ci.org/fluxroot/pulse.svg?branch=master)](https://travis-ci.org/fluxroot/pulse) [![Coverage Status](https://img.shields.io/coveralls/fluxroot/pulse.svg)](https://coveralls.io/r/fluxroot/pulse?branch=master)
 
 
 Introduction
@@ -66,17 +66,17 @@ addition there's a basic Quiescent search to improve the game play.
 
 Build it
 --------
-Pulse Chess uses [Gradle] as build system. To build it from source, use 
+Pulse Chess uses [Maven] as build system. To build it from source, use
 the following steps. 
 
 - get it  
 `git clone https://github.com/fluxroot/pulse.git`
 
 - build it  
-`./gradlew clean dist`
+`mvn clean package`
 
 - grab it  
-`cp build/distributions/pulse-<version>.zip <installation directory>`
+`cp target/pulse-<version>.zip <installation directory>`
 
 
 Acknowledgments
@@ -90,4 +90,4 @@ Pulse Chess is released under the MIT License.
 
 
 [JCPI]: https://github.com/fluxroot/jcpi
-[Gradle]: http://gradle.org/
+[Maven]: http://maven.apache.org/
