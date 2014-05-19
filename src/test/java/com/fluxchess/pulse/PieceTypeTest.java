@@ -6,7 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericChessman;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -34,18 +33,6 @@ public class PieceTypeTest {
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericChessman() {
     Piece.Type.toGenericChessman(Piece.Type.NOPIECETYPE);
-  }
-
-  @Test
-  public void testPromotionValues() {
-    for (GenericChessman genericChessman : GenericChessman.promotions) {
-      assertEquals(genericChessman, Piece.Type.toGenericChessman(Piece.Type.valueOfPromotion(genericChessman)));
-    }
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidValueOfPromotion() {
-    Piece.Type.valueOfPromotion(GenericChessman.PAWN);
   }
 
   @Test

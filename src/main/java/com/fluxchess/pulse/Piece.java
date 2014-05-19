@@ -29,25 +29,6 @@ final class Piece {
     private Type() {
     }
 
-    static int valueOfPromotion(GenericChessman genericChessman) {
-      assert genericChessman != null;
-
-      switch (genericChessman) {
-        case KNIGHT:
-          return KNIGHT;
-        case BISHOP:
-          return BISHOP;
-        case ROOK:
-          return ROOK;
-        case QUEEN:
-          return QUEEN;
-        case PAWN:
-        case KING:
-        default:
-          throw new IllegalArgumentException();
-      }
-    }
-
     static GenericChessman toGenericChessman(int pieceType) {
       switch (pieceType) {
         case PAWN:
