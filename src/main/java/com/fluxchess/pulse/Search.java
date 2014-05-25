@@ -398,7 +398,13 @@ final class Search implements Runnable {
 
       board.makeMove(move);
       boolean isCheckingMove = board.isCheck();
-      int value = -search(depth - 1, -beta, -alpha, ply + 1, isCheckingMove);
+
+      int newDepth = depth - 1;
+      if (isCheckingMove) {
+        ++newDepth;
+      }
+
+      int value = -search(newDepth, -beta, -alpha, ply + 1, isCheckingMove);
       board.undoMove(move);
 
       if (abort) {
@@ -453,7 +459,13 @@ final class Search implements Runnable {
       if (board.makeMove(move)) {
         ++searchedMoves;
         boolean isCheckingMove = board.isCheck();
-        value = -search(depth - 1, -beta, -alpha, ply + 1, isCheckingMove);
+
+        int newDepth = depth - 1;
+        if (isCheckingMove) {
+          ++newDepth;
+        }
+
+        value = -search(newDepth, -beta, -alpha, ply + 1, isCheckingMove);
       }
       board.undoMove(move);
 
