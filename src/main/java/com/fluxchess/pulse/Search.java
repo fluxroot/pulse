@@ -397,7 +397,8 @@ final class Search implements Runnable {
       sendStatus(false);
 
       board.makeMove(move);
-      int value = -search(depth - 1, -beta, -alpha, ply + 1);
+      boolean isCheckingMove = board.isCheck();
+      int value = -search(depth - 1, -beta, -alpha, ply + 1, isCheckingMove);
       board.undoMove(move);
 
       if (abort) {
@@ -422,11 +423,11 @@ final class Search implements Runnable {
     }
   }
 
-  private int search(int depth, int alpha, int beta, int ply) {
+  private int search(int depth, int alpha, int beta, int ply, boolean isCheck) {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
       // Descend into quiescent
-      return quiescent(0, alpha, beta, ply);
+      return quiescent(0, alpha, beta, ply, isCheck);
     }
 
     updateSearch(ply);
@@ -445,15 +446,14 @@ final class Search implements Runnable {
     int bestValue = -Evaluation.INFINITE;
     int searchedMoves = 0;
 
-    boolean isCheck = board.isCheck();
-
     MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       int value = bestValue;
       if (board.makeMove(move)) {
         ++searchedMoves;
-        value = -search(depth - 1, -beta, -alpha, ply + 1);
+        boolean isCheckingMove = board.isCheck();
+        value = -search(depth - 1, -beta, -alpha, ply + 1, isCheckingMove);
       }
       board.undoMove(move);
 
@@ -493,7 +493,7 @@ final class Search implements Runnable {
     return bestValue;
   }
 
-  private int quiescent(int depth, int alpha, int beta, int ply) {
+  private int quiescent(int depth, int alpha, int beta, int ply, boolean isCheck) {
     updateSearch(ply);
 
     // Abort conditions
@@ -509,8 +509,6 @@ final class Search implements Runnable {
     // Initialize
     int bestValue = -Evaluation.INFINITE;
     int searchedMoves = 0;
-
-    boolean isCheck = board.isCheck();
 
     //### BEGIN Stand pat
     if (!isCheck) {
@@ -536,7 +534,8 @@ final class Search implements Runnable {
       int value = bestValue;
       if (board.makeMove(move)) {
         ++searchedMoves;
-        value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
+        boolean isCheckingMove = board.isCheck();
+        value = -quiescent(depth - 1, -beta, -alpha, ply + 1, isCheckingMove);
       }
       board.undoMove(move);
 
