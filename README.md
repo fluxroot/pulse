@@ -35,13 +35,11 @@ source code clean and readable. Below is a list of the major building
 blocks. 
 
 - *UCI compatible*  
-Pulse Chess uses [JCPI] for implementing the UCI protocol. Basically all 
-major features are supported including pondering. 
+Pulse Chess uses [JCPI] for implementing the UCI protocol.
 
 - *0x88 board representation*  
-To keep things simple Pulse Chess uses a 0x88 board representation. In 
-addition piece lists are kept in Bitboards. For generating the board 
-hash Zobrist hashing is used. 
+To keep things simple Pulse Chess uses a 0x88 board representation. In
+addition piece lists are kept in Bitboards.
 
 - *Only material and mobility evaluation*  
 Currently only material and mobility (to add some variation) are used 
