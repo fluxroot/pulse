@@ -1,3 +1,26 @@
+Release Notes - Pulse - Version 1.4.0
+-------------------------------------
+
+* [PULSE-31] - Change to MIT license
+* [PULSE-34] - Using Maven as build tool
+* [PULSE-30] - Change logo file format to bmp
+* [PULSE-39] - Add check extension
+* [PULSE-38] - Rewrite in check testing
+* [PULSE-33] - Remove IntelliJ IDEA settings
+* [PULSE-24] - Remove unused MASK
+* [PULSE-28] - Remove unused methods and refactor tests
+* [PULSE-19] - Remove testing and add integration source set
+* [PULSE-25] - Split Castling into Castling and Type
+* [PULSE-27] - Refactor Piece constants
+* [PULSE-26] - Refactor NOTYPE to NOMOVETYPE
+* [PULSE-32] - Make Zobrist a static utility class
+* [PULSE-35] - Rewrite move conversion from JCPI
+* [PULSE-29] - Replace assertions with exceptions
+* [PULSE-22] - Do not throw exception in isValid()
+* [PULSE-21] - Use long instead of int for number of nodes
+* [PULSE-20] - Fix Color in setFullMoveNumber()
+* [PULSE-23] - Fix insufficient material
+
 Release Notes - Pulse - Version 1.3.0
 -------------------------------------
 
