@@ -19,9 +19,8 @@ import java.io.PrintStream;
 
 /**
  * Pulse uses the Java Chess Protocol Interface (JCPI) to handle the
- * UCI protocol.
- * <p/>
- * We simply extend AbstractEngine and implement the required methods.
+ * UCI protocol. We simply extend AbstractEngine and implement the required
+ * methods.
  */
 public final class Pulse extends AbstractEngine {
 
@@ -51,6 +50,9 @@ public final class Pulse extends AbstractEngine {
   /**
    * We could also provide our own input and output streams. We could e.g.
    * connect a network stream to our engine.
+   *
+   * @param input a buffered reader.
+   * @param output a print stream.
    */
   public Pulse(BufferedReader input, PrintStream output) {
     super(input, output);
@@ -61,6 +63,8 @@ public final class Pulse extends AbstractEngine {
   /**
    * We could also provide our own IProtocolHandler. We will use this
    * constructor in our unit tests.
+   *
+   * @param handler a protocol handler.
    */
   public Pulse(IProtocolHandler handler) {
     super(handler);
