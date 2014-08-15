@@ -15,7 +15,19 @@ final class Bitboard {
   long squares = 0;
 
   static int next(long squares) {
-    return Square.toX88Square(Long.numberOfTrailingZeros(squares));
+    return toX88Square(Long.numberOfTrailingZeros(squares));
+  }
+
+  private static int toX88Square(int square) {
+    assert square >= 0 && square < Long.SIZE;
+
+    return ((square & ~7) << 1) | (square & 7);
+  }
+
+  private static int toBitSquare(int square) {
+    assert Square.isValid(square);
+
+    return ((square & ~7) >>> 1) | (square & 7);
   }
 
   int size() {
@@ -24,22 +36,22 @@ final class Bitboard {
 
   void add(int square) {
     assert Square.isValid(square);
-    assert (squares & (1L << Square.toBitSquare(square))) == 0
+    assert (squares & (1L << toBitSquare(square))) == 0
         : String.format("squares = %d, 0x88 square = %d, bit square = %d",
-        squares, square, Square.toBitSquare(square)
+        squares, square, toBitSquare(square)
     );
 
-    squares |= 1L << Square.toBitSquare(square);
+    squares |= 1L << toBitSquare(square);
   }
 
   void remove(int square) {
     assert Square.isValid(square);
-    assert (squares & (1L << Square.toBitSquare(square))) != 0
+    assert (squares & (1L << toBitSquare(square))) != 0
         : String.format("squares = %d, 0x88 square = %d, bit square = %d",
-        squares, square, Square.toBitSquare(square)
+        squares, square, toBitSquare(square)
     );
 
-    squares &= ~(1L << Square.toBitSquare(square));
+    squares &= ~(1L << toBitSquare(square));
   }
 
 }
