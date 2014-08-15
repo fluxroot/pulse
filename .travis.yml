@@ -3,9 +3,9 @@ language: java
 env:
 - TERM=dumb
 
-install: mvn install -DskipTests -DbuildNumber=${TRAVIS_BUILD_NUMBER} -DrevisionNumber=${TRAVIS_COMMIT}
+install: mvn install -DskipTests
 
-script: mvn test -DbuildNumber=${TRAVIS_BUILD_NUMBER} -DrevisionNumber=${TRAVIS_COMMIT}
+script: mvn test
 
 after_success:
 - mvn clean cobertura:cobertura coveralls:cobertura
