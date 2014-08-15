@@ -22,19 +22,6 @@ final class Evaluation {
   static final int QUEEN_VALUE = 975;
   static final int KING_VALUE = 20000;
 
-  // If there are two minor pieces captured, we are entering the middlegame
-  private static final int PHASE_OPENING_MATERIAL = 2 * KNIGHT_VALUE
-      + 4 * BISHOP_VALUE
-      + 4 * ROOK_VALUE
-      + 2 * QUEEN_VALUE;
-
-  // If our major/minor material is equal to a queen and a rook, we are entering the endgame
-  private static final int PHASE_ENDGAME_MATERIAL = ROOK_VALUE + QUEEN_VALUE;
-
-  // Within the phase interval we are using the tapered eval to make a smooth transition
-  // from the opening to the endgame
-  private static final int PHASE_INTERVAL_MATERIAL = PHASE_OPENING_MATERIAL - PHASE_ENDGAME_MATERIAL;
-
   static final int TEMPO = 1;
 
   static int materialWeight = 100;
@@ -53,31 +40,24 @@ final class Evaluation {
     // Initialize
     int myColor = board.activeColor;
     int oppositeColor = Color.opposite(myColor);
-    int opening = 0;
-    int endgame = 0;
+    int value = 0;
 
     // Evaluate material
     int materialScore = (evaluateMaterial(myColor, board) - evaluateMaterial(oppositeColor, board))
         * materialWeight / MAX_WEIGHT;
-    opening += materialScore;
-    endgame += materialScore;
+    value += materialScore;
 
     // Evaluate mobility
     int mobilityScore = (evaluateMobility(myColor, board) - evaluateMobility(oppositeColor, board))
         * mobilityWeight / MAX_WEIGHT;
-    opening += mobilityScore;
-    endgame += mobilityScore;
+    value += mobilityScore;
 
     // Evaluate castling
     int castlingScore = (evaluateCastling(myColor, board) - evaluateCastling(oppositeColor, board));
-    opening += castlingScore;
+    value += castlingScore;
 
     // Add Tempo
-    opening += TEMPO;
-    endgame += TEMPO;
-
-    // Interpolate opening and endgame
-    int value = interpolate(opening, endgame, board);
+    value += TEMPO;
 
     // This is just a safe guard to protect against overflow in our evaluation
     // function.
@@ -201,22 +181,6 @@ final class Evaluation {
       default:
         throw new IllegalArgumentException();
     }
-  }
-
-  static int interpolate(int opening, int endgame, Board board) {
-    assert board != null;
-
-    int phase;
-    int material = board.majorMinorMaterial[Color.WHITE] + board.majorMinorMaterial[Color.BLACK];
-    if (material >= PHASE_OPENING_MATERIAL) {
-      phase = PHASE_INTERVAL_MATERIAL;
-    } else if (material <= PHASE_ENDGAME_MATERIAL) {
-      phase = 0;
-    } else {
-      phase = material - PHASE_ENDGAME_MATERIAL;
-    }
-
-    return (opening * phase + endgame * (PHASE_INTERVAL_MATERIAL - phase)) / PHASE_INTERVAL_MATERIAL;
   }
 
 }
