@@ -18,8 +18,8 @@ Search::Timer::Timer(bool& timerStopped, bool& doTimeManagement, int& currentDep
 }
 
 void Search::Timer::run(uint64_t searchTime) {
-  std::unique_lock<std::mutex> mutex(waitMutex);
-  if (waitCondition.wait_for(mutex, std::chrono::milliseconds(searchTime)) == std::cv_status::timeout) {
+  std::unique_lock<std::mutex> lock(mutex);
+  if (condition.wait_for(lock, std::chrono::milliseconds(searchTime)) == std::cv_status::timeout) {
     timerStopped = true;
 
     // If we finished the first iteration, we should have a result.
@@ -35,8 +35,26 @@ void Search::Timer::start(uint64_t searchTime) {
 }
 
 void Search::Timer::stop() {
-  waitCondition.notify_all();
+  condition.notify_all();
   thread.join();
+}
+
+Search::Semaphore::Semaphore(int permits)
+    : permits(permits) {
+}
+
+void Search::Semaphore::acquire() {
+  std::unique_lock<std::mutex> lock(mutex);
+  while (permits == 0) {
+    condition.wait(lock);
+  }
+  --permits;
+}
+
+void Search::Semaphore::release() {
+  std::unique_lock<std::mutex> lock(mutex);
+  ++permits;
+  condition.notify_one();
 }
 
 std::unique_ptr<Search> Search::newDepthSearch(Board& board, int searchDepth) {
@@ -132,15 +150,16 @@ std::unique_ptr<Search> Search::newPonderSearch(
 }
 
 Search::Search(Board& board)
-    : board(board), timer(timerStopped, doTimeManagement, currentDepth, initialDepth, abort) {
+    : board(board),
+    timer(timerStopped, doTimeManagement, currentDepth, initialDepth, abort),
+    semaphore(0) {
 }
 
 void Search::start() {
   if (!running) {
     running = true;
     thread = std::thread(&Search::run, this);
-    std::unique_lock<std::mutex> mutex(startMutex);
-    startCondition.wait(mutex);
+    semaphore.acquire();
   }
 }
 
@@ -189,7 +208,7 @@ void Search::run() {
   }
 
   // Go...
-  startCondition.notify_all();
+  semaphore.release();
 
   //### BEGIN Iterative Deepening
   for (int depth = initialDepth; depth <= searchDepth; ++depth) {

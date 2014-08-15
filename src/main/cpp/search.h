@@ -48,8 +48,8 @@ private:
     void start(uint64_t searchTime);
     void stop();
   private:
-    std::mutex waitMutex;
-    std::condition_variable waitCondition;
+    std::mutex mutex;
+    std::condition_variable condition;
     std::thread thread;
 
     bool& timerStopped;
@@ -62,10 +62,21 @@ private:
     void run(uint64_t searchTime);
   };
 
+  class Semaphore {
+  public:
+    Semaphore(int permits);
+
+    void acquire();
+    void release();
+  private:
+    int permits;
+    std::mutex mutex;
+    std::condition_variable condition;
+  };
+
   std::thread thread;
+  Semaphore semaphore;
   bool running = false;
-  std::mutex startMutex;
-  std::condition_variable startCondition;
 
   Board& board;
   Evaluation evaluation;
