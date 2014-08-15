@@ -23,7 +23,7 @@ public class CastlingTest {
   @Test
   public void testValues() {
     for (int color : Color.values) {
-      for (int castlingType : Castling.Type.values) {
+      for (int castlingType : CastlingType.values) {
         int castling = Castling.valueOf(color, castlingType);
 
         assertTrue(Castling.isValid(castling));

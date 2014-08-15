@@ -48,8 +48,8 @@ public class BoardTest {
 
     // Test castling
     for (int color : Color.values) {
-      for (int castlingType : Castling.Type.values) {
-        GenericFile genericFile = genericBoard.getCastling(Color.toGenericColor(color), Castling.Type.toGenericCastling(castlingType));
+      for (int castlingType : CastlingType.values) {
+        GenericFile genericFile = genericBoard.getCastling(Color.toGenericColor(color), CastlingType.toGenericCastling(castlingType));
         int file = board.castlingRights[Castling.valueOf(color, castlingType)];
         if (genericFile == null) {
           assertEquals(File.NOFILE, file);

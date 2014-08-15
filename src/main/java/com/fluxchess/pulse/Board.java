@@ -136,9 +136,9 @@ final class Board {
 
     // Initialize castling
     for (int color : Color.values) {
-      for (int castlingType : Castling.Type.values) {
+      for (int castlingType : CastlingType.values) {
         GenericFile genericFile = genericBoard.getCastling(
-            Color.toGenericColor(color), Castling.Type.toGenericCastling(castlingType)
+            Color.toGenericColor(color), CastlingType.toGenericCastling(castlingType)
         );
         if (genericFile != null) {
           castlingRights[Castling.valueOf(color, castlingType)] = File.valueOf(genericFile);
@@ -180,11 +180,11 @@ final class Board {
 
     // Set castling
     for (int color : Color.values) {
-      for (int castlingType : Castling.Type.values) {
+      for (int castlingType : CastlingType.values) {
         if (castlingRights[Castling.valueOf(color, castlingType)] != File.NOFILE) {
           genericBoard.setCastling(
               Color.toGenericColor(color),
-              Castling.Type.toGenericCastling(castlingType),
+              CastlingType.toGenericCastling(castlingType),
               File.toGenericFile(castlingRights[Castling.valueOf(color, castlingType)])
           );
         }

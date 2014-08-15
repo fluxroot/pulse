@@ -17,13 +17,13 @@ public class CastlingTypeTest {
 
   @Test
   public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    assertUtilityClassWellDefined(Castling.Type.class);
+    assertUtilityClassWellDefined(CastlingType.class);
   }
 
   @Test
   public void testValues() {
-    for (int castlingType : Castling.Type.values) {
-      assertEquals(castlingType, Castling.Type.values[castlingType]);
+    for (int castlingType : CastlingType.values) {
+      assertEquals(castlingType, CastlingType.values[castlingType]);
     }
   }
 
