@@ -244,7 +244,7 @@ void Search::run() {
       std::cout << " ponder " << Move::toNotation(rootMoves.entries[0]->pv.moves[1]);
     }
   } else {
-    std::cout << "nomove";
+    std::cout << "bestmove nomove";
   }
 
   std::cout << std::endl;
