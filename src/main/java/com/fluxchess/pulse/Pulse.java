@@ -182,16 +182,18 @@ public final class Pulse extends AbstractEngine {
     for (GenericMove genericMove : command.moves) {
       // Verify moves
       MoveGenerator moveGenerator = new MoveGenerator();
-      moveGenerator.initialize(board, 1, board.isCheck());
-      int move;
-      while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
+      MoveList moves = moveGenerator.getLegalMoves(board, 1, board.isCheck());
+      boolean found = false;
+      for (int i = 0; i < moves.size; ++i) {
+        int move = moves.entries[i].move;
         if (Move.toGenericMove(move).equals(genericMove)) {
           board.makeMove(move);
+          found = true;
           break;
         }
       }
 
-      if (move == Move.NOMOVE) {
+      if (!found) {
         throw new IllegalArgumentException();
       }
     }

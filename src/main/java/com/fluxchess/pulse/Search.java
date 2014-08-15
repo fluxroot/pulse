@@ -131,16 +131,18 @@ final class Search implements Runnable {
     for (GenericMove genericMove : searchMoves) {
       // Verify moves
       MoveGenerator moveGenerator = new MoveGenerator();
-      moveGenerator.initialize(board, 1, board.isCheck());
-      int move;
-      while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
+      MoveList moves = moveGenerator.getLegalMoves(board, 1, board.isCheck());
+      boolean found = false;
+      for (int i = 0; i < moves.size; ++i) {
+        int move = moves.entries[i].move;
         if (Move.toGenericMove(move).equals(genericMove)) {
           search.searchMoves.entries[search.searchMoves.size++].move = move;
+          found = true;
           break;
         }
       }
 
-      if (move == Move.NOMOVE) {
+      if (!found) {
         throw new IllegalArgumentException();
       }
     }
@@ -280,9 +282,9 @@ final class Search implements Runnable {
     // Populate root move list
     boolean isCheck = board.isCheck();
     MoveGenerator moveGenerator = moveGenerators[0];
-    moveGenerator.initialize(board, 1, isCheck);
-    int move;
-    while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
+    MoveList moves = moveGenerator.getLegalMoves(board, 1, isCheck);
+    for (int i = 0; i < moves.size; ++i) {
+      int move = moves.entries[i].move;
       rootMoves.entries[rootMoves.size].move = move;
       rootMoves.entries[rootMoves.size].pv.moves[0] = move;
       rootMoves.entries[rootMoves.size].pv.size = 1;
@@ -463,9 +465,9 @@ final class Search implements Runnable {
     int searchedMoves = 0;
 
     MoveGenerator moveGenerator = moveGenerators[ply];
-    moveGenerator.initialize(board, depth, isCheck);
-    int move;
-    while ((move = moveGenerator.next()) != Move.NOMOVE) {
+    MoveList moves = moveGenerator.getMoves(board, depth, isCheck);
+    for (int i = 0; i < moves.size; ++i) {
+      int move = moves.entries[i].move;
       int value = bestValue;
       if (board.makeMove(move)) {
         ++searchedMoves;
@@ -552,9 +554,9 @@ final class Search implements Runnable {
 
     // Only generate capturing moves or evasion moves, in case we are in check.
     MoveGenerator moveGenerator = moveGenerators[ply];
-    moveGenerator.initialize(board, depth, isCheck);
-    int move;
-    while ((move = moveGenerator.next()) != Move.NOMOVE) {
+    MoveList moves = moveGenerator.getMoves(board, depth, isCheck);
+    for (int i = 0; i < moves.size; ++i) {
+      int move = moves.entries[i].move;
       int value = bestValue;
       if (board.makeMove(move)) {
         ++searchedMoves;

@@ -16,6 +16,9 @@ final class PerftPerformance {
 
   private static final Logger LOG = LoggerFactory.getLogger(PerftPerformance.class);
 
+  private static final int MAX_DEPTH = 6;
+  private static final MoveGenerator[] moveGenerators = new MoveGenerator[MAX_DEPTH];
+
   private PerftPerformance() {
   }
 
@@ -25,7 +28,11 @@ final class PerftPerformance {
 
     GenericBoard genericBoard = new GenericBoard(GenericBoard.STANDARDSETUP);
     Board board = new Board(genericBoard);
-    int depth = 6;
+    int depth = MAX_DEPTH;
+
+    for (int i = 0; i < MAX_DEPTH; ++i) {
+      moveGenerators[i] = new MoveGenerator();
+    }
 
     LOG.info(String.format("Testing %s at depth %d", genericBoard.toString(), depth));
 
@@ -59,10 +66,10 @@ final class PerftPerformance {
     int totalNodes = 0;
 
     boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = new MoveGenerator();
-    moveGenerator.initialize(board, depth, isCheck);
-    int move;
-    while ((move = moveGenerator.next()) != Move.NOMOVE) {
+    MoveGenerator moveGenerator = moveGenerators[ply];
+    MoveList moves = moveGenerator.getMoves(board, depth, isCheck);
+    for (int i = 0; i < moves.size; ++i) {
+      int move = moves.entries[i].move;
       long nodes = 0;
       if (board.makeMove(move)) {
         nodes = miniMax(depth - 1, board, ply + 1);

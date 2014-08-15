@@ -9,6 +9,7 @@ package com.fluxchess.pulse;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.models.IllegalNotationException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -20,6 +21,16 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class MoveGeneratorTest {
+
+  private static final int MAX_DEPTH = 6;
+  private static final MoveGenerator[] moveGenerators = new MoveGenerator[MAX_DEPTH];
+
+  @BeforeClass
+  public static void setUpClass() {
+    for (int i = 0; i < MAX_DEPTH; ++i) {
+      moveGenerators[i] = new MoveGenerator();
+    }
+  }
 
   @Test
   public void testPerft() throws IOException, IllegalNotationException {
@@ -54,7 +65,9 @@ public class MoveGeneratorTest {
   private long miniMax(int depth, Board board, int ply) {
     long totalNodes = 0;
 
-    MoveList moves = getAll(depth, board, ply);
+    boolean isCheck = board.isCheck();
+    MoveGenerator moveGenerator = moveGenerators[ply];
+    MoveList moves = moveGenerator.getLegalMoves(board, depth, isCheck);
 
     if (depth <= 1) {
       return moves.size;
@@ -81,7 +94,9 @@ public class MoveGeneratorTest {
     ));
 
     // Get actual moves
-    MoveList moves = getAll(depth, board, ply);
+    boolean isCheck = board.isCheck();
+    MoveGenerator moveGenerator = moveGenerators[ply];
+    MoveList moves = moveGenerator.getLegalMoves(board, depth, isCheck);
     Collection<GenericMove> actualMoves = new HashSet<>();
     for (int i = 0; i < moves.size; ++i) {
       actualMoves.add(Move.toGenericMove(moves.entries[i].move));
@@ -119,20 +134,6 @@ public class MoveGeneratorTest {
     }
 
     return message;
-  }
-
-  private MoveList getAll(int depth, Board board, int ply) {
-    MoveList moves = new MoveList();
-
-    boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = new MoveGenerator();
-    moveGenerator.initialize(board, depth, isCheck);
-    int move;
-    while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
-      moves.entries[moves.size++].move = move;
-    }
-
-    return moves;
   }
 
 }

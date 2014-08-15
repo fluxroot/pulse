@@ -38,151 +38,94 @@ final class MoveGenerator {
       Square.NE, Square.NW, Square.SE, Square.SW
   };
 
-  // We will use a staged move generation so we can easily extend it with
-  // other features like transposition tables.
-  private static final State[] mainStates = {State.BEGIN, State.MAIN, State.END};
-  private static final State[] quiescentStates = {State.BEGIN, State.QUIESCENT, State.END};
-
-  private Board board = null;
-  private boolean isCheck = false;
-
-  private State[] states = null;
-  private int stateIndex = 0;
-
   private final MoveList moves = new MoveList();
-  private int moveIndex = 0;
 
-  private static enum State {
-    BEGIN,
-    MAIN,
-    QUIESCENT,
-    END
-  }
-
-  void initialize(Board board, int depth, boolean isCheck) {
+  MoveList getLegalMoves(Board board, int depth, boolean isCheck) {
     assert board != null;
 
-    this.board = board;
-    this.isCheck = isCheck;
-    this.stateIndex = 0;
-    this.moves.size = 0;
-    this.moveIndex = 0;
+    MoveList legalMoves = getMoves(board, depth, isCheck);
+
+    int size = legalMoves.size;
+    legalMoves.size = 0;
+    for (int i = 0; i < size; ++i) {
+      int move = legalMoves.entries[i].move;
+      boolean isLegal = board.makeMove(move);
+      board.undoMove(move);
+      if (isLegal) {
+        legalMoves.entries[legalMoves.size++].move = move;
+      }
+    }
+
+    return legalMoves;
+  }
+
+  MoveList getMoves(Board board, int depth, boolean isCheck) {
+    assert board != null;
+
+    moves.size = 0;
 
     if (depth > 0) {
-      this.states = mainStates;
+      // Generate main moves
+
+      addMoves(moves, board);
+
+      if (!isCheck) {
+        int square = Bitboard.next(board.kings[board.activeColor].squares);
+        addCastlingMoves(moves, square, board);
+      }
     } else {
-      this.states = quiescentStates;
-    }
-  }
+      // Generate quiescent moves
 
-  /**
-   * Returns the next legal move.
-   */
-  public int nextLegal() {
-    boolean isLegal = false;
-    int move = Move.NOMOVE;
+      addMoves(moves, board);
 
-    while (!isLegal && (move = next()) != Move.NOMOVE) {
-      isLegal = board.makeMove(move);
-      board.undoMove(move);
-    }
-
-    return move;
-  }
-
-  /**
-   * Returns the next pseudo-legal move. We will go through our states and
-   * generate the appropriate moves for the current state.
-   *
-   * @return the next pseudo-legal move,
-   * or Move.NOMOVE if there is no next move.
-   */
-  public int next() {
-    while (true) {
-      // Check whether we have any move in the list
-      if (moveIndex < moves.size) {
-        int move = moves.entries[moveIndex++].move;
-
-        switch (states[stateIndex]) {
-          case MAIN:
-            break;
-          case QUIESCENT:
-            // Return only capturing moves, if not in check
-            if (!isCheck && Move.getTargetPiece(move) == Piece.NOPIECE) {
-              continue;
-            }
-            break;
-          default:
-            throw new IllegalStateException();
-        }
-
-        return move;
-      }
-
-      // If we don't have any move in the list, lets generate the moves for the
-      // next state.
-      ++stateIndex;
-      moveIndex = 0;
-      moves.size = 0;
-
-      // We simply generate all moves at once here. However we could also
-      // generate capturing moves first and then all non-capturing moves.
-      switch (states[stateIndex]) {
-        case MAIN:
-          addMoves(moves);
-
-          if (!isCheck) {
-            int square = Bitboard.next(board.kings[board.activeColor].squares);
-            addCastlingMoves(moves, square);
+      if (!isCheck) {
+        int size = moves.size;
+        moves.size = 0;
+        for (int i = 0; i < size; ++i) {
+          if (Move.getTargetPiece(moves.entries[i].move) != Piece.NOPIECE) {
+            // Add only capturing moves
+            moves.entries[moves.size++].move = moves.entries[i].move;
           }
-
-          moves.rateFromMVVLVA();
-          moves.sort();
-          break;
-        case QUIESCENT:
-          addMoves(moves);
-
-          moves.rateFromMVVLVA();
-          moves.sort();
-          break;
-        case END:
-          return Move.NOMOVE;
-        default:
-          throw new IllegalStateException();
+        }
       }
     }
+
+    moves.rateFromMVVLVA();
+    moves.sort();
+
+    return moves;
   }
 
-  private void addMoves(MoveList list) {
+  private void addMoves(MoveList list, Board board) {
     assert list != null;
 
     int activeColor = board.activeColor;
 
     for (long squares = board.pawns[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addPawnMoves(list, square);
+      addPawnMoves(list, square, board);
     }
     for (long squares = board.knights[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, moveDeltaKnight);
+      addMoves(list, square, moveDeltaKnight, board);
     }
     for (long squares = board.bishops[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, moveDeltaBishop);
+      addMoves(list, square, moveDeltaBishop, board);
     }
     for (long squares = board.rooks[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, moveDeltaRook);
+      addMoves(list, square, moveDeltaRook, board);
     }
     for (long squares = board.queens[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, moveDeltaQueen);
+      addMoves(list, square, moveDeltaQueen, board);
     }
     int square = Bitboard.next(board.kings[activeColor].squares);
-    addMoves(list, square, moveDeltaKing);
+    addMoves(list, square, moveDeltaKing, board);
   }
 
-  private void addMoves(MoveList list, int originSquare, int[] moveDelta) {
+  private void addMoves(MoveList list, int originSquare, int[] moveDelta, Board board) {
     assert list != null;
     assert Square.isValid(originSquare);
     assert moveDelta != null;
@@ -223,7 +166,7 @@ final class MoveGenerator {
     }
   }
 
-  private void addPawnMoves(MoveList list, int pawnSquare) {
+  private void addPawnMoves(MoveList list, int pawnSquare, Board board) {
     assert list != null;
     assert Square.isValid(pawnSquare);
 
@@ -318,7 +261,7 @@ final class MoveGenerator {
     }
   }
 
-  private void addCastlingMoves(MoveList list, int kingSquare) {
+  private void addCastlingMoves(MoveList list, int kingSquare, Board board) {
     assert list != null;
     assert Square.isValid(kingSquare);
 
