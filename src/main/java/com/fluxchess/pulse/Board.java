@@ -262,31 +262,31 @@ final class Board {
     int color = Piece.getColor(piece);
 
     switch (pieceType) {
-      case Piece.Type.PAWN:
+      case PieceType.PAWN:
         pawns[color].add(square);
         material[color] += Evaluation.PAWN_VALUE;
         break;
-      case Piece.Type.KNIGHT:
+      case PieceType.KNIGHT:
         knights[color].add(square);
         material[color] += Evaluation.KNIGHT_VALUE;
         majorMinorMaterial[color] += Evaluation.KNIGHT_VALUE;
         break;
-      case Piece.Type.BISHOP:
+      case PieceType.BISHOP:
         bishops[color].add(square);
         material[color] += Evaluation.BISHOP_VALUE;
         majorMinorMaterial[color] += Evaluation.BISHOP_VALUE;
         break;
-      case Piece.Type.ROOK:
+      case PieceType.ROOK:
         rooks[color].add(square);
         material[color] += Evaluation.ROOK_VALUE;
         majorMinorMaterial[color] += Evaluation.ROOK_VALUE;
         break;
-      case Piece.Type.QUEEN:
+      case PieceType.QUEEN:
         queens[color].add(square);
         material[color] += Evaluation.QUEEN_VALUE;
         majorMinorMaterial[color] += Evaluation.QUEEN_VALUE;
         break;
-      case Piece.Type.KING:
+      case PieceType.KING:
         kings[color].add(square);
         material[color] += Evaluation.KING_VALUE;
         break;
@@ -316,31 +316,31 @@ final class Board {
     int color = Piece.getColor(piece);
 
     switch (pieceType) {
-      case Piece.Type.PAWN:
+      case PieceType.PAWN:
         pawns[color].remove(square);
         material[color] -= Evaluation.PAWN_VALUE;
         break;
-      case Piece.Type.KNIGHT:
+      case PieceType.KNIGHT:
         knights[color].remove(square);
         material[color] -= Evaluation.KNIGHT_VALUE;
         majorMinorMaterial[color] -= Evaluation.KNIGHT_VALUE;
         break;
-      case Piece.Type.BISHOP:
+      case PieceType.BISHOP:
         bishops[color].remove(square);
         material[color] -= Evaluation.BISHOP_VALUE;
         majorMinorMaterial[color] -= Evaluation.BISHOP_VALUE;
         break;
-      case Piece.Type.ROOK:
+      case PieceType.ROOK:
         rooks[color].remove(square);
         material[color] -= Evaluation.ROOK_VALUE;
         majorMinorMaterial[color] -= Evaluation.ROOK_VALUE;
         break;
-      case Piece.Type.QUEEN:
+      case PieceType.QUEEN:
         queens[color].remove(square);
         material[color] -= Evaluation.QUEEN_VALUE;
         majorMinorMaterial[color] -= Evaluation.QUEEN_VALUE;
         break;
-      case Piece.Type.KING:
+      case PieceType.KING:
         kings[color].remove(square);
         material[color] -= Evaluation.KING_VALUE;
         break;
@@ -393,7 +393,7 @@ final class Board {
         captureSquare += (originColor == Color.WHITE ? Square.S : Square.N);
       }
       assert targetPiece == board[captureSquare];
-      assert Piece.getType(targetPiece) != Piece.Type.KING;
+      assert Piece.getType(targetPiece) != PieceType.KING;
       remove(captureSquare);
 
       clearCastling(captureSquare);
@@ -433,7 +433,7 @@ final class Board {
           throw new IllegalArgumentException();
       }
 
-      assert Piece.getType(board[rookOriginSquare]) == Piece.Type.ROOK;
+      assert Piece.getType(board[rookOriginSquare]) == PieceType.ROOK;
       int rookPiece = remove(rookOriginSquare);
       put(rookPiece, rookTargetSquare);
     }
@@ -458,7 +458,7 @@ final class Board {
     zobristKey ^= zobristActiveColor;
 
     // Update halfmoveClock
-    if (Piece.getType(originPiece) == Piece.Type.PAWN || targetPiece != Piece.NOPIECE) {
+    if (Piece.getType(originPiece) == PieceType.PAWN || targetPiece != Piece.NOPIECE) {
       halfmoveClock = 0;
     } else {
       ++halfmoveClock;
@@ -519,7 +519,7 @@ final class Board {
           throw new IllegalArgumentException();
       }
 
-      assert Piece.getType(board[rookTargetSquare]) == Piece.Type.ROOK;
+      assert Piece.getType(board[rookTargetSquare]) == PieceType.ROOK;
       int rookPiece = remove(rookTargetSquare);
       put(rookPiece, rookOriginSquare);
     }
@@ -611,7 +611,7 @@ final class Board {
     assert Color.isValid(attackerColor);
 
     // Pawn attacks
-    int pawnPiece = Piece.valueOf(Piece.Type.PAWN, attackerColor);
+    int pawnPiece = Piece.valueOf(PieceType.PAWN, attackerColor);
     for (int i = 1; i < MoveGenerator.moveDeltaPawn[attackerColor].length; ++i) {
       int attackerSquare = targetSquare - MoveGenerator.moveDeltaPawn[attackerColor][i];
       if (Square.isValid(attackerSquare)) {
@@ -624,23 +624,23 @@ final class Board {
     }
 
     return isAttacked(targetSquare,
-        Piece.valueOf(Piece.Type.KNIGHT, attackerColor),
+        Piece.valueOf(PieceType.KNIGHT, attackerColor),
         MoveGenerator.moveDeltaKnight)
 
         // The queen moves like a bishop, so check both piece types
         || isAttacked(targetSquare,
-        Piece.valueOf(Piece.Type.BISHOP, attackerColor),
-        Piece.valueOf(Piece.Type.QUEEN, attackerColor),
+        Piece.valueOf(PieceType.BISHOP, attackerColor),
+        Piece.valueOf(PieceType.QUEEN, attackerColor),
         MoveGenerator.moveDeltaBishop)
 
         // The queen moves like a rook, so check both piece types
         || isAttacked(targetSquare,
-        Piece.valueOf(Piece.Type.ROOK, attackerColor),
-        Piece.valueOf(Piece.Type.QUEEN, attackerColor),
+        Piece.valueOf(PieceType.ROOK, attackerColor),
+        Piece.valueOf(PieceType.QUEEN, attackerColor),
         MoveGenerator.moveDeltaRook)
 
         || isAttacked(targetSquare,
-        Piece.valueOf(Piece.Type.KING, attackerColor),
+        Piece.valueOf(PieceType.KING, attackerColor),
         MoveGenerator.moveDeltaKing);
   }
 

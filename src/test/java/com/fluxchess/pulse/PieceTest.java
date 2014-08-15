@@ -23,7 +23,7 @@ public class PieceTest {
   @Test
   public void testValues() {
     for (int color : Color.values) {
-      for (int pieceType : Piece.Type.values) {
+      for (int pieceType : PieceType.values) {
         int piece = Piece.valueOf(pieceType, color);
 
         assertTrue(Piece.isValid(piece));
@@ -41,18 +41,18 @@ public class PieceTest {
 
   @Test
   public void testGetType() {
-    assertEquals(Piece.Type.PAWN, Piece.getType(Piece.WHITE_PAWN));
-    assertEquals(Piece.Type.PAWN, Piece.getType(Piece.BLACK_PAWN));
-    assertEquals(Piece.Type.KNIGHT, Piece.getType(Piece.WHITE_KNIGHT));
-    assertEquals(Piece.Type.KNIGHT, Piece.getType(Piece.BLACK_KNIGHT));
-    assertEquals(Piece.Type.BISHOP, Piece.getType(Piece.WHITE_BISHOP));
-    assertEquals(Piece.Type.BISHOP, Piece.getType(Piece.BLACK_BISHOP));
-    assertEquals(Piece.Type.ROOK, Piece.getType(Piece.WHITE_ROOK));
-    assertEquals(Piece.Type.ROOK, Piece.getType(Piece.BLACK_ROOK));
-    assertEquals(Piece.Type.QUEEN, Piece.getType(Piece.WHITE_QUEEN));
-    assertEquals(Piece.Type.QUEEN, Piece.getType(Piece.BLACK_QUEEN));
-    assertEquals(Piece.Type.KING, Piece.getType(Piece.WHITE_KING));
-    assertEquals(Piece.Type.KING, Piece.getType(Piece.BLACK_KING));
+    assertEquals(PieceType.PAWN, Piece.getType(Piece.WHITE_PAWN));
+    assertEquals(PieceType.PAWN, Piece.getType(Piece.BLACK_PAWN));
+    assertEquals(PieceType.KNIGHT, Piece.getType(Piece.WHITE_KNIGHT));
+    assertEquals(PieceType.KNIGHT, Piece.getType(Piece.BLACK_KNIGHT));
+    assertEquals(PieceType.BISHOP, Piece.getType(Piece.WHITE_BISHOP));
+    assertEquals(PieceType.BISHOP, Piece.getType(Piece.BLACK_BISHOP));
+    assertEquals(PieceType.ROOK, Piece.getType(Piece.WHITE_ROOK));
+    assertEquals(PieceType.ROOK, Piece.getType(Piece.BLACK_ROOK));
+    assertEquals(PieceType.QUEEN, Piece.getType(Piece.WHITE_QUEEN));
+    assertEquals(PieceType.QUEEN, Piece.getType(Piece.BLACK_QUEEN));
+    assertEquals(PieceType.KING, Piece.getType(Piece.WHITE_KING));
+    assertEquals(PieceType.KING, Piece.getType(Piece.BLACK_KING));
   }
 
   @Test(expected = IllegalArgumentException.class)

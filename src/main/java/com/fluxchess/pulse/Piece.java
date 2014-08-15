@@ -6,95 +6,9 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericChessman;
 import com.fluxchess.jcpi.models.GenericPiece;
 
 final class Piece {
-
-  static final class Type {
-    static final int MASK = 0x7;
-
-    static final int PAWN = 0;
-    static final int KNIGHT = 1;
-    static final int BISHOP = 2;
-    static final int ROOK = 3;
-    static final int QUEEN = 4;
-    static final int KING = 5;
-    static final int NOPIECETYPE = 6;
-
-    static final int[] values = {
-        PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
-    };
-
-    private Type() {
-    }
-
-    static GenericChessman toGenericChessman(int pieceType) {
-      switch (pieceType) {
-        case PAWN:
-          return GenericChessman.PAWN;
-        case KNIGHT:
-          return GenericChessman.KNIGHT;
-        case BISHOP:
-          return GenericChessman.BISHOP;
-        case ROOK:
-          return GenericChessman.ROOK;
-        case QUEEN:
-          return GenericChessman.QUEEN;
-        case KING:
-          return GenericChessman.KING;
-        case NOPIECETYPE:
-        default:
-          throw new IllegalArgumentException();
-      }
-    }
-
-    static boolean isValid(int pieceType) {
-      switch (pieceType) {
-        case PAWN:
-        case KNIGHT:
-        case BISHOP:
-        case ROOK:
-        case QUEEN:
-        case KING:
-          return true;
-        case NOPIECETYPE:
-        default:
-          return false;
-      }
-    }
-
-    static boolean isValidPromotion(int pieceType) {
-      switch (pieceType) {
-        case KNIGHT:
-        case BISHOP:
-        case ROOK:
-        case QUEEN:
-          return true;
-        case PAWN:
-        case KING:
-        case NOPIECETYPE:
-        default:
-          return false;
-      }
-    }
-
-    static boolean isSliding(int pieceType) {
-      switch (pieceType) {
-        case BISHOP:
-        case ROOK:
-        case QUEEN:
-          return true;
-        case PAWN:
-        case KNIGHT:
-        case KING:
-          return false;
-        case NOPIECETYPE:
-        default:
-          throw new IllegalArgumentException();
-      }
-    }
-  }
 
   static final int MASK = 0x1F;
 
@@ -157,37 +71,37 @@ final class Piece {
     switch (color) {
       case Color.WHITE:
         switch (pieceType) {
-          case Type.PAWN:
+          case PieceType.PAWN:
             return WHITE_PAWN;
-          case Type.KNIGHT:
+          case PieceType.KNIGHT:
             return WHITE_KNIGHT;
-          case Type.BISHOP:
+          case PieceType.BISHOP:
             return WHITE_BISHOP;
-          case Type.ROOK:
+          case PieceType.ROOK:
             return WHITE_ROOK;
-          case Type.QUEEN:
+          case PieceType.QUEEN:
             return WHITE_QUEEN;
-          case Type.KING:
+          case PieceType.KING:
             return WHITE_KING;
-          case Type.NOPIECETYPE:
+          case PieceType.NOPIECETYPE:
           default:
             throw new IllegalArgumentException();
         }
       case Color.BLACK:
         switch (pieceType) {
-          case Type.PAWN:
+          case PieceType.PAWN:
             return BLACK_PAWN;
-          case Type.KNIGHT:
+          case PieceType.KNIGHT:
             return BLACK_KNIGHT;
-          case Type.BISHOP:
+          case PieceType.BISHOP:
             return BLACK_BISHOP;
-          case Type.ROOK:
+          case PieceType.ROOK:
             return BLACK_ROOK;
-          case Type.QUEEN:
+          case PieceType.QUEEN:
             return BLACK_QUEEN;
-          case Type.KING:
+          case PieceType.KING:
             return BLACK_KING;
-          case Type.NOPIECETYPE:
+          case PieceType.NOPIECETYPE:
           default:
             throw new IllegalArgumentException();
         }
@@ -254,22 +168,22 @@ final class Piece {
     switch (piece) {
       case WHITE_PAWN:
       case BLACK_PAWN:
-        return Type.PAWN;
+        return PieceType.PAWN;
       case WHITE_KNIGHT:
       case BLACK_KNIGHT:
-        return Type.KNIGHT;
+        return PieceType.KNIGHT;
       case WHITE_BISHOP:
       case BLACK_BISHOP:
-        return Type.BISHOP;
+        return PieceType.BISHOP;
       case WHITE_ROOK:
       case BLACK_ROOK:
-        return Type.ROOK;
+        return PieceType.ROOK;
       case WHITE_QUEEN:
       case BLACK_QUEEN:
-        return Type.QUEEN;
+        return PieceType.QUEEN;
       case WHITE_KING:
       case BLACK_KING:
-        return Type.KING;
+        return PieceType.KING;
       case NOPIECE:
       default:
         throw new IllegalArgumentException();

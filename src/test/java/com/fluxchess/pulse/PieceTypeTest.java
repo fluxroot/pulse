@@ -17,48 +17,48 @@ public class PieceTypeTest {
 
   @Test
   public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    assertUtilityClassWellDefined(Piece.Type.class);
+    assertUtilityClassWellDefined(PieceType.class);
   }
 
   @Test
   public void testValues() {
-    for (int pieceType : Piece.Type.values) {
-      assertTrue(Piece.Type.isValid(pieceType));
-      assertEquals(pieceType, Piece.Type.values[pieceType]);
+    for (int pieceType : PieceType.values) {
+      assertTrue(PieceType.isValid(pieceType));
+      assertEquals(pieceType, PieceType.values[pieceType]);
     }
 
-    assertFalse(Piece.Type.isValid(Piece.Type.NOPIECETYPE));
+    assertFalse(PieceType.isValid(PieceType.NOPIECETYPE));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidToGenericChessman() {
-    Piece.Type.toGenericChessman(Piece.Type.NOPIECETYPE);
+    PieceType.toGenericChessman(PieceType.NOPIECETYPE);
   }
 
   @Test
   public void testIsValidPromotion() {
-    assertTrue(Piece.Type.isValidPromotion(Piece.Type.KNIGHT));
-    assertTrue(Piece.Type.isValidPromotion(Piece.Type.BISHOP));
-    assertTrue(Piece.Type.isValidPromotion(Piece.Type.ROOK));
-    assertTrue(Piece.Type.isValidPromotion(Piece.Type.QUEEN));
-    assertFalse(Piece.Type.isValidPromotion(Piece.Type.PAWN));
-    assertFalse(Piece.Type.isValidPromotion(Piece.Type.KING));
-    assertFalse(Piece.Type.isValidPromotion(Piece.Type.NOPIECETYPE));
+    assertTrue(PieceType.isValidPromotion(PieceType.KNIGHT));
+    assertTrue(PieceType.isValidPromotion(PieceType.BISHOP));
+    assertTrue(PieceType.isValidPromotion(PieceType.ROOK));
+    assertTrue(PieceType.isValidPromotion(PieceType.QUEEN));
+    assertFalse(PieceType.isValidPromotion(PieceType.PAWN));
+    assertFalse(PieceType.isValidPromotion(PieceType.KING));
+    assertFalse(PieceType.isValidPromotion(PieceType.NOPIECETYPE));
   }
 
   @Test
   public void testIsSliding() {
-    assertTrue(Piece.Type.isSliding(Piece.Type.BISHOP));
-    assertTrue(Piece.Type.isSliding(Piece.Type.ROOK));
-    assertTrue(Piece.Type.isSliding(Piece.Type.QUEEN));
-    assertFalse(Piece.Type.isSliding(Piece.Type.PAWN));
-    assertFalse(Piece.Type.isSliding(Piece.Type.KNIGHT));
-    assertFalse(Piece.Type.isSliding(Piece.Type.KING));
+    assertTrue(PieceType.isSliding(PieceType.BISHOP));
+    assertTrue(PieceType.isSliding(PieceType.ROOK));
+    assertTrue(PieceType.isSliding(PieceType.QUEEN));
+    assertFalse(PieceType.isSliding(PieceType.PAWN));
+    assertFalse(PieceType.isSliding(PieceType.KNIGHT));
+    assertFalse(PieceType.isSliding(PieceType.KING));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidIsSliding() {
-    Piece.Type.isSliding(Piece.Type.NOPIECETYPE);
+    PieceType.isSliding(PieceType.NOPIECETYPE);
   }
 
 }

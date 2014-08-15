@@ -22,21 +22,21 @@ public class MoveTest {
 
   @Test
   public void testCreation() {
-    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.a7, Square.b8, Piece.WHITE_PAWN, Piece.BLACK_QUEEN, Piece.Type.KNIGHT);
+    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.a7, Square.b8, Piece.WHITE_PAWN, Piece.BLACK_QUEEN, PieceType.KNIGHT);
 
     assertEquals(Move.Type.PAWNPROMOTION, Move.getType(move));
     assertEquals(Square.a7, Move.getOriginSquare(move));
     assertEquals(Square.b8, Move.getTargetSquare(move));
     assertEquals(Piece.WHITE_PAWN, Move.getOriginPiece(move));
     assertEquals(Piece.BLACK_QUEEN, Move.getTargetPiece(move));
-    assertEquals(Piece.Type.KNIGHT, Move.getPromotion(move));
+    assertEquals(PieceType.KNIGHT, Move.getPromotion(move));
   }
 
   @Test
   public void testPromotion() {
-    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.b7, Square.c8, Piece.WHITE_PAWN, Piece.BLACK_QUEEN, Piece.Type.KNIGHT);
+    int move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.b7, Square.c8, Piece.WHITE_PAWN, Piece.BLACK_QUEEN, PieceType.KNIGHT);
 
-    assertEquals(Piece.Type.KNIGHT, Move.getPromotion(move));
+    assertEquals(PieceType.KNIGHT, Move.getPromotion(move));
   }
 
 }

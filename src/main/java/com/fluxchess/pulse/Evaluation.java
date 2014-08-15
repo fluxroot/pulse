@@ -147,7 +147,7 @@ final class Evaluation {
     assert moveDelta != null;
 
     int mobility = 0;
-    boolean sliding = Piece.Type.isSliding(Piece.getType(board.board[square]));
+    boolean sliding = PieceType.isSliding(Piece.getType(board.board[square]));
 
     for (int delta : moveDelta) {
       int targetSquare = square + delta;
@@ -183,20 +183,20 @@ final class Evaluation {
   }
 
   static int getPieceTypeValue(int pieceType) {
-    assert Piece.Type.isValid(pieceType);
+    assert PieceType.isValid(pieceType);
 
     switch (pieceType) {
-      case Piece.Type.PAWN:
+      case PieceType.PAWN:
         return PAWN_VALUE;
-      case Piece.Type.KNIGHT:
+      case PieceType.KNIGHT:
         return KNIGHT_VALUE;
-      case Piece.Type.BISHOP:
+      case PieceType.BISHOP:
         return BISHOP_VALUE;
-      case Piece.Type.ROOK:
+      case PieceType.ROOK:
         return ROOK_VALUE;
-      case Piece.Type.QUEEN:
+      case PieceType.QUEEN:
         return QUEEN_VALUE;
-      case Piece.Type.KING:
+      case PieceType.KING:
         return KING_VALUE;
       default:
         throw new IllegalArgumentException();
