@@ -97,7 +97,7 @@ final class Square {
   static int getFile(int square) {
     assert isValid(square);
 
-    int file = square % 16;
+    int file = square & 0xF;
     assert File.isValid(file);
 
     return file;
