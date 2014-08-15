@@ -389,7 +389,7 @@ final class Board {
     // Remove target piece and update castling rights
     if (targetPiece != Piece.NOPIECE) {
       int captureSquare = targetSquare;
-      if (type == Move.Type.ENPASSANT) {
+      if (type == MoveType.ENPASSANT) {
         captureSquare += (originColor == Color.WHITE ? Square.S : Square.N);
       }
       assert targetPiece == board[captureSquare];
@@ -402,14 +402,14 @@ final class Board {
     // Move piece
     assert originPiece == board[originSquare];
     remove(originSquare);
-    if (type == Move.Type.PAWNPROMOTION) {
+    if (type == MoveType.PAWNPROMOTION) {
       put(Piece.valueOf(Move.getPromotion(move), originColor), targetSquare);
     } else {
       put(originPiece, targetSquare);
     }
 
     // Move rook and update castling rights
-    if (type == Move.Type.CASTLING) {
+    if (type == MoveType.CASTLING) {
       int rookOriginSquare;
       int rookTargetSquare;
       switch (targetSquare) {
@@ -445,7 +445,7 @@ final class Board {
     if (enPassantSquare != Square.NOSQUARE) {
       zobristKey ^= zobristEnPassantSquare[enPassantSquare];
     }
-    if (type == Move.Type.PAWNDOUBLE) {
+    if (type == MoveType.PAWNDOUBLE) {
       enPassantSquare = targetSquare + (originColor == Color.WHITE ? Square.S : Square.N);
       assert Square.isValid(enPassantSquare);
       zobristKey ^= zobristEnPassantSquare[enPassantSquare];
@@ -495,7 +495,7 @@ final class Board {
     activeColor = Color.opposite(activeColor);
 
     // Undo move rook
-    if (type == Move.Type.CASTLING) {
+    if (type == MoveType.CASTLING) {
       int rookOriginSquare;
       int rookTargetSquare;
       switch (targetSquare) {
@@ -531,7 +531,7 @@ final class Board {
     // Restore target piece
     if (targetPiece != Piece.NOPIECE) {
       int captureSquare = targetSquare;
-      if (type == Move.Type.ENPASSANT) {
+      if (type == MoveType.ENPASSANT) {
         captureSquare += (originColor == Color.WHITE ? Square.S : Square.N);
         assert Square.isValid(captureSquare);
       }

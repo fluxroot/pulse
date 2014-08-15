@@ -21,37 +21,9 @@ import com.fluxchess.jcpi.models.GenericMove;
  */
 final class Move {
 
-  static final class Type {
-    static final int MASK = 0x7;
-
-    static final int NORMAL = 0;
-    static final int PAWNDOUBLE = 1;
-    static final int PAWNPROMOTION = 2;
-    static final int ENPASSANT = 3;
-    static final int CASTLING = 4;
-    static final int NOMOVETYPE = 5;
-
-    private Type() {
-    }
-
-    static boolean isValid(int type) {
-      switch (type) {
-        case NORMAL:
-        case PAWNDOUBLE:
-        case PAWNPROMOTION:
-        case ENPASSANT:
-        case CASTLING:
-          return true;
-        case NOMOVETYPE:
-        default:
-          return false;
-      }
-    }
-  }
-
   // These are our bit masks
   private static final int TYPE_SHIFT = 0;
-  private static final int TYPE_MASK = Move.Type.MASK << TYPE_SHIFT;
+  private static final int TYPE_MASK = MoveType.MASK << TYPE_SHIFT;
   private static final int ORIGINSQUARE_SHIFT = 3;
   private static final int ORIGINSQUARE_MASK = Square.MASK << ORIGINSQUARE_SHIFT;
   private static final int TARGETSQUARE_SHIFT = 10;
@@ -64,7 +36,7 @@ final class Move {
   private static final int PROMOTION_MASK = PieceType.MASK << PROMOTION_SHIFT;
 
   // We don't use 0 as a null value to protect against errors.
-  public static final int NOMOVE = (Move.Type.NOMOVETYPE << TYPE_SHIFT)
+  public static final int NOMOVE = (MoveType.NOMOVETYPE << TYPE_SHIFT)
       | (Square.NOSQUARE << ORIGINSQUARE_SHIFT)
       | (Square.NOSQUARE << TARGETSQUARE_SHIFT)
       | (Piece.NOPIECE << ORIGINPIECE_SHIFT)
@@ -78,7 +50,7 @@ final class Move {
     int move = 0;
 
     // Encode type
-    assert Move.Type.isValid(type);
+    assert MoveType.isValid(type);
     move |= type << TYPE_SHIFT;
 
     // Encode origin square
@@ -110,15 +82,15 @@ final class Move {
     int targetSquare = getTargetSquare(move);
 
     switch (type) {
-      case Move.Type.NORMAL:
-      case Move.Type.PAWNDOUBLE:
-      case Move.Type.ENPASSANT:
-      case Move.Type.CASTLING:
+      case MoveType.NORMAL:
+      case MoveType.PAWNDOUBLE:
+      case MoveType.ENPASSANT:
+      case MoveType.CASTLING:
         return new GenericMove(
             Square.toGenericPosition(originSquare),
             Square.toGenericPosition(targetSquare)
         );
-      case Move.Type.PAWNPROMOTION:
+      case MoveType.PAWNPROMOTION:
         return new GenericMove(
             Square.toGenericPosition(originSquare),
             Square.toGenericPosition(targetSquare),
@@ -131,7 +103,7 @@ final class Move {
 
   static int getType(int move) {
     int type = (move & TYPE_MASK) >>> TYPE_SHIFT;
-    assert Move.Type.isValid(type);
+    assert MoveType.isValid(type);
 
     return type;
   }
