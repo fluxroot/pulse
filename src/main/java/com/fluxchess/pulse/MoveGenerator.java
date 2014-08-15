@@ -38,10 +38,6 @@ final class MoveGenerator {
       Square.NE, Square.NW, Square.SE, Square.SW
   };
 
-  // We will store a MoveGenerator for each ply so we don't have to create them
-  // in search. (which is expensive)
-  private static final MoveGenerator[] moveGenerators = new MoveGenerator[Search.MAX_PLY];
-
   // We will use a staged move generation so we can easily extend it with
   // other features like transposition tables.
   private static final State[] mainStates = {State.BEGIN, State.MAIN, State.END};
@@ -63,33 +59,20 @@ final class MoveGenerator {
     END
   }
 
-  static {
-    for (int i = 0; i < Search.MAX_PLY; ++i) {
-      moveGenerators[i] = new MoveGenerator();
-    }
-  }
-
-  public static MoveGenerator getMoveGenerator(Board board, int depth, int ply, boolean isCheck) {
+  void initialize(Board board, int depth, boolean isCheck) {
     assert board != null;
-    assert ply >= 0 && ply < Search.MAX_PLY;
 
-    MoveGenerator moveGenerator = moveGenerators[ply];
-    moveGenerator.board = board;
-    moveGenerator.isCheck = isCheck;
-    moveGenerator.stateIndex = 0;
-    moveGenerator.moves.size = 0;
-    moveGenerator.moveIndex = 0;
+    this.board = board;
+    this.isCheck = isCheck;
+    this.stateIndex = 0;
+    this.moves.size = 0;
+    this.moveIndex = 0;
 
     if (depth > 0) {
-      moveGenerator.states = mainStates;
+      this.states = mainStates;
     } else {
-      moveGenerator.states = quiescentStates;
+      this.states = quiescentStates;
     }
-
-    return moveGenerator;
-  }
-
-  private MoveGenerator() {
   }
 
   /**

@@ -36,6 +36,10 @@ final class Search implements Runnable {
   private final Board board;
   private final Evaluation evaluation = new Evaluation();
 
+  // We will store a MoveGenerator for each ply so we don't have to create them
+  // in search. (which is expensive)
+  private final MoveGenerator[] moveGenerators = new MoveGenerator[MAX_PLY];
+
   // Depth search
   private int searchDepth = MAX_DEPTH;
 
@@ -126,7 +130,8 @@ final class Search implements Runnable {
 
     for (GenericMove genericMove : searchMoves) {
       // Verify moves
-      MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, 1, 0, board.isCheck());
+      MoveGenerator moveGenerator = new MoveGenerator();
+      moveGenerator.initialize(board, 1, board.isCheck());
       int move;
       while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
         if (Move.toGenericMove(move).equals(genericMove)) {
@@ -214,6 +219,10 @@ final class Search implements Runnable {
     this.protocol = protocol;
     this.board = board;
 
+    for (int i = 0; i < MAX_PLY; ++i) {
+      moveGenerators[i] = new MoveGenerator();
+    }
+
     for (int i = 0; i < pv.length; ++i) {
       pv[i] = new MoveVariation();
     }
@@ -270,7 +279,8 @@ final class Search implements Runnable {
 
     // Populate root move list
     boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, 1, 0, isCheck);
+    MoveGenerator moveGenerator = moveGenerators[0];
+    moveGenerator.initialize(board, 1, isCheck);
     int move;
     while ((move = moveGenerator.nextLegal()) != Move.NOMOVE) {
       rootMoves.entries[rootMoves.size].move = move;
@@ -452,7 +462,8 @@ final class Search implements Runnable {
     int bestValue = -Evaluation.INFINITE;
     int searchedMoves = 0;
 
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
+    MoveGenerator moveGenerator = moveGenerators[ply];
+    moveGenerator.initialize(board, depth, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       int value = bestValue;
@@ -540,7 +551,8 @@ final class Search implements Runnable {
     //### ENDOF Stand pat
 
     // Only generate capturing moves or evasion moves, in case we are in check.
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
+    MoveGenerator moveGenerator = moveGenerators[ply];
+    moveGenerator.initialize(board, depth, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       int value = bestValue;

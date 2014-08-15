@@ -59,7 +59,8 @@ final class PerftPerformance {
     int totalNodes = 0;
 
     boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = MoveGenerator.getMoveGenerator(board, depth, ply, isCheck);
+    MoveGenerator moveGenerator = new MoveGenerator();
+    moveGenerator.initialize(board, depth, isCheck);
     int move;
     while ((move = moveGenerator.next()) != Move.NOMOVE) {
       long nodes = 0;
