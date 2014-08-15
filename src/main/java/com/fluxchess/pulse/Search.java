@@ -409,14 +409,7 @@ final class Search implements Runnable {
       sendStatus(false);
 
       board.makeMove(move);
-      boolean isCheckingMove = board.isCheck();
-
-      int newDepth = depth - 1;
-      if (isCheckingMove) {
-        ++newDepth;
-      }
-
-      int value = -search(newDepth, -beta, -alpha, ply + 1, isCheckingMove);
+      int value = -search(depth - 1, -beta, -alpha, ply + 1, board.isCheck());
       board.undoMove(move);
 
       if (abort) {
@@ -474,14 +467,7 @@ final class Search implements Runnable {
       if (!board.isAttacked(
           Bitboard.next(board.kings[Color.opposite(board.activeColor)].squares), board.activeColor)) {
         ++searchedMoves;
-        boolean isCheckingMove = board.isCheck();
-
-        int newDepth = depth - 1;
-        if (isCheckingMove) {
-          ++newDepth;
-        }
-
-        value = -search(newDepth, -beta, -alpha, ply + 1, isCheckingMove);
+        value = -search(depth - 1, -beta, -alpha, ply + 1, board.isCheck());
       }
       board.undoMove(move);
 
