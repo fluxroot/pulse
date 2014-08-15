@@ -1,6 +1,9 @@
 # Maven
 target/
 
+# CMake
+build/
+
 # Eclipse
 .settings/
 bin/
@@ -11,3 +14,16 @@ bin/
 .idea/
 out/
 *.iml
+
+# Visual Studio
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.suo
+*.user
+*.sdf
+*.opensdf
+Debug/
+Release/
+ipch/
+vendor/
