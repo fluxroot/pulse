@@ -164,36 +164,31 @@ void Pulse::receiveGo(std::istringstream& input) {
     int searchMovesToGo = 40;
     bool ponder = false;
 
-    while (input >> token) {
+    do {
       if (token == "wtime") {
         if (!(input >> whiteTimeLeft)) {
           throw std::exception();
         }
-      }
-      if (token == "winc") {
+      } else if (token == "winc") {
         if (!(input >> whiteTimeIncrement)) {
           throw std::exception();
         }
-      }
-      if (token == "btime") {
+      } else if (token == "btime") {
         if (!(input >> blackTimeLeft)) {
           throw std::exception();
         }
-      }
-      if (token == "binc") {
+      } else if (token == "binc") {
         if (!(input >> blackTimeIncrement)) {
           throw std::exception();
         }
-      }
-      if (token == "movestogo") {
+      } else if (token == "movestogo") {
         if (!(input >> searchMovesToGo)) {
           throw std::exception();
         }
-      }
-      if (token == "ponder") {
+      } else if (token == "ponder") {
         ponder = true;
       }
-    }
+    } while (input >> token);
 
     if (ponder) {
       search = Search::newPonderSearch(

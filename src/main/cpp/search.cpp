@@ -264,6 +264,7 @@ void Search::checkStopConditions() {
 
       // Check if we have a checkmate
       if (std::abs(rootMoves.entries[0]->value) >= Value::CHECKMATE_THRESHOLD
+        && std::abs(rootMoves.entries[0]->value) <= Value::CHECKMATE
         && currentDepth >= (Value::CHECKMATE - std::abs(rootMoves.entries[0]->value))) {
         abort = true;
       }
