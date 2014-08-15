@@ -71,7 +71,10 @@ final class PerftPerformance {
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       long nodes = 0;
-      if (board.makeMove(move)) {
+
+      board.makeMove(move);
+      if (!board.isAttacked(
+          Bitboard.next(board.kings[Color.opposite(board.activeColor)].squares), board.activeColor)) {
         nodes = miniMax(depth - 1, board, ply + 1);
       }
       board.undoMove(move);

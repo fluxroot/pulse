@@ -49,11 +49,13 @@ final class MoveGenerator {
     legalMoves.size = 0;
     for (int i = 0; i < size; ++i) {
       int move = legalMoves.entries[i].move;
-      boolean isLegal = board.makeMove(move);
-      board.undoMove(move);
-      if (isLegal) {
+
+      board.makeMove(move);
+      if (!board.isAttacked(
+          Bitboard.next(board.kings[Color.opposite(board.activeColor)].squares), board.activeColor)) {
         legalMoves.entries[legalMoves.size++].move = move;
       }
+      board.undoMove(move);
     }
 
     return legalMoves;

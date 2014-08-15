@@ -469,7 +469,10 @@ final class Search implements Runnable {
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       int value = bestValue;
-      if (board.makeMove(move)) {
+
+      board.makeMove(move);
+      if (!board.isAttacked(
+          Bitboard.next(board.kings[Color.opposite(board.activeColor)].squares), board.activeColor)) {
         ++searchedMoves;
         boolean isCheckingMove = board.isCheck();
 
@@ -558,7 +561,10 @@ final class Search implements Runnable {
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       int value = bestValue;
-      if (board.makeMove(move)) {
+
+      board.makeMove(move);
+      if (!board.isAttacked(
+          Bitboard.next(board.kings[Color.opposite(board.activeColor)].squares), board.activeColor)) {
         ++searchedMoves;
         boolean isCheckingMove = board.isCheck();
         value = -quiescent(depth - 1, -beta, -alpha, ply + 1, isCheckingMove);
