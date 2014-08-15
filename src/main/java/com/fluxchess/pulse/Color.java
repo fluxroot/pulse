@@ -21,6 +21,17 @@ final class Color {
   private Color() {
   }
 
+  static boolean isValid(int color) {
+    switch (color) {
+      case WHITE:
+      case BLACK:
+        return true;
+      case NOCOLOR:
+      default:
+        return false;
+    }
+  }
+
   static int valueOf(GenericColor genericColor) {
     assert genericColor != null;
 
@@ -43,17 +54,6 @@ final class Color {
       case NOCOLOR:
       default:
         throw new IllegalArgumentException();
-    }
-  }
-
-  static boolean isValid(int color) {
-    switch (color) {
-      case WHITE:
-      case BLACK:
-        return true;
-      case NOCOLOR:
-      default:
-        return false;
     }
   }
 

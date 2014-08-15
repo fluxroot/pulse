@@ -23,16 +23,9 @@ public class ColorTest {
 
   @Test
   public void testValues() {
-    for (GenericColor genericColor : GenericColor.values()) {
-      assertEquals(genericColor, Color.toGenericColor(Color.valueOf(genericColor)));
-      assertEquals(genericColor.ordinal(), Color.valueOf(genericColor));
-      assertEquals(Color.valueOf(genericColor), Color.values[Color.valueOf(genericColor)]);
+    for (int color : Color.values) {
+      assertEquals(color, Color.values[color]);
     }
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidToGenericColor() {
-    Color.toGenericColor(Color.NOCOLOR);
   }
 
   @Test

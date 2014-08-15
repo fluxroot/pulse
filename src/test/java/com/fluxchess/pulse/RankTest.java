@@ -23,16 +23,9 @@ public class RankTest {
 
   @Test
   public void testValues() {
-    for (GenericRank genericRank : GenericRank.values()) {
-      assertEquals(genericRank, Rank.toGenericRank(Rank.valueOf(genericRank)));
-      assertEquals(genericRank.ordinal(), Rank.valueOf(genericRank));
-      assertEquals(Rank.valueOf(genericRank), Rank.values[Rank.valueOf(genericRank)]);
+    for (int rank : Rank.values) {
+      assertEquals(rank, Rank.values[rank]);
     }
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidToGenericRank() {
-    Rank.toGenericRank(Rank.NORANK);
   }
 
   @Test

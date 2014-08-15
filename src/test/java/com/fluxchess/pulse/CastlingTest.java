@@ -26,9 +26,15 @@ public class CastlingTest {
       for (int castlingType : CastlingType.values) {
         int castling = Castling.valueOf(color, castlingType);
 
-        assertTrue(Castling.isValid(castling));
         assertEquals(castling, Castling.values[castling]);
       }
+    }
+  }
+
+  @Test
+  public void testIsValid() {
+    for (int castling : Castling.values) {
+      assertTrue(Castling.isValid(castling));
     }
 
     assertFalse(Castling.isValid(Castling.NOCASTLING));

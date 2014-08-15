@@ -75,6 +75,10 @@ final class Square {
   private Square() {
   }
 
+  static boolean isValid(int square) {
+    return (square & 0x88) == 0;
+  }
+
   static int valueOf(GenericPosition genericPosition) {
     assert genericPosition != null;
 
@@ -88,10 +92,6 @@ final class Square {
     assert isValid(square);
 
     return GenericPosition.valueOf(File.toGenericFile(getFile(square)), Rank.toGenericRank(getRank(square)));
-  }
-
-  static boolean isValid(int square) {
-    return (square & 0x88) == 0;
   }
 
   static int getFile(int square) {

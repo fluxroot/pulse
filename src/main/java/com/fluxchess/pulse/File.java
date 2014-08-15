@@ -27,6 +27,23 @@ final class File {
   private File() {
   }
 
+  static boolean isValid(int file) {
+    switch (file) {
+      case a:
+      case b:
+      case c:
+      case d:
+      case e:
+      case f:
+      case g:
+      case h:
+        return true;
+      case NOFILE:
+      default:
+        return false;
+    }
+  }
+
   static int valueOf(GenericFile genericFile) {
     assert genericFile != null;
 
@@ -73,23 +90,6 @@ final class File {
       case NOFILE:
       default:
         throw new IllegalArgumentException();
-    }
-  }
-
-  static boolean isValid(int file) {
-    switch (file) {
-      case a:
-      case b:
-      case c:
-      case d:
-      case e:
-      case f:
-      case g:
-      case h:
-        return true;
-      case NOFILE:
-      default:
-        return false;
     }
   }
 

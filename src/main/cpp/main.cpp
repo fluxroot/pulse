@@ -6,10 +6,25 @@
  */
 
 #include "pulse.h"
+#include "perft.h"
 
-#include <memory>
+#include <string>
+#include <iostream>
 
 int main(int argc, char* argv[]) {
-  std::unique_ptr<pulse::Pulse> pulse(new pulse::Pulse());
-  pulse->run();
+  try {
+    if (argc == 2) {
+      std::string token(argv[1]);
+      if (token == "perft") {
+        std::unique_ptr<pulse::Perft> perft(new pulse::Perft());
+        perft->run();
+      }
+    } else {
+      std::unique_ptr<pulse::Pulse> pulse(new pulse::Pulse());
+      pulse->run();
+    }
+  } catch (std::exception e) {
+    std::cout << "Exiting Pulse due to an exception: " << e.what() << std::endl;
+    return 1;
+  }
 }

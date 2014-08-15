@@ -34,6 +34,27 @@ final class Piece {
   private Piece() {
   }
 
+  static boolean isValid(int piece) {
+    switch (piece) {
+      case WHITE_PAWN:
+      case WHITE_KNIGHT:
+      case WHITE_BISHOP:
+      case WHITE_ROOK:
+      case WHITE_QUEEN:
+      case WHITE_KING:
+      case BLACK_PAWN:
+      case BLACK_KNIGHT:
+      case BLACK_BISHOP:
+      case BLACK_ROOK:
+      case BLACK_QUEEN:
+      case BLACK_KING:
+        return true;
+      case NOPIECE:
+      default:
+        return false;
+    }
+  }
+
   static int valueOf(GenericPiece genericPiece) {
     assert genericPiece != null;
 
@@ -67,7 +88,7 @@ final class Piece {
     }
   }
 
-  static int valueOf(int pieceType, int color) {
+  static int valueOf(int color, int pieceType) {
     switch (color) {
       case Color.WHITE:
         switch (pieceType) {
@@ -140,27 +161,6 @@ final class Piece {
       case NOPIECE:
       default:
         throw new IllegalArgumentException();
-    }
-  }
-
-  static boolean isValid(int piece) {
-    switch (piece) {
-      case WHITE_PAWN:
-      case WHITE_KNIGHT:
-      case WHITE_BISHOP:
-      case WHITE_ROOK:
-      case WHITE_QUEEN:
-      case WHITE_KING:
-      case BLACK_PAWN:
-      case BLACK_KNIGHT:
-      case BLACK_BISHOP:
-      case BLACK_ROOK:
-      case BLACK_QUEEN:
-      case BLACK_KING:
-        return true;
-      case NOPIECE:
-      default:
-        return false;
     }
   }
 

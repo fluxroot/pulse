@@ -32,36 +32,6 @@ public class MoveGeneratorTest {
     }
   }
 
-  @Test
-  public void testPerft() throws IOException, IllegalNotationException {
-    for (int i = 1; i < 4; i++) {
-      try (InputStream inputStream = MoveGeneratorTest.class.getResourceAsStream("/perftsuite.epd")) {
-        BufferedReader file = new BufferedReader(new InputStreamReader(inputStream));
-
-        String line = file.readLine();
-        while (line != null) {
-          String[] tokens = line.split(";");
-
-          if (tokens.length > i) {
-            String[] data = tokens[i].trim().split(" ");
-            int depth = Integer.parseInt(data[0].substring(1));
-            int nodes = Integer.parseInt(data[1]);
-
-            GenericBoard genericBoard = new GenericBoard(tokens[0].trim());
-            Board board = new Board(genericBoard);
-
-            long result = miniMax(depth, board, 0);
-            if (nodes != result) {
-              throw new AssertionError(findMissingMoves(depth, board, 0));
-            }
-          }
-
-          line = file.readLine();
-        }
-      }
-    }
-  }
-
   private long miniMax(int depth, Board board, int ply) {
     long totalNodes = 0;
 
@@ -82,6 +52,36 @@ public class MoveGeneratorTest {
     }
 
     return totalNodes;
+  }
+
+  @Test
+  public void testPerft() throws IOException, IllegalNotationException {
+    for (int i = 1; i < 4; i++) {
+      try (InputStream inputStream = MoveGeneratorTest.class.getResourceAsStream("/perftsuite.epd")) {
+        BufferedReader file = new BufferedReader(new InputStreamReader(inputStream));
+
+        String line = file.readLine();
+        while (line != null) {
+          String[] tokens = line.split(";");
+
+          if (tokens.length > i) {
+            String[] data = tokens[i].trim().split(" ");
+            int depth = Integer.parseInt(data[0].substring(1));
+            long nodes = Integer.parseInt(data[1]);
+
+            GenericBoard genericBoard = new GenericBoard(tokens[0].trim());
+            Board board = new Board(genericBoard);
+
+            long result = miniMax(depth, board, 0);
+            if (nodes != result) {
+              throw new AssertionError(findMissingMoves(depth, board, 0));
+            }
+          }
+
+          line = file.readLine();
+        }
+      }
+    }
   }
 
   private String findMissingMoves(int depth, Board board, int ply) {

@@ -22,6 +22,19 @@ final class Castling {
   private Castling() {
   }
 
+  static boolean isValid(int castling) {
+    switch (castling) {
+      case WHITE_KINGSIDE:
+      case WHITE_QUEENSIDE:
+      case BLACK_KINGSIDE:
+      case BLACK_QUEENSIDE:
+        return true;
+      case NOCASTLING:
+      default:
+        return false;
+    }
+  }
+
   static int valueOf(int color, int castlingType) {
     switch (color) {
       case Color.WHITE:
@@ -47,19 +60,6 @@ final class Castling {
       case Color.NOCOLOR:
       default:
         throw new IllegalArgumentException();
-    }
-  }
-
-  static boolean isValid(int castling) {
-    switch (castling) {
-      case WHITE_KINGSIDE:
-      case WHITE_QUEENSIDE:
-      case BLACK_KINGSIDE:
-      case BLACK_QUEENSIDE:
-        return true;
-      case NOCASTLING:
-      default:
-        return false;
     }
   }
 

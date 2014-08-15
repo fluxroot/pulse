@@ -25,18 +25,20 @@ public class SquareTest {
   public void testValues() {
     for (GenericPosition genericPosition : GenericPosition.values()) {
       int square = Square.valueOf(genericPosition);
-      assertTrue(Square.isValid(square));
       assertEquals(genericPosition, Square.toGenericPosition(square));
 
       int file = Square.getFile(square);
-      assertTrue(File.isValid(file));
-      assertEquals(genericPosition.file.ordinal(), file);
       assertEquals(genericPosition.file, File.toGenericFile(file));
 
       int rank = Square.getRank(square);
-      assertTrue(Rank.isValid(rank));
-      assertEquals(genericPosition.rank.ordinal(), rank);
       assertEquals(genericPosition.rank, Rank.toGenericRank(rank));
+    }
+  }
+
+  @Test
+  public void testIsValid() {
+    for (int square : Square.values) {
+      assertTrue(Square.isValid(square));
     }
 
     assertFalse(Square.isValid(Square.NOSQUARE));

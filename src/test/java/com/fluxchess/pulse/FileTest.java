@@ -23,16 +23,9 @@ public class FileTest {
 
   @Test
   public void testValues() {
-    for (GenericFile genericFile : GenericFile.values()) {
-      assertEquals(genericFile, File.toGenericFile(File.valueOf(genericFile)));
-      assertEquals(genericFile.ordinal(), File.valueOf(genericFile));
-      assertEquals(File.valueOf(genericFile), File.values[File.valueOf(genericFile)]);
+    for (int file : File.values) {
+      assertEquals(file, File.values[file]);
     }
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidToGenericFile() {
-    File.toGenericFile(File.NOFILE);
   }
 
   @Test

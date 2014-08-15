@@ -8,36 +8,6 @@ package com.fluxchess.pulse;
 
 final class MoveGenerator {
 
-  // Move deltas
-  static final int[][] moveDeltaPawn = {
-      {Square.N, Square.NE, Square.NW}, // Color.WHITE
-      {Square.S, Square.SE, Square.SW}  // Color.BLACK
-  };
-  static final int[] moveDeltaKnight = {
-      Square.N + Square.N + Square.E,
-      Square.N + Square.N + Square.W,
-      Square.N + Square.E + Square.E,
-      Square.N + Square.W + Square.W,
-      Square.S + Square.S + Square.E,
-      Square.S + Square.S + Square.W,
-      Square.S + Square.E + Square.E,
-      Square.S + Square.W + Square.W
-  };
-  static final int[] moveDeltaBishop = {
-      Square.NE, Square.NW, Square.SE, Square.SW
-  };
-  static final int[] moveDeltaRook = {
-      Square.N, Square.E, Square.S, Square.W
-  };
-  static final int[] moveDeltaQueen = {
-      Square.N, Square.E, Square.S, Square.W,
-      Square.NE, Square.NW, Square.SE, Square.SW
-  };
-  static final int[] moveDeltaKing = {
-      Square.N, Square.E, Square.S, Square.W,
-      Square.NE, Square.NW, Square.SE, Square.SW
-  };
-
   private final MoveList moves = new MoveList();
 
   MoveList getLegalMoves(Board board, int depth, boolean isCheck) {
@@ -109,22 +79,22 @@ final class MoveGenerator {
     }
     for (long squares = board.knights[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, moveDeltaKnight, board);
+      addMoves(list, square, Board.knightDirections, board);
     }
     for (long squares = board.bishops[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, moveDeltaBishop, board);
+      addMoves(list, square, Board.bishopDirections, board);
     }
     for (long squares = board.rooks[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, moveDeltaRook, board);
+      addMoves(list, square, Board.rookDirections, board);
     }
     for (long squares = board.queens[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, moveDeltaQueen, board);
+      addMoves(list, square, Board.queenDirections, board);
     }
     int square = Bitboard.next(board.kings[activeColor].squares);
-    addMoves(list, square, moveDeltaKing, board);
+    addMoves(list, square, Board.kingDirections, board);
   }
 
   private void addMoves(MoveList list, int originSquare, int[] moveDelta, Board board) {
@@ -178,8 +148,8 @@ final class MoveGenerator {
     int pawnColor = Piece.getColor(pawnPiece);
 
     // Generate only capturing moves first (i = 1)
-    for (int i = 1; i < moveDeltaPawn[pawnColor].length; ++i) {
-      int delta = moveDeltaPawn[pawnColor][i];
+    for (int i = 1; i < Board.pawnDirections[pawnColor].length; ++i) {
+      int delta = Board.pawnDirections[pawnColor][i];
 
       int targetSquare = pawnSquare + delta;
       if (Square.isValid(targetSquare)) {
@@ -225,7 +195,7 @@ final class MoveGenerator {
     }
 
     // Generate non-capturing moves
-    int delta = moveDeltaPawn[pawnColor][0];
+    int delta = Board.pawnDirections[pawnColor][0];
 
     // Move one rank forward
     int targetSquare = pawnSquare + delta;

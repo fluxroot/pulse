@@ -36,20 +36,14 @@ final class Bitboard {
 
   void add(int square) {
     assert Square.isValid(square);
-    assert (squares & (1L << toBitSquare(square))) == 0
-        : String.format("squares = %d, 0x88 square = %d, bit square = %d",
-        squares, square, toBitSquare(square)
-    );
+    assert (squares & (1L << toBitSquare(square))) == 0;
 
     squares |= 1L << toBitSquare(square);
   }
 
   void remove(int square) {
     assert Square.isValid(square);
-    assert (squares & (1L << toBitSquare(square))) != 0
-        : String.format("squares = %d, 0x88 square = %d, bit square = %d",
-        squares, square, toBitSquare(square)
-    );
+    assert (squares & (1L << toBitSquare(square))) != 0;
 
     squares &= ~(1L << toBitSquare(square));
   }

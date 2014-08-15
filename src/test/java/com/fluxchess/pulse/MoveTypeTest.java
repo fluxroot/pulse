@@ -12,11 +12,11 @@ import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 
-public class ConfigurationTest {
+public class MoveTypeTest {
 
   @Test
   public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    assertUtilityClassWellDefined(Configuration.class);
+    assertUtilityClassWellDefined(MoveType.class);
   }
 
 }

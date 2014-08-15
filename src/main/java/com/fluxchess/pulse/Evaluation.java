@@ -8,20 +8,6 @@ package com.fluxchess.pulse;
 
 final class Evaluation {
 
-  static final int INFINITE = 200000;
-  static final int CHECKMATE = 100000;
-  static final int CHECKMATE_THRESHOLD = CHECKMATE - Search.MAX_PLY;
-  static final int DRAW = 0;
-  static final int NOVALUE = 300000;
-
-  // Piece values as defined by Larry Kaufman
-  static final int PAWN_VALUE = 100;
-  static final int KNIGHT_VALUE = 325;
-  static final int BISHOP_VALUE = 325;
-  static final int ROOK_VALUE = 500;
-  static final int QUEEN_VALUE = 975;
-  static final int KING_VALUE = 20000;
-
   static final int TEMPO = 1;
 
   static int materialWeight = 100;
@@ -57,12 +43,8 @@ final class Evaluation {
 
     // This is just a safe guard to protect against overflow in our evaluation
     // function.
-    if (value <= -CHECKMATE_THRESHOLD) {
+    if (value <= -Value.CHECKMATE_THRESHOLD || value >= Value.CHECKMATE_THRESHOLD) {
       assert false;
-      value = -CHECKMATE_THRESHOLD + 1;
-    } else if (value >= CHECKMATE_THRESHOLD) {
-      assert false;
-      value = CHECKMATE_THRESHOLD - 1;
     }
 
     return value;
@@ -89,25 +71,25 @@ final class Evaluation {
     int knightMobility = 0;
     for (long squares = board.knights[color].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      knightMobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaKnight);
+      knightMobility += evaluateMobility(color, board, square, Board.knightDirections);
     }
 
     int bishopMobility = 0;
     for (long squares = board.bishops[color].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      bishopMobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaBishop);
+      bishopMobility += evaluateMobility(color, board, square, Board.bishopDirections);
     }
 
     int rookMobility = 0;
     for (long squares = board.rooks[color].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      rookMobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaRook);
+      rookMobility += evaluateMobility(color, board, square, Board.rookDirections);
     }
 
     int queenMobility = 0;
     for (long squares = board.queens[color].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      queenMobility += evaluateMobility(color, board, square, MoveGenerator.moveDeltaQueen);
+      queenMobility += evaluateMobility(color, board, square, Board.queenDirections);
     }
 
     return knightMobility * 4
@@ -140,27 +122,6 @@ final class Evaluation {
     }
 
     return mobility;
-  }
-
-  static int getPieceTypeValue(int pieceType) {
-    assert PieceType.isValid(pieceType);
-
-    switch (pieceType) {
-      case PieceType.PAWN:
-        return PAWN_VALUE;
-      case PieceType.KNIGHT:
-        return KNIGHT_VALUE;
-      case PieceType.BISHOP:
-        return BISHOP_VALUE;
-      case PieceType.ROOK:
-        return ROOK_VALUE;
-      case PieceType.QUEEN:
-        return QUEEN_VALUE;
-      case PieceType.KING:
-        return KING_VALUE;
-      default:
-        throw new IllegalArgumentException();
-    }
   }
 
 }

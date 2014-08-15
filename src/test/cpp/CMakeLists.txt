@@ -31,7 +31,20 @@ set_target_properties(gtest_main PROPERTIES IMPORTED_LOCATION ${BINARY_DIR}/${CM
 add_dependencies(gtest_main googletest)
 
 add_executable(unittest
+  bitboardtest.cpp
   boardtest.cpp
+  castlingtest.cpp
+  castlingtypetest.cpp
+  colortest.cpp
+  evaluationtest.cpp
+  filetest.cpp
+  movegeneratortest.cpp
+  movelisttest.cpp
+  movetest.cpp
+  piecetest.cpp
+  piecetypetest.cpp
+  ranktest.cpp
+  squaretest.cpp
 )
 
 target_link_libraries(unittest core gtest gtest_main)

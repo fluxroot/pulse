@@ -25,10 +25,6 @@ import static com.fluxchess.pulse.MoveList.MoveVariation;
  */
 final class Search implements Runnable {
 
-  static final int MAX_PLY = 256;
-  static final int MAX_DEPTH = 64;
-  static final int MAX_MOVES = MAX_PLY + 1024;
-
   private final Thread thread = new Thread(this);
   private final Semaphore semaphore = new Semaphore(0);
   private final IProtocol protocol;
@@ -38,10 +34,10 @@ final class Search implements Runnable {
 
   // We will store a MoveGenerator for each ply so we don't have to create them
   // in search. (which is expensive)
-  private final MoveGenerator[] moveGenerators = new MoveGenerator[MAX_PLY];
+  private final MoveGenerator[] moveGenerators = new MoveGenerator[Depth.MAX_PLY];
 
   // Depth search
-  private int searchDepth = MAX_DEPTH;
+  private int searchDepth = Depth.MAX_DEPTH;
 
   // Nodes search
   private long searchNodes = Long.MAX_VALUE;
@@ -51,9 +47,6 @@ final class Search implements Runnable {
   private Timer timer = null;
   private boolean timerStopped = false;
   private boolean doTimeManagement = false;
-
-  // Moves search
-  private final MoveList searchMoves = new MoveList();
 
   // Search parameters
   private final MoveList rootMoves = new MoveList();
@@ -66,7 +59,7 @@ final class Search implements Runnable {
   private int currentMaxDepth = initialDepth;
   private int currentMove = Move.NOMOVE;
   private int currentMoveNumber = 0;
-  private final MoveVariation[] pv = new MoveVariation[MAX_PLY + 1];
+  private final MoveVariation[] pv = new MoveVariation[Depth.MAX_PLY + 1];
 
   /**
    * This is our search timer for time & clock & ponder searches.
@@ -87,7 +80,7 @@ final class Search implements Runnable {
   static Search newDepthSearch(IProtocol protocol, Board board, int searchDepth) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
-    if (searchDepth < 1 || searchDepth > MAX_DEPTH) throw new IllegalArgumentException();
+    if (searchDepth < 1 || searchDepth > Depth.MAX_DEPTH) throw new IllegalArgumentException();
 
     Search search = new Search(protocol, board);
 
@@ -117,35 +110,6 @@ final class Search implements Runnable {
 
     search.searchTime = searchTime;
     search.timer = new Timer(true);
-
-    return search;
-  }
-
-  static Search newMovesSearch(IProtocol protocol, Board board, List<GenericMove> searchMoves) {
-    if (protocol == null) throw new IllegalArgumentException();
-    if (board == null) throw new IllegalArgumentException();
-    if (searchMoves == null) throw new IllegalArgumentException();
-
-    Search search = new Search(protocol, board);
-
-    for (GenericMove genericMove : searchMoves) {
-      // Verify moves
-      MoveGenerator moveGenerator = new MoveGenerator();
-      MoveList moves = moveGenerator.getLegalMoves(board, 1, board.isCheck());
-      boolean found = false;
-      for (int i = 0; i < moves.size; ++i) {
-        int move = moves.entries[i].move;
-        if (Move.toGenericMove(move).equals(genericMove)) {
-          search.searchMoves.entries[search.searchMoves.size++].move = move;
-          found = true;
-          break;
-        }
-      }
-
-      if (!found) {
-        throw new IllegalArgumentException();
-      }
-    }
 
     return search;
   }
@@ -221,7 +185,7 @@ final class Search implements Runnable {
     this.protocol = protocol;
     this.board = board;
 
-    for (int i = 0; i < MAX_PLY; ++i) {
+    for (int i = 0; i < Depth.MAX_PLY; ++i) {
       moveGenerators[i] = new MoveGenerator();
     }
 
@@ -300,7 +264,7 @@ final class Search implements Runnable {
       currentMaxDepth = 0;
       sendStatus(false);
 
-      searchRoot(currentDepth, -Evaluation.INFINITE, Evaluation.INFINITE);
+      searchRoot(currentDepth, -Value.INFINITE, Value.INFINITE);
 
       // Sort the root move list, so that the next iteration begins with the
       // best move first.
@@ -348,8 +312,8 @@ final class Search implements Runnable {
         } else
 
         // Check if we have a checkmate
-        if (Math.abs(rootMoves.entries[0].value) >= Evaluation.CHECKMATE_THRESHOLD
-            && currentDepth >= (Evaluation.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
+        if (Math.abs(rootMoves.entries[0].value) >= Value.CHECKMATE_THRESHOLD
+            && currentDepth >= (Value.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
           abort = true;
         }
       }
@@ -384,25 +348,11 @@ final class Search implements Runnable {
     }
 
     for (int i = 0; i < rootMoves.size; ++i) {
-      rootMoves.entries[i].value = -Evaluation.INFINITE;
+      rootMoves.entries[i].value = -Value.INFINITE;
     }
 
     for (int i = 0; i < rootMoves.size; ++i) {
       int move = rootMoves.entries[i].move;
-
-      // Search only moves specified in searchedMoves
-      if (searchMoves.size > 0) {
-        boolean found = false;
-        for (int j = 0; j < searchMoves.size; ++j) {
-          if (move == searchMoves.entries[j].move) {
-            found = true;
-            break;
-          }
-        }
-        if (!found) {
-          continue;
-        }
-      }
 
       currentMove = move;
       currentMoveNumber = i + 1;
@@ -444,17 +394,17 @@ final class Search implements Runnable {
     updateSearch(ply);
 
     // Abort conditions
-    if (abort || ply == MAX_PLY) {
+    if (abort || ply == Depth.MAX_PLY) {
       return evaluation.evaluate(board);
     }
 
     // Check the repetition table and fifty move rule
     if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfmoveClock >= 100) {
-      return Evaluation.DRAW;
+      return Value.DRAW;
     }
 
     // Initialize
-    int bestValue = -Evaluation.INFINITE;
+    int bestValue = -Value.INFINITE;
     int searchedMoves = 0;
 
     MoveGenerator moveGenerator = moveGenerators[ply];
@@ -497,10 +447,10 @@ final class Search implements Runnable {
     if (searchedMoves == 0) {
       if (isCheck) {
         // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        return -Evaluation.CHECKMATE + ply;
+        return -Value.CHECKMATE + ply;
       } else {
         // We have a stale mate. Return the draw value.
-        return Evaluation.DRAW;
+        return Value.DRAW;
       }
     }
 
@@ -511,17 +461,17 @@ final class Search implements Runnable {
     updateSearch(ply);
 
     // Abort conditions
-    if (abort || ply == MAX_PLY) {
+    if (abort || ply == Depth.MAX_PLY) {
       return evaluation.evaluate(board);
     }
 
     // Check the repetition table and fifty move rule
     if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfmoveClock >= 100) {
-      return Evaluation.DRAW;
+      return Value.DRAW;
     }
 
     // Initialize
-    int bestValue = -Evaluation.INFINITE;
+    int bestValue = -Value.INFINITE;
     int searchedMoves = 0;
 
     //### BEGIN Stand pat
@@ -582,7 +532,7 @@ final class Search implements Runnable {
     // If we cannot move, check for checkmate.
     if (searchedMoves == 0 && isCheck) {
       // We have a check mate. This is bad for us, so return a -CHECKMATE.
-      return -Evaluation.CHECKMATE + ply;
+      return -Value.CHECKMATE + ply;
     }
 
     return bestValue;
@@ -632,9 +582,9 @@ final class Search implements Runnable {
     command.setNodes(totalNodes);
     command.setTime(timeDelta);
     command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-    if (Math.abs(entry.value) >= Evaluation.CHECKMATE_THRESHOLD) {
+    if (Math.abs(entry.value) >= Value.CHECKMATE_THRESHOLD) {
       // Calculate mate distance
-      int mateDepth = Evaluation.CHECKMATE - Math.abs(entry.value);
+      int mateDepth = Value.CHECKMATE - Math.abs(entry.value);
       command.setMate(Integer.signum(entry.value) * (mateDepth + 1) / 2);
     } else {
       command.setCentipawns(entry.value);

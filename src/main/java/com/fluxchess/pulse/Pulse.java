@@ -11,7 +11,6 @@ import com.fluxchess.jcpi.commands.*;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericColor;
 import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.jcpi.options.AbstractOption;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
 
 import java.io.BufferedReader;
@@ -25,15 +24,27 @@ import java.io.PrintStream;
 public final class Pulse extends AbstractEngine {
 
   // We have to maintain at least the state of the board and the search.
-  private Board board;
-  private Search search;
+  private Board board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
+  private Search search = Search.newInfiniteSearch(getProtocol(), board);
 
   public static void main(String[] args) {
     // Don't do any fancy stuff here. Just create our engine and
     // run it. JCPI takes care of the rest. It waits for the GUI
     // to issue commands which will call our methods using the
     // visitor pattern.
-    new Pulse().run();
+    try {
+      if (args.length == 1) {
+        if (args[0].equalsIgnoreCase("perft")) {
+          new Perft().run();
+        }
+      } else {
+        new Pulse().run();
+      }
+    } catch (Throwable t) {
+      System.out.format("Exiting Pulse due to an exception: %s%n", t.getLocalizedMessage());
+      t.printStackTrace();
+      System.exit(1);
+    }
   }
 
   // AbstractEngine provides three constructors to help us connecting to a
@@ -44,20 +55,17 @@ public final class Pulse extends AbstractEngine {
    * input and output.
    */
   public Pulse() {
-    initialize();
   }
 
   /**
    * We could also provide our own input and output streams. We could e.g.
    * connect a network stream to our engine.
    *
-   * @param input a buffered reader.
+   * @param input  a buffered reader.
    * @param output a print stream.
    */
   public Pulse(BufferedReader input, PrintStream output) {
     super(input, output);
-
-    initialize();
   }
 
   /**
@@ -68,13 +76,6 @@ public final class Pulse extends AbstractEngine {
    */
   public Pulse(IProtocolHandler handler) {
     super(handler);
-
-    initialize();
-  }
-
-  private void initialize() {
-    board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
-    search = Search.newInfiniteSearch(getProtocol(), board);
   }
 
   protected void quit() {
@@ -84,12 +85,9 @@ public final class Pulse extends AbstractEngine {
   }
 
   public void receive(EngineInitializeRequestCommand command) {
-    if (command == null) throw new IllegalArgumentException();
+    new EngineStopCalculatingCommand().accept(this);
 
     // We received an initialization request.
-
-    // Precaution for buggy GUIs: Stop calculating first!
-    new EngineStopCalculatingCommand().accept(this);
 
     // We could do some global initialization here. Probably it would be best
     // to initialize all tables here as they will exist until the end of the
@@ -97,54 +95,17 @@ public final class Pulse extends AbstractEngine {
 
     // We must send an initialization answer back!
     ProtocolInitializeAnswerCommand answerCommand = new ProtocolInitializeAnswerCommand(
-        VersionInfo.current().toString(), "Phokham Nonava"
+        "Pulse 1.5-java", "Phokham Nonava"
     );
-
-    // For each supported option, add it to the command.
-    for (AbstractOption option : Configuration.options) {
-      answerCommand.addOption(option);
-    }
 
     // Send the answer back.
     getProtocol().send(answerCommand);
   }
 
   public void receive(EngineSetOptionCommand command) {
-    if (command == null) throw new IllegalArgumentException();
-
-    // We received a set option command. Just set the option in our
-    // configuration.
-    if (command.name == null) throw new IllegalArgumentException();
-
-    if (command.name.equalsIgnoreCase(Configuration.ponderOption.name)) {
-      if (command.value == null) throw new IllegalArgumentException();
-
-      Configuration.ponder = Boolean.parseBoolean(command.value);
-    }
   }
 
   public void receive(EngineDebugCommand command) {
-    if (command == null) throw new IllegalArgumentException();
-
-    // We received a debug command. Pulse currently does not support debug
-    // output. However, the following code shows how you would set the debug
-    // mode according to the command.
-    if (command.toggle) {
-      // We have to toggle the debug state.
-      Configuration.debug = !Configuration.debug;
-    } else {
-      // Otherwise set the debug state according to the command.
-      Configuration.debug = command.debug;
-    }
-
-    // Send a nice string about our debug mode back.
-    ProtocolInformationCommand informationCommand = new ProtocolInformationCommand();
-    if (Configuration.debug) {
-      informationCommand.setString("Debugging mode is on");
-    } else {
-      informationCommand.setString("Debugging mode is off");
-    }
-    getProtocol().send(informationCommand);
   }
 
   public void receive(EngineReadyRequestCommand command) {
@@ -159,12 +120,9 @@ public final class Pulse extends AbstractEngine {
   }
 
   public void receive(EngineNewGameCommand command) {
-    if (command == null) throw new IllegalArgumentException();
+    new EngineStopCalculatingCommand().accept(this);
 
     // We received a new game command.
-
-    // Precaution for buggy GUIs: Stop calculating first!
-    new EngineStopCalculatingCommand().accept(this);
 
     // Initialize per-game settings here.
     board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
@@ -174,10 +132,9 @@ public final class Pulse extends AbstractEngine {
   public void receive(EngineAnalyzeCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    // We received an analyze command. Just setup the board.
-
-    // Precaution for buggy GUIs: Stop calculating first!
     new EngineStopCalculatingCommand().accept(this);
+
+    // We received an analyze command. Just setup the board.
 
     // Create a new internal board from the GenericBoard.
     board = new Board(command.board);
@@ -202,23 +159,15 @@ public final class Pulse extends AbstractEngine {
       }
     }
 
-    // Don't start calculating though!
-  }
-
-  public void receive(EnginePonderHitCommand command) {
-    if (command == null) throw new IllegalArgumentException();
-
-    // We received a ponder hit command. Just call ponderhit().
-    search.ponderhit();
+    // Don't start searching though!
   }
 
   public void receive(EngineStartCalculatingCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    // Precaution for buggy GUIs: Stop calculating first!
     new EngineStopCalculatingCommand().accept(this);
 
-    // We received a start calculating command. Extract all parameters from the
+    // We received a start command. Extract all parameters from the
     // command and start the search.
     if (command.getDepth() != null) {
       search = Search.newDepthSearch(getProtocol(), board, command.getDepth());
@@ -226,8 +175,6 @@ public final class Pulse extends AbstractEngine {
       search = Search.newNodesSearch(getProtocol(), board, command.getNodes());
     } else if (command.getMoveTime() != null) {
       search = Search.newTimeSearch(getProtocol(), board, command.getMoveTime());
-    } else if (command.getSearchMoveList() != null) {
-      search = Search.newMovesSearch(getProtocol(), board, command.getSearchMoveList());
     } else if (command.getInfinite()) {
       search = Search.newInfiniteSearch(getProtocol(), board);
     } else {
@@ -271,10 +218,13 @@ public final class Pulse extends AbstractEngine {
     search.start();
   }
 
-  public void receive(EngineStopCalculatingCommand command) {
-    if (command == null) throw new IllegalArgumentException();
+  public void receive(EnginePonderHitCommand command) {
+    // We received a ponder hit command. Just call ponderhit().
+    search.ponderhit();
+  }
 
-    // We received a stop calculating command. If a search is running, stop it.
+  public void receive(EngineStopCalculatingCommand command) {
+    // We received a stop command. If a search is running, stop it.
     search.stop();
   }
 

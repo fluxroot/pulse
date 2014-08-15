@@ -23,16 +23,17 @@ public class PieceTypeTest {
   @Test
   public void testValues() {
     for (int pieceType : PieceType.values) {
-      assertTrue(PieceType.isValid(pieceType));
       assertEquals(pieceType, PieceType.values[pieceType]);
+    }
+  }
+
+  @Test
+  public void testIsValid() {
+    for (int pieceType : PieceType.values) {
+      assertTrue(PieceType.isValid(pieceType));
     }
 
     assertFalse(PieceType.isValid(PieceType.NOPIECETYPE));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidToGenericChessman() {
-    PieceType.toGenericChessman(PieceType.NOPIECETYPE);
   }
 
   @Test

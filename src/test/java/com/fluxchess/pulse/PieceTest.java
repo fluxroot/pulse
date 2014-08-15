@@ -24,19 +24,20 @@ public class PieceTest {
   public void testValues() {
     for (int color : Color.values) {
       for (int pieceType : PieceType.values) {
-        int piece = Piece.valueOf(pieceType, color);
+        int piece = Piece.valueOf(color, pieceType);
 
-        assertTrue(Piece.isValid(piece));
         assertEquals(piece, Piece.values[piece]);
       }
     }
-
-    assertFalse(Piece.isValid(Piece.NOPIECE));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidToGenericPiece() {
-    Piece.toGenericPiece(Piece.NOPIECE);
+  @Test
+  public void testIsValid() {
+    for (int piece : Piece.values) {
+      assertTrue(Piece.isValid(piece));
+    }
+
+    assertFalse(Piece.isValid(Piece.NOPIECE));
   }
 
   @Test

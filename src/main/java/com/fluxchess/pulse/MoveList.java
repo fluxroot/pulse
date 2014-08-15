@@ -17,15 +17,15 @@ final class MoveList {
   final Entry[] entries = new Entry[MAX_MOVES];
   int size = 0;
 
-  static final class Entry {
-    int move = Move.NOMOVE;
-    int value = Evaluation.NOVALUE;
-    final MoveVariation pv = new MoveVariation();
+  static final class MoveVariation {
+    final int[] moves = new int[Depth.MAX_PLY];
+    int size = 0;
   }
 
-  static final class MoveVariation {
-    final int[] moves = new int[Search.MAX_PLY];
-    int size = 0;
+  static final class Entry {
+    int move = Move.NOMOVE;
+    int value = Value.NOVALUE;
+    final MoveVariation pv = new MoveVariation();
   }
 
   MoveList() {
@@ -59,16 +59,16 @@ final class MoveList {
       int move = entries[i].move;
       int value = 0;
 
-      int pieceTypeValue = Evaluation.getPieceTypeValue(Piece.getType(Move.getOriginPiece(move)));
-      value += Evaluation.KING_VALUE / pieceTypeValue;
+      int pieceTypeValue = PieceType.getValue(Piece.getType(Move.getOriginPiece(move)));
+      value += PieceType.KING_VALUE / pieceTypeValue;
 
       int target = Move.getTargetPiece(move);
       if (Piece.isValid(target)) {
-        value += 10 * Evaluation.getPieceTypeValue(Piece.getType(target));
+        value += 10 * PieceType.getValue(Piece.getType(target));
       }
 
-      assert value >= (Evaluation.KING_VALUE / Evaluation.KING_VALUE)
-          && value <= (Evaluation.KING_VALUE / Evaluation.PAWN_VALUE) + 10 * Evaluation.QUEEN_VALUE;
+      assert value >= (PieceType.KING_VALUE / PieceType.KING_VALUE)
+          && value <= (PieceType.KING_VALUE / PieceType.PAWN_VALUE) + 10 * PieceType.QUEEN_VALUE;
 
       entries[i].value = value;
     }

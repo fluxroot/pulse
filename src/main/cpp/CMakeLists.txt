@@ -1,8 +1,24 @@
 project(main)
 
 add_library(core STATIC
+  bitboard.cpp
   board.cpp
+  castling.cpp
+  castlingtype.cpp
+  color.cpp
+  evaluation.cpp
+  file.cpp
+  move.cpp
+  movegenerator.cpp
+  movelist.cpp
+  movetype.cpp
+  perft.cpp
+  piece.cpp
+  piecetype.cpp
   pulse.cpp
+  rank.cpp
+  search.cpp
+  square.cpp
 )
 
 add_executable(pulse main.cpp)

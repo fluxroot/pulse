@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Phokham Nonava
+ * Copyright (C) 2013-2014 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
@@ -24,7 +24,30 @@ final class PieceType {
       PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
   };
 
+  // Piece values as defined by Larry Kaufman
+  static final int PAWN_VALUE = 100;
+  static final int KNIGHT_VALUE = 325;
+  static final int BISHOP_VALUE = 325;
+  static final int ROOK_VALUE = 500;
+  static final int QUEEN_VALUE = 975;
+  static final int KING_VALUE = 20000;
+
   private PieceType() {
+  }
+
+  static boolean isValid(int pieceType) {
+    switch (pieceType) {
+      case PAWN:
+      case KNIGHT:
+      case BISHOP:
+      case ROOK:
+      case QUEEN:
+      case KING:
+        return true;
+      case NOPIECETYPE:
+      default:
+        return false;
+    }
   }
 
   static GenericChessman toGenericChessman(int pieceType) {
@@ -44,21 +67,6 @@ final class PieceType {
       case NOPIECETYPE:
       default:
         throw new IllegalArgumentException();
-    }
-  }
-
-  static boolean isValid(int pieceType) {
-    switch (pieceType) {
-      case PAWN:
-      case KNIGHT:
-      case BISHOP:
-      case ROOK:
-      case QUEEN:
-      case KING:
-        return true;
-      case NOPIECETYPE:
-      default:
-        return false;
     }
   }
 
@@ -87,6 +95,26 @@ final class PieceType {
       case KNIGHT:
       case KING:
         return false;
+      case NOPIECETYPE:
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
+
+  static int getValue(int pieceType) {
+    switch (pieceType) {
+      case PAWN:
+        return PAWN_VALUE;
+      case KNIGHT:
+        return KNIGHT_VALUE;
+      case BISHOP:
+        return BISHOP_VALUE;
+      case ROOK:
+        return ROOK_VALUE;
+      case QUEEN:
+        return QUEEN_VALUE;
+      case KING:
+        return KING_VALUE;
       case NOPIECETYPE:
       default:
         throw new IllegalArgumentException();
