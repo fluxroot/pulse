@@ -35,6 +35,8 @@ final class Evaluation {
   // from the opening to the endgame
   private static final int PHASE_INTERVAL_MATERIAL = PHASE_OPENING_MATERIAL - PHASE_ENDGAME_MATERIAL;
 
+  static final int TEMPO = 1;
+
   static int materialWeight = 100;
   static int mobilityWeight = 80;
   private static final int MAX_WEIGHT = 100;
@@ -69,6 +71,10 @@ final class Evaluation {
     // Evaluate castling
     int castlingScore = (evaluateCastling(myColor, board) - evaluateCastling(oppositeColor, board));
     opening += castlingScore;
+
+    // Add Tempo
+    opening += TEMPO;
+    endgame += TEMPO;
 
     // Interpolate opening and endgame
     int value = interpolate(opening, endgame, board);

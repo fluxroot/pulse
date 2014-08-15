@@ -18,7 +18,7 @@ public class EvaluationTest {
     Board board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
     Evaluation evaluation = new Evaluation();
 
-    assertEquals(0, evaluation.evaluate(board));
+    assertEquals(Evaluation.TEMPO, evaluation.evaluate(board));
   }
 
 }
