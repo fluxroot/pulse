@@ -7,14 +7,13 @@
 package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericBoard;
+import org.junit.Test;
 
-/**
- * This is our internal board.
- */
-final class Board {
+public class BoardTest {
 
-  Board(GenericBoard genericBoard) {
-    // Mirror the GenericBoard to our internal board
+  @Test
+  public void testConstructor() {
+    Board board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
   }
 
 }

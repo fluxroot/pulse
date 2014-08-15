@@ -7,15 +7,12 @@
 
   <groupId>com.fluxchess</groupId>
   <artifactId>pulse</artifactId>
-  <version>1.4.0</version>
+  <version>1.5</version>
   <name>Pulse Chess</name>
   <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <buildNumber>dev</buildNumber>
-    <revisionNumber>dev</revisionNumber>
   </properties>
 
   <repositories>
@@ -66,22 +63,6 @@
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/*.properties</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.properties</exclude>
-        </excludes>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -147,6 +128,7 @@
               <goal>single</goal>
             </goals>
             <configuration>
+              <finalName>${project.build.finalName}-java</finalName>
               <appendAssemblyId>false</appendAssemblyId>
               <descriptors>
                 <descriptor>src/assembly/dist.xml</descriptor>
