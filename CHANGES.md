@@ -1,3 +1,19 @@
+Release Notes - Pulse - Version 1.5
+-----------------------------------
+
+* [PULSE-41] - Add skeleton files for Pulse C++ Edition
+* [PULSE-42] - Add Pulse C++ Edition
+* [PULSE-46] - Add perft as command line argument
+* [PULSE-47] - Add Tempo
+* [PULSE-45] - Refactor Java code to match C++ code base
+* [PULSE-51] - Do move legality check in search
+* [PULSE-43] - Remove VersionInfo for simplicity
+* [PULSE-44] - Remove Configuration for simplicity
+* [PULSE-48] - Remove tapered eval for simplicity
+* [PULSE-49] - Remove castling evaluation for simplicity
+* [PULSE-50] - Remove staged move generator
+* [PULSE-52] - Remove check extensions
+
 Release Notes - Pulse - Version 1.4.0
 -------------------------------------
 
