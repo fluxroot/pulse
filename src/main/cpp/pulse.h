@@ -19,7 +19,6 @@ private:
   // We have to maintain at least the state of the board and the search.
   std::unique_ptr<Board> board = std::unique_ptr<Board>(new Board(Board::STANDARDBOARD));
   std::unique_ptr<Search> search = Search::newInfiniteSearch(*board);
-  MoveList searchMoves;
 
   void receiveInitialize();
   void receiveReady();
