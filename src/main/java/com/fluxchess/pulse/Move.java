@@ -36,7 +36,7 @@ final class Move {
   private static final int PROMOTION_MASK = PieceType.MASK << PROMOTION_SHIFT;
 
   // We don't use 0 as a null value to protect against errors.
-  public static final int NOMOVE = (MoveType.NOMOVETYPE << TYPE_SHIFT)
+  static final int NOMOVE = (MoveType.NOMOVETYPE << TYPE_SHIFT)
       | (Square.NOSQUARE << ORIGINSQUARE_SHIFT)
       | (Square.NOSQUARE << TARGETSQUARE_SHIFT)
       | (Piece.NOPIECE << ORIGINPIECE_SHIFT)

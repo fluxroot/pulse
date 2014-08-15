@@ -54,7 +54,7 @@ final class Board {
     }
   }
 
-  public Board(GenericBoard genericBoard) {
+  Board(GenericBoard genericBoard) {
     assert genericBoard != null;
 
     // Initialize stack
@@ -301,7 +301,7 @@ final class Board {
     return piece;
   }
 
-  public void makeMove(int move) {
+  void makeMove(int move) {
     State entry = stack[stackSize];
 
     // Get variables
@@ -411,7 +411,7 @@ final class Board {
     assert stackSize < Search.MAX_MOVES;
   }
 
-  public void undoMove(int move) {
+  void undoMove(int move) {
     --stackSize;
     assert stackSize >= 0;
 
@@ -530,7 +530,7 @@ final class Board {
     }
   }
 
-  public boolean isCheck() {
+  boolean isCheck() {
     // Check whether our king is attacked by any opponent piece
     return isAttacked(Bitboard.next(kings[activeColor].squares), Color.opposite(activeColor));
   }
