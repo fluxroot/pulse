@@ -10,14 +10,12 @@ import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericFile;
 import com.fluxchess.jcpi.models.GenericPiece;
 
-import java.security.SecureRandom;
-
 /**
  * This is our internal board.
  */
 final class Board {
 
-  private static final int BOARDSIZE = 128;
+  static final int BOARDSIZE = 128;
 
   final int[] board = new int[BOARDSIZE];
 
@@ -38,10 +36,6 @@ final class Board {
   private int halfmoveNumber;
 
   long zobristKey = 0;
-  private static final long[][] zobristPieces = new long[Piece.values.length][BOARDSIZE];
-  private static final long[] zobristCastlingRights = new long[Castling.values.length];
-  private static final long[] zobristEnPassantSquare = new long[BOARDSIZE];
-  private static final long zobristActiveColor;
 
   // We will save some board parameters in a State before making a move.
   // Later we will restore them before undoing a move.
@@ -59,44 +53,6 @@ final class Board {
         castlingRights[castling] = File.NOFILE;
       }
     }
-  }
-
-  private static final class Zobrist {
-    private static final SecureRandom random = new SecureRandom();
-
-    private Zobrist() {
-    }
-
-    private static long next() {
-      byte[] bytes = new byte[16];
-      random.nextBytes(bytes);
-
-      long hash = 0L;
-      for (int i = 0; i < bytes.length; ++i) {
-        hash ^= ((long) (bytes[i] & 0xFF)) << ((i * 8) % 64);
-      }
-
-      return hash;
-    }
-  }
-
-  // Initialize the zobrist keys
-  static {
-    for (int piece : Piece.values) {
-      for (int i = 0; i < BOARDSIZE; ++i) {
-        zobristPieces[piece][i] = Zobrist.next();
-      }
-    }
-
-    for (int castling : Castling.values) {
-      zobristCastlingRights[castling] = Zobrist.next();
-    }
-
-    for (int i = 0; i < BOARDSIZE; ++i) {
-      zobristEnPassantSquare[i] = Zobrist.next();
-    }
-
-    zobristActiveColor = Zobrist.next();
   }
 
   public Board(GenericBoard genericBoard) {
@@ -142,7 +98,7 @@ final class Board {
         );
         if (genericFile != null) {
           castlingRights[Castling.valueOf(color, castlingType)] = File.valueOf(genericFile);
-          zobristKey ^= zobristCastlingRights[Castling.valueOf(color, castlingType)];
+          zobristKey ^= Zobrist.castlingRights[Castling.valueOf(color, castlingType)];
         } else {
           castlingRights[Castling.valueOf(color, castlingType)] = File.NOFILE;
         }
@@ -152,13 +108,13 @@ final class Board {
     // Initialize en passant
     if (genericBoard.getEnPassant() != null) {
       enPassantSquare = Square.valueOf(genericBoard.getEnPassant());
-      zobristKey ^= zobristEnPassantSquare[enPassantSquare];
+      zobristKey ^= Zobrist.enPassantSquare[enPassantSquare];
     }
 
     // Initialize active color
     if (activeColor != Color.valueOf(genericBoard.getActiveColor())) {
       activeColor = Color.valueOf(genericBoard.getActiveColor());
-      zobristKey ^= zobristActiveColor;
+      zobristKey ^= Zobrist.activeColor;
     }
 
     // Initialize half move clock
@@ -296,7 +252,7 @@ final class Board {
 
     board[square] = piece;
 
-    zobristKey ^= zobristPieces[piece][square];
+    zobristKey ^= Zobrist.board[piece][square];
   }
 
   /**
@@ -350,7 +306,7 @@ final class Board {
 
     board[square] = Piece.NOPIECE;
 
-    zobristKey ^= zobristPieces[piece][square];
+    zobristKey ^= Zobrist.board[piece][square];
 
     return piece;
   }
@@ -443,19 +399,19 @@ final class Board {
 
     // Update enPassantSquare
     if (enPassantSquare != Square.NOSQUARE) {
-      zobristKey ^= zobristEnPassantSquare[enPassantSquare];
+      zobristKey ^= Zobrist.enPassantSquare[enPassantSquare];
     }
     if (type == MoveType.PAWNDOUBLE) {
       enPassantSquare = targetSquare + (originColor == Color.WHITE ? Square.S : Square.N);
       assert Square.isValid(enPassantSquare);
-      zobristKey ^= zobristEnPassantSquare[enPassantSquare];
+      zobristKey ^= Zobrist.enPassantSquare[enPassantSquare];
     } else {
       enPassantSquare = Square.NOSQUARE;
     }
 
     // Update activeColor
     activeColor = Color.opposite(activeColor);
-    zobristKey ^= zobristActiveColor;
+    zobristKey ^= Zobrist.activeColor;
 
     // Update halfmoveClock
     if (Piece.getType(originPiece) == PieceType.PAWN || targetPiece != Piece.NOPIECE) {
@@ -560,7 +516,7 @@ final class Board {
 
     if (castlingRights[castling] != File.NOFILE) {
       castlingRights[castling] = File.NOFILE;
-      zobristKey ^= zobristCastlingRights[castling];
+      zobristKey ^= Zobrist.castlingRights[castling];
     }
   }
 
