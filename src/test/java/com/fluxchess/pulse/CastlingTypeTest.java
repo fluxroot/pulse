@@ -23,8 +23,8 @@ public class CastlingTypeTest {
 
   @Test
   public void testValues() {
-    for (int castlingType : CastlingType.values) {
-      assertEquals(castlingType, CastlingType.values[castlingType]);
+    for (int castlingtype : CastlingType.values) {
+      assertEquals(castlingtype, CastlingType.values[castlingtype]);
     }
   }
 

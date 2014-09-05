@@ -25,10 +25,10 @@ bool Castling::isValid(int castling) {
   }
 }
 
-int Castling::valueOf(int color, int castlingType) {
+int Castling::valueOf(int color, int castlingtype) {
   switch (color) {
     case Color::WHITE:
-      switch (castlingType) {
+      switch (castlingtype) {
         case CastlingType::KINGSIDE:
           return WHITE_KINGSIDE;
         case CastlingType::QUEENSIDE:
@@ -37,7 +37,7 @@ int Castling::valueOf(int color, int castlingType) {
           throw std::exception();
       }
     case Color::BLACK:
-      switch (castlingType) {
+      switch (castlingtype) {
         case CastlingType::KINGSIDE:
           return BLACK_KINGSIDE;
         case CastlingType::QUEENSIDE:

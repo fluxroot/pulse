@@ -46,12 +46,12 @@ final class Notation {
 
     // Initialize castling
     for (int color : Color.values) {
-      for (int castlingType : CastlingType.values) {
+      for (int castlingtype : CastlingType.values) {
         GenericFile genericFile = genericBoard.getCastling(
-            fromColor(color), fromCastlingType(castlingType)
+            fromColor(color), fromCastlingType(castlingtype)
         );
         if (genericFile != null) {
-          newPosition.setCastlingRight(Castling.valueOf(color, castlingType));
+          newPosition.setCastlingRight(Castling.valueOf(color, castlingtype));
         }
       }
     }
@@ -233,8 +233,8 @@ final class Notation {
     }
   }
 
-  static GenericCastling fromCastlingType(int castlingType) {
-    switch (castlingType) {
+  static GenericCastling fromCastlingType(int castlingtype) {
+    switch (castlingtype) {
       case CastlingType.KINGSIDE:
         return GenericCastling.KINGSIDE;
       case CastlingType.QUEENSIDE:

@@ -32,10 +32,10 @@ final class Castling {
     }
   }
 
-  static int valueOf(int color, int castlingType) {
+  static int valueOf(int color, int castlingtype) {
     switch (color) {
       case Color.WHITE:
-        switch (castlingType) {
+        switch (castlingtype) {
           case CastlingType.KINGSIDE:
             return WHITE_KINGSIDE;
           case CastlingType.QUEENSIDE:
@@ -44,7 +44,7 @@ final class Castling {
             throw new IllegalArgumentException();
         }
       case Color.BLACK:
-        switch (castlingType) {
+        switch (castlingtype) {
           case CastlingType.KINGSIDE:
             return BLACK_KINGSIDE;
           case CastlingType.QUEENSIDE:

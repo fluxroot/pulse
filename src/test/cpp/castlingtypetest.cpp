@@ -12,7 +12,7 @@
 using namespace pulse;
 
 TEST(castlingtypetest, testValues) {
-  for (auto castlingType : CastlingType::values) {
-    EXPECT_EQ(castlingType, CastlingType::values[castlingType]);
+  for (auto castlingtype : CastlingType::values) {
+    EXPECT_EQ(castlingtype, CastlingType::values[castlingtype]);
   }
 }
