@@ -8,6 +8,7 @@
 #define PULSE_SQUARE_H
 
 #include <array>
+#include <vector>
 
 namespace pulse {
 
@@ -56,7 +57,7 @@ public:
   static const int SIZE = 64;
   static const std::array<int, SIZE> values;
 
-  // These are our move deltas.
+  // These are our move directions
   // N = north, E = east, S = south, W = west
   static const int N = 16;
   static const int E = 1;
@@ -66,6 +67,13 @@ public:
   static const int SE = S + E;
   static const int SW = S + W;
   static const int NW = N + W;
+
+  static const std::vector<std::vector<int>> pawnDirections;
+  static const std::vector<int> knightDirections;
+  static const std::vector<int> bishopDirections;
+  static const std::vector<int> rookDirections;
+  static const std::vector<int> queenDirections;
+  static const std::vector<int> kingDirections;
 
   static bool isValid(int square);
   static int fromNotation(const std::string& notation);

@@ -60,35 +60,6 @@ Board::State::State() {
   castlingRights.fill(+File::NOFILE);
 }
 
-const std::vector<std::vector<int>> Board::pawnDirections = {
-  { Square::N, Square::NE, Square::NW }, // Color::WHITE
-  { Square::S, Square::SE, Square::SW }  // Color::BLACK
-};
-const std::vector<int> Board::knightDirections = {
-  Square::N + Square::N + Square::E,
-  Square::N + Square::N + Square::W,
-  Square::N + Square::E + Square::E,
-  Square::N + Square::W + Square::W,
-  Square::S + Square::S + Square::E,
-  Square::S + Square::S + Square::W,
-  Square::S + Square::E + Square::E,
-  Square::S + Square::W + Square::W
-};
-const std::vector<int> Board::bishopDirections = {
-  Square::NE, Square::NW, Square::SE, Square::SW
-};
-const std::vector<int> Board::rookDirections = {
-  Square::N, Square::E, Square::S, Square::W
-};
-const std::vector<int> Board::queenDirections = {
-  Square::N, Square::E, Square::S, Square::W,
-  Square::NE, Square::NW, Square::SE, Square::SW
-};
-const std::vector<int> Board::kingDirections = {
-  Square::N, Square::E, Square::S, Square::W,
-  Square::NE, Square::NW, Square::SE, Square::SW
-};
-
 Board::Board()
     : zobrist(Zobrist::instance()) {
   board.fill(+Piece::NOPIECE);
@@ -874,8 +845,8 @@ bool Board::isAttacked(int targetSquare, int attackerColor) {
 
   // Pawn attacks
   int pawnPiece = Piece::valueOf(attackerColor, PieceType::PAWN);
-  for (unsigned int i = 1; i < pawnDirections[attackerColor].size(); ++i) {
-    int attackerSquare = targetSquare - pawnDirections[attackerColor][i];
+  for (unsigned int i = 1; i < Square::pawnDirections[attackerColor].size(); ++i) {
+    int attackerSquare = targetSquare - Square::pawnDirections[attackerColor][i];
     if (Square::isValid(attackerSquare)) {
       int attackerPawn = board[attackerSquare];
 
@@ -887,23 +858,23 @@ bool Board::isAttacked(int targetSquare, int attackerColor) {
 
   return isAttacked(targetSquare,
     Piece::valueOf(attackerColor, PieceType::KNIGHT),
-      knightDirections)
+    Square::knightDirections)
 
       // The queen moves like a bishop, so check both piece types
       || isAttacked(targetSquare,
       Piece::valueOf(attackerColor, PieceType::BISHOP),
       Piece::valueOf(attackerColor, PieceType::QUEEN),
-      bishopDirections)
+      Square::bishopDirections)
 
       // The queen moves like a rook, so check both piece types
       || isAttacked(targetSquare,
       Piece::valueOf(attackerColor, PieceType::ROOK),
       Piece::valueOf(attackerColor, PieceType::QUEEN),
-      rookDirections)
+      Square::rookDirections)
 
       || isAttacked(targetSquare,
       Piece::valueOf(attackerColor, PieceType::KING),
-      kingDirections);
+      Square::kingDirections);
 }
 
 /**

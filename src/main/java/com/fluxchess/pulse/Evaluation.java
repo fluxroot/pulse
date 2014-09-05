@@ -66,25 +66,25 @@ final class Evaluation {
     int knightMobility = 0;
     for (long squares = board.knights[color].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      knightMobility += evaluateMobility(color, board, square, Board.knightDirections);
+      knightMobility += evaluateMobility(color, board, square, Square.knightDirections);
     }
 
     int bishopMobility = 0;
     for (long squares = board.bishops[color].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      bishopMobility += evaluateMobility(color, board, square, Board.bishopDirections);
+      bishopMobility += evaluateMobility(color, board, square, Square.bishopDirections);
     }
 
     int rookMobility = 0;
     for (long squares = board.rooks[color].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      rookMobility += evaluateMobility(color, board, square, Board.rookDirections);
+      rookMobility += evaluateMobility(color, board, square, Square.rookDirections);
     }
 
     int queenMobility = 0;
     for (long squares = board.queens[color].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      queenMobility += evaluateMobility(color, board, square, Board.queenDirections);
+      queenMobility += evaluateMobility(color, board, square, Square.queenDirections);
     }
 
     return knightMobility * 4

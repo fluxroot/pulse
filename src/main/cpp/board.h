@@ -28,13 +28,6 @@ public:
   static const int MAX_MOVES = Depth::MAX_PLY + 1024;
   static const int BOARDSIZE = 128;
 
-  static const std::vector<std::vector<int>> pawnDirections;
-  static const std::vector<int> knightDirections;
-  static const std::vector<int> bishopDirections;
-  static const std::vector<int> rookDirections;
-  static const std::vector<int> queenDirections;
-  static const std::vector<int> kingDirections;
-
   std::array<int, BOARDSIZE> board;
 
   std::array<Bitboard, Color::SIZE> pawns;

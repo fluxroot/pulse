@@ -61,7 +61,7 @@ final class Square {
       a8, b8, c8, d8, e8, f8, g8, h8
   };
 
-  // These are our move deltas.
+  // These are our move directions
   // N = north, E = east, S = south, W = west
   static final int N = 16;
   static final int E = 1;
@@ -71,6 +71,35 @@ final class Square {
   static final int SE = S + E;
   static final int SW = S + W;
   static final int NW = N + W;
+
+  static final int[][] pawnDirections = {
+      {N, NE, NW}, // Color.WHITE
+      {S, SE, SW}  // Color.BLACK
+  };
+  static final int[] knightDirections = {
+      N + N + E,
+      N + N + W,
+      N + E + E,
+      N + W + W,
+      S + S + E,
+      S + S + W,
+      S + E + E,
+      S + W + W
+  };
+  static final int[] bishopDirections = {
+      NE, NW, SE, SW
+  };
+  static final int[] rookDirections = {
+      N, E, S, W
+  };
+  static final int[] queenDirections = {
+      N, E, S, W,
+      NE, NW, SE, SW
+  };
+  static final int[] kingDirections = {
+      N, E, S, W,
+      NE, NW, SE, SW
+  };
 
   private Square() {
   }

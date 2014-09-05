@@ -79,22 +79,22 @@ final class MoveGenerator {
     }
     for (long squares = board.knights[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, Board.knightDirections, board);
+      addMoves(list, square, Square.knightDirections, board);
     }
     for (long squares = board.bishops[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, Board.bishopDirections, board);
+      addMoves(list, square, Square.bishopDirections, board);
     }
     for (long squares = board.rooks[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, Board.rookDirections, board);
+      addMoves(list, square, Square.rookDirections, board);
     }
     for (long squares = board.queens[activeColor].squares; squares != 0; squares &= squares - 1) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, Board.queenDirections, board);
+      addMoves(list, square, Square.queenDirections, board);
     }
     int square = Bitboard.next(board.kings[activeColor].squares);
-    addMoves(list, square, Board.kingDirections, board);
+    addMoves(list, square, Square.kingDirections, board);
   }
 
   private void addMoves(MoveList list, int originSquare, int[] moveDelta, Board board) {
@@ -148,8 +148,8 @@ final class MoveGenerator {
     int pawnColor = Piece.getColor(pawnPiece);
 
     // Generate only capturing moves first (i = 1)
-    for (int i = 1; i < Board.pawnDirections[pawnColor].length; ++i) {
-      int delta = Board.pawnDirections[pawnColor][i];
+    for (int i = 1; i < Square.pawnDirections[pawnColor].length; ++i) {
+      int delta = Square.pawnDirections[pawnColor][i];
 
       int targetSquare = pawnSquare + delta;
       if (Square.isValid(targetSquare)) {
@@ -195,7 +195,7 @@ final class MoveGenerator {
     }
 
     // Generate non-capturing moves
-    int delta = Board.pawnDirections[pawnColor][0];
+    int delta = Square.pawnDirections[pawnColor][0];
 
     // Move one rank forward
     int targetSquare = pawnSquare + delta;

@@ -76,22 +76,22 @@ void MoveGenerator::addMoves(MoveList& list, Board& board) {
   }
   for (auto squares = board.knights[activeColor].squares; squares != 0; squares &= squares - 1) {
     int square = Bitboard::next(squares);
-    addMoves(list, square, Board::knightDirections, board);
+    addMoves(list, square, Square::knightDirections, board);
   }
   for (auto squares = board.bishops[activeColor].squares; squares != 0; squares &= squares - 1) {
     int square = Bitboard::next(squares);
-    addMoves(list, square, Board::bishopDirections, board);
+    addMoves(list, square, Square::bishopDirections, board);
   }
   for (auto squares = board.rooks[activeColor].squares; squares != 0; squares &= squares - 1) {
     int square = Bitboard::next(squares);
-    addMoves(list, square, Board::rookDirections, board);
+    addMoves(list, square, Square::rookDirections, board);
   }
   for (auto squares = board.queens[activeColor].squares; squares != 0; squares &= squares - 1) {
     int square = Bitboard::next(squares);
-    addMoves(list, square, Board::queenDirections, board);
+    addMoves(list, square, Square::queenDirections, board);
   }
   int square = Bitboard::next(board.kings[activeColor].squares);
-  addMoves(list, square, Board::kingDirections, board);
+  addMoves(list, square, Square::kingDirections, board);
 }
 
 void MoveGenerator::addMoves(MoveList& list, int originSquare, const std::vector<int>& moveDelta, Board& board) {
@@ -142,8 +142,8 @@ void MoveGenerator::addPawnMoves(MoveList& list, int pawnSquare, Board& board) {
   int pawnColor = Piece::getColor(pawnPiece);
 
   // Generate only capturing moves first (i = 1)
-  for (unsigned int i = 1; i < Board::pawnDirections[pawnColor].size(); ++i) {
-    int delta = Board::pawnDirections[pawnColor][i];
+  for (unsigned int i = 1; i < Square::pawnDirections[pawnColor].size(); ++i) {
+    int delta = Square::pawnDirections[pawnColor][i];
 
     int targetSquare = pawnSquare + delta;
     if (Square::isValid(targetSquare)) {
@@ -189,7 +189,7 @@ void MoveGenerator::addPawnMoves(MoveList& list, int pawnSquare, Board& board) {
   }
 
   // Generate non-capturing moves
-  int delta = Board::pawnDirections[pawnColor][0];
+  int delta = Square::pawnDirections[pawnColor][0];
 
   // Move one rank forward
   int targetSquare = pawnSquare + delta;

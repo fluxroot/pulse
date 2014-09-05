@@ -24,6 +24,35 @@ const std::array<int, Square::SIZE> Square::values = {
   a8, b8, c8, d8, e8, f8, g8, h8
 };
 
+const std::vector<std::vector<int>> Square::pawnDirections = {
+    { Square::N, Square::NE, Square::NW }, // Color::WHITE
+    { Square::S, Square::SE, Square::SW }  // Color::BLACK
+};
+const std::vector<int> Square::knightDirections = {
+  Square::N + Square::N + Square::E,
+  Square::N + Square::N + Square::W,
+  Square::N + Square::E + Square::E,
+  Square::N + Square::W + Square::W,
+  Square::S + Square::S + Square::E,
+  Square::S + Square::S + Square::W,
+  Square::S + Square::E + Square::E,
+  Square::S + Square::W + Square::W
+};
+const std::vector<int> Square::bishopDirections = {
+  Square::NE, Square::NW, Square::SE, Square::SW
+};
+const std::vector<int> Square::rookDirections = {
+  Square::N, Square::E, Square::S, Square::W
+};
+const std::vector<int> Square::queenDirections = {
+  Square::N, Square::E, Square::S, Square::W,
+  Square::NE, Square::NW, Square::SE, Square::SW
+};
+const std::vector<int> Square::kingDirections = {
+  Square::N, Square::E, Square::S, Square::W,
+  Square::NE, Square::NW, Square::SE, Square::SW
+};
+
 bool Square::isValid(int square) {
   return (square & 0x88) == 0;
 }

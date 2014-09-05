@@ -20,35 +20,6 @@ final class Board {
   static final int MAX_MOVES = Depth.MAX_PLY + 1024;
   static final int BOARDSIZE = 128;
 
-  static final int[][] pawnDirections = {
-      {Square.N, Square.NE, Square.NW}, // Color.WHITE
-      {Square.S, Square.SE, Square.SW}  // Color.BLACK
-  };
-  static final int[] knightDirections = {
-      Square.N + Square.N + Square.E,
-      Square.N + Square.N + Square.W,
-      Square.N + Square.E + Square.E,
-      Square.N + Square.W + Square.W,
-      Square.S + Square.S + Square.E,
-      Square.S + Square.S + Square.W,
-      Square.S + Square.E + Square.E,
-      Square.S + Square.W + Square.W
-  };
-  static final int[] bishopDirections = {
-      Square.NE, Square.NW, Square.SE, Square.SW
-  };
-  static final int[] rookDirections = {
-      Square.N, Square.E, Square.S, Square.W
-  };
-  static final int[] queenDirections = {
-      Square.N, Square.E, Square.S, Square.W,
-      Square.NE, Square.NW, Square.SE, Square.SW
-  };
-  static final int[] kingDirections = {
-      Square.N, Square.E, Square.S, Square.W,
-      Square.NE, Square.NW, Square.SE, Square.SW
-  };
-
   final int[] board = new int[BOARDSIZE];
 
   final Bitboard[] pawns = new Bitboard[Color.values.length];
@@ -619,8 +590,8 @@ final class Board {
 
     // Pawn attacks
     int pawnPiece = Piece.valueOf(attackerColor, PieceType.PAWN);
-    for (int i = 1; i < pawnDirections[attackerColor].length; ++i) {
-      int attackerSquare = targetSquare - pawnDirections[attackerColor][i];
+    for (int i = 1; i < Square.pawnDirections[attackerColor].length; ++i) {
+      int attackerSquare = targetSquare - Square.pawnDirections[attackerColor][i];
       if (Square.isValid(attackerSquare)) {
         int attackerPawn = board[attackerSquare];
 
@@ -632,23 +603,23 @@ final class Board {
 
     return isAttacked(targetSquare,
         Piece.valueOf(attackerColor, PieceType.KNIGHT),
-        knightDirections)
+        Square.knightDirections)
 
         // The queen moves like a bishop, so check both piece types
         || isAttacked(targetSquare,
         Piece.valueOf(attackerColor, PieceType.BISHOP),
         Piece.valueOf(attackerColor, PieceType.QUEEN),
-        bishopDirections)
+        Square.bishopDirections)
 
         // The queen moves like a rook, so check both piece types
         || isAttacked(targetSquare,
         Piece.valueOf(attackerColor, PieceType.ROOK),
         Piece.valueOf(attackerColor, PieceType.QUEEN),
-        rookDirections)
+        Square.rookDirections)
 
         || isAttacked(targetSquare,
         Piece.valueOf(attackerColor, PieceType.KING),
-        kingDirections);
+        Square.kingDirections);
   }
 
   /**
