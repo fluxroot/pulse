@@ -25,17 +25,21 @@ namespace pulse {
  */
 class Search {
 public:
-  static std::unique_ptr<Search> newDepthSearch(Protocol& protocol, Board& board, int searchDepth);
-  static std::unique_ptr<Search> newNodesSearch(Protocol& protocol, Board& board, uint64_t searchNodes);
-  static std::unique_ptr<Search> newTimeSearch(Protocol& protocol, Board& board, uint64_t searchTime);
-  static std::unique_ptr<Search> newInfiniteSearch(Protocol& protocol, Board& board);
-  static std::unique_ptr<Search> newClockSearch(Protocol& protocol, Board& board,
+  Search(Protocol& protocol);
+
+  void newDepthSearch(Board& board, int searchDepth);
+  void newNodesSearch(Board& board, uint64_t searchNodes);
+  void newTimeSearch(Board& board, uint64_t searchTime);
+  void newInfiniteSearch(Board& board);
+  void newClockSearch(Board& board,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo);
-  static std::unique_ptr<Search> newPonderSearch(Protocol& protocol, Board& board,
+  void newPonderSearch(Board& board,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo);
+  void reset();
   void start();
   void stop();
   void ponderhit();
+  void quit();
   void run();
 
 private:
@@ -44,7 +48,7 @@ private:
    */
   class Timer {
   public:
-    Timer(bool& timerStopped, bool& doTimeManagement, int& currentDepth, int& initialDepth, bool& abort);
+    Timer(bool& timerStopped, bool& doTimeManagement, int& currentDepth, const int& initialDepth, bool& abort);
 
     void start(uint64_t searchTime);
     void stop();
@@ -56,7 +60,7 @@ private:
     bool& timerStopped;
     bool& doTimeManagement;
     int& currentDepth;
-    int& initialDepth;
+    const int& initialDepth;
 
     bool& abort;
 
@@ -69,6 +73,7 @@ private:
 
     void acquire();
     void release();
+    void drainPermits();
   private:
     int permits;
     std::mutex mutex;
@@ -76,11 +81,15 @@ private:
   };
 
   std::thread thread;
-  Semaphore semaphore;
-  bool running = false;
+  Semaphore wakeupSignal;
+  Semaphore runSignal;
+  Semaphore stopSignal;
+  std::recursive_mutex sync;
   Protocol& protocol;
+  bool running = false;
+  bool shutdown = false;
 
-  Board& board;
+  Board board;
   Evaluation evaluation;
 
   // We will store a MoveGenerator for each ply so we don't have to create them
@@ -88,30 +97,28 @@ private:
   std::array<MoveGenerator, Depth::MAX_PLY> moveGenerators;
 
   // Depth search
-  int searchDepth = Depth::MAX_DEPTH;
+  int searchDepth;
 
   // Nodes search
-  uint64_t searchNodes = std::numeric_limits<uint64_t>::max();
+  uint64_t searchNodes;
 
   // Time & Clock & Ponder search
-  uint64_t searchTime = 0;
+  uint64_t searchTime;
   Timer timer;
-  bool timerStopped = false;
-  bool runTimer = false;
-  bool doTimeManagement = false;
+  bool timerStopped;
+  bool runTimer;
+  bool doTimeManagement;
 
   // Search parameters
   MoveList rootMoves;
-  bool abort = false;
-  uint64_t totalNodes = 0;
-  int initialDepth = 1;
-  int currentDepth = initialDepth;
-  int currentMaxDepth = 0;
-  int currentMove = Move::NOMOVE;
-  int currentMoveNumber = 0;
+  bool abort;
+  uint64_t totalNodes;
+  const int initialDepth = 1;
+  int currentDepth;
+  int currentMaxDepth;
+  int currentMove;
+  int currentMoveNumber;
   std::array<MoveList::MoveVariation, Depth::MAX_PLY + 1> pv;
-
-  Search(Protocol& protocol, Board& board);
 
   void checkStopConditions();
   void updateSearch(int ply);

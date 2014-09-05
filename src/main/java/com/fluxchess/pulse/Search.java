@@ -19,10 +19,14 @@ import static com.fluxchess.pulse.MoveList.MoveVariation;
 final class Search implements Runnable {
 
   private final Thread thread = new Thread(this);
-  private final Semaphore semaphore = new Semaphore(0);
+  private final Semaphore wakeupSignal = new Semaphore(0);
+  private final Semaphore runSignal = new Semaphore(0);
+  private final Semaphore stopSignal = new Semaphore(0);
   private final Protocol protocol;
+  private boolean running = false;
+  private boolean shutdown = false;
 
-  private final Board board;
+  private Board board;
   private final Evaluation evaluation = new Evaluation();
 
   // We will store a MoveGenerator for each ply so we don't have to create them
@@ -30,26 +34,26 @@ final class Search implements Runnable {
   private final MoveGenerator[] moveGenerators = new MoveGenerator[Depth.MAX_PLY];
 
   // Depth search
-  private int searchDepth = Depth.MAX_DEPTH;
+  private int searchDepth;
 
   // Nodes search
-  private long searchNodes = Long.MAX_VALUE;
+  private long searchNodes;
 
   // Time & Clock & Ponder search
-  private long searchTime = 0;
-  private Timer timer = null;
-  private boolean timerStopped = false;
-  private boolean doTimeManagement = false;
+  private long searchTime;
+  private Timer timer;
+  private boolean timerStopped;
+  private boolean doTimeManagement;
 
   // Search parameters
   private final MoveList rootMoves = new MoveList();
-  private boolean abort = false;
-  private long totalNodes = 0;
-  private int initialDepth = 1;
-  private int currentDepth = initialDepth;
-  private int currentMaxDepth = 0;
-  private int currentMove = Move.NOMOVE;
-  private int currentMoveNumber = 0;
+  private boolean abort;
+  private long totalNodes;
+  private final int initialDepth = 1;
+  private int currentDepth;
+  private int currentMaxDepth;
+  private int currentMove;
+  private int currentMoveNumber;
   private final MoveVariation[] pv = new MoveVariation[Depth.MAX_PLY + 1];
 
   /**
@@ -68,75 +72,71 @@ final class Search implements Runnable {
     }
   }
 
-  static Search newDepthSearch(Protocol protocol, Board board, int searchDepth) {
-    if (protocol == null) throw new IllegalArgumentException();
+  void newDepthSearch(Board board, int searchDepth) {
     if (board == null) throw new IllegalArgumentException();
     if (searchDepth < 1 || searchDepth > Depth.MAX_DEPTH) throw new IllegalArgumentException();
+    if (running) throw new IllegalStateException();
 
-    Search search = new Search(protocol, board);
+    reset();
 
-    search.searchDepth = searchDepth;
-
-    return search;
+    this.board = board;
+    this.searchDepth = searchDepth;
   }
 
-  static Search newNodesSearch(Protocol protocol, Board board, long searchNodes) {
-    if (protocol == null) throw new IllegalArgumentException();
+  void newNodesSearch(Board board, long searchNodes) {
     if (board == null) throw new IllegalArgumentException();
     if (searchNodes < 1) throw new IllegalArgumentException();
+    if (running) throw new IllegalStateException();
 
-    Search search = new Search(protocol, board);
+    reset();
 
-    search.searchNodes = searchNodes;
-
-    return search;
+    this.board = board;
+    this.searchNodes = searchNodes;
   }
 
-  static Search newTimeSearch(Protocol protocol, Board board, long searchTime) {
-    if (protocol == null) throw new IllegalArgumentException();
+  void newTimeSearch(Board board, long searchTime) {
     if (board == null) throw new IllegalArgumentException();
     if (searchTime < 1) throw new IllegalArgumentException();
+    if (running) throw new IllegalStateException();
 
-    Search search = new Search(protocol, board);
+    reset();
 
-    search.searchTime = searchTime;
-    search.timer = new Timer(true);
-
-    return search;
+    this.board = board;
+    this.searchTime = searchTime;
+    this.timer = new Timer(true);
   }
 
-  static Search newInfiniteSearch(Protocol protocol, Board board) {
-    if (protocol == null) throw new IllegalArgumentException();
+  void newInfiniteSearch(Board board) {
     if (board == null) throw new IllegalArgumentException();
+    if (running) throw new IllegalStateException();
 
-    return new Search(protocol, board);
+    reset();
+
+    this.board = board;
   }
 
-  static Search newClockSearch(
-      Protocol protocol, Board board,
+  void newClockSearch(Board board,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
-    Search search = newPonderSearch(
-        protocol, board,
+    newPonderSearch(board,
         whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
     );
 
-    search.timer = new Timer(true);
-
-    return search;
+    this.timer = new Timer(true);
   }
 
-  static Search newPonderSearch(
-      Protocol protocol, Board board,
+  void newPonderSearch(Board board,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
-    if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
     if (whiteTimeLeft < 1) throw new IllegalArgumentException();
     if (whiteTimeIncrement < 0) throw new IllegalArgumentException();
     if (blackTimeLeft < 1) throw new IllegalArgumentException();
     if (blackTimeIncrement < 0) throw new IllegalArgumentException();
     if (movesToGo < 0) throw new IllegalArgumentException();
+    if (running) throw new IllegalStateException();
 
-    Search search = new Search(protocol, board);
+    reset();
+
+    this.board = board;
 
     long timeLeft;
     long timeIncrement;
@@ -159,22 +159,18 @@ final class Search implements Runnable {
 
     // Assume that we still have to do movesToGo number of moves. For every next
     // move (movesToGo - 1) we will receive a time increment.
-    search.searchTime = (maxSearchTime + (movesToGo - 1) * timeIncrement) / movesToGo;
-    if (search.searchTime > maxSearchTime) {
-      search.searchTime = maxSearchTime;
+    this.searchTime = (maxSearchTime + (movesToGo - 1) * timeIncrement) / movesToGo;
+    if (this.searchTime > maxSearchTime) {
+      this.searchTime = maxSearchTime;
     }
 
-    search.doTimeManagement = true;
-
-    return search;
+    this.doTimeManagement = true;
   }
 
-  private Search(Protocol protocol, Board board) {
+  Search(Protocol protocol) {
     assert protocol != null;
-    assert board != null;
 
     this.protocol = protocol;
-    this.board = board;
 
     for (int i = 0; i < Depth.MAX_PLY; ++i) {
       moveGenerators[i] = new MoveGenerator();
@@ -183,37 +179,55 @@ final class Search implements Runnable {
     for (int i = 0; i < pv.length; ++i) {
       pv[i] = new MoveVariation();
     }
+
+    reset();
+
+    thread.setDaemon(true);
+    thread.start();
   }
 
-  void start() {
-    if (!thread.isAlive()) {
-      thread.setDaemon(true);
-      thread.start();
+  private void reset() {
+    searchDepth = Depth.MAX_DEPTH;
+    searchNodes = Long.MAX_VALUE;
+    searchTime = 0;
+    timer = null;
+    timerStopped = false;
+    doTimeManagement = false;
+    rootMoves.size = 0;
+    abort = false;
+    totalNodes = 0;
+    currentDepth = initialDepth;
+    currentMaxDepth = 0;
+    currentMove = Move.NOMOVE;
+    currentMoveNumber = 0;
+  }
+
+  synchronized void start() {
+    if (!running) {
       try {
-        // Wait for initialization
-        semaphore.acquire();
+        wakeupSignal.release();
+        runSignal.acquire();
       } catch (InterruptedException e) {
         // Do nothing
       }
     }
   }
 
-  void stop() {
-    if (thread.isAlive()) {
+  synchronized void stop() {
+    if (running) {
       // Signal the search thread that we want to stop it
       abort = true;
 
       try {
-        // Wait for the thread to die
-        thread.join(5000);
+        stopSignal.acquire();
       } catch (InterruptedException e) {
         // Do nothing
       }
     }
   }
 
-  void ponderhit() {
-    if (thread.isAlive()) {
+  synchronized void ponderhit() {
+    if (running) {
       // Enable time management
       timer = new Timer(true);
       timer.schedule(new SearchTimer(), searchTime);
@@ -226,64 +240,95 @@ final class Search implements Runnable {
     }
   }
 
+  synchronized void quit() {
+    stop();
+
+    shutdown = true;
+    wakeupSignal.release();
+
+    // Wait for the thread to die
+    try {
+      thread.join(5000);
+    } catch (InterruptedException e) {
+      // Do nothing
+    }
+  }
+
   public void run() {
-    // Do all initialization before releasing the main thread to JCPI
-    if (timer != null) {
-      timer.schedule(new SearchTimer(), searchTime);
-    }
+    while (true) {
+      try {
+        wakeupSignal.acquire();
+      } catch (InterruptedException e) {
+        // Do nothing
+      }
 
-    // Populate root move list
-    MoveList moves = moveGenerators[0].getLegalMoves(board, 1, board.isCheck());
-    for (int i = 0; i < moves.size; ++i) {
-      int move = moves.entries[i].move;
-      rootMoves.entries[rootMoves.size].move = move;
-      rootMoves.entries[rootMoves.size].pv.moves[0] = move;
-      rootMoves.entries[rootMoves.size].pv.size = 1;
-      ++rootMoves.size;
-    }
-
-    // Go...
-    semaphore.release();
-
-    //### BEGIN Iterative Deepening
-    for (int depth = initialDepth; depth <= searchDepth; ++depth) {
-      currentDepth = depth;
-      currentMaxDepth = 0;
-      protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
-
-      searchRoot(currentDepth, -Value.INFINITE, Value.INFINITE);
-
-      // Sort the root move list, so that the next iteration begins with the
-      // best move first.
-      rootMoves.sort();
-
-      checkStopConditions();
-
-      if (abort) {
+      if (shutdown) {
         break;
       }
-    }
-    //### ENDOF Iterative Deepening
 
-    if (timer != null) {
-      timer.cancel();
-    }
-
-    // Update all stats
-    protocol.sendStatus(true, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
-
-    // Send the best move and ponder move
-    int bestMove = Move.NOMOVE;
-    int ponderMove = Move.NOMOVE;
-    if (rootMoves.size > 0) {
-      bestMove = rootMoves.entries[0].move;
-      if (rootMoves.entries[0].pv.size >= 2) {
-        ponderMove = rootMoves.entries[0].pv.moves[1];
+      // Do all initialization before releasing the main thread to JCPI
+      if (timer != null) {
+        timer.schedule(new SearchTimer(), searchTime);
       }
-    }
 
-    // Send the best move to the GUI
-    protocol.sendBestMove(bestMove, ponderMove);
+      // Populate root move list
+      MoveList moves = moveGenerators[0].getLegalMoves(board, 1, board.isCheck());
+      for (int i = 0; i < moves.size; ++i) {
+        int move = moves.entries[i].move;
+        rootMoves.entries[rootMoves.size].move = move;
+        rootMoves.entries[rootMoves.size].pv.moves[0] = move;
+        rootMoves.entries[rootMoves.size].pv.size = 1;
+        ++rootMoves.size;
+      }
+
+      // Go...
+      stopSignal.drainPermits();
+      running = true;
+      runSignal.release();
+
+      //### BEGIN Iterative Deepening
+      for (int depth = initialDepth; depth <= searchDepth; ++depth) {
+        currentDepth = depth;
+        currentMaxDepth = 0;
+        protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
+
+        searchRoot(currentDepth, -Value.INFINITE, Value.INFINITE);
+
+        // Sort the root move list, so that the next iteration begins with the
+        // best move first.
+        rootMoves.sort();
+
+        checkStopConditions();
+
+        if (abort) {
+          break;
+        }
+      }
+      //### ENDOF Iterative Deepening
+
+      if (timer != null) {
+        timer.cancel();
+      }
+
+      // Update all stats
+      protocol.sendStatus(true, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
+
+      // Send the best move and ponder move
+      int bestMove = Move.NOMOVE;
+      int ponderMove = Move.NOMOVE;
+      if (rootMoves.size > 0) {
+        bestMove = rootMoves.entries[0].move;
+        if (rootMoves.entries[0].pv.size >= 2) {
+          ponderMove = rootMoves.entries[0].pv.moves[1];
+        }
+      }
+
+      // Send the best move to the GUI
+      protocol.sendBestMove(bestMove, ponderMove);
+
+      running = false;
+      stopSignal.release();
+    }
   }
 
   private void checkStopConditions() {

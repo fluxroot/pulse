@@ -25,12 +25,11 @@ import java.util.List;
  */
 final class Jcpi extends AbstractEngine implements Protocol {
 
+  private Search search = new Search(this);
   private long startTime = 0;
   private long statusStartTime = 0;
 
-  // We have to maintain at least the state of the board and the search.
   private Board currentBoard = Notation.toBoard(new GenericBoard(GenericBoard.STANDARDSETUP));
-  private Search currentSearch = Search.newInfiniteSearch(this, currentBoard);
 
   // AbstractEngine provides three constructors to help us connecting to a
   // command channel.
@@ -66,11 +65,11 @@ final class Jcpi extends AbstractEngine implements Protocol {
   protected void quit() {
     // We received a quit command. Stop calculating now and
     // cleanup!
-    new EngineStopCalculatingCommand().accept(this);
+    search.quit();
   }
 
   public void receive(EngineInitializeRequestCommand command) {
-    new EngineStopCalculatingCommand().accept(this);
+    search.stop();
 
     // We received an initialization request.
 
@@ -105,19 +104,18 @@ final class Jcpi extends AbstractEngine implements Protocol {
   }
 
   public void receive(EngineNewGameCommand command) {
-    new EngineStopCalculatingCommand().accept(this);
+    search.stop();
 
     // We received a new game command.
 
     // Initialize per-game settings here.
     currentBoard = Notation.toBoard(new GenericBoard(GenericBoard.STANDARDSETUP));
-    currentSearch = Search.newInfiniteSearch(this, currentBoard);
   }
 
   public void receive(EngineAnalyzeCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    new EngineStopCalculatingCommand().accept(this);
+    search.stop();
 
     // We received an analyze command. Just setup the board.
 
@@ -151,18 +149,18 @@ final class Jcpi extends AbstractEngine implements Protocol {
   public void receive(EngineStartCalculatingCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    new EngineStopCalculatingCommand().accept(this);
+    search.stop();
 
     // We received a start command. Extract all parameters from the
     // command and start the search.
     if (command.getDepth() != null) {
-      currentSearch = Search.newDepthSearch(this, currentBoard, command.getDepth());
+      search.newDepthSearch(currentBoard, command.getDepth());
     } else if (command.getNodes() != null) {
-      currentSearch = Search.newNodesSearch(this, currentBoard, command.getNodes());
+      search.newNodesSearch(currentBoard, command.getNodes());
     } else if (command.getMoveTime() != null) {
-      currentSearch = Search.newTimeSearch(this, currentBoard, command.getMoveTime());
+      search.newTimeSearch(currentBoard, command.getMoveTime());
     } else if (command.getInfinite()) {
-      currentSearch = Search.newInfiniteSearch(this, currentBoard);
+      search.newInfiniteSearch(currentBoard);
     } else {
       long whiteTimeLeft = 1;
       if (command.getClock(GenericColor.WHITE) != null) {
@@ -190,30 +188,28 @@ final class Jcpi extends AbstractEngine implements Protocol {
       }
 
       if (command.getPonder()) {
-        currentSearch = Search.newPonderSearch(
-            this, currentBoard,
+        search.newPonderSearch(currentBoard,
             whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
       } else {
-        currentSearch = Search.newClockSearch(
-            this, currentBoard,
+        search.newClockSearch(currentBoard,
             whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
       }
     }
 
     // Go...
-    currentSearch.start();
+    search.start();
     startTime = System.currentTimeMillis();
     statusStartTime = startTime;
   }
 
   public void receive(EnginePonderHitCommand command) {
     // We received a ponder hit command. Just call ponderhit().
-    currentSearch.ponderhit();
+    search.ponderhit();
   }
 
   public void receive(EngineStopCalculatingCommand command) {
     // We received a stop command. If a search is running, stop it.
-    currentSearch.stop();
+    search.stop();
   }
 
   public void sendBestMove(int bestMove, int ponderMove) {

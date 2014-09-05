@@ -26,12 +26,11 @@ public:
   static std::string fromMove(int move);
 
 private:
+  std::unique_ptr<Search> search = std::unique_ptr<Search>(new Search(*this));
   std::chrono::system_clock::time_point startTime;
   std::chrono::system_clock::time_point statusStartTime;
 
-  // We have to maintain at least the state of the board and the search.
-  std::unique_ptr<Board> board = std::unique_ptr<Board>(new Board(Notation::toBoard(Notation::STANDARDBOARD)));
-  std::unique_ptr<Search> search = Search::newInfiniteSearch(*this, *board);
+  std::unique_ptr<Board> currentBoard = std::unique_ptr<Board>(new Board(Notation::toBoard(Notation::STANDARDBOARD)));
 
   void receiveInitialize();
   void receiveReady();
@@ -40,6 +39,7 @@ private:
   void receiveGo(std::istringstream& input);
   void receivePonderHit();
   void receiveStop();
+  void receiveQuit();
 };
 
 }

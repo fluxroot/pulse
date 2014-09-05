@@ -42,14 +42,20 @@ void Uci::run() {
     } else if (token == "ponderhit") {
       receivePonderHit();
     } else if (token == "quit") {
-      receiveStop();
+      receiveQuit();
       break;
     }
   }
 }
 
+void Uci::receiveQuit() {
+  // We received a quit command. Stop calculating now and
+  // cleanup!
+  search->quit();
+}
+
 void Uci::receiveInitialize() {
-  receiveStop();
+  search->stop();
 
   // We received an initialization request.
 
@@ -73,24 +79,23 @@ void Uci::receiveReady() {
 }
 
 void Uci::receiveNewGame() {
-  receiveStop();
+  search->stop();
 
   // We received a new game command.
 
   // Initialize per-game settings here.
-  *board = Notation::toBoard(Notation::STANDARDBOARD);
-  search = Search::newInfiniteSearch(*this, *board);
+  *currentBoard = Notation::toBoard(Notation::STANDARDBOARD);
 }
 
 void Uci::receivePosition(std::istringstream& input) {
-  receiveStop();
+  search->stop();
 
   // We received an position command. Just setup the board.
 
   std::string token;
   input >> token;
   if (token == "startpos") {
-    *board = Notation::toBoard(Notation::STANDARDBOARD);
+    *currentBoard = Notation::toBoard(Notation::STANDARDBOARD);
 
     if (input >> token) {
       if (token != "moves") {
@@ -108,7 +113,7 @@ void Uci::receivePosition(std::istringstream& input) {
       }
     }
 
-    *board = Notation::toBoard(fen);
+    *currentBoard = Notation::toBoard(fen);
   } else {
     throw std::exception();
   }
@@ -117,12 +122,12 @@ void Uci::receivePosition(std::istringstream& input) {
 
   while (input >> token) {
     // Verify moves
-    MoveList& moves = moveGenerator.getLegalMoves(*board, 1, board->isCheck());
+    MoveList& moves = moveGenerator.getLegalMoves(*currentBoard, 1, currentBoard->isCheck());
     bool found = false;
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i]->move;
       if (fromMove(move) == token) {
-        board->makeMove(move);
+        currentBoard->makeMove(move);
         found = true;
         break;
       }
@@ -137,7 +142,7 @@ void Uci::receivePosition(std::istringstream& input) {
 }
 
 void Uci::receiveGo(std::istringstream& input) {
-  receiveStop();
+  search->stop();
 
   // We received a start command. Extract all parameters from the
   // command and start the search.
@@ -146,22 +151,22 @@ void Uci::receiveGo(std::istringstream& input) {
   if (token == "depth") {
     int searchDepth;
     if (input >> searchDepth) {
-      search = Search::newDepthSearch(*this, *board, searchDepth);
+      search->newDepthSearch(*currentBoard, searchDepth);
     } else {
       throw std::exception();
     }
   } else if (token == "nodes") {
     uint64_t searchNodes;
     if (input >> searchNodes) {
-      search = Search::newNodesSearch(*this, *board, searchNodes);
+      search->newNodesSearch(*currentBoard, searchNodes);
     }
   } else if (token == "movetime") {
     uint64_t searchTime;
     if (input >> searchTime) {
-      search = Search::newTimeSearch(*this, *board, searchTime);
+      search->newTimeSearch(*currentBoard, searchTime);
     }
   } else if (token == "infinite") {
-    search = Search::newInfiniteSearch(*this, *board);
+    search->newInfiniteSearch(*currentBoard);
   } else {
     uint64_t whiteTimeLeft = 1;
     uint64_t whiteTimeIncrement = 0;
@@ -197,12 +202,10 @@ void Uci::receiveGo(std::istringstream& input) {
     } while (input >> token);
 
     if (ponder) {
-      search = Search::newPonderSearch(
-        *this, *board,
+      search->newPonderSearch(*currentBoard,
         whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
     } else {
-      search = Search::newClockSearch(
-        *this, *board,
+      search->newClockSearch(*currentBoard,
         whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
     }
   }

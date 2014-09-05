@@ -23,7 +23,7 @@ public class SearchTest {
 
     final Semaphore semaphore = new Semaphore(0);
 
-    Search.newDepthSearch(
+    Search search = new Search(
         new Protocol() {
           @Override
           public void sendBestMove(int bestMove, int ponderMove) {
@@ -44,9 +44,9 @@ public class SearchTest {
           @Override
           public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
-        }, Notation.toBoard("3K3r/8/3k4/8/8/8/8/8 w - - 0 1"),
-        1
-    ).start();
+        });
+    search.newDepthSearch(Notation.toBoard("3K3r/8/3k4/8/8/8/8/8 w - - 0 1"), 1);
+    search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
 
@@ -62,7 +62,7 @@ public class SearchTest {
 
     final Semaphore semaphore = new Semaphore(0);
 
-    Search.newDepthSearch(
+    Search search = new Search(
         new Protocol() {
           @Override
           public void sendBestMove(int bestMove, int ponderMove) {
@@ -88,9 +88,9 @@ public class SearchTest {
               mate[0] = Integer.signum(entry.value) * (mateDepth + 1) / 2;
             }
           }
-        }, Notation.toBoard("8/8/1R1P4/2B2p2/k1K2P2/4P3/8/8 w - - 3 101"),
-        2
-    ).start();
+        });
+    search.newDepthSearch(Notation.toBoard("8/8/1R1P4/2B2p2/k1K2P2/4P3/8/8 w - - 3 101"), 2);
+    search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
 
@@ -107,7 +107,7 @@ public class SearchTest {
 
     final Semaphore semaphore = new Semaphore(0);
 
-    Search.newDepthSearch(
+    Search search = new Search(
         new Protocol() {
           @Override
           public void sendBestMove(int bestMove, int ponderMove) {
@@ -128,9 +128,9 @@ public class SearchTest {
           @Override
           public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
-        }, Notation.toBoard("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1"),
-        1
-    ).start();
+        });
+    search.newDepthSearch(Notation.toBoard("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1"), 1);
+    search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
 
@@ -144,7 +144,7 @@ public class SearchTest {
 
     final Semaphore semaphore = new Semaphore(0);
 
-    Search.newClockSearch(
+    Search search = new Search(
         new Protocol() {
           @Override
           public void sendBestMove(int bestMove, int ponderMove) {
@@ -164,9 +164,9 @@ public class SearchTest {
           @Override
           public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
-        }, Notation.toBoard("3K4/7r/3k4/8/8/8/8/8 b - - 0 1"),
-        10000, 0, 10000, 0, 40
-    ).start();
+        });
+    search.newClockSearch(Notation.toBoard("3K4/7r/3k4/8/8/8/8/8 b - - 0 1"), 10000, 0, 10000, 0, 40);
+    search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
 
@@ -180,7 +180,7 @@ public class SearchTest {
 
     final Semaphore semaphore = new Semaphore(0);
 
-    Search.newClockSearch(
+    Search search = new Search(
         new Protocol() {
           @Override
           public void sendBestMove(int bestMove, int ponderMove) {
@@ -200,9 +200,9 @@ public class SearchTest {
           @Override
           public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
-        }, Notation.toBoard("K1k5/8/8/8/8/8/8/8 w - - 0 1"),
-        10000, 0, 10000, 0, 40
-    ).start();
+        });
+    search.newClockSearch(Notation.toBoard("K1k5/8/8/8/8/8/8/8 w - - 0 1"), 10000, 0, 10000, 0, 40);
+    search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
 

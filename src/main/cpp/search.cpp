@@ -12,7 +12,7 @@
 
 namespace pulse {
 
-Search::Timer::Timer(bool& timerStopped, bool& doTimeManagement, int& currentDepth, int& initialDepth, bool& abort)
+Search::Timer::Timer(bool& timerStopped, bool& doTimeManagement, int& currentDepth, const int& initialDepth, bool& abort)
     : timerStopped(timerStopped), doTimeManagement(doTimeManagement),
     currentDepth(currentDepth), initialDepth(initialDepth), abort(abort) {
 }
@@ -57,66 +57,71 @@ void Search::Semaphore::release() {
   condition.notify_one();
 }
 
-std::unique_ptr<Search> Search::newDepthSearch(Protocol& protocol, Board& board, int searchDepth) {
+void Search::Semaphore::drainPermits() {
+  std::unique_lock<std::mutex> lock(mutex);
+  permits = 0;
+}
+
+void Search::newDepthSearch(Board& board, int searchDepth) {
   if (searchDepth < 1 || searchDepth > Depth::MAX_DEPTH) throw std::exception();
+  if (running) throw std::exception();
 
-  std::unique_ptr<Search> search(new Search(protocol, board));
+  reset();
 
-  search->searchDepth = searchDepth;
-
-  return search;
+  this->board = board;
+  this->searchDepth = searchDepth;
 }
 
-std::unique_ptr<Search> Search::newNodesSearch(Protocol& protocol, Board& board, uint64_t searchNodes) {
+void Search::newNodesSearch(Board& board, uint64_t searchNodes) {
   if (searchNodes < 1) throw std::exception();
+  if (running) throw std::exception();
 
-  std::unique_ptr<Search> search(new Search(protocol, board));
+  reset();
 
-  search->searchNodes = searchNodes;
-
-  return search;
+  this->board = board;
+  this->searchNodes = searchNodes;
 }
 
-std::unique_ptr<Search> Search::newTimeSearch(Protocol& protocol, Board& board, uint64_t searchTime) {
+void Search::newTimeSearch(Board& board, uint64_t searchTime) {
   if (searchTime < 1) throw std::exception();
+  if (running) throw std::exception();
 
-  std::unique_ptr<Search> search(new Search(protocol, board));
+  reset();
 
-  search->searchTime = searchTime;
-  search->runTimer = true;
-
-  return search;
+  this->board = board;
+  this->searchTime = searchTime;
+  this->runTimer = true;
 }
 
-std::unique_ptr<Search> Search::newInfiniteSearch(Protocol& protocol, Board& board) {
-  std::unique_ptr<Search> search(new Search(protocol, board));
+void Search::newInfiniteSearch(Board& board) {
+  if (running) throw std::exception();
 
-  return search;
+  reset();
+
+  this->board = board;
 }
 
-std::unique_ptr<Search> Search::newClockSearch(
-    Protocol& protocol, Board& board,
+void Search::newClockSearch(Board& board,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo) {
-  std::unique_ptr<Search> search = newPonderSearch(
-      protocol, board,
+  newPonderSearch(board,
       whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
   );
 
-  search->runTimer = true;
-
-  return search;
+  this->runTimer = true;
 }
 
-std::unique_ptr<Search> Search::newPonderSearch(
-    Protocol& protocol, Board& board,
+void Search::newPonderSearch(Board& board,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo) {
   if (whiteTimeLeft < 1) throw std::exception();
   if (whiteTimeIncrement < 0) throw std::exception();
   if (blackTimeLeft < 1) throw std::exception();
   if (blackTimeIncrement < 0) throw std::exception();
   if (movesToGo < 0) throw std::exception();
+  if (running) throw std::exception();
 
-  std::unique_ptr<Search> search(new Search(protocol, board));
+  reset();
+
+  this->board = board;
 
   uint64_t timeLeft;
   uint64_t timeIncrement;
@@ -139,41 +144,63 @@ std::unique_ptr<Search> Search::newPonderSearch(
 
   // Assume that we still have to do movesToGo number of moves. For every next
   // move (movesToGo - 1) we will receive a time increment.
-  search->searchTime = (maxSearchTime + (movesToGo - 1) * timeIncrement) / movesToGo;
-  if (search->searchTime > maxSearchTime) {
-    search->searchTime = maxSearchTime;
+  this->searchTime = (maxSearchTime + (movesToGo - 1) * timeIncrement) / movesToGo;
+  if (this->searchTime > maxSearchTime) {
+    this->searchTime = maxSearchTime;
   }
 
-  search->doTimeManagement = true;
-
-  return search;
+  this->doTimeManagement = true;
 }
 
-Search::Search(Protocol& protocol, Board& board)
-    : protocol(protocol), board(board),
+Search::Search(Protocol& protocol)
+    : protocol(protocol),
     timer(timerStopped, doTimeManagement, currentDepth, initialDepth, abort),
-    semaphore(0) {
+    wakeupSignal(0), runSignal(0), stopSignal(0) {
+
+  reset();
+
+  thread = std::thread(&Search::run, this);
+}
+
+void Search::reset() {
+  searchDepth = Depth::MAX_DEPTH;
+  searchNodes = std::numeric_limits<uint64_t>::max();
+  searchTime = 0;
+  runTimer = false;
+  timerStopped = false;
+  doTimeManagement = false;
+  rootMoves.size = 0;
+  abort = false;
+  totalNodes = 0;
+  currentDepth = initialDepth;
+  currentMaxDepth = 0;
+  currentMove = Move::NOMOVE;
+  currentMoveNumber = 0;
 }
 
 void Search::start() {
+  std::unique_lock<std::recursive_mutex> lock(sync);
+
   if (!running) {
-    running = true;
-    thread = std::thread(&Search::run, this);
-    semaphore.acquire();
+    wakeupSignal.release();
+    runSignal.acquire();
   }
 }
 
 void Search::stop() {
+  std::unique_lock<std::recursive_mutex> lock(sync);
+
   if (running) {
     // Signal the search thread that we want to stop it
     abort = true;
 
-    thread.join();
-    running = false;
+    stopSignal.acquire();
   }
 }
 
 void Search::ponderhit() {
+  std::unique_lock<std::recursive_mutex> lock(sync);
+
   if (running) {
     // Enable time management
     runTimer = true;
@@ -187,64 +214,88 @@ void Search::ponderhit() {
   }
 }
 
+void Search::quit() {
+  std::unique_lock<std::recursive_mutex> lock(sync);
+
+  stop();
+
+  shutdown = true;
+  wakeupSignal.release();
+
+  thread.join();
+}
+
 void Search::run() {
-  // Do all initialization before releasing the main thread to JCPI
-  if (runTimer) {
-    timer.start(searchTime);
-  }
+  while (true) {
+    wakeupSignal.acquire();
 
-  // Populate root move list
-  MoveList& moves = moveGenerators[0].getLegalMoves(board, 1, board.isCheck());
-  for (int i = 0; i < moves.size; ++i) {
-    int move = moves.entries[i]->move;
-    rootMoves.entries[rootMoves.size]->move = move;
-    rootMoves.entries[rootMoves.size]->pv.moves[0] = move;
-    rootMoves.entries[rootMoves.size]->pv.size = 1;
-    ++rootMoves.size;
-  }
-
-  // Go...
-  semaphore.release();
-
-  //### BEGIN Iterative Deepening
-  for (int depth = initialDepth; depth <= searchDepth; ++depth) {
-    currentDepth = depth;
-    currentMaxDepth = 0;
-    protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
-
-    searchRoot(currentDepth, -Value::INFINITE, Value::INFINITE);
-
-    // Sort the root move list, so that the next iteration begins with the
-    // best move first.
-    rootMoves.sort();
-
-    checkStopConditions();
-
-    if (abort) {
+    if (shutdown) {
       break;
     }
-  }
-  //### ENDOF Iterative Deepening
 
-  if (runTimer) {
-    timer.stop();
-  }
-
-  // Update all stats
-  protocol.sendStatus(true, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
-
-  // Send the best move and ponder move
-  int bestMove = Move::NOMOVE;
-  int ponderMove = Move::NOMOVE;
-  if (rootMoves.size > 0) {
-    bestMove = rootMoves.entries[0]->move;
-    if (rootMoves.entries[0]->pv.size >= 2) {
-      ponderMove = rootMoves.entries[0]->pv.moves[1];
+    // Do all initialization before releasing the main thread to JCPI
+    if (runTimer) {
+      timer.start(searchTime);
     }
-  }
 
-  // Send the best move to the GUI
-  protocol.sendBestMove(bestMove, ponderMove);
+    // Populate root move list
+    MoveList& moves = moveGenerators[0].getLegalMoves(board, 1, board.isCheck());
+    for (int i = 0; i < moves.size; ++i) {
+      int move = moves.entries[i]->move;
+      rootMoves.entries[rootMoves.size]->move = move;
+      rootMoves.entries[rootMoves.size]->pv.moves[0] = move;
+      rootMoves.entries[rootMoves.size]->pv.size = 1;
+      ++rootMoves.size;
+    }
+
+    // Go...
+    stopSignal.drainPermits();
+    running = true;
+    runSignal.release();
+
+    //### BEGIN Iterative Deepening
+    for (int depth = initialDepth; depth <= searchDepth; ++depth) {
+      currentDepth = depth;
+      currentMaxDepth = 0;
+      protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
+
+      searchRoot(currentDepth, -Value::INFINITE, Value::INFINITE);
+
+      // Sort the root move list, so that the next iteration begins with the
+      // best move first.
+      rootMoves.sort();
+
+      checkStopConditions();
+
+      if (abort) {
+        break;
+      }
+    }
+    //### ENDOF Iterative Deepening
+
+    if (runTimer) {
+      timer.stop();
+    }
+
+    // Update all stats
+    protocol.sendStatus(true, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
+
+    // Send the best move and ponder move
+    int bestMove = Move::NOMOVE;
+    int ponderMove = Move::NOMOVE;
+    if (rootMoves.size > 0) {
+      bestMove = rootMoves.entries[0]->move;
+      if (rootMoves.entries[0]->pv.size >= 2) {
+        ponderMove = rootMoves.entries[0]->pv.moves[1];
+      }
+    }
+
+    // Send the best move to the GUI
+    protocol.sendBestMove(bestMove, ponderMove);
+
+    running = false;
+    stopSignal.release();
+  }
 }
 
 void Search::checkStopConditions() {
