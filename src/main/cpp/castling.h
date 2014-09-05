@@ -21,8 +21,6 @@ public:
   static const int NOCASTLING = 0;
 
   static const int VALUES_LENGTH = 16;
-  static const int VALUES_SIZE = 4;
-  static const std::array<int, VALUES_SIZE> values;
 
   static bool isValid(int castling);
   static int valueOf(int color, int castlingType);

@@ -13,11 +13,6 @@
 
 namespace pulse {
 
-const std::array<int, Castling::VALUES_SIZE> Castling::values = {
-  WHITE_KINGSIDE, WHITE_QUEENSIDE,
-  BLACK_KINGSIDE, BLACK_QUEENSIDE
-};
-
 bool Castling::isValid(int castling) {
   switch (castling) {
     case WHITE_KINGSIDE:

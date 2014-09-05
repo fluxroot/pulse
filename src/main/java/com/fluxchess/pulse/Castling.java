@@ -16,10 +16,6 @@ final class Castling {
   static final int NOCASTLING = 0;
 
   static final int VALUES_LENGTH = 16;
-  static final int[] values = {
-      WHITE_KINGSIDE, WHITE_QUEENSIDE,
-      BLACK_KINGSIDE, BLACK_QUEENSIDE
-  };
 
   private Castling() {
   }
