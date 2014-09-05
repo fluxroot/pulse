@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
-public class PulseTest {
+public class JcpiTest {
 
   private final BlockingQueue<IEngineCommand> commands = new LinkedBlockingQueue<>();
 
@@ -62,7 +62,7 @@ public class PulseTest {
     command.setDepth(2);
     commands.add(command);
 
-    new Pulse(new ProtocolHandler() {
+    new Jcpi(new ProtocolHandler() {
       @Override
       public void send(ProtocolBestMoveCommand command) {
         super.send(command);
@@ -106,7 +106,7 @@ public class PulseTest {
     command.setNodes(1L);
     commands.add(command);
 
-    new Pulse(new ProtocolHandler() {
+    new Jcpi(new ProtocolHandler() {
       @Override
       public void send(ProtocolBestMoveCommand command) {
         super.send(command);
@@ -144,7 +144,7 @@ public class PulseTest {
     commands.add(command);
 
     long startTime = System.currentTimeMillis();
-    new Pulse(new ProtocolHandler()).run();
+    new Jcpi(new ProtocolHandler()).run();
     long stopTime = System.currentTimeMillis();
 
     assertTrue(stopTime - startTime >= 1000L);
@@ -160,7 +160,7 @@ public class PulseTest {
     command.setMoveTime(1L);
     commands.add(command);
 
-    new Pulse(new ProtocolHandler()).run();
+    new Jcpi(new ProtocolHandler()).run();
   }
 
   @Test
@@ -181,7 +181,7 @@ public class PulseTest {
       }
     }, 1000);
 
-    new Pulse(new ProtocolHandler()).run();
+    new Jcpi(new ProtocolHandler()).run();
   }
 
   @Test
@@ -200,7 +200,7 @@ public class PulseTest {
       }
     }, 1000);
 
-    new Pulse(new ProtocolHandler()).run();
+    new Jcpi(new ProtocolHandler()).run();
   }
 
   @Test
@@ -216,7 +216,7 @@ public class PulseTest {
     command.setClockIncrement(GenericColor.BLACK, 0L);
     commands.add(command);
 
-    new Pulse(new ProtocolHandler()).run();
+    new Jcpi(new ProtocolHandler()).run();
   }
 
   @Test
@@ -233,7 +233,7 @@ public class PulseTest {
     command.setMovesToGo(20);
     commands.add(command);
 
-    new Pulse(new ProtocolHandler()).run();
+    new Jcpi(new ProtocolHandler()).run();
   }
 
   @Test
@@ -256,7 +256,7 @@ public class PulseTest {
       }
     }, 1000);
 
-    new Pulse(new ProtocolHandler()).run();
+    new Jcpi(new ProtocolHandler()).run();
   }
 
   private class ProtocolHandler implements IProtocolHandler {

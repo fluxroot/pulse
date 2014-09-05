@@ -21,6 +21,7 @@ public:
   static const int ROOK = 3;
   static const int QUEEN = 4;
   static const int KING = 5;
+
   static const int NOPIECETYPE = 6;
 
   static const int SIZE = 6;
@@ -35,20 +36,11 @@ public:
   static const int KING_VALUE = 20000;
 
   static bool isValid(int pieceType);
-  static int fromNotation(char notation);
-  static char toNotation(int piecetype, int color);
   static bool isValidPromotion(int pieceType);
   static bool isSliding(int pieceType);
   static int getValue(int pieceType);
 
 private:
-  static const char PAWN_NOTATION = 'P';
-  static const char KNIGHT_NOTATION = 'N';
-  static const char BISHOP_NOTATION = 'B';
-  static const char ROOK_NOTATION = 'R';
-  static const char QUEEN_NOTATION = 'Q';
-  static const char KING_NOTATION = 'K';
-
   PieceType();
   ~PieceType();
 };

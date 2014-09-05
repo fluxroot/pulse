@@ -6,8 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericPosition;
-
 final class Square {
 
   static final int MASK = 0x7F;
@@ -109,19 +107,14 @@ final class Square {
     return (square & 0x88) == 0;
   }
 
-  static int valueOf(GenericPosition genericPosition) {
-    assert genericPosition != null;
+  static int valueOf(int file, int rank) {
+    assert File.isValid(file);
+    assert Rank.isValid(rank);
 
-    int square = Rank.valueOf(genericPosition.rank) * 16 + File.valueOf(genericPosition.file);
+    int square = (rank << 4) + file;
     assert isValid(square);
 
     return square;
-  }
-
-  static GenericPosition toGenericPosition(int square) {
-    assert isValid(square);
-
-    return GenericPosition.valueOf(File.toGenericFile(getFile(square)), Rank.toGenericRank(getRank(square)));
   }
 
   static int getFile(int square) {

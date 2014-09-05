@@ -25,27 +25,9 @@ bool Castling::isValid(int castling) {
     case BLACK_KINGSIDE:
     case BLACK_QUEENSIDE:
       return true;
-    case NOCASTLING:
     default:
       return false;
   }
-}
-
-int Castling::fromNotation(char notation) {
-  int color = Color::colorOf(notation);
-  int castlingtype = CastlingType::fromNotation(notation);
-
-  if (castlingtype != CastlingType::NOCASTLINGTYPE) {
-    return valueOf(color, castlingtype);
-  } else {
-    return NOCASTLING;
-  }
-}
-
-char Castling::toNotation(int castling) {
-  assert(isValid(castling));
-
-  return CastlingType::toNotation(getType(castling), getColor(castling));
 }
 
 int Castling::valueOf(int color, int castlingType) {
@@ -56,7 +38,6 @@ int Castling::valueOf(int color, int castlingType) {
           return WHITE_KINGSIDE;
         case CastlingType::QUEENSIDE:
           return WHITE_QUEENSIDE;
-        case CastlingType::NOCASTLINGTYPE:
         default:
           throw std::exception();
       }
@@ -66,11 +47,9 @@ int Castling::valueOf(int color, int castlingType) {
           return BLACK_KINGSIDE;
         case CastlingType::QUEENSIDE:
           return BLACK_QUEENSIDE;
-        case CastlingType::NOCASTLINGTYPE:
         default:
           throw std::exception();
       }
-    case Color::NOCOLOR:
     default:
       throw std::exception();
   }
@@ -84,7 +63,6 @@ int Castling::getType(int castling) {
     case WHITE_QUEENSIDE:
     case BLACK_QUEENSIDE:
       return CastlingType::QUEENSIDE;
-    case NOCASTLING:
     default:
       throw std::exception();
   }
@@ -98,7 +76,6 @@ int Castling::getColor(int castling) {
     case BLACK_KINGSIDE:
     case BLACK_QUEENSIDE:
       return Color::BLACK;
-    case NOCASTLING:
     default:
       throw std::exception();
   }

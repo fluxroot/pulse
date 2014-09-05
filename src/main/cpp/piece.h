@@ -27,14 +27,13 @@ public:
   static const int BLACK_ROOK = 9;
   static const int BLACK_QUEEN = 10;
   static const int BLACK_KING = 11;
+
   static const int NOPIECE = 12;
 
   static const int SIZE = 12;
   static const std::array<int, SIZE> values;
 
   static bool isValid(int piece);
-  static int fromNotation(char notation);
-  static char toNotation(int piece);
   static int valueOf(int pieceType, int color);
   static int getType(int piece);
   static int getColor(int piece);

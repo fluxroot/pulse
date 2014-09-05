@@ -12,21 +12,6 @@
 
 namespace pulse {
 
-std::string Move::toNotation(int move) {
-  std::string notation;
-
-  notation += Square::toNotation(getOriginSquare(move));
-  notation += Square::toNotation(getTargetSquare(move));
-
-  int promotion = getPromotion(move);
-  if (promotion != PieceType::NOPIECETYPE) {
-    int color = Piece::getColor(getOriginPiece(move));
-    notation += std::tolower(PieceType::toNotation(promotion, color));
-  }
-
-  return notation;
-}
-
 int Move::valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion) {
   int move = 0;
 

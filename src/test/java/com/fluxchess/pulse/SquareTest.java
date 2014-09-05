@@ -6,7 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericPosition;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,21 +16,20 @@ import static org.junit.Assert.*;
 public class SquareTest {
 
   @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public void testUtilityClass()
+      throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     assertUtilityClassWellDefined(Square.class);
   }
 
   @Test
   public void testValues() {
-    for (GenericPosition genericPosition : GenericPosition.values()) {
-      int square = Square.valueOf(genericPosition);
-      assertEquals(genericPosition, Square.toGenericPosition(square));
+    for (int rank : Rank.values) {
+      for (int file : File.values) {
+        int square = Square.valueOf(file, rank);
 
-      int file = Square.getFile(square);
-      assertEquals(genericPosition.file, File.toGenericFile(file));
-
-      int rank = Square.getRank(square);
-      assertEquals(genericPosition.rank, Rank.toGenericRank(rank));
+        assertEquals(file, Square.getFile(square));
+        assertEquals(rank, Square.getRank(square));
+      }
     }
   }
 

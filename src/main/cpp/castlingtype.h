@@ -15,18 +15,13 @@ class CastlingType {
 public:
   static const int KINGSIDE = 0;
   static const int QUEENSIDE = 1;
+
   static const int NOCASTLINGTYPE = 2;
 
   static const int SIZE = 2;
   static const std::array<int, SIZE> values;
 
-  static int fromNotation(char notation);
-  static char toNotation(int castlingtype, int color);
-
 private:
-  static const char KINGSIDE_NOTATION = 'K';
-  static const char QUEENSIDE_NOTATION = 'Q';
-
   CastlingType();
   ~CastlingType();
 };

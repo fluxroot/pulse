@@ -16,7 +16,8 @@ import static org.junit.Assert.*;
 public class PieceTypeTest {
 
   @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public void testUtilityClass()
+      throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     assertUtilityClassWellDefined(PieceType.class);
   }
 
@@ -55,11 +56,6 @@ public class PieceTypeTest {
     assertFalse(PieceType.isSliding(PieceType.PAWN));
     assertFalse(PieceType.isSliding(PieceType.KNIGHT));
     assertFalse(PieceType.isSliding(PieceType.KING));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidIsSliding() {
-    PieceType.isSliding(PieceType.NOPIECETYPE);
   }
 
 }

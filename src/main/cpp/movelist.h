@@ -7,7 +7,6 @@
 #ifndef PULSE_MOVELIST_H
 #define PULSE_MOVELIST_H
 
-#include "depth.h"
 #include "value.h"
 #include "move.h"
 

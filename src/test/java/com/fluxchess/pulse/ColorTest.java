@@ -6,7 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericColor;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +16,8 @@ import static org.junit.Assert.*;
 public class ColorTest {
 
   @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public void testUtilityClass()
+      throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     assertUtilityClassWellDefined(Color.class);
   }
 
@@ -41,11 +41,6 @@ public class ColorTest {
   public void testOpposite() {
     assertEquals(Color.WHITE, Color.opposite(Color.BLACK));
     assertEquals(Color.BLACK, Color.opposite(Color.WHITE));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidOpposite() {
-    Color.opposite(Color.NOCOLOR);
   }
 
 }

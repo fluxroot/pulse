@@ -12,6 +12,7 @@ final class Value {
   static final int CHECKMATE = 100000;
   static final int CHECKMATE_THRESHOLD = CHECKMATE - Depth.MAX_PLY;
   static final int DRAW = 0;
+
   static final int NOVALUE = 300000;
 
   private Value() {

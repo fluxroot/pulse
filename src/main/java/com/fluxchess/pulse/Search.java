@@ -6,13 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.commands.IProtocol;
-import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
-import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
-import com.fluxchess.jcpi.models.GenericMove;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -27,7 +20,7 @@ final class Search implements Runnable {
 
   private final Thread thread = new Thread(this);
   private final Semaphore semaphore = new Semaphore(0);
-  private final IProtocol protocol;
+  private final Protocol protocol;
 
   private final Board board;
   private final Evaluation evaluation = new Evaluation();
@@ -51,8 +44,6 @@ final class Search implements Runnable {
   // Search parameters
   private final MoveList rootMoves = new MoveList();
   private boolean abort = false;
-  private long startTime = 0;
-  private long statusStartTime = 0;
   private long totalNodes = 0;
   private int initialDepth = 1;
   private int currentDepth = initialDepth;
@@ -77,7 +68,7 @@ final class Search implements Runnable {
     }
   }
 
-  static Search newDepthSearch(IProtocol protocol, Board board, int searchDepth) {
+  static Search newDepthSearch(Protocol protocol, Board board, int searchDepth) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
     if (searchDepth < 1 || searchDepth > Depth.MAX_DEPTH) throw new IllegalArgumentException();
@@ -89,7 +80,7 @@ final class Search implements Runnable {
     return search;
   }
 
-  static Search newNodesSearch(IProtocol protocol, Board board, long searchNodes) {
+  static Search newNodesSearch(Protocol protocol, Board board, long searchNodes) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
     if (searchNodes < 1) throw new IllegalArgumentException();
@@ -101,7 +92,7 @@ final class Search implements Runnable {
     return search;
   }
 
-  static Search newTimeSearch(IProtocol protocol, Board board, long searchTime) {
+  static Search newTimeSearch(Protocol protocol, Board board, long searchTime) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
     if (searchTime < 1) throw new IllegalArgumentException();
@@ -114,7 +105,7 @@ final class Search implements Runnable {
     return search;
   }
 
-  static Search newInfiniteSearch(IProtocol protocol, Board board) {
+  static Search newInfiniteSearch(Protocol protocol, Board board) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
 
@@ -122,7 +113,7 @@ final class Search implements Runnable {
   }
 
   static Search newClockSearch(
-      IProtocol protocol, Board board,
+      Protocol protocol, Board board,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
     Search search = newPonderSearch(
         protocol, board,
@@ -135,7 +126,7 @@ final class Search implements Runnable {
   }
 
   static Search newPonderSearch(
-      IProtocol protocol, Board board,
+      Protocol protocol, Board board,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
     if (protocol == null) throw new IllegalArgumentException();
     if (board == null) throw new IllegalArgumentException();
@@ -178,7 +169,7 @@ final class Search implements Runnable {
     return search;
   }
 
-  private Search(IProtocol protocol, Board board) {
+  private Search(Protocol protocol, Board board) {
     assert protocol != null;
     assert board != null;
 
@@ -237,8 +228,6 @@ final class Search implements Runnable {
 
   public void run() {
     // Do all initialization before releasing the main thread to JCPI
-    startTime = System.currentTimeMillis();
-    statusStartTime = startTime;
     if (timer != null) {
       timer.schedule(new SearchTimer(), searchTime);
     }
@@ -262,7 +251,7 @@ final class Search implements Runnable {
     for (int depth = initialDepth; depth <= searchDepth; ++depth) {
       currentDepth = depth;
       currentMaxDepth = 0;
-      sendStatus(false);
+      protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
       searchRoot(currentDepth, -Value.INFINITE, Value.INFINITE);
 
@@ -283,20 +272,20 @@ final class Search implements Runnable {
     }
 
     // Update all stats
-    sendStatus(true);
+    protocol.sendStatus(true, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
-    // Get the best move and convert it to a GenericMove
-    GenericMove bestMove = null;
-    GenericMove ponderMove = null;
+    // Send the best move and ponder move
+    int bestMove = Move.NOMOVE;
+    int ponderMove = Move.NOMOVE;
     if (rootMoves.size > 0) {
-      bestMove = Move.toGenericMove(rootMoves.entries[0].move);
+      bestMove = rootMoves.entries[0].move;
       if (rootMoves.entries[0].pv.size >= 2) {
-        ponderMove = Move.toGenericMove(rootMoves.entries[0].pv.moves[1]);
+        ponderMove = rootMoves.entries[0].pv.moves[1];
       }
     }
 
     // Send the best move to the GUI
-    protocol.send(new ProtocolBestMoveCommand(bestMove, ponderMove));
+    protocol.sendBestMove(bestMove, ponderMove);
   }
 
   private void checkStopConditions() {
@@ -335,7 +324,7 @@ final class Search implements Runnable {
 
     pv[ply].size = 0;
 
-    sendStatus();
+    protocol.sendStatus(currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
   }
 
   private void searchRoot(int depth, int alpha, int beta) {
@@ -357,7 +346,7 @@ final class Search implements Runnable {
 
       currentMove = move;
       currentMoveNumber = i + 1;
-      sendStatus(false);
+      protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
       board.makeMove(move);
       int value = -search(depth - 1, -beta, -alpha, ply + 1, board.isCheck());
@@ -374,7 +363,7 @@ final class Search implements Runnable {
         rootMoves.entries[i].value = value;
         savePV(move, pv[ply + 1], rootMoves.entries[i].pv);
 
-        sendMove(rootMoves.entries[i]);
+        protocol.sendMove(rootMoves.entries[i], currentDepth, currentMaxDepth, totalNodes);
       }
     }
 
@@ -543,62 +532,6 @@ final class Search implements Runnable {
     dest.moves[0] = move;
     System.arraycopy(src.moves, 0, dest.moves, 1, src.size);
     dest.size = src.size + 1;
-  }
-
-  private void sendStatus() {
-    if (System.currentTimeMillis() - statusStartTime >= 1000) {
-      sendStatus(false);
-    }
-  }
-
-  private void sendStatus(boolean force) {
-    long timeDelta = System.currentTimeMillis() - startTime;
-
-    if (force || timeDelta >= 1000) {
-      ProtocolInformationCommand command = new ProtocolInformationCommand();
-
-      command.setDepth(currentDepth);
-      command.setMaxDepth(currentMaxDepth);
-      command.setNodes(totalNodes);
-      command.setTime(timeDelta);
-      command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-      if (currentMove != Move.NOMOVE) {
-        command.setCurrentMove(Move.toGenericMove(currentMove));
-        command.setCurrentMoveNumber(currentMoveNumber);
-      }
-
-      protocol.send(command);
-
-      statusStartTime = System.currentTimeMillis();
-    }
-  }
-
-  private void sendMove(MoveList.Entry entry) {
-    long timeDelta = System.currentTimeMillis() - startTime;
-
-    ProtocolInformationCommand command = new ProtocolInformationCommand();
-
-    command.setDepth(currentDepth);
-    command.setMaxDepth(currentMaxDepth);
-    command.setNodes(totalNodes);
-    command.setTime(timeDelta);
-    command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-    if (Math.abs(entry.value) >= Value.CHECKMATE_THRESHOLD) {
-      // Calculate mate distance
-      int mateDepth = Value.CHECKMATE - Math.abs(entry.value);
-      command.setMate(Integer.signum(entry.value) * (mateDepth + 1) / 2);
-    } else {
-      command.setCentipawns(entry.value);
-    }
-    List<GenericMove> moveList = new ArrayList<>();
-    for (int i = 0; i < entry.pv.size; ++i) {
-      moveList.add(Move.toGenericMove(entry.pv.moves[i]));
-    }
-    command.setMoveList(moveList);
-
-    protocol.send(command);
-
-    statusStartTime = System.currentTimeMillis();
   }
 
 }

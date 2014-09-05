@@ -46,10 +46,6 @@ TEST(piecetest, testGetType) {
   EXPECT_EQ(+PieceType::KING, Piece::getType(Piece::BLACK_KING));
 }
 
-TEST(piecetest, testInvalidGetType) {
-  EXPECT_THROW(Piece::getType(Piece::NOPIECE), std::exception);
-}
-
 TEST(piecetest, testGetColor) {
   EXPECT_EQ(+Color::WHITE, Piece::getColor(Piece::WHITE_PAWN));
   EXPECT_EQ(+Color::BLACK, Piece::getColor(Piece::BLACK_PAWN));
@@ -63,8 +59,4 @@ TEST(piecetest, testGetColor) {
   EXPECT_EQ(+Color::BLACK, Piece::getColor(Piece::BLACK_QUEEN));
   EXPECT_EQ(+Color::WHITE, Piece::getColor(Piece::WHITE_KING));
   EXPECT_EQ(+Color::BLACK, Piece::getColor(Piece::BLACK_KING));
-}
-
-TEST(piecetest, testInvalidGetColor) {
-  EXPECT_THROW(Piece::getColor(Piece::NOPIECE), std::exception);
 }

@@ -6,7 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericBoard;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -15,7 +14,7 @@ public class EvaluationTest {
 
   @Test
   public void testEvaluate() {
-    Board board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
+    Board board = Notation.toBoard(Notation.STANDARDBOARD);
     Evaluation evaluation = new Evaluation();
 
     assertEquals(Evaluation.TEMPO, evaluation.evaluate(board));

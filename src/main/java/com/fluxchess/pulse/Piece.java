@@ -6,8 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericPiece;
-
 final class Piece {
 
   static final int MASK = 0x1F;
@@ -24,6 +22,7 @@ final class Piece {
   static final int BLACK_ROOK = 9;
   static final int BLACK_QUEEN = 10;
   static final int BLACK_KING = 11;
+
   static final int NOPIECE = 12;
 
   static final int[] values = {
@@ -49,42 +48,8 @@ final class Piece {
       case BLACK_QUEEN:
       case BLACK_KING:
         return true;
-      case NOPIECE:
       default:
         return false;
-    }
-  }
-
-  static int valueOf(GenericPiece genericPiece) {
-    assert genericPiece != null;
-
-    switch (genericPiece) {
-      case WHITEPAWN:
-        return WHITE_PAWN;
-      case WHITEKNIGHT:
-        return WHITE_KNIGHT;
-      case WHITEBISHOP:
-        return WHITE_BISHOP;
-      case WHITEROOK:
-        return WHITE_ROOK;
-      case WHITEQUEEN:
-        return WHITE_QUEEN;
-      case WHITEKING:
-        return WHITE_KING;
-      case BLACKPAWN:
-        return BLACK_PAWN;
-      case BLACKKNIGHT:
-        return BLACK_KNIGHT;
-      case BLACKBISHOP:
-        return BLACK_BISHOP;
-      case BLACKROOK:
-        return BLACK_ROOK;
-      case BLACKQUEEN:
-        return BLACK_QUEEN;
-      case BLACKKING:
-        return BLACK_KING;
-      default:
-        throw new IllegalArgumentException();
     }
   }
 
@@ -104,7 +69,6 @@ final class Piece {
             return WHITE_QUEEN;
           case PieceType.KING:
             return WHITE_KING;
-          case PieceType.NOPIECETYPE:
           default:
             throw new IllegalArgumentException();
         }
@@ -122,43 +86,9 @@ final class Piece {
             return BLACK_QUEEN;
           case PieceType.KING:
             return BLACK_KING;
-          case PieceType.NOPIECETYPE:
           default:
             throw new IllegalArgumentException();
         }
-      case Color.NOCOLOR:
-      default:
-        throw new IllegalArgumentException();
-    }
-  }
-
-  static GenericPiece toGenericPiece(int piece) {
-    switch (piece) {
-      case WHITE_PAWN:
-        return GenericPiece.WHITEPAWN;
-      case WHITE_KNIGHT:
-        return GenericPiece.WHITEKNIGHT;
-      case WHITE_BISHOP:
-        return GenericPiece.WHITEBISHOP;
-      case WHITE_ROOK:
-        return GenericPiece.WHITEROOK;
-      case WHITE_QUEEN:
-        return GenericPiece.WHITEQUEEN;
-      case WHITE_KING:
-        return GenericPiece.WHITEKING;
-      case BLACK_PAWN:
-        return GenericPiece.BLACKPAWN;
-      case BLACK_KNIGHT:
-        return GenericPiece.BLACKKNIGHT;
-      case BLACK_BISHOP:
-        return GenericPiece.BLACKBISHOP;
-      case BLACK_ROOK:
-        return GenericPiece.BLACKROOK;
-      case BLACK_QUEEN:
-        return GenericPiece.BLACKQUEEN;
-      case BLACK_KING:
-        return GenericPiece.BLACKKING;
-      case NOPIECE:
       default:
         throw new IllegalArgumentException();
     }
@@ -184,7 +114,6 @@ final class Piece {
       case WHITE_KING:
       case BLACK_KING:
         return PieceType.KING;
-      case NOPIECE:
       default:
         throw new IllegalArgumentException();
     }
@@ -206,7 +135,6 @@ final class Piece {
       case BLACK_QUEEN:
       case BLACK_KING:
         return Color.BLACK;
-      case NOPIECE:
       default:
         throw new IllegalArgumentException();
     }

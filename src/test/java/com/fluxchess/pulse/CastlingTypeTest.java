@@ -16,7 +16,8 @@ import static org.junit.Assert.assertEquals;
 public class CastlingTypeTest {
 
   @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public void testUtilityClass()
+      throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     assertUtilityClassWellDefined(CastlingType.class);
   }
 

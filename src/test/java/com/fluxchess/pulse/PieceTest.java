@@ -16,7 +16,8 @@ import static org.junit.Assert.*;
 public class PieceTest {
 
   @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public void testUtilityClass()
+      throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     assertUtilityClassWellDefined(Piece.class);
   }
 
@@ -56,11 +57,6 @@ public class PieceTest {
     assertEquals(PieceType.KING, Piece.getType(Piece.BLACK_KING));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidGetType() {
-    Piece.getType(Piece.NOPIECE);
-  }
-
   @Test
   public void testGetColor() {
     assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_PAWN));
@@ -75,11 +71,6 @@ public class PieceTest {
     assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_QUEEN));
     assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_KING));
     assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_KING));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidGetColor() {
-    Piece.getColor(Piece.NOPIECE);
   }
 
 }

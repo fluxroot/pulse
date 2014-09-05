@@ -15,7 +15,8 @@ import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 public class MoveTypeTest {
 
   @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public void testUtilityClass()
+      throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     assertUtilityClassWellDefined(MoveType.class);
   }
 

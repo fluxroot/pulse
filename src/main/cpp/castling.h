@@ -17,14 +17,13 @@ public:
   static const int WHITE_QUEENSIDE = 1;
   static const int BLACK_KINGSIDE = 2;
   static const int BLACK_QUEENSIDE = 3;
+
   static const int NOCASTLING = 4;
 
   static const int SIZE = 4;
   static const std::array<int, SIZE> values;
 
   static bool isValid(int castling);
-  static int fromNotation(char notation);
-  static char toNotation(int castling);
   static int valueOf(int color, int castlingType);
   static int getType(int castling);
   static int getColor(int castling);

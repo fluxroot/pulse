@@ -21,25 +21,15 @@ public:
   static const int f = 5;
   static const int g = 6;
   static const int h = 7;
+
   static const int NOFILE = 8;
 
   static const int SIZE = 8;
   static const std::array<int, SIZE> values;
 
   static bool isValid(int file);
-  static int fromNotation(char notation);
-  static char toNotation(int file);
 
 private:
-  static const char a_NOTATION = 'a';
-  static const char b_NOTATION = 'b';
-  static const char c_NOTATION = 'c';
-  static const char d_NOTATION = 'd';
-  static const char e_NOTATION = 'e';
-  static const char f_NOTATION = 'f';
-  static const char g_NOTATION = 'g';
-  static const char h_NOTATION = 'h';
-
   File();
   ~File();
 };

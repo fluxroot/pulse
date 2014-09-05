@@ -15,7 +15,8 @@ import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 public class DepthTest {
 
   @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public void testUtilityClass()
+      throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     assertUtilityClassWellDefined(Depth.class);
   }
 

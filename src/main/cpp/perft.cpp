@@ -6,6 +6,7 @@
  */
 
 #include "perft.h"
+#include "notation.h"
 
 #include <iostream>
 #include <iomanip>
@@ -16,10 +17,10 @@
 namespace pulse {
 
 void Perft::run() {
-  std::unique_ptr<Board> board(new Board(Board::STANDARDBOARD));
+  std::unique_ptr<Board> board(new Board(Notation::toBoard(Notation::STANDARDBOARD)));
   int depth = MAX_DEPTH;
 
-  std::cout << "Testing " << board->toString() << " at depth " << depth << std::endl;
+  std::cout << "Testing " << Notation::fromBoard(*board) << " at depth " << depth << std::endl;
 
   auto startTime = std::chrono::system_clock::now();
   uint64_t result = miniMax(depth, *board, 0);

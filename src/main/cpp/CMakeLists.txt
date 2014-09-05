@@ -7,6 +7,7 @@ add_library(core STATIC
   castlingtype.cpp
   color.cpp
   evaluation.cpp
+  notation.cpp
   file.cpp
   move.cpp
   movegenerator.cpp
@@ -15,10 +16,10 @@ add_library(core STATIC
   perft.cpp
   piece.cpp
   piecetype.cpp
-  pulse.cpp
   rank.cpp
   search.cpp
   square.cpp
+  uci.cpp
 )
 
 add_executable(pulse main.cpp)

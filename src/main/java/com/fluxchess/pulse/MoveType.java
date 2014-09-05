@@ -15,6 +15,7 @@ final class MoveType {
   static final int PAWNPROMOTION = 2;
   static final int ENPASSANT = 3;
   static final int CASTLING = 4;
+
   static final int NOMOVETYPE = 5;
 
   private MoveType() {
@@ -28,7 +29,6 @@ final class MoveType {
       case ENPASSANT:
       case CASTLING:
         return true;
-      case NOMOVETYPE:
       default:
         return false;
     }

@@ -37,6 +37,7 @@ add_executable(unittest
   castlingtypetest.cpp
   colortest.cpp
   evaluationtest.cpp
+  notationtest.cpp
   filetest.cpp
   movegeneratortest.cpp
   movelisttest.cpp

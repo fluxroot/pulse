@@ -6,8 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericBoard;
-
 import java.util.concurrent.TimeUnit;
 
 final class Perft {
@@ -17,15 +15,14 @@ final class Perft {
   private final MoveGenerator[] moveGenerators = new MoveGenerator[MAX_DEPTH];
 
   void run() {
-    GenericBoard genericBoard = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Board board = new Board(genericBoard);
+    Board board = Notation.toBoard(Notation.STANDARDBOARD);
     int depth = MAX_DEPTH;
 
     for (int i = 0; i < MAX_DEPTH; ++i) {
       moveGenerators[i] = new MoveGenerator();
     }
 
-    System.out.format("Testing %s at depth %d%n", genericBoard.toString(), depth);
+    System.out.format("Testing %s at depth %d%n", Notation.fromBoard(board), depth);
 
     long startTime = System.currentTimeMillis();
     long result = miniMax(depth, board, 0);

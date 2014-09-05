@@ -18,8 +18,6 @@
 
 namespace pulse {
 
-const std::string Board::STANDARDBOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-
 // Initialize the zobrist keys
 Board::Zobrist::Zobrist() {
   for (auto piece : Piece::values) {
@@ -66,174 +64,6 @@ Board::Board()
     : zobrist(Zobrist::instance()) {
   board.fill(+Piece::NOPIECE);
   castlingRights.fill(+File::NOFILE);
-}
-
-Board::Board(const std::string& fen)
-    : Board() {
-  // Clean and split into tokens
-  std::vector<std::string> tokens;
-  std::stringstream ss(fen);
-  std::string token;
-  while (std::getline(ss, token, ' ')) {
-    if (!token.empty()) {
-      tokens.push_back(token);
-    }
-  }
-
-  // halfmove clock and fullmove number are optional
-  if (tokens.size() < 4 || tokens.size() > 6) {
-    throw std::exception();
-  }
-
-  unsigned int tokensIndex = 0;
-
-  // Parse pieces
-  token = tokens[tokensIndex++];
-  int file = File::a;
-  int rank = Rank::r8;
-
-  for (auto character : token) {
-    int piece = Piece::fromNotation(character);
-    if (piece != Piece::NOPIECE) {
-      if (!File::isValid(file) || !Rank::isValid(rank)) {
-        throw std::invalid_argument("Illegal file or rank");
-      }
-
-      put(piece, Square::valueOf(file, rank));
-
-      if (file == File::h) {
-        file = File::NOFILE;
-      } else {
-        ++file;
-      }
-    } else if (character == '/') {
-      if (file != File::NOFILE || rank == Rank::r1) {
-        throw std::invalid_argument("Illegal file or rank");
-      }
-
-      file = File::a;
-      --rank;
-    } else {
-      std::string s = { character };
-      int emptySquares = std::stoi(s);
-      if (emptySquares < 1 || 8 < emptySquares) {
-        throw std::invalid_argument("Illegal number of empty squares");
-      }
-
-      file += emptySquares - 1;
-      if (!File::isValid(file)) {
-        throw std::invalid_argument("Illegal number of empty squares");
-      }
-
-      if (file == File::h) {
-        file = File::NOFILE;
-      } else {
-        ++file;
-      }
-    }
-  }
-
-  // Parse active color
-  token = tokens[tokensIndex++];
-
-  if (token.length() != 1) {
-    throw std::exception();
-  }
-
-  int activeColor = Color::fromNotation(token[0]);
-  if (activeColor == Color::NOCOLOR) {
-    throw std::exception();
-  }
-  if (this->activeColor != activeColor) {
-    this->activeColor = activeColor;
-    zobristKey ^= zobrist.activeColor;
-  }
-
-  // Parse castling rights
-  token = tokens[tokensIndex++];
-
-  if (token.compare("-") != 0) {
-    for (auto character : token) {
-      int castlingFile;
-      int kingFile;
-      int castling = Castling::fromNotation(character);
-      if (castling == Castling::NOCASTLING) {
-        castlingFile = File::fromNotation(character);
-        if (castlingFile == File::NOFILE) {
-          throw std::exception();
-        }
-
-        int color = Color::colorOf(character);
-
-        if (kings[color].squares == 0) {
-          throw std::exception();
-        }
-
-        kingFile = Square::getFile(Bitboard::numberOfTrailingZeros(kings[color].squares));
-        if (castlingFile > kingFile) {
-          castling = Castling::valueOf(color, CastlingType::KINGSIDE);
-        } else {
-          castling = Castling::valueOf(color, CastlingType::QUEENSIDE);
-        }
-      } else if (Castling::getType(castling) == CastlingType::KINGSIDE) {
-        castlingFile = File::h;
-        kingFile = File::e;
-      } else {
-        castlingFile = File::a;
-        kingFile = File::e;
-      }
-
-      assert(Castling::isValid(castling));
-      assert(File::isValid(castlingFile));
-      assert(File::isValid(kingFile));
-
-      castlingRights[castling] = castlingFile;
-      zobristKey ^= zobrist.castlingRights[castling];
-    }
-  }
-
-  // Parse en passant square
-  token = tokens[tokensIndex++];
-
-  if (token.compare("-") != 0) {
-    if (token.length() != 2) {
-      throw std::exception();
-    }
-
-    int enPassantFile = File::fromNotation(token[0]);
-    int enPassantRank = Rank::fromNotation(token[1]);
-    if (!(activeColor == Color::BLACK && enPassantRank == Rank::r3)
-      && !(activeColor == Color::WHITE && enPassantRank == Rank::r6)) {
-      throw std::exception();
-    }
-
-    enPassantSquare = Square::valueOf(enPassantFile, enPassantRank);
-    zobristKey ^= zobrist.enPassantSquare[enPassantSquare];
-  }
-
-  // Parse halfmove clock
-  if (tokens.size() >= 5) {
-    token = tokens[tokensIndex++];
-
-    int number = std::stoi(token);
-    if (number < 0) {
-      throw std::exception();
-    }
-
-    halfmoveClock = number;
-  }
-
-  // Parse fullmove number
-  if (tokens.size() == 6) {
-    token = tokens[tokensIndex++];
-
-    int number = std::stoi(token);
-    if (number < 1) {
-      throw std::exception();
-    }
-
-    setFullmoveNumber(number);
-  }
 }
 
 Board::Board(const Board& board)
@@ -310,85 +140,45 @@ bool Board::operator!=(const Board& board) const {
   return !(*this == board);
 }
 
-std::string Board::toString() {
-  std::string fen;
+void Board::setActiveColor(int activeColor) {
+  assert(Color::isValid(activeColor));
 
-  // Pieces
-  for (auto iter = Rank::values.rbegin(); iter != Rank::values.rend(); ++iter) {
-    int rank = *iter;
-    unsigned int emptySquares = 0;
-
-    for (auto file : File::values) {
-      int piece = board[Square::valueOf(file, rank)];
-
-      if (piece == Piece::NOPIECE) {
-        ++emptySquares;
-      } else {
-        if (emptySquares > 0) {
-          fen += std::to_string(emptySquares);
-          emptySquares = 0;
-        }
-        fen += Piece::toNotation(piece);
-      }
-    }
-
-    if (emptySquares > 0) {
-      fen += std::to_string(emptySquares);
-    }
-
-    if (rank > Rank::r1) {
-      fen += '/';
-    }
+  if (this->activeColor != activeColor) {
+    this->activeColor = activeColor;
+    zobristKey ^= zobrist.activeColor;
   }
-
-  fen += ' ';
-
-  // Color
-  fen += Color::toNotation(activeColor);
-
-  fen += ' ';
-
-  // Castling
-  std::string castlingNotation;
-  for (auto castling : Castling::values) {
-    if (castlingRights[castling] != File::NOFILE) {
-      int file = castlingRights[castling];
-      if (file == File::a || file == File::h) {
-        castlingNotation += Castling::toNotation(castling);
-      } else {
-        castlingNotation += Color::transform(File::toNotation(file), Castling::getColor(castling));
-      }
-    }
-  }
-  if (castlingNotation.empty()) {
-    fen += '-';
-  } else {
-    fen += castlingNotation;
-  }
-
-  fen += ' ';
-
-  // En passant
-  if (enPassantSquare != Square::NOSQUARE) {
-    fen += Square::toNotation(enPassantSquare);
-  } else {
-    fen += '-';
-  }
-
-  fen += ' ';
-
-  // Halfmove clock
-  fen += std::to_string(halfmoveClock);
-
-  fen += ' ';
-
-  // Fullmove number
-  fen += std::to_string(getFullmoveNumber());
-
-  return fen;
 }
 
-int Board::getFullmoveNumber() {
+void Board::setCastlingRight(int castling, int file) {
+  assert(Castling::isValid(castling));
+
+  if (castlingRights[castling] != File::NOFILE) {
+    castlingRights[castling] = File::NOFILE;
+    zobristKey ^= zobrist.castlingRights[castling];
+  }
+  if (file != File::NOFILE) {
+    castlingRights[castling] = file;
+    zobristKey ^= zobrist.castlingRights[castling];
+  }
+}
+
+void Board::setEnPassantSquare(int enPassantSquare) {
+  if (this->enPassantSquare != Square::NOSQUARE) {
+    zobristKey ^= zobrist.enPassantSquare[this->enPassantSquare];
+  }
+  if (enPassantSquare != Square::NOSQUARE) {
+    zobristKey ^= zobrist.enPassantSquare[enPassantSquare];
+  }
+  this->enPassantSquare = enPassantSquare;
+}
+
+void Board::setHalfmoveClock(int halfmoveClock) {
+  assert(halfmoveClock >= 0);
+
+  this->halfmoveClock = halfmoveClock;
+}
+
+int Board::getFullmoveNumber() const {
   return halfmoveNumber / 2;
 }
 

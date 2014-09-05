@@ -5,15 +5,20 @@
  * found in the LICENSE file.
  */
 
-#include "pulse.h"
+#include "uci.h"
+#include "castlingtype.h"
+#include "file.h"
+#include "rank.h"
 
+#include <cassert>
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <cctype>
 
 namespace pulse {
 
-void Pulse::run() {
+void Uci::run() {
   std::cin.exceptions(std::iostream::eofbit | std::iostream::failbit | std::iostream::badbit);
   while (true) {
     std::string line;
@@ -43,7 +48,7 @@ void Pulse::run() {
   }
 }
 
-void Pulse::receiveInitialize() {
+void Uci::receiveInitialize() {
   receiveStop();
 
   // We received an initialization request.
@@ -58,7 +63,7 @@ void Pulse::receiveInitialize() {
   std::cout << "uciok" << std::endl;
 }
 
-void Pulse::receiveReady() {
+void Uci::receiveReady() {
   // We received a ready request. We must send the token back as soon as we
   // can. However, because we launch the search in a separate thread, our main
   // thread is able to handle the commands asynchronously to the search. If we
@@ -67,17 +72,17 @@ void Pulse::receiveReady() {
   std::cout << "readyok" << std::endl;
 }
 
-void Pulse::receiveNewGame() {
+void Uci::receiveNewGame() {
   receiveStop();
 
   // We received a new game command.
 
   // Initialize per-game settings here.
-  board = std::unique_ptr<Board>(new Board(Board::STANDARDBOARD));
-  search = Search::newInfiniteSearch(*board);
+  *board = Notation::toBoard(Notation::STANDARDBOARD);
+  search = Search::newInfiniteSearch(*this, *board);
 }
 
-void Pulse::receivePosition(std::istringstream& input) {
+void Uci::receivePosition(std::istringstream& input) {
   receiveStop();
 
   // We received an position command. Just setup the board.
@@ -85,7 +90,7 @@ void Pulse::receivePosition(std::istringstream& input) {
   std::string token;
   input >> token;
   if (token == "startpos") {
-    board = std::unique_ptr<Board>(new Board(Board::STANDARDBOARD));
+    *board = Notation::toBoard(Notation::STANDARDBOARD);
 
     if (input >> token) {
       if (token != "moves") {
@@ -103,7 +108,7 @@ void Pulse::receivePosition(std::istringstream& input) {
       }
     }
 
-    board = std::unique_ptr<Board>(new Board(fen));
+    *board = Notation::toBoard(fen);
   } else {
     throw std::exception();
   }
@@ -116,7 +121,7 @@ void Pulse::receivePosition(std::istringstream& input) {
     bool found = false;
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i]->move;
-      if (Move::toNotation(move) == token) {
+      if (fromMove(move) == token) {
         board->makeMove(move);
         found = true;
         break;
@@ -131,7 +136,7 @@ void Pulse::receivePosition(std::istringstream& input) {
   // Don't start searching though!
 }
 
-void Pulse::receiveGo(std::istringstream& input) {
+void Uci::receiveGo(std::istringstream& input) {
   receiveStop();
 
   // We received a start command. Extract all parameters from the
@@ -141,22 +146,22 @@ void Pulse::receiveGo(std::istringstream& input) {
   if (token == "depth") {
     int searchDepth;
     if (input >> searchDepth) {
-      search = Search::newDepthSearch(*board, searchDepth);
+      search = Search::newDepthSearch(*this, *board, searchDepth);
     } else {
       throw std::exception();
     }
   } else if (token == "nodes") {
     uint64_t searchNodes;
     if (input >> searchNodes) {
-      search = Search::newNodesSearch(*board, searchNodes);
+      search = Search::newNodesSearch(*this, *board, searchNodes);
     }
   } else if (token == "movetime") {
     uint64_t searchTime;
     if (input >> searchTime) {
-      search = Search::newTimeSearch(*board, searchTime);
+      search = Search::newTimeSearch(*this, *board, searchTime);
     }
   } else if (token == "infinite") {
-    search = Search::newInfiniteSearch(*board);
+    search = Search::newInfiniteSearch(*this, *board);
   } else {
     uint64_t whiteTimeLeft = 1;
     uint64_t whiteTimeIncrement = 0;
@@ -193,27 +198,119 @@ void Pulse::receiveGo(std::istringstream& input) {
 
     if (ponder) {
       search = Search::newPonderSearch(
-        *board,
+        *this, *board,
         whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
     } else {
       search = Search::newClockSearch(
-        *board,
+        *this, *board,
         whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
     }
   }
 
   // Go...
   search->start();
+  startTime = std::chrono::system_clock::now();
+  statusStartTime = startTime;
 }
 
-void Pulse::receivePonderHit() {
+void Uci::receivePonderHit() {
   // We received a ponder hit command. Just call ponderhit().
   search->ponderhit();
 }
 
-void Pulse::receiveStop() {
+void Uci::receiveStop() {
   // We received a stop command. If a search is running, stop it.
   search->stop();
+}
+
+void Uci::sendBestMove(int bestMove, int ponderMove) {
+  std::cout << "bestmove ";
+
+  if (bestMove != Move::NOMOVE) {
+    std::cout << fromMove(bestMove);
+
+    if (ponderMove != Move::NOMOVE) {
+      std::cout << " ponder " << fromMove(ponderMove);
+    }
+  } else {
+    std::cout << "nomove";
+  }
+
+  std::cout << std::endl;
+}
+
+void Uci::sendStatus(
+    int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove, int currentMoveNumber) {
+  if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - statusStartTime).count() >= 1000) {
+    sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
+  }
+}
+
+void Uci::sendStatus(
+    bool force, int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove, int currentMoveNumber) {
+  auto timeDelta = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime);
+
+  if (force || timeDelta.count() >= 1000) {
+    std::cout << "info";
+    std::cout << " depth " << currentDepth;
+    std::cout << " seldepth " << currentMaxDepth;
+    std::cout << " nodes " << totalNodes;
+    std::cout << " time " << timeDelta.count();
+    std::cout << " nps " << (timeDelta.count() >= 1000 ? (totalNodes * 1000) / timeDelta.count() : 0);
+
+    if (currentMove != Move::NOMOVE) {
+      std::cout << " currmove " << fromMove(currentMove);
+      std::cout << " currmovenumber " << currentMoveNumber;
+    }
+
+    std::cout << std::endl;
+
+    statusStartTime = std::chrono::system_clock::now();
+  }
+}
+
+void Uci::sendMove(MoveList::Entry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) {
+  auto timeDelta = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime);
+
+  std::cout << "info";
+  std::cout << " depth " << currentDepth;
+  std::cout << " seldepth " << currentMaxDepth;
+  std::cout << " nodes " << totalNodes;
+  std::cout << " time " << timeDelta.count();
+  std::cout << " nps " << (timeDelta.count() >= 1000 ? (totalNodes * 1000) / timeDelta.count() : 0);
+
+  if (std::abs(entry.value) >= Value::CHECKMATE_THRESHOLD) {
+    // Calculate mate distance
+    int mateDepth = Value::CHECKMATE - std::abs(entry.value);
+    std::cout << " score mate " << ((entry.value > 0) - (entry.value < 0)) * (mateDepth + 1) / 2;
+  } else {
+    std::cout << " score cp " << entry.value;
+  }
+
+  if (entry.pv.size > 0) {
+    std::cout << " pv";
+    for (int i = 0; i < entry.pv.size; ++i) {
+      std::cout << " " << fromMove(entry.pv.moves[i]);
+    }
+  }
+
+  std::cout << std::endl;
+
+  statusStartTime = std::chrono::system_clock::now();
+}
+
+std::string Uci::fromMove(int move) {
+  std::string notation;
+
+  notation += Notation::fromSquare(Move::getOriginSquare(move));
+  notation += Notation::fromSquare(Move::getTargetSquare(move));
+
+  int promotion = Move::getPromotion(move);
+  if (promotion != PieceType::NOPIECETYPE) {
+    notation += std::tolower(Notation::fromPieceType(promotion));
+  }
+
+  return notation;
 }
 
 }

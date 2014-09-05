@@ -6,6 +6,7 @@
  */
 
 #include "movegenerator.h"
+#include "notation.h"
 
 #include "gtest/gtest.h"
 
@@ -190,11 +191,11 @@ TEST(movegeneratortest, testPerft) {
         int depth = std::stoi(data[0].substr(1));
         uint64_t nodes = std::stoll(data[1]);
 
-        Board board(tokens[0]);
+        Board board(Notation::toBoard(tokens[0]));
 
         uint64_t result = miniMax(depth, board, 0);
         EXPECT_EQ(nodes, result)
-          << board.toString() << ", depth " << i
+          << Notation::fromBoard(board) << ", depth " << i
           << ": expected " << nodes
           << ", actual " << result;
       }

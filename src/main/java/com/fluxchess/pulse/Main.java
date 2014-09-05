@@ -19,7 +19,7 @@ public final class Main {
           new Perft().run();
         }
       } else {
-        new Pulse().run();
+        new Jcpi().run();
       }
     } catch (Throwable t) {
       System.out.format("Exiting Pulse due to an exception: %s%n", t.getLocalizedMessage());

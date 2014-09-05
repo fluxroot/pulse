@@ -15,17 +15,22 @@ import com.fluxchess.jcpi.protocols.IProtocolHandler;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Pulse uses the Java Chess Protocol Interface (JCPI) to handle the
  * UCI protocol. We simply extend AbstractEngine and implement the required
  * methods.
  */
-final class Pulse extends AbstractEngine {
+final class Jcpi extends AbstractEngine implements Protocol {
+
+  private long startTime = 0;
+  private long statusStartTime = 0;
 
   // We have to maintain at least the state of the board and the search.
-  private Board board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
-  private Search search = Search.newInfiniteSearch(getProtocol(), board);
+  private Board currentBoard = Notation.toBoard(new GenericBoard(GenericBoard.STANDARDSETUP));
+  private Search currentSearch = Search.newInfiniteSearch(this, currentBoard);
 
   // AbstractEngine provides three constructors to help us connecting to a
   // command channel.
@@ -34,7 +39,7 @@ final class Pulse extends AbstractEngine {
    * This is our default constructor to create Pulse. It will use the standard
    * input and output.
    */
-  public Pulse() {
+  public Jcpi() {
   }
 
   /**
@@ -44,7 +49,7 @@ final class Pulse extends AbstractEngine {
    * @param input  a buffered reader.
    * @param output a print stream.
    */
-  public Pulse(BufferedReader input, PrintStream output) {
+  public Jcpi(BufferedReader input, PrintStream output) {
     super(input, output);
   }
 
@@ -54,7 +59,7 @@ final class Pulse extends AbstractEngine {
    *
    * @param handler a protocol handler.
    */
-  public Pulse(IProtocolHandler handler) {
+  public Jcpi(IProtocolHandler handler) {
     super(handler);
   }
 
@@ -105,8 +110,8 @@ final class Pulse extends AbstractEngine {
     // We received a new game command.
 
     // Initialize per-game settings here.
-    board = new Board(new GenericBoard(GenericBoard.STANDARDSETUP));
-    search = Search.newInfiniteSearch(getProtocol(), board);
+    currentBoard = Notation.toBoard(new GenericBoard(GenericBoard.STANDARDSETUP));
+    currentSearch = Search.newInfiniteSearch(this, currentBoard);
   }
 
   public void receive(EngineAnalyzeCommand command) {
@@ -117,19 +122,19 @@ final class Pulse extends AbstractEngine {
     // We received an analyze command. Just setup the board.
 
     // Create a new internal board from the GenericBoard.
-    board = new Board(command.board);
+    currentBoard = Notation.toBoard(command.board);
 
     MoveGenerator moveGenerator = new MoveGenerator();
 
     // Make all moves
     for (GenericMove genericMove : command.moves) {
       // Verify moves
-      MoveList moves = moveGenerator.getLegalMoves(board, 1, board.isCheck());
+      MoveList moves = moveGenerator.getLegalMoves(currentBoard, 1, currentBoard.isCheck());
       boolean found = false;
       for (int i = 0; i < moves.size; ++i) {
         int move = moves.entries[i].move;
-        if (Move.toGenericMove(move).equals(genericMove)) {
-          board.makeMove(move);
+        if (fromMove(move).equals(genericMove)) {
+          currentBoard.makeMove(move);
           found = true;
           break;
         }
@@ -151,13 +156,13 @@ final class Pulse extends AbstractEngine {
     // We received a start command. Extract all parameters from the
     // command and start the search.
     if (command.getDepth() != null) {
-      search = Search.newDepthSearch(getProtocol(), board, command.getDepth());
+      currentSearch = Search.newDepthSearch(this, currentBoard, command.getDepth());
     } else if (command.getNodes() != null) {
-      search = Search.newNodesSearch(getProtocol(), board, command.getNodes());
+      currentSearch = Search.newNodesSearch(this, currentBoard, command.getNodes());
     } else if (command.getMoveTime() != null) {
-      search = Search.newTimeSearch(getProtocol(), board, command.getMoveTime());
+      currentSearch = Search.newTimeSearch(this, currentBoard, command.getMoveTime());
     } else if (command.getInfinite()) {
-      search = Search.newInfiniteSearch(getProtocol(), board);
+      currentSearch = Search.newInfiniteSearch(this, currentBoard);
     } else {
       long whiteTimeLeft = 1;
       if (command.getClock(GenericColor.WHITE) != null) {
@@ -185,28 +190,128 @@ final class Pulse extends AbstractEngine {
       }
 
       if (command.getPonder()) {
-        search = Search.newPonderSearch(
-            getProtocol(), board,
+        currentSearch = Search.newPonderSearch(
+            this, currentBoard,
             whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
       } else {
-        search = Search.newClockSearch(
-            getProtocol(), board,
+        currentSearch = Search.newClockSearch(
+            this, currentBoard,
             whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
       }
     }
 
     // Go...
-    search.start();
+    currentSearch.start();
+    startTime = System.currentTimeMillis();
+    statusStartTime = startTime;
   }
 
   public void receive(EnginePonderHitCommand command) {
     // We received a ponder hit command. Just call ponderhit().
-    search.ponderhit();
+    currentSearch.ponderhit();
   }
 
   public void receive(EngineStopCalculatingCommand command) {
     // We received a stop command. If a search is running, stop it.
-    search.stop();
+    currentSearch.stop();
+  }
+
+  public void sendBestMove(int bestMove, int ponderMove) {
+    GenericMove genericBestMove = null;
+    GenericMove genericPonderMove = null;
+    if (bestMove != Move.NOMOVE) {
+      genericBestMove = fromMove(bestMove);
+
+      if (ponderMove != Move.NOMOVE) {
+        genericPonderMove = fromMove(ponderMove);
+      }
+    }
+
+    // Send the best move to the GUI
+    getProtocol().send(new ProtocolBestMoveCommand(genericBestMove, genericPonderMove));
+  }
+
+  public void sendStatus(
+      int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber) {
+    if (System.currentTimeMillis() - statusStartTime >= 1000) {
+      sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
+    }
+  }
+
+  public void sendStatus(
+      boolean force, int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber) {
+    long timeDelta = System.currentTimeMillis() - startTime;
+
+    if (force || timeDelta >= 1000) {
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+      command.setDepth(currentDepth);
+      command.setMaxDepth(currentMaxDepth);
+      command.setNodes(totalNodes);
+      command.setTime(timeDelta);
+      command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
+      if (currentMove != Move.NOMOVE) {
+        command.setCurrentMove(Jcpi.fromMove(currentMove));
+        command.setCurrentMoveNumber(currentMoveNumber);
+      }
+
+      getProtocol().send(command);
+
+      statusStartTime = System.currentTimeMillis();
+    }
+  }
+
+  public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
+    long timeDelta = System.currentTimeMillis() - startTime;
+
+    ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+    command.setDepth(currentDepth);
+    command.setMaxDepth(currentMaxDepth);
+    command.setNodes(totalNodes);
+    command.setTime(timeDelta);
+    command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
+    if (Math.abs(entry.value) >= Value.CHECKMATE_THRESHOLD) {
+      // Calculate mate distance
+      int mateDepth = Value.CHECKMATE - Math.abs(entry.value);
+      command.setMate(Integer.signum(entry.value) * (mateDepth + 1) / 2);
+    } else {
+      command.setCentipawns(entry.value);
+    }
+    List<GenericMove> moveList = new ArrayList<>();
+    for (int i = 0; i < entry.pv.size; ++i) {
+      moveList.add(Jcpi.fromMove(entry.pv.moves[i]));
+    }
+    command.setMoveList(moveList);
+
+    getProtocol().send(command);
+
+    statusStartTime = System.currentTimeMillis();
+  }
+
+  static GenericMove fromMove(int move) {
+    int type = Move.getType(move);
+    int originSquare = Move.getOriginSquare(move);
+    int targetSquare = Move.getTargetSquare(move);
+
+    switch (type) {
+      case MoveType.NORMAL:
+      case MoveType.PAWNDOUBLE:
+      case MoveType.ENPASSANT:
+      case MoveType.CASTLING:
+        return new GenericMove(
+            Notation.fromSquare(originSquare),
+            Notation.fromSquare(targetSquare)
+        );
+      case MoveType.PAWNPROMOTION:
+        return new GenericMove(
+            Notation.fromSquare(originSquare),
+            Notation.fromSquare(targetSquare),
+            Notation.fromPieceType(Move.getPromotion(move))
+        );
+      default:
+        throw new IllegalArgumentException();
+    }
   }
 
 }

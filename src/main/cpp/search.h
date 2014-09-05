@@ -7,6 +7,7 @@
 #ifndef PULSE_SEARCH_H
 #define PULSE_SEARCH_H
 
+#include "protocol.h"
 #include "board.h"
 #include "movegenerator.h"
 #include "evaluation.h"
@@ -24,13 +25,13 @@ namespace pulse {
  */
 class Search {
 public:
-  static std::unique_ptr<Search> newDepthSearch(Board& board, int searchDepth);
-  static std::unique_ptr<Search> newNodesSearch(Board& board, uint64_t searchNodes);
-  static std::unique_ptr<Search> newTimeSearch(Board& board, uint64_t searchTime);
-  static std::unique_ptr<Search> newInfiniteSearch(Board& board);
-  static std::unique_ptr<Search> newClockSearch(Board& board,
+  static std::unique_ptr<Search> newDepthSearch(Protocol& protocol, Board& board, int searchDepth);
+  static std::unique_ptr<Search> newNodesSearch(Protocol& protocol, Board& board, uint64_t searchNodes);
+  static std::unique_ptr<Search> newTimeSearch(Protocol& protocol, Board& board, uint64_t searchTime);
+  static std::unique_ptr<Search> newInfiniteSearch(Protocol& protocol, Board& board);
+  static std::unique_ptr<Search> newClockSearch(Protocol& protocol, Board& board,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo);
-  static std::unique_ptr<Search> newPonderSearch(Board& board,
+  static std::unique_ptr<Search> newPonderSearch(Protocol& protocol, Board& board,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo);
   void start();
   void stop();
@@ -77,6 +78,7 @@ private:
   std::thread thread;
   Semaphore semaphore;
   bool running = false;
+  Protocol& protocol;
 
   Board& board;
   Evaluation evaluation;
@@ -101,8 +103,6 @@ private:
   // Search parameters
   MoveList rootMoves;
   bool abort = false;
-  std::chrono::system_clock::time_point startTime;
-  std::chrono::system_clock::time_point statusStartTime;
   uint64_t totalNodes = 0;
   int initialDepth = 1;
   int currentDepth = initialDepth;
@@ -111,7 +111,7 @@ private:
   int currentMoveNumber = 0;
   std::array<MoveList::MoveVariation, Depth::MAX_PLY + 1> pv;
 
-  Search(Board& board);
+  Search(Protocol& protocol, Board& board);
 
   void checkStopConditions();
   void updateSearch(int ply);
@@ -119,9 +119,6 @@ private:
   int search(int depth, int alpha, int beta, int ply, bool isCheck);
   int quiescent(int depth, int alpha, int beta, int ply, bool isCheck);
   void savePV(int move, MoveList::MoveVariation& src, MoveList::MoveVariation& dest);
-  void sendStatus();
-  void sendStatus(bool force);
-  void sendMove(MoveList::Entry& entry);
 };
 
 }

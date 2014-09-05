@@ -8,6 +8,7 @@
 #include "square.h"
 #include "file.h"
 #include "rank.h"
+#include "uci.h"
 
 #include "gtest/gtest.h"
 
@@ -16,21 +17,12 @@ using namespace pulse;
 TEST(squaretest, testValues) {
   for (auto rank : Rank::values) {
     for (auto file : File::values) {
-      std::string notation;
-      notation += File::toNotation(file);
-      notation += Rank::toNotation(rank);
-
-      int square = Square::fromNotation(notation);
+      int square = Square::valueOf(file, rank);
 
       EXPECT_EQ(file, Square::getFile(square));
       EXPECT_EQ(rank, Square::getRank(square));
-
-      EXPECT_EQ(File::toNotation(file), Square::toNotation(square)[0]);
-      EXPECT_EQ(Rank::toNotation(rank), Square::toNotation(square)[1]);
     }
   }
-
-  EXPECT_EQ(+Square::NOSQUARE, Square::fromNotation("x0"));
 }
 
 TEST(squaretest, testIsValid) {

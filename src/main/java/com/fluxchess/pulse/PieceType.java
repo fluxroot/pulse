@@ -6,8 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericChessman;
-
 final class PieceType {
 
   static final int MASK = 0x7;
@@ -18,6 +16,7 @@ final class PieceType {
   static final int ROOK = 3;
   static final int QUEEN = 4;
   static final int KING = 5;
+
   static final int NOPIECETYPE = 6;
 
   static final int[] values = {
@@ -44,29 +43,8 @@ final class PieceType {
       case QUEEN:
       case KING:
         return true;
-      case NOPIECETYPE:
       default:
         return false;
-    }
-  }
-
-  static GenericChessman toGenericChessman(int pieceType) {
-    switch (pieceType) {
-      case PAWN:
-        return GenericChessman.PAWN;
-      case KNIGHT:
-        return GenericChessman.KNIGHT;
-      case BISHOP:
-        return GenericChessman.BISHOP;
-      case ROOK:
-        return GenericChessman.ROOK;
-      case QUEEN:
-        return GenericChessman.QUEEN;
-      case KING:
-        return GenericChessman.KING;
-      case NOPIECETYPE:
-      default:
-        throw new IllegalArgumentException();
     }
   }
 
@@ -77,9 +55,6 @@ final class PieceType {
       case ROOK:
       case QUEEN:
         return true;
-      case PAWN:
-      case KING:
-      case NOPIECETYPE:
       default:
         return false;
     }
@@ -95,7 +70,6 @@ final class PieceType {
       case KNIGHT:
       case KING:
         return false;
-      case NOPIECETYPE:
       default:
         throw new IllegalArgumentException();
     }
@@ -115,7 +89,6 @@ final class PieceType {
         return QUEEN_VALUE;
       case KING:
         return KING_VALUE;
-      case NOPIECETYPE:
       default:
         throw new IllegalArgumentException();
     }

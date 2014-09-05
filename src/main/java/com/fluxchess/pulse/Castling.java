@@ -12,6 +12,7 @@ final class Castling {
   static final int WHITE_QUEENSIDE = 1;
   static final int BLACK_KINGSIDE = 2;
   static final int BLACK_QUEENSIDE = 3;
+
   static final int NOCASTLING = 4;
 
   static final int[] values = {
@@ -29,7 +30,6 @@ final class Castling {
       case BLACK_KINGSIDE:
       case BLACK_QUEENSIDE:
         return true;
-      case NOCASTLING:
       default:
         return false;
     }
@@ -43,7 +43,6 @@ final class Castling {
             return WHITE_KINGSIDE;
           case CastlingType.QUEENSIDE:
             return WHITE_QUEENSIDE;
-          case CastlingType.NOCASTLINGTYPE:
           default:
             throw new IllegalArgumentException();
         }
@@ -53,11 +52,9 @@ final class Castling {
             return BLACK_KINGSIDE;
           case CastlingType.QUEENSIDE:
             return BLACK_QUEENSIDE;
-          case CastlingType.NOCASTLINGTYPE:
           default:
             throw new IllegalArgumentException();
         }
-      case Color.NOCOLOR:
       default:
         throw new IllegalArgumentException();
     }

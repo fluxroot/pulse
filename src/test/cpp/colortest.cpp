@@ -30,7 +30,3 @@ TEST(colortest, testOpposite) {
   EXPECT_EQ(+Color::WHITE, Color::opposite(Color::BLACK));
   EXPECT_EQ(+Color::BLACK, Color::opposite(Color::WHITE));
 }
-
-TEST(colortest, testInvalidOpposite) {
-  EXPECT_THROW(Color::opposite(Color::NOCOLOR), std::exception);
-}

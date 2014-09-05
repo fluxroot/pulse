@@ -57,30 +57,30 @@ void Search::Semaphore::release() {
   condition.notify_one();
 }
 
-std::unique_ptr<Search> Search::newDepthSearch(Board& board, int searchDepth) {
+std::unique_ptr<Search> Search::newDepthSearch(Protocol& protocol, Board& board, int searchDepth) {
   if (searchDepth < 1 || searchDepth > Depth::MAX_DEPTH) throw std::exception();
 
-  std::unique_ptr<Search> search(new Search(board));
+  std::unique_ptr<Search> search(new Search(protocol, board));
 
   search->searchDepth = searchDepth;
 
   return search;
 }
 
-std::unique_ptr<Search> Search::newNodesSearch(Board& board, uint64_t searchNodes) {
+std::unique_ptr<Search> Search::newNodesSearch(Protocol& protocol, Board& board, uint64_t searchNodes) {
   if (searchNodes < 1) throw std::exception();
 
-  std::unique_ptr<Search> search(new Search(board));
+  std::unique_ptr<Search> search(new Search(protocol, board));
 
   search->searchNodes = searchNodes;
 
   return search;
 }
 
-std::unique_ptr<Search> Search::newTimeSearch(Board& board, uint64_t searchTime) {
+std::unique_ptr<Search> Search::newTimeSearch(Protocol& protocol, Board& board, uint64_t searchTime) {
   if (searchTime < 1) throw std::exception();
 
-  std::unique_ptr<Search> search(new Search(board));
+  std::unique_ptr<Search> search(new Search(protocol, board));
 
   search->searchTime = searchTime;
   search->runTimer = true;
@@ -88,17 +88,17 @@ std::unique_ptr<Search> Search::newTimeSearch(Board& board, uint64_t searchTime)
   return search;
 }
 
-std::unique_ptr<Search> Search::newInfiniteSearch(Board& board) {
-  std::unique_ptr<Search> search(new Search(board));
+std::unique_ptr<Search> Search::newInfiniteSearch(Protocol& protocol, Board& board) {
+  std::unique_ptr<Search> search(new Search(protocol, board));
 
   return search;
 }
 
 std::unique_ptr<Search> Search::newClockSearch(
-    Board& board,
+    Protocol& protocol, Board& board,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo) {
   std::unique_ptr<Search> search = newPonderSearch(
-      board,
+      protocol, board,
       whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
   );
 
@@ -108,7 +108,7 @@ std::unique_ptr<Search> Search::newClockSearch(
 }
 
 std::unique_ptr<Search> Search::newPonderSearch(
-    Board& board,
+    Protocol& protocol, Board& board,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo) {
   if (whiteTimeLeft < 1) throw std::exception();
   if (whiteTimeIncrement < 0) throw std::exception();
@@ -116,7 +116,7 @@ std::unique_ptr<Search> Search::newPonderSearch(
   if (blackTimeIncrement < 0) throw std::exception();
   if (movesToGo < 0) throw std::exception();
 
-  std::unique_ptr<Search> search(new Search(board));
+  std::unique_ptr<Search> search(new Search(protocol, board));
 
   uint64_t timeLeft;
   uint64_t timeIncrement;
@@ -149,8 +149,8 @@ std::unique_ptr<Search> Search::newPonderSearch(
   return search;
 }
 
-Search::Search(Board& board)
-    : board(board),
+Search::Search(Protocol& protocol, Board& board)
+    : protocol(protocol), board(board),
     timer(timerStopped, doTimeManagement, currentDepth, initialDepth, abort),
     semaphore(0) {
 }
@@ -189,8 +189,6 @@ void Search::ponderhit() {
 
 void Search::run() {
   // Do all initialization before releasing the main thread to JCPI
-  startTime = std::chrono::system_clock::now();
-  statusStartTime = startTime;
   if (runTimer) {
     timer.start(searchTime);
   }
@@ -214,7 +212,7 @@ void Search::run() {
   for (int depth = initialDepth; depth <= searchDepth; ++depth) {
     currentDepth = depth;
     currentMaxDepth = 0;
-    sendStatus(false);
+    protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
     searchRoot(currentDepth, -Value::INFINITE, Value::INFINITE);
 
@@ -235,19 +233,20 @@ void Search::run() {
   }
 
   // Update all stats
-  sendStatus(true);
+  protocol.sendStatus(true, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
-  // Get the best move and convert it to a GenericMove
+  // Send the best move and ponder move
+  int bestMove = Move::NOMOVE;
+  int ponderMove = Move::NOMOVE;
   if (rootMoves.size > 0) {
-    std::cout << "bestmove " << Move::toNotation(rootMoves.entries[0]->move);
+    bestMove = rootMoves.entries[0]->move;
     if (rootMoves.entries[0]->pv.size >= 2) {
-      std::cout << " ponder " << Move::toNotation(rootMoves.entries[0]->pv.moves[1]);
+      ponderMove = rootMoves.entries[0]->pv.moves[1];
     }
-  } else {
-    std::cout << "bestmove nomove";
   }
 
-  std::cout << std::endl;
+  // Send the best move to the GUI
+  protocol.sendBestMove(bestMove, ponderMove);
 }
 
 void Search::checkStopConditions() {
@@ -286,7 +285,7 @@ void Search::updateSearch(int ply) {
 
   pv[ply].size = 0;
 
-  sendStatus();
+  protocol.sendStatus(currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 }
 
 void Search::searchRoot(int depth, int alpha, int beta) {
@@ -308,7 +307,7 @@ void Search::searchRoot(int depth, int alpha, int beta) {
 
     currentMove = move;
     currentMoveNumber = i + 1;
-    sendStatus(false);
+    protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
     board.makeMove(move);
     int value = -search(depth - 1, -beta, -alpha, ply + 1, board.isCheck());
@@ -325,7 +324,7 @@ void Search::searchRoot(int depth, int alpha, int beta) {
       rootMoves.entries[i]->value = value;
       savePV(move, pv[ply + 1], rootMoves.entries[i]->pv);
 
-      sendMove(*rootMoves.entries[i]);
+      protocol.sendMove(*rootMoves.entries[i], currentDepth, currentMaxDepth, totalNodes);
     }
   }
 
@@ -496,64 +495,6 @@ void Search::savePV(int move, MoveList::MoveVariation& src, MoveList::MoveVariat
     dest.moves[i + 1] = src.moves[i];
   }
   dest.size = src.size + 1;
-}
-
-void Search::sendStatus() {
-  if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - statusStartTime).count() >= 1000) {
-    sendStatus(false);
-  }
-}
-
-void Search::sendStatus(bool force) {
-  auto timeDelta = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime);
-
-  if (force || timeDelta.count() >= 1000) {
-    std::cout << "info";
-    std::cout << " depth " << currentDepth;
-    std::cout << " seldepth " << currentMaxDepth;
-    std::cout << " nodes " << totalNodes;
-    std::cout << " time " << timeDelta.count();
-    std::cout << " nps " << (timeDelta.count() >= 1000 ? (totalNodes * 1000) / timeDelta.count() : 0);
-
-    if (currentMove != Move::NOMOVE) {
-      std::cout << " currmove " << Move::toNotation(currentMove);
-      std::cout << " currmovenumber " << currentMoveNumber;
-    }
-
-    std::cout << std::endl;
-
-    statusStartTime = std::chrono::system_clock::now();
-  }
-}
-
-void Search::sendMove(MoveList::Entry& entry) {
-  auto timeDelta = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime);
-
-  std::cout << "info";
-  std::cout << " depth " << currentDepth;
-  std::cout << " seldepth " << currentMaxDepth;
-  std::cout << " nodes " << totalNodes;
-  std::cout << " time " << timeDelta.count();
-  std::cout << " nps " << (timeDelta.count() >= 1000 ? (totalNodes * 1000) / timeDelta.count() : 0);
-
-  if (std::abs(entry.value) >= Value::CHECKMATE_THRESHOLD) {
-    // Calculate mate distance
-    int mateDepth = Value::CHECKMATE - std::abs(entry.value);
-    std::cout << " score mate " << ((entry.value > 0) - (entry.value < 0)) * (mateDepth + 1) / 2;
-  } else {
-    std::cout << " score cp " << entry.value;
-  }
-
-  if (entry.pv.size > 0) {
-    std::cout << " pv";
-    for (int i = 0; i < entry.pv.size; ++i) {
-      std::cout << " " << Move::toNotation(entry.pv.moves[i]);
-    }
-  }
-
-  std::cout << std::endl;
-
-  statusStartTime = std::chrono::system_clock::now();
 }
 
 }

@@ -18,6 +18,7 @@ public:
   static const int PAWNPROMOTION = 2;
   static const int ENPASSANT = 3;
   static const int CASTLING = 4;
+
   static const int NOMOVETYPE = 5;
 
   static bool isValid(int type);

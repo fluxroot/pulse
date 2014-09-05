@@ -6,13 +6,14 @@
  */
 
 #include "evaluation.h"
+#include "notation.h"
 
 #include "gtest/gtest.h"
 
 using namespace pulse;
 
 TEST(evaluationtest, testEvaluate) {
-  Board board(Board::STANDARDBOARD);
+  Board board(Notation::toBoard(Notation::STANDARDBOARD));
   Evaluation evaluation;
 
   EXPECT_EQ(+Evaluation::TEMPO, evaluation.evaluate(board));

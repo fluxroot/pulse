@@ -18,15 +18,8 @@
 
 namespace pulse {
 
-/**
- * This is our internal board.
- */
 class Board {
 public:
-  static const std::string STANDARDBOARD;
-
-  static const int MAX_MOVES = Depth::MAX_PLY + 1024;
-
   std::array<int, Square::LENGTH> board;
 
   std::array<Bitboard, Color::SIZE> pawns;
@@ -45,17 +38,23 @@ public:
 
   uint64_t zobristKey = 0;
 
-  Board(const std::string& fen);
+  Board();
   Board(const Board& board);
 
   Board& operator=(const Board& board);
   bool operator==(const Board& board) const;
   bool operator!=(const Board& board) const;
 
-  std::string toString();
-  int getFullmoveNumber();
+  void setActiveColor(int activeColor);
+  void setCastlingRight(int castling, int file);
+  void setEnPassantSquare(int enPassantSquare);
+  void setHalfmoveClock(int halfmoveClock);
+  int getFullmoveNumber() const;
+  void setFullmoveNumber(int fullmoveNumber);
   bool isRepetition();
   bool hasInsufficientMaterial();
+  void put(int piece, int square);
+  int remove(int square);
   void makeMove(int move);
   void undoMove(int move);
   bool isCheck();
@@ -88,6 +87,8 @@ private:
     State();
   };
 
+  static const int MAX_MOVES = Depth::MAX_PLY + 1024;
+
   int halfmoveNumber = 2;
 
   // We will save some board parameters in a State before making a move.
@@ -95,13 +96,8 @@ private:
   std::array<State, MAX_MOVES> states;
   int statesSize = 0;
 
-  const Zobrist& zobrist;
+  Zobrist& zobrist;
 
-  Board();
-
-  void setFullmoveNumber(int fullmoveNumber);
-  void put(int piece, int square);
-  int remove(int square);
   void clearCastlingRights(int castling);
   void clearCastling(int square);
   bool isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& moveDelta);

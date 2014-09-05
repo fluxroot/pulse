@@ -33,27 +33,9 @@ bool Piece::isValid(int piece) {
     case BLACK_QUEEN:
     case BLACK_KING:
       return true;
-    case NOPIECE:
     default:
       return false;
   }
-}
-
-int Piece::fromNotation(char notation) {
-  int color = Color::colorOf(notation);
-  int piecetype = PieceType::fromNotation(notation);
-
-  if (piecetype != PieceType::NOPIECETYPE) {
-    return valueOf(color, piecetype);
-  } else {
-    return NOPIECE;
-  }
-}
-
-char Piece::toNotation(int piece) {
-  assert(isValid(piece));
-
-  return PieceType::toNotation(getType(piece), getColor(piece));
 }
 
 int Piece::valueOf(int color, int pieceType) {
@@ -72,7 +54,6 @@ int Piece::valueOf(int color, int pieceType) {
           return WHITE_QUEEN;
         case PieceType::KING:
           return WHITE_KING;
-        case PieceType::NOPIECETYPE:
         default:
           throw std::exception();
       }
@@ -90,11 +71,9 @@ int Piece::valueOf(int color, int pieceType) {
           return BLACK_QUEEN;
         case PieceType::KING:
           return BLACK_KING;
-        case PieceType::NOPIECETYPE:
         default:
           throw std::exception();
       }
-    case Color::NOCOLOR:
     default:
       throw std::exception();
   }
@@ -120,7 +99,6 @@ int Piece::getType(int piece) {
     case WHITE_KING:
     case BLACK_KING:
       return PieceType::KING;
-    case NOPIECE:
     default:
       throw std::exception();
   }
@@ -142,7 +120,6 @@ int Piece::getColor(int piece) {
     case BLACK_QUEEN:
     case BLACK_KING:
       return Color::BLACK;
-    case NOPIECE:
     default:
       throw std::exception();
   }

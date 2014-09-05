@@ -43,7 +43,3 @@ TEST(piecetypetest, testIsSliding) {
   EXPECT_FALSE(PieceType::isSliding(PieceType::KNIGHT));
   EXPECT_FALSE(PieceType::isSliding(PieceType::KING));
 }
-
-TEST(piecetypetest, testInvalidIsSliding) {
-  EXPECT_THROW(PieceType::isSliding(PieceType::NOPIECETYPE), std::exception);
-}

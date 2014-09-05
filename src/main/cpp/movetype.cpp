@@ -17,7 +17,6 @@ bool MoveType::isValid(int type) {
     case ENPASSANT:
     case CASTLING:
       return true;
-    case NOMOVETYPE:
     default:
       return false;
   }

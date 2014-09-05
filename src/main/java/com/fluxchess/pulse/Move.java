@@ -6,8 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericMove;
-
 /**
  * This class represents a move as a int value. The fields are represented by
  * the following bits.
@@ -44,31 +42,6 @@ final class Move {
       | (PieceType.NOPIECETYPE << PROMOTION_SHIFT);
 
   private Move() {
-  }
-
-  static GenericMove toGenericMove(int move) {
-    int type = getType(move);
-    int originSquare = getOriginSquare(move);
-    int targetSquare = getTargetSquare(move);
-
-    switch (type) {
-      case MoveType.NORMAL:
-      case MoveType.PAWNDOUBLE:
-      case MoveType.ENPASSANT:
-      case MoveType.CASTLING:
-        return new GenericMove(
-            Square.toGenericPosition(originSquare),
-            Square.toGenericPosition(targetSquare)
-        );
-      case MoveType.PAWNPROMOTION:
-        return new GenericMove(
-            Square.toGenericPosition(originSquare),
-            Square.toGenericPosition(targetSquare),
-            PieceType.toGenericChessman(getPromotion(move))
-        );
-      default:
-        throw new IllegalArgumentException();
-    }
   }
 
   static int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion) {

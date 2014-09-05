@@ -8,7 +8,6 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.jcpi.models.IllegalNotationException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -55,7 +54,7 @@ public class MoveGeneratorTest {
   }
 
   @Test
-  public void testPerft() throws IOException, IllegalNotationException {
+  public void testPerft() throws IOException {
     for (int i = 1; i < 4; i++) {
       try (InputStream inputStream = MoveGeneratorTest.class.getResourceAsStream("/perftsuite.epd")) {
         BufferedReader file = new BufferedReader(new InputStreamReader(inputStream));
@@ -69,8 +68,7 @@ public class MoveGeneratorTest {
             int depth = Integer.parseInt(data[0].substring(1));
             long nodes = Integer.parseInt(data[1]);
 
-            GenericBoard genericBoard = new GenericBoard(tokens[0].trim());
-            Board board = new Board(genericBoard);
+            Board board = Notation.toBoard(tokens[0].trim());
 
             long result = miniMax(depth, board, 0);
             if (nodes != result) {
@@ -88,7 +86,7 @@ public class MoveGeneratorTest {
     String message = "";
 
     // Get expected moves from JCPI
-    GenericBoard genericBoard = board.toGenericBoard();
+    GenericBoard genericBoard = Notation.toGenericBoard(board);
     Collection<GenericMove> expectedMoves = new HashSet<>(Arrays.asList(
         com.fluxchess.jcpi.utils.MoveGenerator.getGenericMoves(genericBoard)
     ));
@@ -99,7 +97,7 @@ public class MoveGeneratorTest {
     MoveList moves = moveGenerator.getLegalMoves(board, depth, isCheck);
     Collection<GenericMove> actualMoves = new HashSet<>();
     for (int i = 0; i < moves.size; ++i) {
-      actualMoves.add(Move.toGenericMove(moves.entries[i].move));
+      actualMoves.add(Jcpi.fromMove(moves.entries[i].move));
     }
 
     // Compare expected and actual moves

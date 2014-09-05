@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-#include "pulse.h"
+#include "uci.h"
 #include "perft.h"
 
 #include <string>
@@ -20,8 +20,8 @@ int main(int argc, char* argv[]) {
         perft->run();
       }
     } else {
-      std::unique_ptr<pulse::Pulse> pulse(new pulse::Pulse());
-      pulse->run();
+      std::unique_ptr<pulse::Uci> uci(new pulse::Uci());
+      uci->run();
     }
   } catch (std::exception e) {
     std::cout << "Exiting Pulse due to an exception: " << e.what() << std::endl;

@@ -25,60 +25,36 @@ const std::array<int, Square::SIZE> Square::values = {
 };
 
 const std::vector<std::vector<int>> Square::pawnDirections = {
-    { Square::N, Square::NE, Square::NW }, // Color::WHITE
-    { Square::S, Square::SE, Square::SW }  // Color::BLACK
+    { N, NE, NW }, // Color::WHITE
+    { S, SE, SW }  // Color::BLACK
 };
 const std::vector<int> Square::knightDirections = {
-  Square::N + Square::N + Square::E,
-  Square::N + Square::N + Square::W,
-  Square::N + Square::E + Square::E,
-  Square::N + Square::W + Square::W,
-  Square::S + Square::S + Square::E,
-  Square::S + Square::S + Square::W,
-  Square::S + Square::E + Square::E,
-  Square::S + Square::W + Square::W
+  N + N + E,
+  N + N + W,
+  N + E + E,
+  N + W + W,
+  S + S + E,
+  S + S + W,
+  S + E + E,
+  S + W + W
 };
 const std::vector<int> Square::bishopDirections = {
-  Square::NE, Square::NW, Square::SE, Square::SW
+  NE, NW, SE, SW
 };
 const std::vector<int> Square::rookDirections = {
-  Square::N, Square::E, Square::S, Square::W
+  N, E, S, W
 };
 const std::vector<int> Square::queenDirections = {
-  Square::N, Square::E, Square::S, Square::W,
-  Square::NE, Square::NW, Square::SE, Square::SW
+  N, E, S, W,
+  NE, NW, SE, SW
 };
 const std::vector<int> Square::kingDirections = {
-  Square::N, Square::E, Square::S, Square::W,
-  Square::NE, Square::NW, Square::SE, Square::SW
+  N, E, S, W,
+  NE, NW, SE, SW
 };
 
 bool Square::isValid(int square) {
   return (square & 0x88) == 0;
-}
-
-int Square::fromNotation(const std::string& notation) {
-  int file = File::fromNotation(notation[0]);
-  int rank = Rank::fromNotation(notation[1]);
-
-  if (file != File::NOFILE && rank != Rank::NORANK) {
-    int square = (rank << 4) + file;
-    assert(isValid(square));
-
-    return square;
-  } else {
-    return Square::NOSQUARE;
-  }
-}
-
-std::string Square::toNotation(int square) {
-  assert(isValid(square));
-
-  std::string notation;
-  notation += File::toNotation(getFile(square));
-  notation += Rank::toNotation(getRank(square));
-
-  return notation;
 }
 
 int Square::valueOf(int file, int rank) {

@@ -50,7 +50,6 @@ public:
       | (Piece::NOPIECE << TARGET_PIECE_SHIFT)
       | (PieceType::NOPIECETYPE << PROMOTION_SHIFT);
 
-  static std::string toNotation(int move);
   static int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion);
   static int getType(int move);
   static int getOriginSquare(int move);

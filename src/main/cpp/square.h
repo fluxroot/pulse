@@ -77,8 +77,6 @@ public:
   static const std::vector<int> kingDirections;
 
   static bool isValid(int square);
-  static int fromNotation(const std::string& notation);
-  static std::string toNotation(int square);
   static int valueOf(int file, int rank);
   static int getFile(int square);
   static int getRank(int square);

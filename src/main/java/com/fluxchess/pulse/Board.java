@@ -6,18 +6,11 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.GenericBoard;
-import com.fluxchess.jcpi.models.GenericFile;
-import com.fluxchess.jcpi.models.GenericPiece;
-
 import java.security.SecureRandom;
 
-/**
- * This is our internal board.
- */
 final class Board {
 
-  static final int MAX_MOVES = Depth.MAX_PLY + 1024;
+  private static final int MAX_MOVES = Depth.MAX_PLY + 1024;
 
   final int[] board = new int[Square.LENGTH];
 
@@ -94,12 +87,10 @@ final class Board {
     }
   }
 
-  Board(GenericBoard genericBoard) {
-    assert genericBoard != null;
-
-    // Initialize states
-    for (int i = 0; i < states.length; ++i) {
-      states[i] = new State();
+  Board() {
+    // Initialize board
+    for (int square : Square.values) {
+      board[square] = Piece.NOPIECE;
     }
 
     // Initialize piece type lists
@@ -112,100 +103,59 @@ final class Board {
       kings[color] = new Bitboard();
     }
 
-    // Initialize board
-    for (int square : Square.values) {
-      board[square] = Piece.NOPIECE;
-
-      GenericPiece genericPiece = genericBoard.getPiece(Square.toGenericPosition(square));
-      if (genericPiece != null) {
-        int piece = Piece.valueOf(genericPiece);
-        put(piece, square);
-      }
+    for (int castling : Castling.values) {
+      castlingRights[castling] = File.NOFILE;
     }
 
-    // Initialize active color
-    if (activeColor != Color.valueOf(genericBoard.getActiveColor())) {
-      activeColor = Color.valueOf(genericBoard.getActiveColor());
+    // Initialize states
+    for (int i = 0; i < states.length; ++i) {
+      states[i] = new State();
+    }
+  }
+
+  void setActiveColor(int activeColor) {
+    assert Color.isValid(activeColor);
+
+    if (this.activeColor != activeColor) {
+      this.activeColor = activeColor;
       zobristKey ^= Zobrist.activeColor;
     }
+  }
 
-    // Initialize castling
-    for (int color : Color.values) {
-      for (int castlingType : CastlingType.values) {
-        GenericFile genericFile = genericBoard.getCastling(
-            Color.toGenericColor(color), CastlingType.toGenericCastling(castlingType)
-        );
-        if (genericFile != null) {
-          castlingRights[Castling.valueOf(color, castlingType)] = File.valueOf(genericFile);
-          zobristKey ^= Zobrist.castlingRights[Castling.valueOf(color, castlingType)];
-        } else {
-          castlingRights[Castling.valueOf(color, castlingType)] = File.NOFILE;
-        }
-      }
+  void setCastlingRight(int castling, int file) {
+    assert Castling.isValid(castling);
+
+    if (castlingRights[castling] != File.NOFILE) {
+      castlingRights[castling] = File.NOFILE;
+      zobristKey ^= Zobrist.castlingRights[castling];
     }
+    if (file != File.NOFILE) {
+      castlingRights[castling] = file;
+      zobristKey ^= Zobrist.castlingRights[castling];
+    }
+  }
 
-    // Initialize en passant
-    if (genericBoard.getEnPassant() != null) {
-      enPassantSquare = Square.valueOf(genericBoard.getEnPassant());
+  void setEnPassantSquare(int enPassantSquare) {
+    if (this.enPassantSquare != Square.NOSQUARE) {
+      zobristKey ^= Zobrist.enPassantSquare[this.enPassantSquare];
+    }
+    if (enPassantSquare != Square.NOSQUARE) {
       zobristKey ^= Zobrist.enPassantSquare[enPassantSquare];
     }
-
-    // Initialize half move clock
-    halfmoveClock = genericBoard.getHalfMoveClock();
-
-    // Initialize the full move number
-    setFullmoveNumber(genericBoard.getFullMoveNumber());
+    this.enPassantSquare = enPassantSquare;
   }
 
-  GenericBoard toGenericBoard() {
-    GenericBoard genericBoard = new GenericBoard();
+  void setHalfmoveClock(int halfmoveClock) {
+    assert halfmoveClock >= 0;
 
-    // Set board
-    for (int square : Square.values) {
-      if (board[square] != Piece.NOPIECE) {
-        genericBoard.setPiece(Piece.toGenericPiece(board[square]), Square.toGenericPosition(square));
-      }
-    }
-
-    // Set castling
-    for (int color : Color.values) {
-      for (int castlingType : CastlingType.values) {
-        if (castlingRights[Castling.valueOf(color, castlingType)] != File.NOFILE) {
-          genericBoard.setCastling(
-              Color.toGenericColor(color),
-              CastlingType.toGenericCastling(castlingType),
-              File.toGenericFile(castlingRights[Castling.valueOf(color, castlingType)])
-          );
-        }
-      }
-    }
-
-    // Set en passant
-    if (enPassantSquare != Square.NOSQUARE) {
-      genericBoard.setEnPassant(Square.toGenericPosition(enPassantSquare));
-    }
-
-    // Set active color
-    genericBoard.setActiveColor(Color.toGenericColor(activeColor));
-
-    // Set half move clock
-    genericBoard.setHalfMoveClock(halfmoveClock);
-
-    // Set full move number
-    genericBoard.setFullMoveNumber(getFullmoveNumber());
-
-    return genericBoard;
-  }
-
-  public String toString() {
-    return toGenericBoard().toString();
+    this.halfmoveClock = halfmoveClock;
   }
 
   int getFullmoveNumber() {
     return halfmoveNumber / 2;
   }
 
-  private void setFullmoveNumber(int fullmoveNumber) {
+  void setFullmoveNumber(int fullmoveNumber) {
     assert fullmoveNumber > 0;
 
     halfmoveNumber = fullmoveNumber * 2;
@@ -242,7 +192,7 @@ final class Board {
    * @param piece  the Piece.
    * @param square the Square.
    */
-  private void put(int piece, int square) {
+  void put(int piece, int square) {
     assert Piece.isValid(piece);
     assert Square.isValid(square);
     assert board[square] == Piece.NOPIECE;
@@ -291,7 +241,7 @@ final class Board {
    * @param square the Square.
    * @return the Piece which was removed.
    */
-  private int remove(int square) {
+  int remove(int square) {
     assert Square.isValid(square);
     assert Piece.isValid(board[square]);
 
