@@ -286,7 +286,17 @@ final class Position {
   }
 
   void makeMove(int move) {
+    // Save state
     State entry = states[statesSize];
+    entry.zobristKey = zobristKey;
+    for (int castling : Castling.values) {
+      entry.castlingRights[castling] = castlingRights[castling];
+    }
+    entry.enPassantSquare = enPassantSquare;
+    entry.halfmoveClock = halfmoveClock;
+
+    ++statesSize;
+    assert statesSize < MAX_MOVES;
 
     // Get variables
     int type = Move.getType(move);
@@ -295,20 +305,6 @@ final class Position {
     int originPiece = Move.getOriginPiece(move);
     int originColor = Piece.getColor(originPiece);
     int targetPiece = Move.getTargetPiece(move);
-
-    // Save zobristKey
-    entry.zobristKey = zobristKey;
-
-    // Save castling rights
-    for (int castling : Castling.values) {
-      entry.castlingRights[castling] = castlingRights[castling];
-    }
-
-    // Save enPassantSquare
-    entry.enPassantSquare = enPassantSquare;
-
-    // Save halfmoveClock
-    entry.halfmoveClock = halfmoveClock;
 
     // Remove target piece and update castling rights
     if (targetPiece != Piece.NOPIECE) {
@@ -390,17 +386,9 @@ final class Position {
 
     // Update fullMoveNumber
     ++halfmoveNumber;
-
-    ++statesSize;
-    assert statesSize < MAX_MOVES;
   }
 
   void undoMove(int move) {
-    --statesSize;
-    assert statesSize >= 0;
-
-    State entry = states[statesSize];
-
     // Get variables
     int type = Move.getType(move);
     int originSquare = Move.getOriginSquare(move);
@@ -459,20 +447,18 @@ final class Position {
       put(targetPiece, captureSquare);
     }
 
-    // Restore halfmoveClock
+    // Restore state
+    assert statesSize > 0;
+    --statesSize;
+
+    State entry = states[statesSize];
     halfmoveClock = entry.halfmoveClock;
-
-    // Restore enPassantSquare
     enPassantSquare = entry.enPassantSquare;
-
-    // Restore castling rights
     for (int castling : Castling.values) {
       if (entry.castlingRights[castling] != castlingRights[castling]) {
         castlingRights[castling] = entry.castlingRights[castling];
       }
     }
-
-    // Restore zobristKey
     zobristKey = entry.zobristKey;
   }
 
