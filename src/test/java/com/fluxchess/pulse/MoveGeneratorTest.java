@@ -46,8 +46,7 @@ public class MoveGeneratorTest {
       int move = moves.entries[i].move;
 
       board.makeMove(move);
-      if (!board.isAttacked(
-          Bitboard.next(board.kings[Color.opposite(board.activeColor)].squares), board.activeColor)) {
+      if (!board.isCheck(Color.opposite(board.activeColor))) {
         totalNodes += miniMax(depth - 1, board, ply + 1);
       }
       board.undoMove(move);
@@ -58,7 +57,7 @@ public class MoveGeneratorTest {
 
   @Test
   public void testPerft() throws IOException {
-    for (int i = 1; i < 5; i++) {
+    for (int i = 1; i < 4; i++) {
       try (InputStream inputStream = MoveGeneratorTest.class.getResourceAsStream("/perftsuite.epd")) {
         BufferedReader file = new BufferedReader(new InputStreamReader(inputStream));
 

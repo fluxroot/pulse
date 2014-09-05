@@ -18,4 +18,18 @@ final class Value {
   private Value() {
   }
 
+  static boolean isValid(int value) {
+    int absvalue = Math.abs(value);
+
+    return absvalue <= CHECKMATE || absvalue == INFINITE;
+  }
+
+  static boolean isCheckmate(int value) {
+    assert isValid(value);
+
+    int absvalue = Math.abs(value);
+
+    return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;
+  }
+
 }

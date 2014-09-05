@@ -126,13 +126,12 @@ final class Board {
     assert Castling.isValid(castling);
 
     if (castlingRights[castling] != File.NOFILE) {
-      castlingRights[castling] = File.NOFILE;
       zobristKey ^= Zobrist.castlingRights[castling];
     }
     if (file != File.NOFILE) {
-      castlingRights[castling] = file;
       zobristKey ^= Zobrist.castlingRights[castling];
     }
+    castlingRights[castling] = file;
   }
 
   void setEnPassantSquare(int enPassantSquare) {
@@ -518,6 +517,11 @@ final class Board {
   boolean isCheck() {
     // Check whether our king is attacked by any opponent piece
     return isAttacked(Bitboard.next(kings[activeColor].squares), Color.opposite(activeColor));
+  }
+
+  boolean isCheck(int color) {
+    // Check whether the king for color is attacked by any opponent piece
+    return isAttacked(Bitboard.next(kings[color].squares), Color.opposite(color));
   }
 
   /**

@@ -153,13 +153,12 @@ void Board::setCastlingRight(int castling, int file) {
   assert(Castling::isValid(castling));
 
   if (castlingRights[castling] != File::NOFILE) {
-    castlingRights[castling] = File::NOFILE;
     zobristKey ^= zobrist.castlingRights[castling];
   }
   if (file != File::NOFILE) {
-    castlingRights[castling] = file;
     zobristKey ^= zobrist.castlingRights[castling];
   }
+  castlingRights[castling] = file;
 }
 
 void Board::setEnPassantSquare(int enPassantSquare) {
@@ -545,6 +544,11 @@ void Board::clearCastling(int square) {
 bool Board::isCheck() {
   // Check whether our king is attacked by any opponent piece
   return isAttacked(Bitboard::next(kings[activeColor].squares), Color::opposite(activeColor));
+}
+
+bool Board::isCheck(int color) {
+  // Check whether the king for color is attacked by any opponent piece
+  return isAttacked(Bitboard::next(kings[color].squares), Color::opposite(color));
 }
 
 /**

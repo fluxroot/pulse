@@ -233,9 +233,7 @@ final class Search implements Runnable {
     }
 
     // Populate root move list
-    boolean isCheck = board.isCheck();
-    MoveGenerator moveGenerator = moveGenerators[0];
-    MoveList moves = moveGenerator.getLegalMoves(board, 1, isCheck);
+    MoveList moves = moveGenerators[0].getLegalMoves(board, 1, board.isCheck());
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       rootMoves.entries[rootMoves.size].move = move;
@@ -301,8 +299,7 @@ final class Search implements Runnable {
         } else
 
         // Check if we have a checkmate
-        if (Math.abs(rootMoves.entries[0].value) >= Value.CHECKMATE_THRESHOLD
-            && Math.abs(rootMoves.entries[0].value) <= Value.CHECKMATE
+        if (Value.isCheckmate(rootMoves.entries[0].value)
             && currentDepth >= (Value.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
           abort = true;
         }
@@ -337,6 +334,7 @@ final class Search implements Runnable {
       return;
     }
 
+    // Reset all values, so the best move is pushed to the front
     for (int i = 0; i < rootMoves.size; ++i) {
       rootMoves.entries[i].value = -Value.INFINITE;
     }
@@ -349,7 +347,7 @@ final class Search implements Runnable {
       protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
       board.makeMove(move);
-      int value = -search(depth - 1, -beta, -alpha, ply + 1, board.isCheck());
+      int value = -search(depth - 1, -beta, -alpha, ply + 1);
       board.undoMove(move);
 
       if (abort) {
@@ -360,6 +358,7 @@ final class Search implements Runnable {
       if (value > alpha) {
         alpha = value;
 
+        // We found a new best move
         rootMoves.entries[i].value = value;
         savePV(move, pv[ply + 1], rootMoves.entries[i].pv);
 
@@ -374,11 +373,11 @@ final class Search implements Runnable {
     }
   }
 
-  private int search(int depth, int alpha, int beta, int ply, boolean isCheck) {
+  private int search(int depth, int alpha, int beta, int ply) {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
       // Descend into quiescent
-      return quiescent(0, alpha, beta, ply, isCheck);
+      return quiescent(0, alpha, beta, ply);
     }
 
     updateSearch(ply);
@@ -388,26 +387,25 @@ final class Search implements Runnable {
       return evaluation.evaluate(board);
     }
 
-    // Check the repetition table and fifty move rule
-    if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfmoveClock >= 100) {
+    // Check insufficient material, repetition and fifty move rule
+    if (board.isRepetition() || board.hasInsufficientMaterial() || board.halfmoveClock >= 100) {
       return Value.DRAW;
     }
 
     // Initialize
     int bestValue = -Value.INFINITE;
     int searchedMoves = 0;
+    boolean isCheck = board.isCheck();
 
-    MoveGenerator moveGenerator = moveGenerators[ply];
-    MoveList moves = moveGenerator.getMoves(board, depth, isCheck);
+    MoveList moves = moveGenerators[ply].getMoves(board, depth, isCheck);
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       int value = bestValue;
 
       board.makeMove(move);
-      if (!board.isAttacked(
-          Bitboard.next(board.kings[Color.opposite(board.activeColor)].squares), board.activeColor)) {
+      if (!board.isCheck(Color.opposite(board.activeColor))) {
         ++searchedMoves;
-        value = -search(depth - 1, -beta, -alpha, ply + 1, board.isCheck());
+        value = -search(depth - 1, -beta, -alpha, ply + 1);
       }
       board.undoMove(move);
 
@@ -447,7 +445,7 @@ final class Search implements Runnable {
     return bestValue;
   }
 
-  private int quiescent(int depth, int alpha, int beta, int ply, boolean isCheck) {
+  private int quiescent(int depth, int alpha, int beta, int ply) {
     updateSearch(ply);
 
     // Abort conditions
@@ -455,14 +453,15 @@ final class Search implements Runnable {
       return evaluation.evaluate(board);
     }
 
-    // Check the repetition table and fifty move rule
-    if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfmoveClock >= 100) {
+    // Check insufficient material, repetition and fifty move rule
+    if (board.isRepetition() || board.hasInsufficientMaterial() || board.halfmoveClock >= 100) {
       return Value.DRAW;
     }
 
     // Initialize
     int bestValue = -Value.INFINITE;
     int searchedMoves = 0;
+    boolean isCheck = board.isCheck();
 
     //### BEGIN Stand pat
     if (!isCheck) {
@@ -481,19 +480,15 @@ final class Search implements Runnable {
     }
     //### ENDOF Stand pat
 
-    // Only generate capturing moves or evasion moves, in case we are in check.
-    MoveGenerator moveGenerator = moveGenerators[ply];
-    MoveList moves = moveGenerator.getMoves(board, depth, isCheck);
+    MoveList moves = moveGenerators[ply].getMoves(board, depth, isCheck);
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       int value = bestValue;
 
       board.makeMove(move);
-      if (!board.isAttacked(
-          Bitboard.next(board.kings[Color.opposite(board.activeColor)].squares), board.activeColor)) {
+      if (!board.isCheck(Color.opposite(board.activeColor))) {
         ++searchedMoves;
-        boolean isCheckingMove = board.isCheck();
-        value = -quiescent(depth - 1, -beta, -alpha, ply + 1, isCheckingMove);
+        value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
       }
       board.undoMove(move);
 

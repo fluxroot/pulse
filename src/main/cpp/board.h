@@ -58,6 +58,7 @@ public:
   void makeMove(int move);
   void undoMove(int move);
   bool isCheck();
+  bool isCheck(int color);
   bool isAttacked(int targetSquare, int attackerColor);
 
 private:

@@ -21,8 +21,7 @@ final class MoveGenerator {
       int move = legalMoves.entries[i].move;
 
       board.makeMove(move);
-      if (!board.isAttacked(
-          Bitboard.next(board.kings[Color.opposite(board.activeColor)].squares), board.activeColor)) {
+      if (!board.isCheck(Color.opposite(board.activeColor))) {
         legalMoves.entries[legalMoves.size++].move = move;
       }
       board.undoMove(move);
@@ -73,23 +72,23 @@ final class MoveGenerator {
 
     int activeColor = board.activeColor;
 
-    for (long squares = board.pawns[activeColor].squares; squares != 0; squares &= squares - 1) {
+    for (long squares = board.pawns[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
       addPawnMoves(list, square, board);
     }
-    for (long squares = board.knights[activeColor].squares; squares != 0; squares &= squares - 1) {
+    for (long squares = board.knights[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
       addMoves(list, square, Square.knightDirections, board);
     }
-    for (long squares = board.bishops[activeColor].squares; squares != 0; squares &= squares - 1) {
+    for (long squares = board.bishops[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
       addMoves(list, square, Square.bishopDirections, board);
     }
-    for (long squares = board.rooks[activeColor].squares; squares != 0; squares &= squares - 1) {
+    for (long squares = board.rooks[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
       addMoves(list, square, Square.rookDirections, board);
     }
-    for (long squares = board.queens[activeColor].squares; squares != 0; squares &= squares - 1) {
+    for (long squares = board.queens[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
       addMoves(list, square, Square.queenDirections, board);
     }

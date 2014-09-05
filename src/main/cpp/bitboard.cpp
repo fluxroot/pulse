@@ -48,6 +48,12 @@ int Bitboard::next(uint64_t squares) {
   return toX88Square(numberOfTrailingZeros(squares));
 }
 
+uint64_t Bitboard::remainder(uint64_t squares) {
+  assert(squares != 0);
+
+  return squares & (squares - 1);
+}
+
 int Bitboard::toX88Square(int square) {
   assert(square >= 0 && square < 64);
 

@@ -194,9 +194,7 @@ void Search::run() {
   }
 
   // Populate root move list
-  bool isCheck = board.isCheck();
-  MoveGenerator& moveGenerator = moveGenerators[0];
-  MoveList& moves = moveGenerator.getLegalMoves(board, 1, isCheck);
+  MoveList& moves = moveGenerators[0].getLegalMoves(board, 1, board.isCheck());
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
     rootMoves.entries[rootMoves.size]->move = move;
@@ -262,8 +260,7 @@ void Search::checkStopConditions() {
       } else
 
       // Check if we have a checkmate
-      if (std::abs(rootMoves.entries[0]->value) >= Value::CHECKMATE_THRESHOLD
-        && std::abs(rootMoves.entries[0]->value) <= Value::CHECKMATE
+      if (Value::isCheckmate(rootMoves.entries[0]->value)
         && currentDepth >= (Value::CHECKMATE - std::abs(rootMoves.entries[0]->value))) {
         abort = true;
       }
@@ -298,6 +295,7 @@ void Search::searchRoot(int depth, int alpha, int beta) {
     return;
   }
 
+  // Reset all values, so the best move is pushed to the front
   for (int i = 0; i < rootMoves.size; ++i) {
     rootMoves.entries[i]->value = -Value::INFINITE;
   }
@@ -310,7 +308,7 @@ void Search::searchRoot(int depth, int alpha, int beta) {
     protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
     board.makeMove(move);
-    int value = -search(depth - 1, -beta, -alpha, ply + 1, board.isCheck());
+    int value = -search(depth - 1, -beta, -alpha, ply + 1);
     board.undoMove(move);
 
     if (abort) {
@@ -321,6 +319,7 @@ void Search::searchRoot(int depth, int alpha, int beta) {
     if (value > alpha) {
       alpha = value;
 
+      // We found a new best move
       rootMoves.entries[i]->value = value;
       savePV(move, pv[ply + 1], rootMoves.entries[i]->pv);
 
@@ -335,11 +334,11 @@ void Search::searchRoot(int depth, int alpha, int beta) {
   }
 }
 
-int Search::search(int depth, int alpha, int beta, int ply, bool isCheck) {
+int Search::search(int depth, int alpha, int beta, int ply) {
   // We are at a leaf/horizon. So calculate that value.
   if (depth <= 0) {
     // Descend into quiescent
-    return quiescent(0, alpha, beta, ply, isCheck);
+    return quiescent(0, alpha, beta, ply);
   }
 
   updateSearch(ply);
@@ -349,26 +348,25 @@ int Search::search(int depth, int alpha, int beta, int ply, bool isCheck) {
     return evaluation.evaluate(board);
   }
 
-  // Check the repetition table and fifty move rule
-  if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfmoveClock >= 100) {
+  // Check insufficient material, repetition and fifty move rule
+  if (board.isRepetition() || board.hasInsufficientMaterial() || board.halfmoveClock >= 100) {
     return Value::DRAW;
   }
 
   // Initialize
   int bestValue = -Value::INFINITE;
   int searchedMoves = 0;
+  bool isCheck = board.isCheck();
 
-  MoveGenerator& moveGenerator = moveGenerators[ply];
-  MoveList& moves = moveGenerator.getMoves(board, depth, isCheck);
+  MoveList& moves = moveGenerators[ply].getMoves(board, depth, isCheck);
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
     int value = bestValue;
 
     board.makeMove(move);
-    if (!board.isAttacked(
-        Bitboard::next(board.kings[Color::opposite(board.activeColor)].squares), board.activeColor)) {
+    if (!board.isCheck(Color::opposite(board.activeColor))) {
       ++searchedMoves;
-      value = -search(depth - 1, -beta, -alpha, ply + 1, board.isCheck());
+      value = -search(depth - 1, -beta, -alpha, ply + 1);
     }
     board.undoMove(move);
 
@@ -408,7 +406,7 @@ int Search::search(int depth, int alpha, int beta, int ply, bool isCheck) {
   return bestValue;
 }
 
-int Search::quiescent(int depth, int alpha, int beta, int ply, bool isCheck) {
+int Search::quiescent(int depth, int alpha, int beta, int ply) {
   updateSearch(ply);
 
   // Abort conditions
@@ -416,14 +414,15 @@ int Search::quiescent(int depth, int alpha, int beta, int ply, bool isCheck) {
     return evaluation.evaluate(board);
   }
 
-  // Check the repetition table and fifty move rule
-  if (board.hasInsufficientMaterial() || board.isRepetition() || board.halfmoveClock >= 100) {
+  // Check insufficient material, repetition and fifty move rule
+  if (board.isRepetition() || board.hasInsufficientMaterial() || board.halfmoveClock >= 100) {
     return Value::DRAW;
   }
 
   // Initialize
   int bestValue = -Value::INFINITE;
   int searchedMoves = 0;
+  bool isCheck = board.isCheck();
 
   //### BEGIN Stand pat
   if (!isCheck) {
@@ -442,19 +441,15 @@ int Search::quiescent(int depth, int alpha, int beta, int ply, bool isCheck) {
   }
   //### ENDOF Stand pat
 
-  // Only generate capturing moves or evasion moves, in case we are in check.
-  MoveGenerator& moveGenerator = moveGenerators[ply];
-  MoveList& moves = moveGenerator.getMoves(board, depth, isCheck);
+  MoveList& moves = moveGenerators[ply].getMoves(board, depth, isCheck);
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
     int value = bestValue;
 
     board.makeMove(move);
-    if (!board.isAttacked(
-        Bitboard::next(board.kings[Color::opposite(board.activeColor)].squares), board.activeColor)) {
+    if (!board.isCheck(Color::opposite(board.activeColor))) {
       ++searchedMoves;
-      bool isCheckingMove = board.isCheck();
-      value = -quiescent(depth - 1, -beta, -alpha, ply + 1, isCheckingMove);
+      value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
     }
     board.undoMove(move);
 

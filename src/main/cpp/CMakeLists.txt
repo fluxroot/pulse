@@ -20,6 +20,7 @@ add_library(core STATIC
   search.cpp
   square.cpp
   uci.cpp
+  value.cpp
 )
 
 add_executable(pulse main.cpp)

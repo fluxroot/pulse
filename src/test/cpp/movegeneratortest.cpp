@@ -160,8 +160,7 @@ uint64_t miniMax(int depth, Board& board, int ply) {
     int move = moves.entries[i]->move;
 
     board.makeMove(move);
-    if (!board.isAttacked(
-      Bitboard::next(board.kings[Color::opposite(board.activeColor)].squares), board.activeColor)) {
+    if (!board.isCheck(Color::opposite(board.activeColor))) {
       totalNodes += miniMax(depth - 1, board, ply + 1);
     }
     board.undoMove(move);
@@ -171,7 +170,7 @@ uint64_t miniMax(int depth, Board& board, int ply) {
 }
 
 TEST(movegeneratortest, testPerft) {
-  for (unsigned int i = 1; i < 5; i++) {
+  for (unsigned int i = 1; i < 4; i++) {
     for (auto line : positions) {
       std::vector<std::string> tokens;
       std::stringstream ss(line);

@@ -116,8 +116,8 @@ private:
   void checkStopConditions();
   void updateSearch(int ply);
   void searchRoot(int depth, int alpha, int beta);
-  int search(int depth, int alpha, int beta, int ply, bool isCheck);
-  int quiescent(int depth, int alpha, int beta, int ply, bool isCheck);
+  int search(int depth, int alpha, int beta, int ply);
+  int quiescent(int depth, int alpha, int beta, int ply);
   void savePV(int move, MoveList::MoveVariation& src, MoveList::MoveVariation& dest);
 };
 

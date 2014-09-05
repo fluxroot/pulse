@@ -20,6 +20,9 @@ public:
 
   static const int NOVALUE = 300000;
 
+  static bool isValid(int value);
+  static bool isCheckmate(int value);
+
 private:
   Value();
   ~Value();

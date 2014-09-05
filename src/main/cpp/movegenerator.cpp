@@ -22,8 +22,7 @@ MoveList& MoveGenerator::getLegalMoves(Board& board, int depth, bool isCheck) {
     int move = legalMoves.entries[i]->move;
 
     board.makeMove(move);
-    if (!board.isAttacked(
-        Bitboard::next(board.kings[Color::opposite(board.activeColor)].squares), board.activeColor)) {
+    if (!board.isCheck(Color::opposite(board.activeColor))) {
       legalMoves.entries[legalMoves.size++]->move = move;
     }
     board.undoMove(move);
@@ -70,23 +69,23 @@ MoveList& MoveGenerator::getMoves(Board& board, int depth, bool isCheck) {
 void MoveGenerator::addMoves(MoveList& list, Board& board) {
   int activeColor = board.activeColor;
 
-  for (auto squares = board.pawns[activeColor].squares; squares != 0; squares &= squares - 1) {
+  for (auto squares = board.pawns[activeColor].squares; squares != 0; squares = Bitboard::remainder(squares)) {
     int square = Bitboard::next(squares);
     addPawnMoves(list, square, board);
   }
-  for (auto squares = board.knights[activeColor].squares; squares != 0; squares &= squares - 1) {
+  for (auto squares = board.knights[activeColor].squares; squares != 0; squares = Bitboard::remainder(squares)) {
     int square = Bitboard::next(squares);
     addMoves(list, square, Square::knightDirections, board);
   }
-  for (auto squares = board.bishops[activeColor].squares; squares != 0; squares &= squares - 1) {
+  for (auto squares = board.bishops[activeColor].squares; squares != 0; squares = Bitboard::remainder(squares)) {
     int square = Bitboard::next(squares);
     addMoves(list, square, Square::bishopDirections, board);
   }
-  for (auto squares = board.rooks[activeColor].squares; squares != 0; squares &= squares - 1) {
+  for (auto squares = board.rooks[activeColor].squares; squares != 0; squares = Bitboard::remainder(squares)) {
     int square = Bitboard::next(squares);
     addMoves(list, square, Square::rookDirections, board);
   }
-  for (auto squares = board.queens[activeColor].squares; squares != 0; squares &= squares - 1) {
+  for (auto squares = board.queens[activeColor].squares; squares != 0; squares = Bitboard::remainder(squares)) {
     int square = Bitboard::next(squares);
     addMoves(list, square, Square::queenDirections, board);
   }

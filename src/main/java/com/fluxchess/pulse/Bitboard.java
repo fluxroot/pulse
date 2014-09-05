@@ -18,6 +18,12 @@ final class Bitboard {
     return toX88Square(Long.numberOfTrailingZeros(squares));
   }
 
+  static long remainder(long squares) {
+    assert squares != 0;
+
+    return squares & (squares - 1);
+  }
+
   private static int toX88Square(int square) {
     assert square >= 0 && square < Long.SIZE;
 

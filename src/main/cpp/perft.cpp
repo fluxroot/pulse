@@ -63,8 +63,7 @@ uint64_t Perft::miniMax(int depth, Board& board, int ply) {
     uint64_t nodes = 0;
 
     board.makeMove(move);
-    if (!board.isAttacked(
-        Bitboard::next(board.kings[Color::opposite(board.activeColor)].squares), board.activeColor)) {
+    if (!board.isCheck(Color::opposite(board.activeColor))) {
       nodes = miniMax(depth - 1, board, ply + 1);
     }
     board.undoMove(move);

@@ -26,6 +26,7 @@ public:
   static int numberOfTrailingZeros(uint64_t b);
   static int bitCount(uint64_t b);
   static int next(uint64_t squares);
+  static uint64_t remainder(uint64_t);
   int size();
   void add(int square);
   void remove(int square);
