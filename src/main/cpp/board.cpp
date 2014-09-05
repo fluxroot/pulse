@@ -18,6 +18,8 @@
 
 namespace pulse {
 
+const std::string Board::STANDARDBOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
 // Initialize the zobrist keys
 Board::Zobrist::Zobrist() {
   for (auto piece : Piece::values) {
@@ -64,88 +66,6 @@ Board::Board()
     : zobrist(Zobrist::instance()) {
   board.fill(+Piece::NOPIECE);
   castlingRights.fill(+File::NOFILE);
-}
-
-Board::Board(unsigned int id)
-    : Board() {
-  if (959 < id) throw std::exception();
-
-  // Setup pawns
-  for (auto file : File::values) {
-    put(Piece::WHITE_PAWN, Square::valueOf(file, Rank::r2));
-    put(Piece::BLACK_PAWN, Square::valueOf(file, Rank::r7));
-  }
-
-  // Setup light-square bishops
-  std::array<int, 4> lightSquareBishopFiles = { File::b, File::d, File::f, File::h };
-  int lightSquareBishopFile = lightSquareBishopFiles[id % 4];
-  put(Piece::WHITE_BISHOP, Square::valueOf(lightSquareBishopFile, Rank::r1));
-  put(Piece::BLACK_BISHOP, Square::valueOf(lightSquareBishopFile, Rank::r8));
-  id /= 4;
-
-  // Setup dark-square bishops
-  std::array<int, 4> darkSquareBishopFiles = { File::a, File::c, File::e, File::g };
-  int darkSquareBishopFile = darkSquareBishopFiles[id % 4];
-  put(Piece::WHITE_BISHOP, Square::valueOf(darkSquareBishopFile, Rank::r1));
-  put(Piece::BLACK_BISHOP, Square::valueOf(darkSquareBishopFile, Rank::r8));
-  id /= 4;
-
-  // Setup queens
-  int queenFile = File::NOFILE;
-  unsigned int remainder = id % 6;
-  for (auto file : File::values) {
-    if (board[Square::valueOf(file, Rank::r1)] == Piece::NOPIECE) {
-      if (remainder == 0) {
-        queenFile = file;
-        break;
-      } else {
-        --remainder;
-      }
-    }
-  }
-  assert(queenFile != File::NOFILE);
-  put(Piece::WHITE_QUEEN, Square::valueOf(queenFile, Rank::r1));
-  put(Piece::BLACK_QUEEN, Square::valueOf(queenFile, Rank::r8));
-  id /= 6;
-
-  // Setup kern ("KRN")
-  assert(id <= 9);
-  std::array<std::array<int, 5>, 10> kerns = { {
-      { PieceType::KNIGHT, PieceType::KNIGHT, PieceType::ROOK, PieceType::KING, PieceType::ROOK },
-      { PieceType::KNIGHT, PieceType::ROOK, PieceType::KNIGHT, PieceType::KING, PieceType::ROOK },
-      { PieceType::KNIGHT, PieceType::ROOK, PieceType::KING, PieceType::KNIGHT, PieceType::ROOK },
-      { PieceType::KNIGHT, PieceType::ROOK, PieceType::KING, PieceType::ROOK, PieceType::KNIGHT },
-      { PieceType::ROOK, PieceType::KNIGHT, PieceType::KNIGHT, PieceType::KING, PieceType::ROOK },
-      { PieceType::ROOK, PieceType::KNIGHT, PieceType::KING, PieceType::KNIGHT, PieceType::ROOK },
-      { PieceType::ROOK, PieceType::KNIGHT, PieceType::KING, PieceType::ROOK, PieceType::KNIGHT },
-      { PieceType::ROOK, PieceType::KING, PieceType::KNIGHT, PieceType::KNIGHT, PieceType::ROOK },
-      { PieceType::ROOK, PieceType::KING, PieceType::KNIGHT, PieceType::ROOK, PieceType::KNIGHT },
-      { PieceType::ROOK, PieceType::KING, PieceType::ROOK, PieceType::KNIGHT, PieceType::KNIGHT }
-      } };
-  unsigned int index = 0;
-  int kingFile = File::NOFILE;
-  for (auto file : File::values) {
-    if (board[Square::valueOf(file, Rank::r1)] == Piece::NOPIECE) {
-      int piecetype = kerns[id][index];
-
-      put(Piece::valueOf(Color::WHITE, piecetype), Square::valueOf(file, Rank::r1));
-      put(Piece::valueOf(Color::BLACK, piecetype), Square::valueOf(file, Rank::r8));
-
-      if (piecetype == PieceType::ROOK) {
-        if (kingFile == File::NOFILE) {
-          castlingRights[Castling::WHITE_QUEENSIDE] = file;
-          castlingRights[Castling::BLACK_QUEENSIDE] = file;
-        } else {
-          castlingRights[Castling::WHITE_KINGSIDE] = file;
-          castlingRights[Castling::BLACK_KINGSIDE] = file;
-        }
-      } else if (piecetype == PieceType::KING) {
-        kingFile = file;
-      }
-
-      ++index;
-    }
-  }
 }
 
 Board::Board(const std::string& fen)

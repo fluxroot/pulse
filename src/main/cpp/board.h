@@ -23,7 +23,7 @@ namespace pulse {
  */
 class Board {
 public:
-  static const unsigned int STANDARDBOARD = 518;
+  static const std::string STANDARDBOARD;
 
   static const int MAX_MOVES = Depth::MAX_PLY + 1024;
 
@@ -45,7 +45,6 @@ public:
 
   uint64_t zobristKey = 0;
 
-  Board(unsigned int id);
   Board(const std::string& fen);
   Board(const Board& board);
 
