@@ -139,10 +139,11 @@ public final class Pulse extends AbstractEngine {
     // Create a new internal board from the GenericBoard.
     board = new Board(command.board);
 
+    MoveGenerator moveGenerator = new MoveGenerator();
+
     // Make all moves
     for (GenericMove genericMove : command.moves) {
       // Verify moves
-      MoveGenerator moveGenerator = new MoveGenerator();
       MoveList moves = moveGenerator.getLegalMoves(board, 1, board.isCheck());
       boolean found = false;
       for (int i = 0; i < moves.size; ++i) {

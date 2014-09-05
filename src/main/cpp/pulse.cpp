@@ -108,9 +108,10 @@ void Pulse::receivePosition(std::istringstream& input) {
     throw std::exception();
   }
 
+  MoveGenerator moveGenerator;
+
   while (input >> token) {
     // Verify moves
-    MoveGenerator moveGenerator;
     MoveList& moves = moveGenerator.getLegalMoves(*board, 1, board->isCheck());
     bool found = false;
     for (int i = 0; i < moves.size; ++i) {
