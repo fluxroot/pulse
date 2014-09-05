@@ -112,11 +112,6 @@ final class Board {
       kings[color] = new Bitboard();
     }
 
-    // Initialize material
-    for (int color : Color.values) {
-      material[color] = 0;
-    }
-
     // Initialize board
     for (int square : Square.values) {
       board[square] = Piece.NOPIECE;
@@ -126,6 +121,12 @@ final class Board {
         int piece = Piece.valueOf(genericPiece);
         put(piece, square);
       }
+    }
+
+    // Initialize active color
+    if (activeColor != Color.valueOf(genericBoard.getActiveColor())) {
+      activeColor = Color.valueOf(genericBoard.getActiveColor());
+      zobristKey ^= Zobrist.activeColor;
     }
 
     // Initialize castling
@@ -147,12 +148,6 @@ final class Board {
     if (genericBoard.getEnPassant() != null) {
       enPassantSquare = Square.valueOf(genericBoard.getEnPassant());
       zobristKey ^= Zobrist.enPassantSquare[enPassantSquare];
-    }
-
-    // Initialize active color
-    if (activeColor != Color.valueOf(genericBoard.getActiveColor())) {
-      activeColor = Color.valueOf(genericBoard.getActiveColor());
-      zobristKey ^= Zobrist.activeColor;
     }
 
     // Initialize half move clock

@@ -140,9 +140,13 @@ Board::Board(const std::string& fen)
     throw std::exception();
   }
 
-  activeColor = Color::fromNotation(token[0]);
+  int activeColor = Color::fromNotation(token[0]);
   if (activeColor == Color::NOCOLOR) {
     throw std::exception();
+  }
+  if (this->activeColor != activeColor) {
+    this->activeColor = activeColor;
+    zobristKey ^= zobrist.activeColor;
   }
 
   // Parse castling rights
@@ -184,6 +188,7 @@ Board::Board(const std::string& fen)
       assert(File::isValid(kingFile));
 
       castlingRights[castling] = castlingFile;
+      zobristKey ^= zobrist.castlingRights[castling];
     }
   }
 
@@ -203,6 +208,7 @@ Board::Board(const std::string& fen)
     }
 
     enPassantSquare = Square::valueOf(enPassantFile, enPassantRank);
+    zobristKey ^= zobrist.enPassantSquare[enPassantSquare];
   }
 
   // Parse halfmove clock
