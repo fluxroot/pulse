@@ -30,24 +30,24 @@ private:
   // These are our bit masks
   static const int TYPE_SHIFT = 0;
   static const int TYPE_MASK = MoveType::MASK << TYPE_SHIFT;
-  static const int ORIGINSQUARE_SHIFT = 3;
-  static const int ORIGINSQUARE_MASK = Square::MASK << ORIGINSQUARE_SHIFT;
-  static const int TARGETSQUARE_SHIFT = 10;
-  static const int TARGETSQUARE_MASK = Square::MASK << TARGETSQUARE_SHIFT;
-  static const int ORIGINPIECE_SHIFT = 17;
-  static const int ORIGINPIECE_MASK = Piece::MASK << ORIGINPIECE_SHIFT;
-  static const int TARGETPIECE_SHIFT = 22;
-  static const int TARGETPIECE_MASK = Piece::MASK << TARGETPIECE_SHIFT;
+  static const int ORIGIN_SQUARE_SHIFT = 3;
+  static const int ORIGIN_SQUARE_MASK = Square::MASK << ORIGIN_SQUARE_SHIFT;
+  static const int TARGET_SQUARE_SHIFT = 10;
+  static const int TARGET_SQUARE_MASK = Square::MASK << TARGET_SQUARE_SHIFT;
+  static const int ORIGIN_PIECE_SHIFT = 17;
+  static const int ORIGIN_PIECE_MASK = Piece::MASK << ORIGIN_PIECE_SHIFT;
+  static const int TARGET_PIECE_SHIFT = 22;
+  static const int TARGET_PIECE_MASK = Piece::MASK << TARGET_PIECE_SHIFT;
   static const int PROMOTION_SHIFT = 27;
   static const int PROMOTION_MASK = PieceType::MASK << PROMOTION_SHIFT;
 
 public:
   // We don't use 0 as a null value to protect against errors.
   static const int NOMOVE = (MoveType::NOMOVETYPE << TYPE_SHIFT)
-      | (Square::NOSQUARE << ORIGINSQUARE_SHIFT)
-      | (Square::NOSQUARE << TARGETSQUARE_SHIFT)
-      | (Piece::NOPIECE << ORIGINPIECE_SHIFT)
-      | (Piece::NOPIECE << TARGETPIECE_SHIFT)
+      | (Square::NOSQUARE << ORIGIN_SQUARE_SHIFT)
+      | (Square::NOSQUARE << TARGET_SQUARE_SHIFT)
+      | (Piece::NOPIECE << ORIGIN_PIECE_SHIFT)
+      | (Piece::NOPIECE << TARGET_PIECE_SHIFT)
       | (PieceType::NOPIECETYPE << PROMOTION_SHIFT);
 
   static std::string toNotation(int move);

@@ -36,19 +36,19 @@ int Move::valueOf(int type, int originSquare, int targetSquare, int originPiece,
 
   // Encode origin square
   assert(Square::isValid(originSquare));
-  move |= originSquare << ORIGINSQUARE_SHIFT;
+  move |= originSquare << ORIGIN_SQUARE_SHIFT;
 
   // Encode target square
   assert(Square::isValid(targetSquare));
-  move |= targetSquare << TARGETSQUARE_SHIFT;
+  move |= targetSquare << TARGET_SQUARE_SHIFT;
 
   // Encode origin piece
   assert(Piece::isValid(originPiece));
-  move |= originPiece << ORIGINPIECE_SHIFT;
+  move |= originPiece << ORIGIN_PIECE_SHIFT;
 
   // Encode target piece
   assert(Piece::isValid(targetPiece) || targetPiece == Piece::NOPIECE);
-  move |= targetPiece << TARGETPIECE_SHIFT;
+  move |= targetPiece << TARGET_PIECE_SHIFT;
 
   // Encode promotion
   assert(PieceType::isValidPromotion(promotion) || promotion == PieceType::NOPIECETYPE);
@@ -65,28 +65,28 @@ int Move::getType(int move) {
 }
 
 int Move::getOriginSquare(int move) {
-  int originSquare = (move & ORIGINSQUARE_MASK) >> ORIGINSQUARE_SHIFT;
+  int originSquare = (move & ORIGIN_SQUARE_MASK) >> ORIGIN_SQUARE_SHIFT;
   assert(Square::isValid(originSquare));
 
   return originSquare;
 }
 
 int Move::getTargetSquare(int move) {
-  int targetSquare = (move & TARGETSQUARE_MASK) >> TARGETSQUARE_SHIFT;
+  int targetSquare = (move & TARGET_SQUARE_MASK) >> TARGET_SQUARE_SHIFT;
   assert(Square::isValid(targetSquare));
 
   return targetSquare;
 }
 
 int Move::getOriginPiece(int move) {
-  int originPiece = (move & ORIGINPIECE_MASK) >> ORIGINPIECE_SHIFT;
+  int originPiece = (move & ORIGIN_PIECE_MASK) >> ORIGIN_PIECE_SHIFT;
   assert(Piece::isValid(originPiece));
 
   return originPiece;
 }
 
 int Move::getTargetPiece(int move) {
-  int targetPiece = (move & TARGETPIECE_MASK) >> TARGETPIECE_SHIFT;
+  int targetPiece = (move & TARGET_PIECE_MASK) >> TARGET_PIECE_SHIFT;
   assert(Piece::isValid(targetPiece) || targetPiece == Piece::NOPIECE);
 
   return targetPiece;
