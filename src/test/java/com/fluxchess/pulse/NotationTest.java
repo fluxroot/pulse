@@ -9,6 +9,7 @@ package com.fluxchess.pulse;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class NotationTest {
 
@@ -64,10 +65,10 @@ public class NotationTest {
         position.material[Color.BLACK]);
 
     // Test castling
-    assertEquals(File.h, position.castlingRights[Castling.WHITE_KINGSIDE]);
-    assertEquals(File.a, position.castlingRights[Castling.WHITE_QUEENSIDE]);
-    assertEquals(File.h, position.castlingRights[Castling.BLACK_KINGSIDE]);
-    assertEquals(File.a, position.castlingRights[Castling.BLACK_QUEENSIDE]);
+    assertNotEquals(Castling.NOCASTLING, position.castlingRights & Castling.WHITE_KINGSIDE);
+    assertNotEquals(Castling.NOCASTLING, position.castlingRights & Castling.WHITE_QUEENSIDE);
+    assertNotEquals(Castling.NOCASTLING, position.castlingRights & Castling.BLACK_KINGSIDE);
+    assertNotEquals(Castling.NOCASTLING, position.castlingRights & Castling.BLACK_QUEENSIDE);
 
     // Test en passant
     assertEquals(Square.NOSQUARE, position.enPassantSquare);

@@ -51,9 +51,7 @@ final class Notation {
             fromColor(color), fromCastlingType(castlingType)
         );
         if (genericFile != null) {
-          newPosition.setCastlingRight(Castling.valueOf(color, castlingType), toFile(genericFile));
-        } else {
-          newPosition.setCastlingRight(Castling.valueOf(color, castlingType), File.NOFILE);
+          newPosition.setCastlingRight(Castling.valueOf(color, castlingType));
         }
       }
     }
@@ -83,16 +81,29 @@ final class Notation {
     }
 
     // Set castling
-    for (int color : Color.values) {
-      for (int castlingType : CastlingType.values) {
-        if (position.castlingRights[Castling.valueOf(color, castlingType)] != File.NOFILE) {
-          genericBoard.setCastling(
-              fromColor(color),
-              fromCastlingType(castlingType),
-              fromFile(position.castlingRights[Castling.valueOf(color, castlingType)])
-          );
-        }
-      }
+    if ((position.castlingRights & Castling.WHITE_KINGSIDE) != Castling.NOCASTLING) {
+      genericBoard.setCastling(
+          fromColor(Color.WHITE), fromCastlingType(CastlingType.KINGSIDE),
+          fromFile(File.h)
+      );
+    }
+    if ((position.castlingRights & Castling.WHITE_QUEENSIDE) != Castling.NOCASTLING) {
+      genericBoard.setCastling(
+          fromColor(Color.WHITE), fromCastlingType(CastlingType.QUEENSIDE),
+          fromFile(File.a)
+      );
+    }
+    if ((position.castlingRights & Castling.BLACK_KINGSIDE) != Castling.NOCASTLING) {
+      genericBoard.setCastling(
+          fromColor(Color.BLACK), fromCastlingType(CastlingType.KINGSIDE),
+          fromFile(File.h)
+      );
+    }
+    if ((position.castlingRights & Castling.BLACK_QUEENSIDE) != Castling.NOCASTLING) {
+      genericBoard.setCastling(
+          fromColor(Color.BLACK), fromCastlingType(CastlingType.QUEENSIDE),
+          fromFile(File.a)
+      );
     }
 
     // Set en passant

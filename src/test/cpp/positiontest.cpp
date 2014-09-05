@@ -204,7 +204,7 @@ TEST(positiontest, testCastlingMove) {
   int move = Move::valueOf(MoveType::CASTLING, Square::e1, Square::c1, Piece::WHITE_KING, Piece::NOPIECE, PieceType::NOPIECETYPE);
   position.makeMove(move);
 
-  EXPECT_EQ(+File::NOFILE, position.castlingRights[Castling::WHITE_QUEENSIDE]);
+  EXPECT_EQ(+Castling::NOCASTLING, position.castlingRights & Castling::WHITE_QUEENSIDE);
 
   position.undoMove(move);
 
@@ -217,7 +217,7 @@ TEST(positiontest, testCastlingMove) {
   move = Move::valueOf(MoveType::CASTLING, Square::e1, Square::g1, Piece::WHITE_KING, Piece::NOPIECE, PieceType::NOPIECETYPE);
   position.makeMove(move);
 
-  EXPECT_EQ(+File::NOFILE, position.castlingRights[Castling::WHITE_KINGSIDE]);
+  EXPECT_EQ(+Castling::NOCASTLING, position.castlingRights & Castling::WHITE_KINGSIDE);
 
   position.undoMove(move);
 

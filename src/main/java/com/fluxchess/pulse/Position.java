@@ -23,7 +23,7 @@ final class Position {
 
   final int[] material = new int[Color.values.length];
 
-  final int[] castlingRights = new int[Castling.values.length];
+  int castlingRights = Castling.NOCASTLING;
   int enPassantSquare = Square.NOSQUARE;
   int activeColor = Color.WHITE;
   int halfmoveClock = 0;
@@ -40,7 +40,7 @@ final class Position {
     private static final SecureRandom random = new SecureRandom();
 
     static final long[][] board = new long[Piece.values.length][Square.LENGTH];
-    static final long[] castlingRights = new long[Castling.values.length];
+    static final long[] castlingRights = new long[Castling.VALUES_LENGTH];
     static final long[] enPassantSquare = new long[Square.LENGTH];
     static final long activeColor = next();
 
@@ -52,9 +52,14 @@ final class Position {
         }
       }
 
-      for (int castling : Castling.values) {
-        castlingRights[castling] = next();
-      }
+      castlingRights[Castling.WHITE_KINGSIDE] = next();
+      castlingRights[Castling.WHITE_QUEENSIDE] = next();
+      castlingRights[Castling.BLACK_KINGSIDE] = next();
+      castlingRights[Castling.BLACK_QUEENSIDE] = next();
+      castlingRights[Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE] =
+          castlingRights[Castling.WHITE_KINGSIDE] ^ castlingRights[Castling.WHITE_QUEENSIDE];
+      castlingRights[Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE] =
+          castlingRights[Castling.BLACK_KINGSIDE] ^ castlingRights[Castling.BLACK_QUEENSIDE];
 
       for (int i = 0; i < Square.LENGTH; ++i) {
         enPassantSquare[i] = next();
@@ -76,15 +81,9 @@ final class Position {
 
   private static final class State {
     private long zobristKey = 0;
-    private final int[] castlingRights = new int[Castling.values.length];
+    private int castlingRights = Castling.NOCASTLING;
     private int enPassantSquare = Square.NOSQUARE;
     private int halfmoveClock = 0;
-
-    private State() {
-      for (int castling : Castling.values) {
-        castlingRights[castling] = File.NOFILE;
-      }
-    }
   }
 
   Position() {
@@ -103,10 +102,6 @@ final class Position {
       kings[color] = new Bitboard();
     }
 
-    for (int castling : Castling.values) {
-      castlingRights[castling] = File.NOFILE;
-    }
-
     // Initialize states
     for (int i = 0; i < states.length; ++i) {
       states[i] = new State();
@@ -122,16 +117,13 @@ final class Position {
     }
   }
 
-  void setCastlingRight(int castling, int file) {
+  void setCastlingRight(int castling) {
     assert Castling.isValid(castling);
 
-    if (castlingRights[castling] != File.NOFILE) {
+    if ((castlingRights & castling) == Castling.NOCASTLING) {
+      castlingRights |= castling;
       zobristKey ^= Zobrist.castlingRights[castling];
     }
-    if (file != File.NOFILE) {
-      zobristKey ^= Zobrist.castlingRights[castling];
-    }
-    castlingRights[castling] = file;
   }
 
   void setEnPassantSquare(int enPassantSquare) {
@@ -289,9 +281,7 @@ final class Position {
     // Save state
     State entry = states[statesSize];
     entry.zobristKey = zobristKey;
-    for (int castling : Castling.values) {
-      entry.castlingRights[castling] = castlingRights[castling];
-    }
+    entry.castlingRights = castlingRights;
     entry.enPassantSquare = enPassantSquare;
     entry.halfmoveClock = halfmoveClock;
 
@@ -454,49 +444,41 @@ final class Position {
     State entry = states[statesSize];
     halfmoveClock = entry.halfmoveClock;
     enPassantSquare = entry.enPassantSquare;
-    for (int castling : Castling.values) {
-      if (entry.castlingRights[castling] != castlingRights[castling]) {
-        castlingRights[castling] = entry.castlingRights[castling];
-      }
-    }
+    castlingRights = entry.castlingRights;
     zobristKey = entry.zobristKey;
-  }
-
-  private void clearCastlingRights(int castling) {
-    assert Castling.isValid(castling);
-
-    if (castlingRights[castling] != File.NOFILE) {
-      castlingRights[castling] = File.NOFILE;
-      zobristKey ^= Zobrist.castlingRights[castling];
-    }
   }
 
   private void clearCastling(int square) {
     assert Square.isValid(square);
 
+    int newCastlingRights = castlingRights;
+
     switch (square) {
       case Square.a1:
-        clearCastlingRights(Castling.WHITE_QUEENSIDE);
-        break;
-      case Square.h1:
-        clearCastlingRights(Castling.WHITE_KINGSIDE);
+        newCastlingRights &= ~Castling.WHITE_QUEENSIDE;
         break;
       case Square.a8:
-        clearCastlingRights(Castling.BLACK_QUEENSIDE);
+        newCastlingRights &= ~Castling.BLACK_QUEENSIDE;
+        break;
+      case Square.h1:
+        newCastlingRights &= ~Castling.WHITE_KINGSIDE;
         break;
       case Square.h8:
-        clearCastlingRights(Castling.BLACK_KINGSIDE);
+        newCastlingRights &= ~Castling.BLACK_KINGSIDE;
         break;
       case Square.e1:
-        clearCastlingRights(Castling.WHITE_QUEENSIDE);
-        clearCastlingRights(Castling.WHITE_KINGSIDE);
+        newCastlingRights &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
         break;
       case Square.e8:
-        clearCastlingRights(Castling.BLACK_QUEENSIDE);
-        clearCastlingRights(Castling.BLACK_KINGSIDE);
+        newCastlingRights &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
         break;
       default:
-        break;
+        return;
+    }
+
+    if (newCastlingRights != castlingRights) {
+      castlingRights = newCastlingRights;
+      zobristKey ^= Zobrist.castlingRights[newCastlingRights ^ castlingRights];
     }
   }
 

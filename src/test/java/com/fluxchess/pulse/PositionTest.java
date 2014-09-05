@@ -173,7 +173,7 @@ public class PositionTest {
     int move = Move.valueOf(MoveType.CASTLING, Square.e1, Square.c1, Piece.WHITE_KING, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
 
-    assertEquals(File.NOFILE, position.castlingRights[Castling.WHITE_QUEENSIDE]);
+    assertEquals(Castling.NOCASTLING, position.castlingRights & Castling.WHITE_QUEENSIDE);
 
     position.undoMove(move);
 
@@ -186,7 +186,7 @@ public class PositionTest {
     move = Move.valueOf(MoveType.CASTLING, Square.e1, Square.g1, Piece.WHITE_KING, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
 
-    assertEquals(File.NOFILE, position.castlingRights[Castling.WHITE_KINGSIDE]);
+    assertEquals(Castling.NOCASTLING, position.castlingRights & Castling.WHITE_KINGSIDE);
 
     position.undoMove(move);
 

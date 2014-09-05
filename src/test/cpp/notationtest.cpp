@@ -65,10 +65,10 @@ TEST(notationtest, testStandardPosition) {
     position.material[Color::BLACK]);
 
   // Test castling
-  EXPECT_EQ(+File::h, position.castlingRights[Castling::WHITE_KINGSIDE]);
-  EXPECT_EQ(+File::a, position.castlingRights[Castling::WHITE_QUEENSIDE]);
-  EXPECT_EQ(+File::h, position.castlingRights[Castling::BLACK_KINGSIDE]);
-  EXPECT_EQ(+File::a, position.castlingRights[Castling::BLACK_QUEENSIDE]);
+  EXPECT_NE(+Castling::NOCASTLING, position.castlingRights & Castling::WHITE_KINGSIDE);
+  EXPECT_NE(+Castling::NOCASTLING, position.castlingRights & Castling::WHITE_QUEENSIDE);
+  EXPECT_NE(+Castling::NOCASTLING, position.castlingRights & Castling::BLACK_KINGSIDE);
+  EXPECT_NE(+Castling::NOCASTLING, position.castlingRights & Castling::BLACK_QUEENSIDE);
 
   // Test en passant
   EXPECT_EQ(+Square::NOSQUARE, position.enPassantSquare);

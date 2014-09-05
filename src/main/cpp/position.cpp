@@ -26,9 +26,14 @@ Position::Zobrist::Zobrist() {
     }
   }
 
-  for (auto castling : Castling::values) {
-    castlingRights[castling] = next();
-  }
+  castlingRights[Castling::WHITE_KINGSIDE] = next();
+  castlingRights[Castling::WHITE_QUEENSIDE] = next();
+  castlingRights[Castling::BLACK_KINGSIDE] = next();
+  castlingRights[Castling::BLACK_QUEENSIDE] = next();
+  castlingRights[Castling::WHITE_KINGSIDE | Castling::WHITE_QUEENSIDE] =
+    castlingRights[Castling::WHITE_KINGSIDE] ^ castlingRights[Castling::WHITE_QUEENSIDE];
+  castlingRights[Castling::BLACK_KINGSIDE | Castling::BLACK_QUEENSIDE] =
+    castlingRights[Castling::BLACK_KINGSIDE] ^ castlingRights[Castling::BLACK_QUEENSIDE];
 
   for (int i = 0; i < Square::LENGTH; ++i) {
     enPassantSquare[i] = next();
@@ -56,14 +61,9 @@ uint64_t Position::Zobrist::next() {
   return hash;
 }
 
-Position::State::State() {
-  castlingRights.fill(+File::NOFILE);
-}
-
 Position::Position()
     : zobrist(Zobrist::instance()) {
   board.fill(+Piece::NOPIECE);
-  castlingRights.fill(+File::NOFILE);
 }
 
 Position::Position(const Position& position)
@@ -149,16 +149,13 @@ void Position::setActiveColor(int activeColor) {
   }
 }
 
-void Position::setCastlingRight(int castling, int file) {
+void Position::setCastlingRight(int castling) {
   assert(Castling::isValid(castling));
 
-  if (castlingRights[castling] != File::NOFILE) {
+  if ((castlingRights & castling) == Castling::NOCASTLING) {
+    castlingRights |= castling;
     zobristKey ^= zobrist.castlingRights[castling];
   }
-  if (file != File::NOFILE) {
-    zobristKey ^= zobrist.castlingRights[castling];
-  }
-  castlingRights[castling] = file;
 }
 
 void Position::setEnPassantSquare(int enPassantSquare) {
@@ -316,9 +313,7 @@ void Position::makeMove(int move) {
   // Save state
   State& entry = states[statesSize];
   entry.zobristKey = zobristKey;
-  for (auto castling : Castling::values) {
-    entry.castlingRights[castling] = castlingRights[castling];
-  }
+  entry.castlingRights = castlingRights;
   entry.enPassantSquare = enPassantSquare;
   entry.halfmoveClock = halfmoveClock;
 
@@ -481,49 +476,41 @@ void Position::undoMove(int move) {
   State& entry = states[statesSize];
   halfmoveClock = entry.halfmoveClock;
   enPassantSquare = entry.enPassantSquare;
-  for (auto castling : Castling::values) {
-    if (entry.castlingRights[castling] != castlingRights[castling]) {
-      castlingRights[castling] = entry.castlingRights[castling];
-    }
-  }
+  castlingRights = entry.castlingRights;
   zobristKey = entry.zobristKey;
-}
-
-void Position::clearCastlingRights(int castling) {
-  assert(Castling::isValid(castling));
-
-  if (castlingRights[castling] != File::NOFILE) {
-    castlingRights[castling] = File::NOFILE;
-    zobristKey ^= zobrist.castlingRights[castling];
-  }
 }
 
 void Position::clearCastling(int square) {
   assert(Square::isValid(square));
 
+  int newCastlingRights = castlingRights;
+
   switch (square) {
     case Square::a1:
-      clearCastlingRights(Castling::WHITE_QUEENSIDE);
-      break;
-    case Square::h1:
-      clearCastlingRights(Castling::WHITE_KINGSIDE);
+      newCastlingRights &= ~Castling::WHITE_QUEENSIDE;
       break;
     case Square::a8:
-      clearCastlingRights(Castling::BLACK_QUEENSIDE);
+      newCastlingRights &= ~Castling::BLACK_QUEENSIDE;
+      break;
+    case Square::h1:
+      newCastlingRights &= ~Castling::WHITE_KINGSIDE;
       break;
     case Square::h8:
-      clearCastlingRights(Castling::BLACK_KINGSIDE);
+      newCastlingRights &= ~Castling::BLACK_KINGSIDE;
       break;
     case Square::e1:
-      clearCastlingRights(Castling::WHITE_QUEENSIDE);
-      clearCastlingRights(Castling::WHITE_KINGSIDE);
+      newCastlingRights &= ~(Castling::WHITE_KINGSIDE | Castling::WHITE_QUEENSIDE);
       break;
     case Square::e8:
-      clearCastlingRights(Castling::BLACK_QUEENSIDE);
-      clearCastlingRights(Castling::BLACK_KINGSIDE);
+      newCastlingRights &= ~(Castling::BLACK_KINGSIDE | Castling::BLACK_QUEENSIDE);
       break;
     default:
-      break;
+      return;
+  }
+
+  if (newCastlingRights != castlingRights) {
+    castlingRights = newCastlingRights;
+    zobristKey ^= zobrist.castlingRights[newCastlingRights ^ castlingRights];
   }
 }
 

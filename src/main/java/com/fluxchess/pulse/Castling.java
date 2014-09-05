@@ -8,13 +8,14 @@ package com.fluxchess.pulse;
 
 final class Castling {
 
-  static final int WHITE_KINGSIDE = 0;
-  static final int WHITE_QUEENSIDE = 1;
-  static final int BLACK_KINGSIDE = 2;
-  static final int BLACK_QUEENSIDE = 3;
+  static final int WHITE_KINGSIDE = 1 << 0;
+  static final int WHITE_QUEENSIDE = 1 << 1;
+  static final int BLACK_KINGSIDE = 1 << 2;
+  static final int BLACK_QUEENSIDE = 1 << 3;
 
-  static final int NOCASTLING = 4;
+  static final int NOCASTLING = 0;
 
+  static final int VALUES_LENGTH = 16;
   static final int[] values = {
       WHITE_KINGSIDE, WHITE_QUEENSIDE,
       BLACK_KINGSIDE, BLACK_QUEENSIDE

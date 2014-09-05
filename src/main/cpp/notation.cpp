@@ -137,7 +137,7 @@ Position Notation::toPosition(const std::string& fen) {
       assert(File::isValid(castlingFile));
       assert(File::isValid(kingFile));
 
-      position.setCastlingRight(castling, castlingFile);
+      position.setCastlingRight(castling);
     }
   }
 
@@ -226,15 +226,17 @@ std::string Notation::fromPosition(const Position& position) {
 
   // Castling
   std::string castlingNotation;
-  for (auto castling : Castling::values) {
-    if (position.castlingRights[castling] != File::NOFILE) {
-      int file = position.castlingRights[castling];
-      if (file == File::a || file == File::h) {
-        castlingNotation += fromCastling(castling);
-      } else {
-        castlingNotation += transform(fromFile(file), Castling::getColor(castling));
-      }
-    }
+  if ((position.castlingRights & Castling::WHITE_KINGSIDE) != Castling::NOCASTLING) {
+    castlingNotation += fromCastling(Castling::WHITE_KINGSIDE);
+  }
+  if ((position.castlingRights & Castling::WHITE_QUEENSIDE) != Castling::NOCASTLING) {
+    castlingNotation += fromCastling(Castling::WHITE_QUEENSIDE);
+  }
+  if ((position.castlingRights & Castling::BLACK_KINGSIDE) != Castling::NOCASTLING) {
+    castlingNotation += fromCastling(Castling::BLACK_KINGSIDE);
+  }
+  if ((position.castlingRights & Castling::BLACK_QUEENSIDE) != Castling::NOCASTLING) {
+    castlingNotation += fromCastling(Castling::BLACK_QUEENSIDE);
   }
   if (castlingNotation.empty()) {
     fen += '-';

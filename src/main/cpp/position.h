@@ -31,7 +31,7 @@ public:
 
   std::array<int, Color::SIZE> material = {};
 
-  std::array<int, Castling::SIZE> castlingRights;
+  int castlingRights = Castling::NOCASTLING;
   int enPassantSquare = Square::NOSQUARE;
   int activeColor = Color::WHITE;
   int halfmoveClock = 0;
@@ -46,7 +46,7 @@ public:
   bool operator!=(const Position& position) const;
 
   void setActiveColor(int activeColor);
-  void setCastlingRight(int castling, int file);
+  void setCastlingRight(int castling);
   void setEnPassantSquare(int enPassantSquare);
   void setHalfmoveClock(int halfmoveClock);
   int getFullmoveNumber() const;
@@ -65,7 +65,7 @@ private:
   class Zobrist {
   public:
     std::array<std::array<uint64_t, Square::LENGTH>, Piece::SIZE> board;
-    std::array<uint64_t, Castling::SIZE> castlingRights;
+    std::array<uint64_t, Castling::VALUES_LENGTH> castlingRights;
     std::array<uint64_t, Square::LENGTH> enPassantSquare;
     uint64_t activeColor;
 
@@ -81,11 +81,9 @@ private:
   class State {
   public:
     uint64_t zobristKey = 0;
-    std::array<int, Castling::SIZE> castlingRights;
+    int castlingRights = Castling::NOCASTLING;
     int enPassantSquare = Square::NOSQUARE;
     int halfmoveClock = 0;
-
-    State();
   };
 
   static const int MAX_MOVES = Depth::MAX_PLY + 1024;
@@ -99,7 +97,6 @@ private:
 
   Zobrist& zobrist;
 
-  void clearCastlingRights(int castling);
   void clearCastling(int square);
   bool isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& moveDelta);
   bool isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& moveDelta);

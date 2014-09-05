@@ -11,7 +11,8 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CastlingTest {
 
@@ -19,17 +20,6 @@ public class CastlingTest {
   public void testUtilityClass()
       throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     assertUtilityClassWellDefined(Castling.class);
-  }
-
-  @Test
-  public void testValues() {
-    for (int color : Color.values) {
-      for (int castlingType : CastlingType.values) {
-        int castling = Castling.valueOf(color, castlingType);
-
-        assertEquals(castling, Castling.values[castling]);
-      }
-    }
   }
 
   @Test
