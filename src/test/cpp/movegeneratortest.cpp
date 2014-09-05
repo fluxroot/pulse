@@ -146,21 +146,24 @@ static const int MAX_DEPTH = 6;
 static std::array<MoveGenerator, MAX_DEPTH> moveGenerators;
 
 uint64_t miniMax(int depth, Board& board, int ply) {
+  if (depth <= 0) {
+    return 1;
+  }
+
   uint64_t totalNodes = 0;
 
   bool isCheck = board.isCheck();
   MoveGenerator& moveGenerator = moveGenerators[ply];
-  MoveList& moves = moveGenerator.getLegalMoves(board, depth, isCheck);
-
-  if (depth <= 1) {
-    return moves.size;
-  }
+  MoveList& moves = moveGenerator.getMoves(board, depth, isCheck);
 
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
 
     board.makeMove(move);
-    totalNodes += miniMax(depth - 1, board, ply + 1);
+    if (!board.isAttacked(
+      Bitboard::next(board.kings[Color::opposite(board.activeColor)].squares), board.activeColor)) {
+      totalNodes += miniMax(depth - 1, board, ply + 1);
+    }
     board.undoMove(move);
   }
 
@@ -168,7 +171,7 @@ uint64_t miniMax(int depth, Board& board, int ply) {
 }
 
 TEST(movegeneratortest, testPerft) {
-  for (unsigned int i = 1; i < 4; i++) {
+  for (unsigned int i = 1; i < 5; i++) {
     for (auto line : positions) {
       std::vector<std::string> tokens;
       std::stringstream ss(line);
