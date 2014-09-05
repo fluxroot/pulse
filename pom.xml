@@ -116,7 +116,7 @@
               <archive>
                 <manifest>
                   <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                  <mainClass>com.fluxchess.pulse.Pulse</mainClass>
+                  <mainClass>com.fluxchess.pulse.Main</mainClass>
                 </manifest>
               </archive>
             </configuration>
