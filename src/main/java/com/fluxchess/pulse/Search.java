@@ -26,7 +26,7 @@ final class Search implements Runnable {
   private boolean running = false;
   private boolean shutdown = false;
 
-  private Board board;
+  private Position position;
   private final Evaluation evaluation = new Evaluation();
 
   // We will store a MoveGenerator for each ply so we don't have to create them
@@ -72,61 +72,61 @@ final class Search implements Runnable {
     }
   }
 
-  void newDepthSearch(Board board, int searchDepth) {
-    if (board == null) throw new IllegalArgumentException();
+  void newDepthSearch(Position position, int searchDepth) {
+    if (position == null) throw new IllegalArgumentException();
     if (searchDepth < 1 || searchDepth > Depth.MAX_DEPTH) throw new IllegalArgumentException();
     if (running) throw new IllegalStateException();
 
     reset();
 
-    this.board = board;
+    this.position = position;
     this.searchDepth = searchDepth;
   }
 
-  void newNodesSearch(Board board, long searchNodes) {
-    if (board == null) throw new IllegalArgumentException();
+  void newNodesSearch(Position position, long searchNodes) {
+    if (position == null) throw new IllegalArgumentException();
     if (searchNodes < 1) throw new IllegalArgumentException();
     if (running) throw new IllegalStateException();
 
     reset();
 
-    this.board = board;
+    this.position = position;
     this.searchNodes = searchNodes;
   }
 
-  void newTimeSearch(Board board, long searchTime) {
-    if (board == null) throw new IllegalArgumentException();
+  void newTimeSearch(Position position, long searchTime) {
+    if (position == null) throw new IllegalArgumentException();
     if (searchTime < 1) throw new IllegalArgumentException();
     if (running) throw new IllegalStateException();
 
     reset();
 
-    this.board = board;
+    this.position = position;
     this.searchTime = searchTime;
     this.timer = new Timer(true);
   }
 
-  void newInfiniteSearch(Board board) {
-    if (board == null) throw new IllegalArgumentException();
+  void newInfiniteSearch(Position position) {
+    if (position == null) throw new IllegalArgumentException();
     if (running) throw new IllegalStateException();
 
     reset();
 
-    this.board = board;
+    this.position = position;
   }
 
-  void newClockSearch(Board board,
+  void newClockSearch(Position position,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
-    newPonderSearch(board,
+    newPonderSearch(position,
         whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
     );
 
     this.timer = new Timer(true);
   }
 
-  void newPonderSearch(Board board,
+  void newPonderSearch(Position position,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
-    if (board == null) throw new IllegalArgumentException();
+    if (position == null) throw new IllegalArgumentException();
     if (whiteTimeLeft < 1) throw new IllegalArgumentException();
     if (whiteTimeIncrement < 0) throw new IllegalArgumentException();
     if (blackTimeLeft < 1) throw new IllegalArgumentException();
@@ -136,11 +136,11 @@ final class Search implements Runnable {
 
     reset();
 
-    this.board = board;
+    this.position = position;
 
     long timeLeft;
     long timeIncrement;
-    if (board.activeColor == Color.WHITE) {
+    if (position.activeColor == Color.WHITE) {
       timeLeft = whiteTimeLeft;
       timeIncrement = whiteTimeIncrement;
     } else {
@@ -272,7 +272,7 @@ final class Search implements Runnable {
       }
 
       // Populate root move list
-      MoveList moves = moveGenerators[0].getLegalMoves(board, 1, board.isCheck());
+      MoveList moves = moveGenerators[0].getLegalMoves(position, 1, position.isCheck());
       for (int i = 0; i < moves.size; ++i) {
         int move = moves.entries[i].move;
         rootMoves.entries[rootMoves.size].move = move;
@@ -391,9 +391,9 @@ final class Search implements Runnable {
       currentMoveNumber = i + 1;
       protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
-      board.makeMove(move);
+      position.makeMove(move);
       int value = -search(depth - 1, -beta, -alpha, ply + 1);
-      board.undoMove(move);
+      position.undoMove(move);
 
       if (abort) {
         return;
@@ -429,30 +429,30 @@ final class Search implements Runnable {
 
     // Abort conditions
     if (abort || ply == Depth.MAX_PLY) {
-      return evaluation.evaluate(board);
+      return evaluation.evaluate(position);
     }
 
     // Check insufficient material, repetition and fifty move rule
-    if (board.isRepetition() || board.hasInsufficientMaterial() || board.halfmoveClock >= 100) {
+    if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
       return Value.DRAW;
     }
 
     // Initialize
     int bestValue = -Value.INFINITE;
     int searchedMoves = 0;
-    boolean isCheck = board.isCheck();
+    boolean isCheck = position.isCheck();
 
-    MoveList moves = moveGenerators[ply].getMoves(board, depth, isCheck);
+    MoveList moves = moveGenerators[ply].getMoves(position, depth, isCheck);
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       int value = bestValue;
 
-      board.makeMove(move);
-      if (!board.isCheck(Color.opposite(board.activeColor))) {
+      position.makeMove(move);
+      if (!position.isCheck(Color.opposite(position.activeColor))) {
         ++searchedMoves;
         value = -search(depth - 1, -beta, -alpha, ply + 1);
       }
-      board.undoMove(move);
+      position.undoMove(move);
 
       if (abort) {
         return bestValue;
@@ -495,22 +495,22 @@ final class Search implements Runnable {
 
     // Abort conditions
     if (abort || ply == Depth.MAX_PLY) {
-      return evaluation.evaluate(board);
+      return evaluation.evaluate(position);
     }
 
     // Check insufficient material, repetition and fifty move rule
-    if (board.isRepetition() || board.hasInsufficientMaterial() || board.halfmoveClock >= 100) {
+    if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
       return Value.DRAW;
     }
 
     // Initialize
     int bestValue = -Value.INFINITE;
     int searchedMoves = 0;
-    boolean isCheck = board.isCheck();
+    boolean isCheck = position.isCheck();
 
     //### BEGIN Stand pat
     if (!isCheck) {
-      bestValue = evaluation.evaluate(board);
+      bestValue = evaluation.evaluate(position);
 
       // Do we have a better value?
       if (bestValue > alpha) {
@@ -525,17 +525,17 @@ final class Search implements Runnable {
     }
     //### ENDOF Stand pat
 
-    MoveList moves = moveGenerators[ply].getMoves(board, depth, isCheck);
+    MoveList moves = moveGenerators[ply].getMoves(position, depth, isCheck);
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       int value = bestValue;
 
-      board.makeMove(move);
-      if (!board.isCheck(Color.opposite(board.activeColor))) {
+      position.makeMove(move);
+      if (!position.isCheck(Color.opposite(position.activeColor))) {
         ++searchedMoves;
         value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
       }
-      board.undoMove(move);
+      position.undoMove(move);
 
       if (abort) {
         return bestValue;

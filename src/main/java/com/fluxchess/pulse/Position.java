@@ -8,7 +8,7 @@ package com.fluxchess.pulse;
 
 import java.security.SecureRandom;
 
-final class Board {
+final class Position {
 
   private static final int MAX_MOVES = Depth.MAX_PLY + 1024;
 
@@ -31,7 +31,7 @@ final class Board {
 
   long zobristKey = 0;
 
-  // We will save some board parameters in a State before making a move.
+  // We will save some position parameters in a State before making a move.
   // Later we will restore them before undoing a move.
   private final State[] states = new State[MAX_MOVES];
   private int statesSize = 0;
@@ -87,7 +87,7 @@ final class Board {
     }
   }
 
-  Board() {
+  Position() {
     // Initialize board
     for (int square : Square.values) {
       board[square] = Piece.NOPIECE;

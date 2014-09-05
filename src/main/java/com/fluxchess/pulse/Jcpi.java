@@ -29,7 +29,7 @@ final class Jcpi extends AbstractEngine implements Protocol {
   private long startTime = 0;
   private long statusStartTime = 0;
 
-  private Board currentBoard = Notation.toBoard(new GenericBoard(GenericBoard.STANDARDSETUP));
+  private Position currentPosition = Notation.toPosition(new GenericBoard(GenericBoard.STANDARDSETUP));
 
   // AbstractEngine provides three constructors to help us connecting to a
   // command channel.
@@ -109,7 +109,7 @@ final class Jcpi extends AbstractEngine implements Protocol {
     // We received a new game command.
 
     // Initialize per-game settings here.
-    currentBoard = Notation.toBoard(new GenericBoard(GenericBoard.STANDARDSETUP));
+    currentPosition = Notation.toPosition(new GenericBoard(GenericBoard.STANDARDSETUP));
   }
 
   public void receive(EngineAnalyzeCommand command) {
@@ -117,22 +117,22 @@ final class Jcpi extends AbstractEngine implements Protocol {
 
     search.stop();
 
-    // We received an analyze command. Just setup the board.
+    // We received an analyze command. Just setup the position.
 
-    // Create a new internal board from the GenericBoard.
-    currentBoard = Notation.toBoard(command.board);
+    // Create a new internal position from the GenericBoard.
+    currentPosition = Notation.toPosition(command.board);
 
     MoveGenerator moveGenerator = new MoveGenerator();
 
     // Make all moves
     for (GenericMove genericMove : command.moves) {
       // Verify moves
-      MoveList moves = moveGenerator.getLegalMoves(currentBoard, 1, currentBoard.isCheck());
+      MoveList moves = moveGenerator.getLegalMoves(currentPosition, 1, currentPosition.isCheck());
       boolean found = false;
       for (int i = 0; i < moves.size; ++i) {
         int move = moves.entries[i].move;
         if (fromMove(move).equals(genericMove)) {
-          currentBoard.makeMove(move);
+          currentPosition.makeMove(move);
           found = true;
           break;
         }
@@ -154,13 +154,13 @@ final class Jcpi extends AbstractEngine implements Protocol {
     // We received a start command. Extract all parameters from the
     // command and start the search.
     if (command.getDepth() != null) {
-      search.newDepthSearch(currentBoard, command.getDepth());
+      search.newDepthSearch(currentPosition, command.getDepth());
     } else if (command.getNodes() != null) {
-      search.newNodesSearch(currentBoard, command.getNodes());
+      search.newNodesSearch(currentPosition, command.getNodes());
     } else if (command.getMoveTime() != null) {
-      search.newTimeSearch(currentBoard, command.getMoveTime());
+      search.newTimeSearch(currentPosition, command.getMoveTime());
     } else if (command.getInfinite()) {
-      search.newInfiniteSearch(currentBoard);
+      search.newInfiniteSearch(currentPosition);
     } else {
       long whiteTimeLeft = 1;
       if (command.getClock(GenericColor.WHITE) != null) {
@@ -188,10 +188,10 @@ final class Jcpi extends AbstractEngine implements Protocol {
       }
 
       if (command.getPonder()) {
-        search.newPonderSearch(currentBoard,
+        search.newPonderSearch(currentPosition,
             whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
       } else {
-        search.newClockSearch(currentBoard,
+        search.newClockSearch(currentPosition,
             whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, searchMovesToGo);
       }
     }

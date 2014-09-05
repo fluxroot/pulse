@@ -2,7 +2,6 @@ project(main)
 
 add_library(core STATIC
   bitboard.cpp
-  board.cpp
   castling.cpp
   castlingtype.cpp
   color.cpp
@@ -16,6 +15,7 @@ add_library(core STATIC
   perft.cpp
   piece.cpp
   piecetype.cpp
+  position.cpp
   rank.cpp
   search.cpp
   square.cpp

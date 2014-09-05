@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-#include "board.h"
+#include "position.h"
 #include "castlingtype.h"
 #include "file.h"
 #include "rank.h"
@@ -19,7 +19,7 @@
 namespace pulse {
 
 // Initialize the zobrist keys
-Board::Zobrist::Zobrist() {
+Position::Zobrist::Zobrist() {
   for (auto piece : Piece::values) {
     for (int i = 0; i < Square::LENGTH; ++i) {
       board[piece][i] = next();
@@ -37,12 +37,12 @@ Board::Zobrist::Zobrist() {
   activeColor = next();
 }
 
-Board::Zobrist& Board::Zobrist::instance() {
+Position::Zobrist& Position::Zobrist::instance() {
   static Zobrist* instance = new Zobrist();
   return *instance;
 }
 
-uint64_t Board::Zobrist::next() {
+uint64_t Position::Zobrist::next() {
   std::array<uint64_t, 16> bytes;
   for (int i = 0; i < 16; ++i) {
     bytes[i] = generator();
@@ -56,91 +56,91 @@ uint64_t Board::Zobrist::next() {
   return hash;
 }
 
-Board::State::State() {
+Position::State::State() {
   castlingRights.fill(+File::NOFILE);
 }
 
-Board::Board()
+Position::Position()
     : zobrist(Zobrist::instance()) {
   board.fill(+Piece::NOPIECE);
   castlingRights.fill(+File::NOFILE);
 }
 
-Board::Board(const Board& board)
-    : Board() {
-  this->board = board.board;
-  this->pawns = board.pawns;
-  this->knights = board.knights;
-  this->bishops = board.bishops;
-  this->rooks = board.rooks;
-  this->queens = board.queens;
-  this->kings = board.kings;
+Position::Position(const Position& position)
+    : Position() {
+  this->board = position.board;
+  this->pawns = position.pawns;
+  this->knights = position.knights;
+  this->bishops = position.bishops;
+  this->rooks = position.rooks;
+  this->queens = position.queens;
+  this->kings = position.kings;
 
-  this->material = board.material;
+  this->material = position.material;
 
-  this->castlingRights = board.castlingRights;
-  this->enPassantSquare = board.enPassantSquare;
-  this->activeColor = board.activeColor;
-  this->halfmoveClock = board.halfmoveClock;
+  this->castlingRights = position.castlingRights;
+  this->enPassantSquare = position.enPassantSquare;
+  this->activeColor = position.activeColor;
+  this->halfmoveClock = position.halfmoveClock;
 
-  this->zobristKey = board.zobristKey;
+  this->zobristKey = position.zobristKey;
 
-  this->halfmoveNumber = board.halfmoveNumber;
+  this->halfmoveNumber = position.halfmoveNumber;
 
   this->statesSize = 0;
 }
 
-Board& Board::operator=(const Board& board) {
-  this->board = board.board;
-  this->pawns = board.pawns;
-  this->knights = board.knights;
-  this->bishops = board.bishops;
-  this->rooks = board.rooks;
-  this->queens = board.queens;
-  this->kings = board.kings;
+Position& Position::operator=(const Position& position) {
+  this->board = position.board;
+  this->pawns = position.pawns;
+  this->knights = position.knights;
+  this->bishops = position.bishops;
+  this->rooks = position.rooks;
+  this->queens = position.queens;
+  this->kings = position.kings;
 
-  this->material = board.material;
+  this->material = position.material;
 
-  this->castlingRights = board.castlingRights;
-  this->enPassantSquare = board.enPassantSquare;
-  this->activeColor = board.activeColor;
-  this->halfmoveClock = board.halfmoveClock;
+  this->castlingRights = position.castlingRights;
+  this->enPassantSquare = position.enPassantSquare;
+  this->activeColor = position.activeColor;
+  this->halfmoveClock = position.halfmoveClock;
 
-  this->zobristKey = board.zobristKey;
+  this->zobristKey = position.zobristKey;
 
-  this->halfmoveNumber = board.halfmoveNumber;
+  this->halfmoveNumber = position.halfmoveNumber;
 
   this->statesSize = 0;
 
   return *this;
 }
 
-bool Board::operator==(const Board& board) const {
-  return this->board == board.board
-    && this->pawns == board.pawns
-    && this->knights == board.knights
-    && this->bishops == board.bishops
-    && this->rooks == board.rooks
-    && this->queens == board.queens
-    && this->kings == board.kings
+bool Position::operator==(const Position& position) const {
+  return this->board == position.board
+    && this->pawns == position.pawns
+    && this->knights == position.knights
+    && this->bishops == position.bishops
+    && this->rooks == position.rooks
+    && this->queens == position.queens
+    && this->kings == position.kings
 
-    && this->material == board.material
+    && this->material == position.material
 
-    && this->castlingRights == board.castlingRights
-    && this->enPassantSquare == board.enPassantSquare
-    && this->activeColor == board.activeColor
-    && this->halfmoveClock == board.halfmoveClock
+    && this->castlingRights == position.castlingRights
+    && this->enPassantSquare == position.enPassantSquare
+    && this->activeColor == position.activeColor
+    && this->halfmoveClock == position.halfmoveClock
 
-    && this->zobristKey == board.zobristKey
+    && this->zobristKey == position.zobristKey
 
-    && this->halfmoveNumber == board.halfmoveNumber;
+    && this->halfmoveNumber == position.halfmoveNumber;
 }
 
-bool Board::operator!=(const Board& board) const {
-  return !(*this == board);
+bool Position::operator!=(const Position& position) const {
+  return !(*this == position);
 }
 
-void Board::setActiveColor(int activeColor) {
+void Position::setActiveColor(int activeColor) {
   assert(Color::isValid(activeColor));
 
   if (this->activeColor != activeColor) {
@@ -149,7 +149,7 @@ void Board::setActiveColor(int activeColor) {
   }
 }
 
-void Board::setCastlingRight(int castling, int file) {
+void Position::setCastlingRight(int castling, int file) {
   assert(Castling::isValid(castling));
 
   if (castlingRights[castling] != File::NOFILE) {
@@ -161,7 +161,7 @@ void Board::setCastlingRight(int castling, int file) {
   castlingRights[castling] = file;
 }
 
-void Board::setEnPassantSquare(int enPassantSquare) {
+void Position::setEnPassantSquare(int enPassantSquare) {
   if (this->enPassantSquare != Square::NOSQUARE) {
     zobristKey ^= zobrist.enPassantSquare[this->enPassantSquare];
   }
@@ -171,17 +171,17 @@ void Board::setEnPassantSquare(int enPassantSquare) {
   this->enPassantSquare = enPassantSquare;
 }
 
-void Board::setHalfmoveClock(int halfmoveClock) {
+void Position::setHalfmoveClock(int halfmoveClock) {
   assert(halfmoveClock >= 0);
 
   this->halfmoveClock = halfmoveClock;
 }
 
-int Board::getFullmoveNumber() const {
+int Position::getFullmoveNumber() const {
   return halfmoveNumber / 2;
 }
 
-void Board::setFullmoveNumber(int fullmoveNumber) {
+void Position::setFullmoveNumber(int fullmoveNumber) {
   assert(fullmoveNumber > 0);
 
   halfmoveNumber = fullmoveNumber * 2;
@@ -190,7 +190,7 @@ void Board::setFullmoveNumber(int fullmoveNumber) {
   }
 }
 
-bool Board::isRepetition() {
+bool Position::isRepetition() {
   // Search back until the last halfmoveClock reset
   int j = std::max(0, statesSize - halfmoveClock);
   for (int i = statesSize - 2; i >= j; i -= 2) {
@@ -202,7 +202,7 @@ bool Board::isRepetition() {
   return false;
 }
 
-bool Board::hasInsufficientMaterial() {
+bool Position::hasInsufficientMaterial() {
   // If there is only one minor left, we are unable to checkmate
   return pawns[Color::WHITE].size() == 0 && pawns[Color::BLACK].size() == 0
       && rooks[Color::WHITE].size() == 0 && rooks[Color::BLACK].size() == 0
@@ -218,7 +218,7 @@ bool Board::hasInsufficientMaterial() {
  * @param piece  the Piece.
  * @param square the Square.
  */
-void Board::put(int piece, int square) {
+void Position::put(int piece, int square) {
   assert(Piece::isValid(piece));
   assert(Square::isValid(square));
   assert(board[square] == Piece::NOPIECE);
@@ -267,7 +267,7 @@ void Board::put(int piece, int square) {
  * @param square the Square.
  * @return the Piece which was removed.
  */
-int Board::remove(int square) {
+int Position::remove(int square) {
   assert(Square::isValid(square));
   assert(Piece::isValid(board[square]));
 
@@ -312,7 +312,7 @@ int Board::remove(int square) {
   return piece;
 }
 
-void Board::makeMove(int move) {
+void Position::makeMove(int move) {
   State& entry = states[statesSize];
 
   // Get variables
@@ -422,7 +422,7 @@ void Board::makeMove(int move) {
   assert(statesSize < MAX_MOVES);
 }
 
-void Board::undoMove(int move) {
+void Position::undoMove(int move) {
   --statesSize;
   assert(statesSize >= 0);
 
@@ -503,7 +503,7 @@ void Board::undoMove(int move) {
   zobristKey = entry.zobristKey;
 }
 
-void Board::clearCastlingRights(int castling) {
+void Position::clearCastlingRights(int castling) {
   assert(Castling::isValid(castling));
 
   if (castlingRights[castling] != File::NOFILE) {
@@ -512,7 +512,7 @@ void Board::clearCastlingRights(int castling) {
   }
 }
 
-void Board::clearCastling(int square) {
+void Position::clearCastling(int square) {
   assert(Square::isValid(square));
 
   switch (square) {
@@ -541,12 +541,12 @@ void Board::clearCastling(int square) {
   }
 }
 
-bool Board::isCheck() {
+bool Position::isCheck() {
   // Check whether our king is attacked by any opponent piece
   return isAttacked(Bitboard::next(kings[activeColor].squares), Color::opposite(activeColor));
 }
 
-bool Board::isCheck(int color) {
+bool Position::isCheck(int color) {
   // Check whether the king for color is attacked by any opponent piece
   return isAttacked(Bitboard::next(kings[color].squares), Color::opposite(color));
 }
@@ -559,7 +559,7 @@ bool Board::isCheck(int color) {
  * @param attackerColor the attacker Color.
  * @return whether the targetSquare is attacked.
  */
-bool Board::isAttacked(int targetSquare, int attackerColor) {
+bool Position::isAttacked(int targetSquare, int attackerColor) {
   assert(Square::isValid(targetSquare));
   assert(Color::isValid(attackerColor));
 
@@ -600,7 +600,7 @@ bool Board::isAttacked(int targetSquare, int attackerColor) {
 /**
  * Returns whether the targetSquare is attacked by a non-sliding piece.
  */
-bool Board::isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& moveDelta) {
+bool Position::isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& moveDelta) {
   assert(Square::isValid(targetSquare));
   assert(Piece::isValid(attackerPiece));
 
@@ -618,7 +618,7 @@ bool Board::isAttacked(int targetSquare, int attackerPiece, const std::vector<in
 /**
  * Returns whether the targetSquare is attacked by a sliding piece.
  */
-bool Board::isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& moveDelta) {
+bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& moveDelta) {
   assert(Square::isValid(targetSquare));
   assert(Piece::isValid(attackerPiece));
   assert(Piece::isValid(queenPiece));

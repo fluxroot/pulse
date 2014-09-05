@@ -7,7 +7,7 @@
 #ifndef PULSE_NOTATION_H
 #define PULSE_NOTATION_H
 
-#include "board.h"
+#include "position.h"
 
 #include <array>
 
@@ -15,10 +15,10 @@ namespace pulse {
 
 class Notation {
 public:
-  static const std::string STANDARDBOARD;
+  static const std::string STANDARDPOSITION;
 
-  static Board toBoard(const std::string& fen);
-  static std::string fromBoard(const Board& board);
+  static Position toPosition(const std::string& fen);
+  static std::string fromPosition(const Position& position);
   static int toColor(char notation);
   static char fromColor(int color);
   static int toPieceType(char notation);

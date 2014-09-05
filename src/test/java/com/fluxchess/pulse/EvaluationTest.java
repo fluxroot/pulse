@@ -14,10 +14,10 @@ public class EvaluationTest {
 
   @Test
   public void testEvaluate() {
-    Board board = Notation.toBoard(Notation.STANDARDBOARD);
+    Position position = Notation.toPosition(Notation.STANDARDPOSITION);
     Evaluation evaluation = new Evaluation();
 
-    assertEquals(Evaluation.TEMPO, evaluation.evaluate(board));
+    assertEquals(Evaluation.TEMPO, evaluation.evaluate(position));
   }
 
 }

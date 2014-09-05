@@ -145,25 +145,25 @@ static const std::vector<std::string> positions = {
 static const int MAX_DEPTH = 6;
 static std::array<MoveGenerator, MAX_DEPTH> moveGenerators;
 
-uint64_t miniMax(int depth, Board& board, int ply) {
+uint64_t miniMax(int depth, Position& position, int ply) {
   if (depth <= 0) {
     return 1;
   }
 
   uint64_t totalNodes = 0;
 
-  bool isCheck = board.isCheck();
+  bool isCheck = position.isCheck();
   MoveGenerator& moveGenerator = moveGenerators[ply];
-  MoveList& moves = moveGenerator.getMoves(board, depth, isCheck);
+  MoveList& moves = moveGenerator.getMoves(position, depth, isCheck);
 
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
 
-    board.makeMove(move);
-    if (!board.isCheck(Color::opposite(board.activeColor))) {
-      totalNodes += miniMax(depth - 1, board, ply + 1);
+    position.makeMove(move);
+    if (!position.isCheck(Color::opposite(position.activeColor))) {
+      totalNodes += miniMax(depth - 1, position, ply + 1);
     }
-    board.undoMove(move);
+    position.undoMove(move);
   }
 
   return totalNodes;
@@ -193,11 +193,11 @@ TEST(movegeneratortest, testPerft) {
         int depth = std::stoi(data[0].substr(1));
         uint64_t nodes = std::stoll(data[1]);
 
-        Board board(Notation::toBoard(tokens[0]));
+        Position position(Notation::toPosition(tokens[0]));
 
-        uint64_t result = miniMax(depth, board, 0);
+        uint64_t result = miniMax(depth, position, 0);
         EXPECT_EQ(nodes, result)
-          << Notation::fromBoard(board) << ", depth " << i
+          << Notation::fromPosition(position) << ", depth " << i
           << ": expected " << nodes
           << ", actual " << result;
       }

@@ -13,8 +13,8 @@
 using namespace pulse;
 
 TEST(evaluationtest, testEvaluate) {
-  Board board(Notation::toBoard(Notation::STANDARDBOARD));
+  Position position(Notation::toPosition(Notation::STANDARDPOSITION));
   Evaluation evaluation;
 
-  EXPECT_EQ(+Evaluation::TEMPO, evaluation.evaluate(board));
+  EXPECT_EQ(+Evaluation::TEMPO, evaluation.evaluate(position));
 }

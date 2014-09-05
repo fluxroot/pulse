@@ -17,13 +17,13 @@
 namespace pulse {
 
 void Perft::run() {
-  std::unique_ptr<Board> board(new Board(Notation::toBoard(Notation::STANDARDBOARD)));
+  std::unique_ptr<Position> position(new Position(Notation::toPosition(Notation::STANDARDPOSITION)));
   int depth = MAX_DEPTH;
 
-  std::cout << "Testing " << Notation::fromBoard(*board) << " at depth " << depth << std::endl;
+  std::cout << "Testing " << Notation::fromPosition(*position) << " at depth " << depth << std::endl;
 
   auto startTime = std::chrono::system_clock::now();
-  uint64_t result = miniMax(depth, *board, 0);
+  uint64_t result = miniMax(depth, *position, 0);
   auto endTime = std::chrono::system_clock::now();
 
   auto duration = endTime - startTime;
@@ -48,25 +48,25 @@ void Perft::run() {
     << result / std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() << std::endl;
 }
 
-uint64_t Perft::miniMax(int depth, Board& board, int ply) {
+uint64_t Perft::miniMax(int depth, Position& position, int ply) {
   if (depth == 0) {
     return 1;
   }
 
   uint64_t totalNodes = 0;
 
-  bool isCheck = board.isCheck();
+  bool isCheck = position.isCheck();
   MoveGenerator& moveGenerator = moveGenerators[ply];
-  MoveList& moves = moveGenerator.getMoves(board, depth, isCheck);
+  MoveList& moves = moveGenerator.getMoves(position, depth, isCheck);
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
     uint64_t nodes = 0;
 
-    board.makeMove(move);
-    if (!board.isCheck(Color::opposite(board.activeColor))) {
-      nodes = miniMax(depth - 1, board, ply + 1);
+    position.makeMove(move);
+    if (!position.isCheck(Color::opposite(position.activeColor))) {
+      nodes = miniMax(depth - 1, position, ply + 1);
     }
-    board.undoMove(move);
+    position.undoMove(move);
 
     totalNodes += nodes;
   }

@@ -30,7 +30,7 @@ private:
   std::chrono::system_clock::time_point startTime;
   std::chrono::system_clock::time_point statusStartTime;
 
-  std::unique_ptr<Board> currentBoard = std::unique_ptr<Board>(new Board(Notation::toBoard(Notation::STANDARDBOARD)));
+  std::unique_ptr<Position> currentPosition = std::unique_ptr<Position>(new Position(Notation::toPosition(Notation::STANDARDPOSITION)));
 
   void receiveInitialize();
   void receiveReady();

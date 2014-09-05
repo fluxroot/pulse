@@ -20,7 +20,7 @@ private:
   
   std::array<MoveGenerator, MAX_DEPTH> moveGenerators;
 
-  uint64_t miniMax(int depth, Board& board, int ply);
+  uint64_t miniMax(int depth, Position& position, int ply);
 };
 
 }

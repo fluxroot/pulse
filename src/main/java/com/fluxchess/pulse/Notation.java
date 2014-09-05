@@ -10,39 +10,39 @@ import com.fluxchess.jcpi.models.*;
 
 final class Notation {
 
-  static final String STANDARDBOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  static final String STANDARDPOSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
   private Notation() {
   }
 
-  static Board toBoard(String fen) {
+  static Position toPosition(String fen) {
     try {
-      return toBoard(new GenericBoard(fen));
+      return toPosition(new GenericBoard(fen));
     } catch (IllegalNotationException e) {
       throw new IllegalArgumentException(e);
     }
   }
 
-  static String fromBoard(Board board) {
-    return toGenericBoard(board).toString();
+  static String fromPosition(Position position) {
+    return toGenericBoard(position).toString();
   }
 
-  static Board toBoard(GenericBoard genericBoard) {
+  static Position toPosition(GenericBoard genericBoard) {
     assert genericBoard != null;
 
-    Board newBoard = new Board();
+    Position newPosition = new Position();
 
     // Initialize board
     for (int square : Square.values) {
       GenericPiece genericPiece = genericBoard.getPiece(fromSquare(square));
       if (genericPiece != null) {
         int piece = toPiece(genericPiece);
-        newBoard.put(piece, square);
+        newPosition.put(piece, square);
       }
     }
 
     // Initialize active color
-    newBoard.setActiveColor(toColor(genericBoard.getActiveColor()));
+    newPosition.setActiveColor(toColor(genericBoard.getActiveColor()));
 
     // Initialize castling
     for (int color : Color.values) {
@@ -51,63 +51,63 @@ final class Notation {
             fromColor(color), fromCastlingType(castlingType)
         );
         if (genericFile != null) {
-          newBoard.setCastlingRight(Castling.valueOf(color, castlingType), toFile(genericFile));
+          newPosition.setCastlingRight(Castling.valueOf(color, castlingType), toFile(genericFile));
         } else {
-          newBoard.setCastlingRight(Castling.valueOf(color, castlingType), File.NOFILE);
+          newPosition.setCastlingRight(Castling.valueOf(color, castlingType), File.NOFILE);
         }
       }
     }
 
     // Initialize en passant
     if (genericBoard.getEnPassant() != null) {
-      newBoard.setEnPassantSquare(toSquare(genericBoard.getEnPassant()));
+      newPosition.setEnPassantSquare(toSquare(genericBoard.getEnPassant()));
     }
 
     // Initialize half move clock
-    newBoard.setHalfmoveClock(genericBoard.getHalfMoveClock());
+    newPosition.setHalfmoveClock(genericBoard.getHalfMoveClock());
 
     // Initialize the full move number
-    newBoard.setFullmoveNumber(genericBoard.getFullMoveNumber());
+    newPosition.setFullmoveNumber(genericBoard.getFullMoveNumber());
 
-    return newBoard;
+    return newPosition;
   }
 
-  static GenericBoard toGenericBoard(Board board) {
+  static GenericBoard toGenericBoard(Position position) {
     GenericBoard genericBoard = new GenericBoard();
 
     // Set board
     for (int square : Square.values) {
-      if (board.board[square] != Piece.NOPIECE) {
-        genericBoard.setPiece(fromPiece(board.board[square]), fromSquare(square));
+      if (position.board[square] != Piece.NOPIECE) {
+        genericBoard.setPiece(fromPiece(position.board[square]), fromSquare(square));
       }
     }
 
     // Set castling
     for (int color : Color.values) {
       for (int castlingType : CastlingType.values) {
-        if (board.castlingRights[Castling.valueOf(color, castlingType)] != File.NOFILE) {
+        if (position.castlingRights[Castling.valueOf(color, castlingType)] != File.NOFILE) {
           genericBoard.setCastling(
               fromColor(color),
               fromCastlingType(castlingType),
-              fromFile(board.castlingRights[Castling.valueOf(color, castlingType)])
+              fromFile(position.castlingRights[Castling.valueOf(color, castlingType)])
           );
         }
       }
     }
 
     // Set en passant
-    if (board.enPassantSquare != Square.NOSQUARE) {
-      genericBoard.setEnPassant(fromSquare(board.enPassantSquare));
+    if (position.enPassantSquare != Square.NOSQUARE) {
+      genericBoard.setEnPassant(fromSquare(position.enPassantSquare));
     }
 
     // Set active color
-    genericBoard.setActiveColor(fromColor(board.activeColor));
+    genericBoard.setActiveColor(fromColor(position.activeColor));
 
     // Set half move clock
-    genericBoard.setHalfMoveClock(board.halfmoveClock);
+    genericBoard.setHalfMoveClock(position.halfmoveClock);
 
     // Set full move number
-    genericBoard.setFullMoveNumber(board.getFullmoveNumber());
+    genericBoard.setFullMoveNumber(position.getFullmoveNumber());
 
     return genericBoard;
   }

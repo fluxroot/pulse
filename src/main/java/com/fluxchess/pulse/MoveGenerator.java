@@ -10,44 +10,44 @@ final class MoveGenerator {
 
   private final MoveList moves = new MoveList();
 
-  MoveList getLegalMoves(Board board, int depth, boolean isCheck) {
-    assert board != null;
+  MoveList getLegalMoves(Position position, int depth, boolean isCheck) {
+    assert position != null;
 
-    MoveList legalMoves = getMoves(board, depth, isCheck);
+    MoveList legalMoves = getMoves(position, depth, isCheck);
 
     int size = legalMoves.size;
     legalMoves.size = 0;
     for (int i = 0; i < size; ++i) {
       int move = legalMoves.entries[i].move;
 
-      board.makeMove(move);
-      if (!board.isCheck(Color.opposite(board.activeColor))) {
+      position.makeMove(move);
+      if (!position.isCheck(Color.opposite(position.activeColor))) {
         legalMoves.entries[legalMoves.size++].move = move;
       }
-      board.undoMove(move);
+      position.undoMove(move);
     }
 
     return legalMoves;
   }
 
-  MoveList getMoves(Board board, int depth, boolean isCheck) {
-    assert board != null;
+  MoveList getMoves(Position position, int depth, boolean isCheck) {
+    assert position != null;
 
     moves.size = 0;
 
     if (depth > 0) {
       // Generate main moves
 
-      addMoves(moves, board);
+      addMoves(moves, position);
 
       if (!isCheck) {
-        int square = Bitboard.next(board.kings[board.activeColor].squares);
-        addCastlingMoves(moves, square, board);
+        int square = Bitboard.next(position.kings[position.activeColor].squares);
+        addCastlingMoves(moves, square, position);
       }
     } else {
       // Generate quiescent moves
 
-      addMoves(moves, board);
+      addMoves(moves, position);
 
       if (!isCheck) {
         int size = moves.size;
@@ -67,41 +67,41 @@ final class MoveGenerator {
     return moves;
   }
 
-  private void addMoves(MoveList list, Board board) {
+  private void addMoves(MoveList list, Position position) {
     assert list != null;
 
-    int activeColor = board.activeColor;
+    int activeColor = position.activeColor;
 
-    for (long squares = board.pawns[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
+    for (long squares = position.pawns[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
-      addPawnMoves(list, square, board);
+      addPawnMoves(list, square, position);
     }
-    for (long squares = board.knights[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
+    for (long squares = position.knights[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, Square.knightDirections, board);
+      addMoves(list, square, Square.knightDirections, position);
     }
-    for (long squares = board.bishops[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
+    for (long squares = position.bishops[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, Square.bishopDirections, board);
+      addMoves(list, square, Square.bishopDirections, position);
     }
-    for (long squares = board.rooks[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
+    for (long squares = position.rooks[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, Square.rookDirections, board);
+      addMoves(list, square, Square.rookDirections, position);
     }
-    for (long squares = board.queens[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
+    for (long squares = position.queens[activeColor].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
-      addMoves(list, square, Square.queenDirections, board);
+      addMoves(list, square, Square.queenDirections, position);
     }
-    int square = Bitboard.next(board.kings[activeColor].squares);
-    addMoves(list, square, Square.kingDirections, board);
+    int square = Bitboard.next(position.kings[activeColor].squares);
+    addMoves(list, square, Square.kingDirections, position);
   }
 
-  private void addMoves(MoveList list, int originSquare, int[] moveDelta, Board board) {
+  private void addMoves(MoveList list, int originSquare, int[] moveDelta, Position position) {
     assert list != null;
     assert Square.isValid(originSquare);
     assert moveDelta != null;
 
-    int originPiece = board.board[originSquare];
+    int originPiece = position.board[originSquare];
     assert Piece.isValid(originPiece);
     boolean sliding = PieceType.isSliding(Piece.getType(originPiece));
     int oppositeColor = Color.opposite(Piece.getColor(originPiece));
@@ -112,7 +112,7 @@ final class MoveGenerator {
 
       // Check if we're still on the board
       while (Square.isValid(targetSquare)) {
-        int targetPiece = board.board[targetSquare];
+        int targetPiece = position.board[targetSquare];
 
         if (targetPiece == Piece.NOPIECE) {
           // quiet move
@@ -137,11 +137,11 @@ final class MoveGenerator {
     }
   }
 
-  private void addPawnMoves(MoveList list, int pawnSquare, Board board) {
+  private void addPawnMoves(MoveList list, int pawnSquare, Position position) {
     assert list != null;
     assert Square.isValid(pawnSquare);
 
-    int pawnPiece = board.board[pawnSquare];
+    int pawnPiece = position.board[pawnSquare];
     assert Piece.isValid(pawnPiece);
     assert Piece.getType(pawnPiece) == PieceType.PAWN;
     int pawnColor = Piece.getColor(pawnPiece);
@@ -152,7 +152,7 @@ final class MoveGenerator {
 
       int targetSquare = pawnSquare + delta;
       if (Square.isValid(targetSquare)) {
-        int targetPiece = board.board[targetSquare];
+        int targetPiece = position.board[targetSquare];
 
         if (targetPiece != Piece.NOPIECE) {
           if (Piece.getColor(targetPiece) == Color.opposite(pawnColor)) {
@@ -177,13 +177,13 @@ final class MoveGenerator {
                   MoveType.NORMAL, pawnSquare, targetSquare, pawnPiece, targetPiece, PieceType.NOPIECETYPE);
             }
           }
-        } else if (targetSquare == board.enPassantSquare) {
+        } else if (targetSquare == position.enPassantSquare) {
           // En passant move
           assert (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.r3)
               || (pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.r6);
 
           int captureSquare = targetSquare + (pawnColor == Color.WHITE ? Square.S : Square.N);
-          targetPiece = board.board[captureSquare];
+          targetPiece = position.board[captureSquare];
           assert Piece.getType(targetPiece) == PieceType.PAWN;
           assert Piece.getColor(targetPiece) == Color.opposite(pawnColor);
 
@@ -198,7 +198,7 @@ final class MoveGenerator {
 
     // Move one rank forward
     int targetSquare = pawnSquare + delta;
-    if (Square.isValid(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
+    if (Square.isValid(targetSquare) && position.board[targetSquare] == Piece.NOPIECE) {
       if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.r8)
           || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.r1)) {
         // Pawn promotion move
@@ -219,7 +219,7 @@ final class MoveGenerator {
 
         // Move another rank forward
         targetSquare += delta;
-        if (Square.isValid(targetSquare) && board.board[targetSquare] == Piece.NOPIECE) {
+        if (Square.isValid(targetSquare) && position.board[targetSquare] == Piece.NOPIECE) {
           if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.r4)
               || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.r5)) {
             // Pawn double move
@@ -232,58 +232,58 @@ final class MoveGenerator {
     }
   }
 
-  private void addCastlingMoves(MoveList list, int kingSquare, Board board) {
+  private void addCastlingMoves(MoveList list, int kingSquare, Position position) {
     assert list != null;
     assert Square.isValid(kingSquare);
 
-    int kingPiece = board.board[kingSquare];
+    int kingPiece = position.board[kingSquare];
     assert Piece.isValid(kingPiece);
     assert Piece.getType(kingPiece) == PieceType.KING;
 
     if (Piece.getColor(kingPiece) == Color.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[Castling.WHITE_KINGSIDE] != File.NOFILE
-          && board.board[Square.f1] == Piece.NOPIECE
-          && board.board[Square.g1] == Piece.NOPIECE
-          && !board.isAttacked(Square.f1, Color.BLACK)) {
-        assert board.board[Square.e1] == Piece.WHITE_KING;
-        assert board.board[Square.h1] == Piece.WHITE_ROOK;
+      if (position.castlingRights[Castling.WHITE_KINGSIDE] != File.NOFILE
+          && position.board[Square.f1] == Piece.NOPIECE
+          && position.board[Square.g1] == Piece.NOPIECE
+          && !position.isAttacked(Square.f1, Color.BLACK)) {
+        assert position.board[Square.e1] == Piece.WHITE_KING;
+        assert position.board[Square.h1] == Piece.WHITE_ROOK;
 
         list.entries[list.size++].move = Move.valueOf(
             MoveType.CASTLING, kingSquare, Square.g1, kingPiece, Piece.NOPIECE, PieceType.NOPIECETYPE);
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[Castling.WHITE_QUEENSIDE] != File.NOFILE
-          && board.board[Square.b1] == Piece.NOPIECE
-          && board.board[Square.c1] == Piece.NOPIECE
-          && board.board[Square.d1] == Piece.NOPIECE
-          && !board.isAttacked(Square.d1, Color.BLACK)) {
-        assert board.board[Square.e1] == Piece.WHITE_KING;
-        assert board.board[Square.a1] == Piece.WHITE_ROOK;
+      if (position.castlingRights[Castling.WHITE_QUEENSIDE] != File.NOFILE
+          && position.board[Square.b1] == Piece.NOPIECE
+          && position.board[Square.c1] == Piece.NOPIECE
+          && position.board[Square.d1] == Piece.NOPIECE
+          && !position.isAttacked(Square.d1, Color.BLACK)) {
+        assert position.board[Square.e1] == Piece.WHITE_KING;
+        assert position.board[Square.a1] == Piece.WHITE_ROOK;
 
         list.entries[list.size++].move = Move.valueOf(
             MoveType.CASTLING, kingSquare, Square.c1, kingPiece, Piece.NOPIECE, PieceType.NOPIECETYPE);
       }
     } else {
       // Do not test g8 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[Castling.BLACK_KINGSIDE] != File.NOFILE
-          && board.board[Square.f8] == Piece.NOPIECE
-          && board.board[Square.g8] == Piece.NOPIECE
-          && !board.isAttacked(Square.f8, Color.WHITE)) {
-        assert board.board[Square.e8] == Piece.BLACK_KING;
-        assert board.board[Square.h8] == Piece.BLACK_ROOK;
+      if (position.castlingRights[Castling.BLACK_KINGSIDE] != File.NOFILE
+          && position.board[Square.f8] == Piece.NOPIECE
+          && position.board[Square.g8] == Piece.NOPIECE
+          && !position.isAttacked(Square.f8, Color.WHITE)) {
+        assert position.board[Square.e8] == Piece.BLACK_KING;
+        assert position.board[Square.h8] == Piece.BLACK_ROOK;
 
         list.entries[list.size++].move = Move.valueOf(
             MoveType.CASTLING, kingSquare, Square.g8, kingPiece, Piece.NOPIECE, PieceType.NOPIECETYPE);
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
-      if (board.castlingRights[Castling.BLACK_QUEENSIDE] != File.NOFILE
-          && board.board[Square.b8] == Piece.NOPIECE
-          && board.board[Square.c8] == Piece.NOPIECE
-          && board.board[Square.d8] == Piece.NOPIECE
-          && !board.isAttacked(Square.d8, Color.WHITE)) {
-        assert board.board[Square.e8] == Piece.BLACK_KING;
-        assert board.board[Square.a8] == Piece.BLACK_ROOK;
+      if (position.castlingRights[Castling.BLACK_QUEENSIDE] != File.NOFILE
+          && position.board[Square.b8] == Piece.NOPIECE
+          && position.board[Square.c8] == Piece.NOPIECE
+          && position.board[Square.d8] == Piece.NOPIECE
+          && !position.isAttacked(Square.d8, Color.WHITE)) {
+        assert position.board[Square.e8] == Piece.BLACK_KING;
+        assert position.board[Square.a8] == Piece.BLACK_ROOK;
 
         list.entries[list.size++].move = Move.valueOf(
             MoveType.CASTLING, kingSquare, Square.c8, kingPiece, Piece.NOPIECE, PieceType.NOPIECETYPE);

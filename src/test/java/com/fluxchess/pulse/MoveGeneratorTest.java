@@ -31,25 +31,25 @@ public class MoveGeneratorTest {
     }
   }
 
-  private long miniMax(int depth, Board board, int ply) {
+  private long miniMax(int depth, Position position, int ply) {
     if (depth <= 0) {
       return 1;
     }
 
     long totalNodes = 0;
 
-    boolean isCheck = board.isCheck();
+    boolean isCheck = position.isCheck();
     MoveGenerator moveGenerator = moveGenerators[ply];
-    MoveList moves = moveGenerator.getMoves(board, depth, isCheck);
+    MoveList moves = moveGenerator.getMoves(position, depth, isCheck);
 
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
 
-      board.makeMove(move);
-      if (!board.isCheck(Color.opposite(board.activeColor))) {
-        totalNodes += miniMax(depth - 1, board, ply + 1);
+      position.makeMove(move);
+      if (!position.isCheck(Color.opposite(position.activeColor))) {
+        totalNodes += miniMax(depth - 1, position, ply + 1);
       }
-      board.undoMove(move);
+      position.undoMove(move);
     }
 
     return totalNodes;
@@ -70,11 +70,11 @@ public class MoveGeneratorTest {
             int depth = Integer.parseInt(data[0].substring(1));
             long nodes = Integer.parseInt(data[1]);
 
-            Board board = Notation.toBoard(tokens[0].trim());
+            Position position = Notation.toPosition(tokens[0].trim());
 
-            long result = miniMax(depth, board, 0);
+            long result = miniMax(depth, position, 0);
             if (nodes != result) {
-              throw new AssertionError(findMissingMoves(depth, board, 0));
+              throw new AssertionError(findMissingMoves(depth, position, 0));
             }
           }
 
@@ -84,19 +84,19 @@ public class MoveGeneratorTest {
     }
   }
 
-  private String findMissingMoves(int depth, Board board, int ply) {
+  private String findMissingMoves(int depth, Position position, int ply) {
     String message = "";
 
     // Get expected moves from JCPI
-    GenericBoard genericBoard = Notation.toGenericBoard(board);
+    GenericBoard genericBoard = Notation.toGenericBoard(position);
     Collection<GenericMove> expectedMoves = new HashSet<>(Arrays.asList(
         com.fluxchess.jcpi.utils.MoveGenerator.getGenericMoves(genericBoard)
     ));
 
     // Get actual moves
-    boolean isCheck = board.isCheck();
+    boolean isCheck = position.isCheck();
     MoveGenerator moveGenerator = moveGenerators[ply];
-    MoveList moves = moveGenerator.getLegalMoves(board, depth, isCheck);
+    MoveList moves = moveGenerator.getLegalMoves(position, depth, isCheck);
     Collection<GenericMove> actualMoves = new HashSet<>();
     for (int i = 0; i < moves.size; ++i) {
       actualMoves.add(Jcpi.fromMove(moves.entries[i].move));
@@ -117,9 +117,9 @@ public class MoveGeneratorTest {
       for (int i = 0; i < moves.size; ++i) {
         int move = moves.entries[i].move;
 
-        board.makeMove(move);
-        message += findMissingMoves(depth - 1, board, ply + 1);
-        board.undoMove(move);
+        position.makeMove(move);
+        message += findMissingMoves(depth - 1, position, ply + 1);
+        position.undoMove(move);
 
         if (!message.isEmpty()) {
           break;

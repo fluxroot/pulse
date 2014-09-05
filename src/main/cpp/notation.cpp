@@ -18,10 +18,10 @@
 
 namespace pulse {
 
-const std::string Notation::STANDARDBOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const std::string Notation::STANDARDPOSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   
-Board Notation::toBoard(const std::string& fen) {
-  Board board;
+Position Notation::toPosition(const std::string& fen) {
+  Position position;
 
   // Clean and split into tokens
   std::vector<std::string> tokens;
@@ -52,7 +52,7 @@ Board Notation::toBoard(const std::string& fen) {
         throw std::invalid_argument("Illegal file or rank");
       }
 
-      board.put(piece, Square::valueOf(file, rank));
+      position.put(piece, Square::valueOf(file, rank));
 
       if (file == File::h) {
         file = File::NOFILE;
@@ -97,7 +97,7 @@ Board Notation::toBoard(const std::string& fen) {
   if (activeColor == Color::NOCOLOR) {
     throw std::exception();
   }
-  board.setActiveColor(activeColor);
+  position.setActiveColor(activeColor);
 
   // Parse castling rights
   token = tokens[tokensIndex++];
@@ -115,11 +115,11 @@ Board Notation::toBoard(const std::string& fen) {
 
         int color = colorOf(character);
 
-        if (board.kings[color].squares == 0) {
+        if (position.kings[color].squares == 0) {
           throw std::exception();
         }
 
-        kingFile = Square::getFile(Bitboard::numberOfTrailingZeros(board.kings[color].squares));
+        kingFile = Square::getFile(Bitboard::numberOfTrailingZeros(position.kings[color].squares));
         if (castlingFile > kingFile) {
           castling = Castling::valueOf(color, CastlingType::KINGSIDE);
         } else {
@@ -137,7 +137,7 @@ Board Notation::toBoard(const std::string& fen) {
       assert(File::isValid(castlingFile));
       assert(File::isValid(kingFile));
 
-      board.setCastlingRight(castling, castlingFile);
+      position.setCastlingRight(castling, castlingFile);
     }
   }
 
@@ -156,7 +156,7 @@ Board Notation::toBoard(const std::string& fen) {
       throw std::exception();
     }
 
-    board.setEnPassantSquare(Square::valueOf(enPassantFile, enPassantRank));
+    position.setEnPassantSquare(Square::valueOf(enPassantFile, enPassantRank));
   }
 
   // Parse halfmove clock
@@ -168,7 +168,7 @@ Board Notation::toBoard(const std::string& fen) {
       throw std::exception();
     }
 
-    board.setHalfmoveClock(number);
+    position.setHalfmoveClock(number);
   }
 
   // Parse fullmove number
@@ -180,13 +180,13 @@ Board Notation::toBoard(const std::string& fen) {
       throw std::exception();
     }
 
-    board.setFullmoveNumber(number);
+    position.setFullmoveNumber(number);
   }
 
-  return board;
+  return position;
 }
 
-std::string Notation::fromBoard(const Board& board) {
+std::string Notation::fromPosition(const Position& position) {
   std::string fen;
 
   // Pieces
@@ -195,7 +195,7 @@ std::string Notation::fromBoard(const Board& board) {
     unsigned int emptySquares = 0;
 
     for (auto file : File::values) {
-      int piece = board.board[Square::valueOf(file, rank)];
+      int piece = position.board[Square::valueOf(file, rank)];
 
       if (piece == Piece::NOPIECE) {
         ++emptySquares;
@@ -220,15 +220,15 @@ std::string Notation::fromBoard(const Board& board) {
   fen += ' ';
 
   // Color
-  fen += fromColor(board.activeColor);
+  fen += fromColor(position.activeColor);
 
   fen += ' ';
 
   // Castling
   std::string castlingNotation;
   for (auto castling : Castling::values) {
-    if (board.castlingRights[castling] != File::NOFILE) {
-      int file = board.castlingRights[castling];
+    if (position.castlingRights[castling] != File::NOFILE) {
+      int file = position.castlingRights[castling];
       if (file == File::a || file == File::h) {
         castlingNotation += fromCastling(castling);
       } else {
@@ -245,8 +245,8 @@ std::string Notation::fromBoard(const Board& board) {
   fen += ' ';
 
   // En passant
-  if (board.enPassantSquare != Square::NOSQUARE) {
-    fen += fromSquare(board.enPassantSquare);
+  if (position.enPassantSquare != Square::NOSQUARE) {
+    fen += fromSquare(position.enPassantSquare);
   } else {
     fen += '-';
   }
@@ -254,12 +254,12 @@ std::string Notation::fromBoard(const Board& board) {
   fen += ' ';
 
   // Halfmove clock
-  fen += std::to_string(board.halfmoveClock);
+  fen += std::to_string(position.halfmoveClock);
 
   fen += ' ';
 
   // Fullmove number
-  fen += std::to_string(board.getFullmoveNumber());
+  fen += std::to_string(position.getFullmoveNumber());
 
   return fen;
 }

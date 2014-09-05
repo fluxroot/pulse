@@ -8,7 +8,7 @@
 #define PULSE_SEARCH_H
 
 #include "protocol.h"
-#include "board.h"
+#include "position.h"
 #include "movegenerator.h"
 #include "evaluation.h"
 
@@ -27,13 +27,13 @@ class Search {
 public:
   Search(Protocol& protocol);
 
-  void newDepthSearch(Board& board, int searchDepth);
-  void newNodesSearch(Board& board, uint64_t searchNodes);
-  void newTimeSearch(Board& board, uint64_t searchTime);
-  void newInfiniteSearch(Board& board);
-  void newClockSearch(Board& board,
+  void newDepthSearch(Position& position, int searchDepth);
+  void newNodesSearch(Position& position, uint64_t searchNodes);
+  void newTimeSearch(Position& position, uint64_t searchTime);
+  void newInfiniteSearch(Position& position);
+  void newClockSearch(Position& position,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo);
-  void newPonderSearch(Board& board,
+  void newPonderSearch(Position& position,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo);
   void reset();
   void start();
@@ -89,7 +89,7 @@ private:
   bool running = false;
   bool shutdown = false;
 
-  Board board;
+  Position position;
   Evaluation evaluation;
 
   // We will store a MoveGenerator for each ply so we don't have to create them

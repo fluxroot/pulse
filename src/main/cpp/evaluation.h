@@ -7,7 +7,7 @@
 #ifndef PULSE_EVALUATION_H
 #define PULSE_EVALUATION_H
 
-#include "board.h"
+#include "position.h"
 
 namespace pulse {
 
@@ -18,14 +18,14 @@ public:
   static int materialWeight;
   static int mobilityWeight;
 
-  int evaluate(Board& board);
+  int evaluate(Position& position);
 
 private:
   static const int MAX_WEIGHT = 100;
 
-  int evaluateMaterial(int color, Board& board);
-  int evaluateMobility(int color, Board& board);
-  int evaluateMobility(int color, Board& board, int square, const std::vector<int>& moveDelta);
+  int evaluateMaterial(int color, Position& position);
+  int evaluateMobility(int color, Position& position);
+  int evaluateMobility(int color, Position& position, int square, const std::vector<int>& moveDelta);
 };
 
 }

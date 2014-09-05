@@ -32,7 +32,6 @@ add_dependencies(gtest_main googletest)
 
 add_executable(unittest
   bitboardtest.cpp
-  boardtest.cpp
   castlingtest.cpp
   castlingtypetest.cpp
   colortest.cpp
@@ -44,6 +43,7 @@ add_executable(unittest
   movetest.cpp
   piecetest.cpp
   piecetypetest.cpp
+  positiontest.cpp
   ranktest.cpp
   squaretest.cpp
 )

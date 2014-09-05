@@ -15,17 +15,17 @@ final class Perft {
   private final MoveGenerator[] moveGenerators = new MoveGenerator[MAX_DEPTH];
 
   void run() {
-    Board board = Notation.toBoard(Notation.STANDARDBOARD);
+    Position position = Notation.toPosition(Notation.STANDARDPOSITION);
     int depth = MAX_DEPTH;
 
     for (int i = 0; i < MAX_DEPTH; ++i) {
       moveGenerators[i] = new MoveGenerator();
     }
 
-    System.out.format("Testing %s at depth %d%n", Notation.fromBoard(board), depth);
+    System.out.format("Testing %s at depth %d%n", Notation.fromPosition(position), depth);
 
     long startTime = System.currentTimeMillis();
-    long result = miniMax(depth, board, 0);
+    long result = miniMax(depth, position, 0);
     long endTime = System.currentTimeMillis();
 
     long duration = endTime - startTime;
@@ -42,25 +42,25 @@ final class Perft {
     System.out.format("n/ms: %d%n", result / duration);
   }
 
-  private long miniMax(int depth, Board board, int ply) {
+  private long miniMax(int depth, Position position, int ply) {
     if (depth == 0) {
       return 1;
     }
 
     int totalNodes = 0;
 
-    boolean isCheck = board.isCheck();
+    boolean isCheck = position.isCheck();
     MoveGenerator moveGenerator = moveGenerators[ply];
-    MoveList moves = moveGenerator.getMoves(board, depth, isCheck);
+    MoveList moves = moveGenerator.getMoves(position, depth, isCheck);
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       long nodes = 0;
 
-      board.makeMove(move);
-      if (!board.isCheck(Color.opposite(board.activeColor))) {
-        nodes = miniMax(depth - 1, board, ply + 1);
+      position.makeMove(move);
+      if (!position.isCheck(Color.opposite(position.activeColor))) {
+        nodes = miniMax(depth - 1, position, ply + 1);
       }
-      board.undoMove(move);
+      position.undoMove(move);
 
       totalNodes += nodes;
     }

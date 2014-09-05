@@ -4,8 +4,8 @@
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-#ifndef PULSE_BOARD_H
-#define PULSE_BOARD_H
+#ifndef PULSE_POSITION_H
+#define PULSE_POSITION_H
 
 #include "bitboard.h"
 #include "color.h"
@@ -18,7 +18,7 @@
 
 namespace pulse {
 
-class Board {
+class Position {
 public:
   std::array<int, Square::LENGTH> board;
 
@@ -38,12 +38,12 @@ public:
 
   uint64_t zobristKey = 0;
 
-  Board();
-  Board(const Board& board);
+  Position();
+  Position(const Position& position);
 
-  Board& operator=(const Board& board);
-  bool operator==(const Board& board) const;
-  bool operator!=(const Board& board) const;
+  Position& operator=(const Position& position);
+  bool operator==(const Position& position) const;
+  bool operator!=(const Position& position) const;
 
   void setActiveColor(int activeColor);
   void setCastlingRight(int castling, int file);
@@ -92,7 +92,7 @@ private:
 
   int halfmoveNumber = 2;
 
-  // We will save some board parameters in a State before making a move.
+  // We will save some position parameters in a State before making a move.
   // Later we will restore them before undoing a move.
   std::array<State, MAX_MOVES> states;
   int statesSize = 0;

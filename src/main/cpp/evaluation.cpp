@@ -17,24 +17,24 @@ int Evaluation::materialWeight = 100;
 int Evaluation::mobilityWeight = 80;
 
 /**
- * Evaluates the board.
+ * Evaluates the position.
  *
- * @param board the board.
+ * @param position the position.
  * @return the evaluation value in centipawns.
  */
-int Evaluation::evaluate(Board& board) {
+int Evaluation::evaluate(Position& position) {
   // Initialize
-  int myColor = board.activeColor;
+  int myColor = position.activeColor;
   int oppositeColor = Color::opposite(myColor);
   int value = 0;
 
   // Evaluate material
-  int materialScore = (evaluateMaterial(myColor, board) - evaluateMaterial(oppositeColor, board))
+  int materialScore = (evaluateMaterial(myColor, position) - evaluateMaterial(oppositeColor, position))
       * materialWeight / MAX_WEIGHT;
   value += materialScore;
 
   // Evaluate mobility
-  int mobilityScore = (evaluateMobility(myColor, board) - evaluateMobility(oppositeColor, board))
+  int mobilityScore = (evaluateMobility(myColor, position) - evaluateMobility(oppositeColor, position))
       * mobilityWeight / MAX_WEIGHT;
   value += mobilityScore;
 
@@ -45,44 +45,44 @@ int Evaluation::evaluate(Board& board) {
   return value;
 }
 
-int Evaluation::evaluateMaterial(int color, Board& board) {
+int Evaluation::evaluateMaterial(int color, Position& position) {
   assert(Color::isValid(color));
 
-  int material = board.material[color];
+  int material = position.material[color];
 
   // Add bonus for bishop pair
-  if (board.bishops[color].size() >= 2) {
+  if (position.bishops[color].size() >= 2) {
     material += 50;
   }
 
   return material;
 }
 
-int Evaluation::evaluateMobility(int color, Board& board) {
+int Evaluation::evaluateMobility(int color, Position& position) {
   assert(Color::isValid(color));
 
   int knightMobility = 0;
-  for (auto squares = board.knights[color].squares; squares != 0; squares = Bitboard::remainder(squares)) {
+  for (auto squares = position.knights[color].squares; squares != 0; squares = Bitboard::remainder(squares)) {
     int square = Bitboard::next(squares);
-    knightMobility += evaluateMobility(color, board, square, Square::knightDirections);
+    knightMobility += evaluateMobility(color, position, square, Square::knightDirections);
   }
 
   int bishopMobility = 0;
-  for (auto squares = board.bishops[color].squares; squares != 0; squares = Bitboard::remainder(squares)) {
+  for (auto squares = position.bishops[color].squares; squares != 0; squares = Bitboard::remainder(squares)) {
     int square = Bitboard::next(squares);
-    bishopMobility += evaluateMobility(color, board, square, Square::bishopDirections);
+    bishopMobility += evaluateMobility(color, position, square, Square::bishopDirections);
   }
 
   int rookMobility = 0;
-  for (auto squares = board.rooks[color].squares; squares != 0; squares = Bitboard::remainder(squares)) {
+  for (auto squares = position.rooks[color].squares; squares != 0; squares = Bitboard::remainder(squares)) {
     int square = Bitboard::next(squares);
-    rookMobility += evaluateMobility(color, board, square, Square::rookDirections);
+    rookMobility += evaluateMobility(color, position, square, Square::rookDirections);
   }
 
   int queenMobility = 0;
-  for (auto squares = board.queens[color].squares; squares != 0; squares = Bitboard::remainder(squares)) {
+  for (auto squares = position.queens[color].squares; squares != 0; squares = Bitboard::remainder(squares)) {
     int square = Bitboard::next(squares);
-    queenMobility += evaluateMobility(color, board, square, Square::queenDirections);
+    queenMobility += evaluateMobility(color, position, square, Square::queenDirections);
   }
 
   return knightMobility * 4
@@ -91,12 +91,12 @@ int Evaluation::evaluateMobility(int color, Board& board) {
       + queenMobility;
 }
 
-int Evaluation::evaluateMobility(int color, Board& board, int square, const std::vector<int>& moveDelta) {
+int Evaluation::evaluateMobility(int color, Position& position, int square, const std::vector<int>& moveDelta) {
   assert(Color::isValid(color));
-  assert(Piece::isValid(board.board[square]));
+  assert(Piece::isValid(position.board[square]));
 
   int mobility = 0;
-  bool sliding = PieceType::isSliding(Piece::getType(board.board[square]));
+  bool sliding = PieceType::isSliding(Piece::getType(position.board[square]));
 
   for (auto delta : moveDelta) {
     int targetSquare = square + delta;
@@ -104,7 +104,7 @@ int Evaluation::evaluateMobility(int color, Board& board, int square, const std:
     while (Square::isValid(targetSquare)) {
       ++mobility;
 
-      if (sliding && board.board[targetSquare] == Piece::NOPIECE) {
+      if (sliding && position.board[targetSquare] == Piece::NOPIECE) {
         targetSquare += delta;
       } else {
         break;

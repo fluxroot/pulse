@@ -45,7 +45,7 @@ public class SearchTest {
           public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
         });
-    search.newDepthSearch(Notation.toBoard("3K3r/8/3k4/8/8/8/8/8 w - - 0 1"), 1);
+    search.newDepthSearch(Notation.toPosition("3K3r/8/3k4/8/8/8/8/8 w - - 0 1"), 1);
     search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
@@ -89,7 +89,7 @@ public class SearchTest {
             }
           }
         });
-    search.newDepthSearch(Notation.toBoard("8/8/1R1P4/2B2p2/k1K2P2/4P3/8/8 w - - 3 101"), 2);
+    search.newDepthSearch(Notation.toPosition("8/8/1R1P4/2B2p2/k1K2P2/4P3/8/8 w - - 3 101"), 2);
     search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
@@ -129,7 +129,7 @@ public class SearchTest {
           public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
         });
-    search.newDepthSearch(Notation.toBoard("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1"), 1);
+    search.newDepthSearch(Notation.toPosition("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1"), 1);
     search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
@@ -165,7 +165,7 @@ public class SearchTest {
           public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
         });
-    search.newClockSearch(Notation.toBoard("3K4/7r/3k4/8/8/8/8/8 b - - 0 1"), 10000, 0, 10000, 0, 40);
+    search.newClockSearch(Notation.toPosition("3K4/7r/3k4/8/8/8/8/8 b - - 0 1"), 10000, 0, 10000, 0, 40);
     search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
@@ -201,7 +201,7 @@ public class SearchTest {
           public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
         });
-    search.newClockSearch(Notation.toBoard("K1k5/8/8/8/8/8/8/8 w - - 0 1"), 10000, 0, 10000, 0, 40);
+    search.newClockSearch(Notation.toPosition("K1k5/8/8/8/8/8/8/8 w - - 0 1"), 10000, 0, 10000, 0, 40);
     search.start();
 
     assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));

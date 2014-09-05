@@ -62,55 +62,55 @@ void Search::Semaphore::drainPermits() {
   permits = 0;
 }
 
-void Search::newDepthSearch(Board& board, int searchDepth) {
+void Search::newDepthSearch(Position& position, int searchDepth) {
   if (searchDepth < 1 || searchDepth > Depth::MAX_DEPTH) throw std::exception();
   if (running) throw std::exception();
 
   reset();
 
-  this->board = board;
+  this->position = position;
   this->searchDepth = searchDepth;
 }
 
-void Search::newNodesSearch(Board& board, uint64_t searchNodes) {
+void Search::newNodesSearch(Position& position, uint64_t searchNodes) {
   if (searchNodes < 1) throw std::exception();
   if (running) throw std::exception();
 
   reset();
 
-  this->board = board;
+  this->position = position;
   this->searchNodes = searchNodes;
 }
 
-void Search::newTimeSearch(Board& board, uint64_t searchTime) {
+void Search::newTimeSearch(Position& position, uint64_t searchTime) {
   if (searchTime < 1) throw std::exception();
   if (running) throw std::exception();
 
   reset();
 
-  this->board = board;
+  this->position = position;
   this->searchTime = searchTime;
   this->runTimer = true;
 }
 
-void Search::newInfiniteSearch(Board& board) {
+void Search::newInfiniteSearch(Position& position) {
   if (running) throw std::exception();
 
   reset();
 
-  this->board = board;
+  this->position = position;
 }
 
-void Search::newClockSearch(Board& board,
+void Search::newClockSearch(Position& position,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo) {
-  newPonderSearch(board,
+  newPonderSearch(position,
       whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
   );
 
   this->runTimer = true;
 }
 
-void Search::newPonderSearch(Board& board,
+void Search::newPonderSearch(Position& position,
     uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft, uint64_t blackTimeIncrement, int movesToGo) {
   if (whiteTimeLeft < 1) throw std::exception();
   if (whiteTimeIncrement < 0) throw std::exception();
@@ -121,11 +121,11 @@ void Search::newPonderSearch(Board& board,
 
   reset();
 
-  this->board = board;
+  this->position = position;
 
   uint64_t timeLeft;
   uint64_t timeIncrement;
-  if (board.activeColor == Color::WHITE) {
+  if (position.activeColor == Color::WHITE) {
     timeLeft = whiteTimeLeft;
     timeIncrement = whiteTimeIncrement;
   } else {
@@ -239,7 +239,7 @@ void Search::run() {
     }
 
     // Populate root move list
-    MoveList& moves = moveGenerators[0].getLegalMoves(board, 1, board.isCheck());
+    MoveList& moves = moveGenerators[0].getLegalMoves(position, 1, position.isCheck());
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i]->move;
       rootMoves.entries[rootMoves.size]->move = move;
@@ -358,9 +358,9 @@ void Search::searchRoot(int depth, int alpha, int beta) {
     currentMoveNumber = i + 1;
     protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
-    board.makeMove(move);
+    position.makeMove(move);
     int value = -search(depth - 1, -beta, -alpha, ply + 1);
-    board.undoMove(move);
+    position.undoMove(move);
 
     if (abort) {
       return;
@@ -396,30 +396,30 @@ int Search::search(int depth, int alpha, int beta, int ply) {
 
   // Abort conditions
   if (abort || ply == Depth::MAX_PLY) {
-    return evaluation.evaluate(board);
+    return evaluation.evaluate(position);
   }
 
   // Check insufficient material, repetition and fifty move rule
-  if (board.isRepetition() || board.hasInsufficientMaterial() || board.halfmoveClock >= 100) {
+  if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
     return Value::DRAW;
   }
 
   // Initialize
   int bestValue = -Value::INFINITE;
   int searchedMoves = 0;
-  bool isCheck = board.isCheck();
+  bool isCheck = position.isCheck();
 
-  MoveList& moves = moveGenerators[ply].getMoves(board, depth, isCheck);
+  MoveList& moves = moveGenerators[ply].getMoves(position, depth, isCheck);
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
     int value = bestValue;
 
-    board.makeMove(move);
-    if (!board.isCheck(Color::opposite(board.activeColor))) {
+    position.makeMove(move);
+    if (!position.isCheck(Color::opposite(position.activeColor))) {
       ++searchedMoves;
       value = -search(depth - 1, -beta, -alpha, ply + 1);
     }
-    board.undoMove(move);
+    position.undoMove(move);
 
     if (abort) {
       return bestValue;
@@ -462,22 +462,22 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 
   // Abort conditions
   if (abort || ply == Depth::MAX_PLY) {
-    return evaluation.evaluate(board);
+    return evaluation.evaluate(position);
   }
 
   // Check insufficient material, repetition and fifty move rule
-  if (board.isRepetition() || board.hasInsufficientMaterial() || board.halfmoveClock >= 100) {
+  if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
     return Value::DRAW;
   }
 
   // Initialize
   int bestValue = -Value::INFINITE;
   int searchedMoves = 0;
-  bool isCheck = board.isCheck();
+  bool isCheck = position.isCheck();
 
   //### BEGIN Stand pat
   if (!isCheck) {
-    bestValue = evaluation.evaluate(board);
+    bestValue = evaluation.evaluate(position);
 
     // Do we have a better value?
     if (bestValue > alpha) {
@@ -492,17 +492,17 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
   }
   //### ENDOF Stand pat
 
-  MoveList& moves = moveGenerators[ply].getMoves(board, depth, isCheck);
+  MoveList& moves = moveGenerators[ply].getMoves(position, depth, isCheck);
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
     int value = bestValue;
 
-    board.makeMove(move);
-    if (!board.isCheck(Color::opposite(board.activeColor))) {
+    position.makeMove(move);
+    if (!position.isCheck(Color::opposite(position.activeColor))) {
       ++searchedMoves;
       value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
     }
-    board.undoMove(move);
+    position.undoMove(move);
 
     if (abort) {
       return bestValue;
