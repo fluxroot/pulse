@@ -21,7 +21,7 @@ namespace pulse {
 // Initialize the zobrist keys
 Board::Zobrist::Zobrist() {
   for (auto piece : Piece::values) {
-    for (int i = 0; i < Board::BOARDSIZE; ++i) {
+    for (int i = 0; i < Square::LENGTH; ++i) {
       board[piece][i] = next();
     }
   }
@@ -30,7 +30,7 @@ Board::Zobrist::Zobrist() {
     castlingRights[castling] = next();
   }
 
-  for (int i = 0; i < Board::BOARDSIZE; ++i) {
+  for (int i = 0; i < Square::LENGTH; ++i) {
     enPassantSquare[i] = next();
   }
 

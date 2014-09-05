@@ -26,9 +26,8 @@ public:
   static const unsigned int STANDARDBOARD = 518;
 
   static const int MAX_MOVES = Depth::MAX_PLY + 1024;
-  static const int BOARDSIZE = 128;
 
-  std::array<int, BOARDSIZE> board;
+  std::array<int, Square::LENGTH> board;
 
   std::array<Bitboard, Color::SIZE> pawns;
   std::array<Bitboard, Color::SIZE> knights;
@@ -66,9 +65,9 @@ public:
 private:
   class Zobrist {
   public:
-    std::array<std::array<uint64_t, BOARDSIZE>, Piece::SIZE> board;
+    std::array<std::array<uint64_t, Square::LENGTH>, Piece::SIZE> board;
     std::array<uint64_t, Castling::SIZE> castlingRights;
-    std::array<uint64_t, BOARDSIZE> enPassantSquare;
+    std::array<uint64_t, Square::LENGTH> enPassantSquare;
     uint64_t activeColor;
 
     static Zobrist& instance();

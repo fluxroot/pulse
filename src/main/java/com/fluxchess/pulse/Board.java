@@ -18,9 +18,8 @@ import java.security.SecureRandom;
 final class Board {
 
   static final int MAX_MOVES = Depth.MAX_PLY + 1024;
-  static final int BOARDSIZE = 128;
 
-  final int[] board = new int[BOARDSIZE];
+  final int[] board = new int[Square.LENGTH];
 
   final Bitboard[] pawns = new Bitboard[Color.values.length];
   final Bitboard[] knights = new Bitboard[Color.values.length];
@@ -47,15 +46,15 @@ final class Board {
   private static final class Zobrist {
     private static final SecureRandom random = new SecureRandom();
 
-    static final long[][] board = new long[Piece.values.length][BOARDSIZE];
+    static final long[][] board = new long[Piece.values.length][Square.LENGTH];
     static final long[] castlingRights = new long[Castling.values.length];
-    static final long[] enPassantSquare = new long[BOARDSIZE];
+    static final long[] enPassantSquare = new long[Square.LENGTH];
     static final long activeColor = next();
 
     // Initialize the zobrist keys
     static {
       for (int piece : Piece.values) {
-        for (int i = 0; i < BOARDSIZE; ++i) {
+        for (int i = 0; i < Square.LENGTH; ++i) {
           board[piece][i] = next();
         }
       }
@@ -64,7 +63,7 @@ final class Board {
         castlingRights[castling] = next();
       }
 
-      for (int i = 0; i < BOARDSIZE; ++i) {
+      for (int i = 0; i < Square.LENGTH; ++i) {
         enPassantSquare[i] = next();
       }
     }
