@@ -41,12 +41,7 @@ final class Evaluation {
     // Add Tempo
     value += TEMPO;
 
-    // This is just a safe guard to protect against overflow in our evaluation
-    // function.
-    if (value <= -Value.CHECKMATE_THRESHOLD || value >= Value.CHECKMATE_THRESHOLD) {
-      assert false;
-    }
-
+    assert Math.abs(value) < Value.CHECKMATE_THRESHOLD;
     return value;
   }
 
