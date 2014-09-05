@@ -16,14 +16,6 @@ import com.fluxchess.jcpi.commands.*;
  */
 public final class Pulse extends AbstractEngine {
 
-  public static void main(String[] args) {
-    // Don't do any fancy stuff here. Just create our engine and
-    // run it. JCPI takes care of the rest. It waits for the GUI
-    // to issue commands which will call our methods using the
-    // visitor pattern.
-    new Pulse().run();
-  }
-
   protected void quit() {
   }
 
