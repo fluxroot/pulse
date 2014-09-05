@@ -34,7 +34,7 @@ public:
   static const std::array<int, VALUES_SIZE> values;
 
   static bool isValid(int piece);
-  static int valueOf(int pieceType, int color);
+  static int valueOf(int piecetype, int color);
   static int getType(int piece);
   static int getColor(int piece);
 

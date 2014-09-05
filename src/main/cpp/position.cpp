@@ -205,12 +205,12 @@ void Position::put(int piece, int square) {
   assert(Square::isValid(square));
   assert(board[square] == Piece::NOPIECE);
 
-  int pieceType = Piece::getType(piece);
+  int piecetype = Piece::getType(piece);
   int color = Piece::getColor(piece);
 
   board[square] = piece;
-  pieces[color][pieceType].add(square);
-  material[color] += PieceType::getValue(pieceType);
+  pieces[color][piecetype].add(square);
+  material[color] += PieceType::getValue(piecetype);
 
   zobristKey ^= zobrist.board[piece][square];
 }
@@ -228,12 +228,12 @@ int Position::remove(int square) {
 
   int piece = board[square];
 
-  int pieceType = Piece::getType(piece);
+  int piecetype = Piece::getType(piece);
   int color = Piece::getColor(piece);
 
   board[square] = Piece::NOPIECE;
-  pieces[color][pieceType].remove(square);
-  material[color] -= PieceType::getValue(pieceType);
+  pieces[color][piecetype].remove(square);
+  material[color] -= PieceType::getValue(piecetype);
 
   zobristKey ^= zobrist.board[piece][square];
 

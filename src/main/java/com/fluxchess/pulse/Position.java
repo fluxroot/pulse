@@ -180,12 +180,12 @@ final class Position {
     assert Square.isValid(square);
     assert board[square] == Piece.NOPIECE;
 
-    int pieceType = Piece.getType(piece);
+    int piecetype = Piece.getType(piece);
     int color = Piece.getColor(piece);
 
     board[square] = piece;
-    pieces[color][pieceType].add(square);
-    material[color] += PieceType.getValue(pieceType);
+    pieces[color][piecetype].add(square);
+    material[color] += PieceType.getValue(piecetype);
 
     zobristKey ^= Zobrist.board[piece][square];
   }
@@ -203,12 +203,12 @@ final class Position {
 
     int piece = board[square];
 
-    int pieceType = Piece.getType(piece);
+    int piecetype = Piece.getType(piece);
     int color = Piece.getColor(piece);
 
     board[square] = Piece.NOPIECE;
-    pieces[color][pieceType].remove(square);
-    material[color] -= PieceType.getValue(pieceType);
+    pieces[color][piecetype].remove(square);
+    material[color] -= PieceType.getValue(piecetype);
 
     zobristKey ^= Zobrist.board[piece][square];
 

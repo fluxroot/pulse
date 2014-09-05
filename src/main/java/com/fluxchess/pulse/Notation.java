@@ -148,8 +148,8 @@ final class Notation {
     }
   }
 
-  static GenericChessman fromPieceType(int pieceType) {
-    switch (pieceType) {
+  static GenericChessman fromPieceType(int piecetype) {
+    switch (piecetype) {
       case PieceType.PAWN:
         return GenericChessman.PAWN;
       case PieceType.KNIGHT:

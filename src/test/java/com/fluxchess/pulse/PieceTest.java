@@ -24,8 +24,8 @@ public class PieceTest {
   @Test
   public void testValues() {
     for (int color : Color.values) {
-      for (int pieceType : PieceType.values) {
-        int piece = Piece.valueOf(color, pieceType);
+      for (int piecetype : PieceType.values) {
+        int piece = Piece.valueOf(color, piecetype);
 
         assertEquals(piece, Piece.values[piece]);
       }

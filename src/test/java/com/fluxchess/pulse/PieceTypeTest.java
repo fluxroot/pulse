@@ -23,15 +23,15 @@ public class PieceTypeTest {
 
   @Test
   public void testValues() {
-    for (int pieceType : PieceType.values) {
-      assertEquals(pieceType, PieceType.values[pieceType]);
+    for (int piecetype : PieceType.values) {
+      assertEquals(piecetype, PieceType.values[piecetype]);
     }
   }
 
   @Test
   public void testIsValid() {
-    for (int pieceType : PieceType.values) {
-      assertTrue(PieceType.isValid(pieceType));
+    for (int piecetype : PieceType.values) {
+      assertTrue(PieceType.isValid(piecetype));
     }
 
     assertFalse(PieceType.isValid(PieceType.NOPIECETYPE));

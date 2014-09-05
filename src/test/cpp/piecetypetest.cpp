@@ -12,14 +12,14 @@
 using namespace pulse;
 
 TEST(piecetypetest, testValues) {
-  for (auto pieceType : PieceType::values) {
-    EXPECT_EQ(pieceType, PieceType::values[pieceType]);
+  for (auto piecetype : PieceType::values) {
+    EXPECT_EQ(piecetype, PieceType::values[piecetype]);
   }
 }
 
 TEST(piecetypetest, testIsValid) {
-  for (auto pieceType : PieceType::values) {
-    EXPECT_TRUE(PieceType::isValid(pieceType));
+  for (auto piecetype : PieceType::values) {
+    EXPECT_TRUE(PieceType::isValid(piecetype));
   }
 
   EXPECT_FALSE(PieceType::isValid(PieceType::NOPIECETYPE));

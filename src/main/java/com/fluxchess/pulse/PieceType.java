@@ -34,8 +34,8 @@ final class PieceType {
   private PieceType() {
   }
 
-  static boolean isValid(int pieceType) {
-    switch (pieceType) {
+  static boolean isValid(int piecetype) {
+    switch (piecetype) {
       case PAWN:
       case KNIGHT:
       case BISHOP:
@@ -48,8 +48,8 @@ final class PieceType {
     }
   }
 
-  static boolean isValidPromotion(int pieceType) {
-    switch (pieceType) {
+  static boolean isValidPromotion(int piecetype) {
+    switch (piecetype) {
       case KNIGHT:
       case BISHOP:
       case ROOK:
@@ -60,8 +60,8 @@ final class PieceType {
     }
   }
 
-  static boolean isSliding(int pieceType) {
-    switch (pieceType) {
+  static boolean isSliding(int piecetype) {
+    switch (piecetype) {
       case BISHOP:
       case ROOK:
       case QUEEN:
@@ -75,8 +75,8 @@ final class PieceType {
     }
   }
 
-  static int getValue(int pieceType) {
-    switch (pieceType) {
+  static int getValue(int piecetype) {
+    switch (piecetype) {
       case PAWN:
         return PAWN_VALUE;
       case KNIGHT:

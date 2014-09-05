@@ -59,8 +59,8 @@ final class MoveList {
       int move = entries[i].move;
       int value = 0;
 
-      int pieceTypeValue = PieceType.getValue(Piece.getType(Move.getOriginPiece(move)));
-      value += PieceType.KING_VALUE / pieceTypeValue;
+      int piecetypeValue = PieceType.getValue(Piece.getType(Move.getOriginPiece(move)));
+      value += PieceType.KING_VALUE / piecetypeValue;
 
       int target = Move.getTargetPiece(move);
       if (Piece.isValid(target)) {

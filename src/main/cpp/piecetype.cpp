@@ -16,8 +16,8 @@ const std::array<int, PieceType::VALUES_SIZE> PieceType::values = {
   PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
 };
 
-bool PieceType::isValid(int pieceType) {
-  switch (pieceType) {
+bool PieceType::isValid(int piecetype) {
+  switch (piecetype) {
     case PAWN:
     case KNIGHT:
     case BISHOP:
@@ -30,8 +30,8 @@ bool PieceType::isValid(int pieceType) {
   }
 }
 
-bool PieceType::isValidPromotion(int pieceType) {
-  switch (pieceType) {
+bool PieceType::isValidPromotion(int piecetype) {
+  switch (piecetype) {
     case KNIGHT:
     case BISHOP:
     case ROOK:
@@ -42,8 +42,8 @@ bool PieceType::isValidPromotion(int pieceType) {
   }
 }
 
-bool PieceType::isSliding(int pieceType) {
-  switch (pieceType) {
+bool PieceType::isSliding(int piecetype) {
+  switch (piecetype) {
     case BISHOP:
     case ROOK:
     case QUEEN:
@@ -57,8 +57,8 @@ bool PieceType::isSliding(int pieceType) {
   }
 }
 
-int PieceType::getValue(int pieceType) {
-  switch (pieceType) {
+int PieceType::getValue(int piecetype) {
+  switch (piecetype) {
     case PAWN:
       return PAWN_VALUE;
     case KNIGHT:

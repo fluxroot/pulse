@@ -53,10 +53,10 @@ final class Piece {
     }
   }
 
-  static int valueOf(int color, int pieceType) {
+  static int valueOf(int color, int piecetype) {
     switch (color) {
       case Color.WHITE:
-        switch (pieceType) {
+        switch (piecetype) {
           case PieceType.PAWN:
             return WHITE_PAWN;
           case PieceType.KNIGHT:
@@ -73,7 +73,7 @@ final class Piece {
             throw new IllegalArgumentException();
         }
       case Color.BLACK:
-        switch (pieceType) {
+        switch (piecetype) {
           case PieceType.PAWN:
             return BLACK_PAWN;
           case PieceType.KNIGHT:

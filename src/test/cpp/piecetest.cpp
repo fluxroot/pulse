@@ -15,8 +15,8 @@ using namespace pulse;
 
 TEST(piecetest, testValues) {
   for (auto color : Color::values) {
-    for (auto pieceType : PieceType::values) {
-      int piece = Piece::valueOf(color, pieceType);
+    for (auto piecetype : PieceType::values) {
+      int piece = Piece::valueOf(color, piecetype);
 
       EXPECT_EQ(piece, Piece::values[piece]);
     }
