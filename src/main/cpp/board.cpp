@@ -331,7 +331,7 @@ Board::Board(const Board& board)
 
   this->halfmoveNumber = board.halfmoveNumber;
 
-  this->stackSize = 0;
+  this->statesSize = 0;
 }
 
 Board& Board::operator=(const Board& board) {
@@ -354,7 +354,7 @@ Board& Board::operator=(const Board& board) {
 
   this->halfmoveNumber = board.halfmoveNumber;
 
-  this->stackSize = 0;
+  this->statesSize = 0;
 
   return *this;
 }
@@ -477,9 +477,9 @@ void Board::setFullmoveNumber(int fullmoveNumber) {
 
 bool Board::isRepetition() {
   // Search back until the last halfmoveClock reset
-  int j = std::max(0, stackSize - halfmoveClock);
-  for (int i = stackSize - 2; i >= j; i -= 2) {
-    if (zobristKey == stack[i].zobristKey) {
+  int j = std::max(0, statesSize - halfmoveClock);
+  for (int i = statesSize - 2; i >= j; i -= 2) {
+    if (zobristKey == states[i].zobristKey) {
       return true;
     }
   }
@@ -598,7 +598,7 @@ int Board::remove(int square) {
 }
 
 void Board::makeMove(int move) {
-  State& entry = stack[stackSize];
+  State& entry = states[statesSize];
 
   // Get variables
   int type = Move::getType(move);
@@ -703,15 +703,15 @@ void Board::makeMove(int move) {
   // Update fullMoveNumber
   ++halfmoveNumber;
 
-  ++stackSize;
-  assert(stackSize < MAX_MOVES);
+  ++statesSize;
+  assert(statesSize < MAX_MOVES);
 }
 
 void Board::undoMove(int move) {
-  --stackSize;
-  assert(stackSize >= 0);
+  --statesSize;
+  assert(statesSize >= 0);
 
-  State& entry = stack[stackSize];
+  State& entry = states[statesSize];
 
   // Get variables
   int type = Move::getType(move);

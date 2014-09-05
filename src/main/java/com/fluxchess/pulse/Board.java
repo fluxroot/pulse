@@ -41,8 +41,8 @@ final class Board {
 
   // We will save some board parameters in a State before making a move.
   // Later we will restore them before undoing a move.
-  private final State[] stack = new State[MAX_MOVES];
-  private int stackSize = 0;
+  private final State[] states = new State[MAX_MOVES];
+  private int statesSize = 0;
 
   private static final class Zobrist {
     private static final SecureRandom random = new SecureRandom();
@@ -98,9 +98,9 @@ final class Board {
   Board(GenericBoard genericBoard) {
     assert genericBoard != null;
 
-    // Initialize stack
-    for (int i = 0; i < stack.length; ++i) {
-      stack[i] = new State();
+    // Initialize states
+    for (int i = 0; i < states.length; ++i) {
+      states[i] = new State();
     }
 
     // Initialize piece type lists
@@ -222,9 +222,9 @@ final class Board {
 
   boolean isRepetition() {
     // Search back until the last halfmoveClock reset
-    int j = Math.max(0, stackSize - halfmoveClock);
-    for (int i = stackSize - 2; i >= j; i -= 2) {
-      if (zobristKey == stack[i].zobristKey) {
+    int j = Math.max(0, statesSize - halfmoveClock);
+    for (int i = statesSize - 2; i >= j; i -= 2) {
+      if (zobristKey == states[i].zobristKey) {
         return true;
       }
     }
@@ -343,7 +343,7 @@ final class Board {
   }
 
   void makeMove(int move) {
-    State entry = stack[stackSize];
+    State entry = states[statesSize];
 
     // Get variables
     int type = Move.getType(move);
@@ -448,15 +448,15 @@ final class Board {
     // Update fullMoveNumber
     ++halfmoveNumber;
 
-    ++stackSize;
-    assert stackSize < MAX_MOVES;
+    ++statesSize;
+    assert statesSize < MAX_MOVES;
   }
 
   void undoMove(int move) {
-    --stackSize;
-    assert stackSize >= 0;
+    --statesSize;
+    assert statesSize >= 0;
 
-    State entry = stack[stackSize];
+    State entry = states[statesSize];
 
     // Get variables
     int type = Move.getType(move);

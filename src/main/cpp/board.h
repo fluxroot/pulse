@@ -94,8 +94,8 @@ private:
 
   // We will save some board parameters in a State before making a move.
   // Later we will restore them before undoing a move.
-  std::array<State, MAX_MOVES> stack;
-  int stackSize = 0;
+  std::array<State, MAX_MOVES> states;
+  int statesSize = 0;
 
   const Zobrist& zobrist;
 
