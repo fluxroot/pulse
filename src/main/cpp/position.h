@@ -12,6 +12,7 @@
 #include "castling.h"
 #include "square.h"
 #include "piece.h"
+#include "piecetype.h"
 #include "depth.h"
 
 #include <random>
@@ -22,12 +23,7 @@ class Position {
 public:
   std::array<int, Square::VALUES_LENGTH> board;
 
-  std::array<Bitboard, Color::VALUES_SIZE> pawns;
-  std::array<Bitboard, Color::VALUES_SIZE> knights;
-  std::array<Bitboard, Color::VALUES_SIZE> bishops;
-  std::array<Bitboard, Color::VALUES_SIZE> rooks;
-  std::array<Bitboard, Color::VALUES_SIZE> queens;
-  std::array<Bitboard, Color::VALUES_SIZE> kings;
+  std::array<std::array<Bitboard, PieceType::VALUES_SIZE>, Color::VALUES_SIZE> pieces;
 
   std::array<int, Color::VALUES_SIZE> material = {};
 

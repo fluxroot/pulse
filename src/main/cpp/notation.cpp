@@ -115,11 +115,11 @@ Position Notation::toPosition(const std::string& fen) {
 
         int color = colorOf(character);
 
-        if (position.kings[color].squares == 0) {
+        if (position.pieces[color][PieceType::KING].squares == 0) {
           throw std::exception();
         }
 
-        kingFile = Square::getFile(Bitboard::numberOfTrailingZeros(position.kings[color].squares));
+        kingFile = Square::getFile(Bitboard::numberOfTrailingZeros(position.pieces[color][PieceType::KING].squares));
         if (castlingFile > kingFile) {
           castling = Castling::valueOf(color, CastlingType::KINGSIDE);
         } else {

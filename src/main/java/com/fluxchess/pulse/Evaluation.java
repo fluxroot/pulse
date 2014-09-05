@@ -52,7 +52,7 @@ final class Evaluation {
     int material = position.material[color];
 
     // Add bonus for bishop pair
-    if (position.bishops[color].size() >= 2) {
+    if (position.pieces[color][PieceType.BISHOP].size() >= 2) {
       material += 50;
     }
 
@@ -64,25 +64,25 @@ final class Evaluation {
     assert position != null;
 
     int knightMobility = 0;
-    for (long squares = position.knights[color].squares; squares != 0; squares = Bitboard.remainder(squares)) {
+    for (long squares = position.pieces[color][PieceType.KNIGHT].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
       knightMobility += evaluateMobility(color, position, square, Square.knightDirections);
     }
 
     int bishopMobility = 0;
-    for (long squares = position.bishops[color].squares; squares != 0; squares = Bitboard.remainder(squares)) {
+    for (long squares = position.pieces[color][PieceType.BISHOP].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
       bishopMobility += evaluateMobility(color, position, square, Square.bishopDirections);
     }
 
     int rookMobility = 0;
-    for (long squares = position.rooks[color].squares; squares != 0; squares = Bitboard.remainder(squares)) {
+    for (long squares = position.pieces[color][PieceType.ROOK].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
       rookMobility += evaluateMobility(color, position, square, Square.rookDirections);
     }
 
     int queenMobility = 0;
-    for (long squares = position.queens[color].squares; squares != 0; squares = Bitboard.remainder(squares)) {
+    for (long squares = position.pieces[color][PieceType.QUEEN].squares; squares != 0; squares = Bitboard.remainder(squares)) {
       int square = Bitboard.next(squares);
       queenMobility += evaluateMobility(color, position, square, Square.queenDirections);
     }

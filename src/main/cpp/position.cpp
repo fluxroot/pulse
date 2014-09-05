@@ -69,12 +69,7 @@ Position::Position()
 Position::Position(const Position& position)
     : Position() {
   this->board = position.board;
-  this->pawns = position.pawns;
-  this->knights = position.knights;
-  this->bishops = position.bishops;
-  this->rooks = position.rooks;
-  this->queens = position.queens;
-  this->kings = position.kings;
+  this->pieces = position.pieces;
 
   this->material = position.material;
 
@@ -92,12 +87,7 @@ Position::Position(const Position& position)
 
 Position& Position::operator=(const Position& position) {
   this->board = position.board;
-  this->pawns = position.pawns;
-  this->knights = position.knights;
-  this->bishops = position.bishops;
-  this->rooks = position.rooks;
-  this->queens = position.queens;
-  this->kings = position.kings;
+  this->pieces = position.pieces;
 
   this->material = position.material;
 
@@ -117,12 +107,7 @@ Position& Position::operator=(const Position& position) {
 
 bool Position::operator==(const Position& position) const {
   return this->board == position.board
-    && this->pawns == position.pawns
-    && this->knights == position.knights
-    && this->bishops == position.bishops
-    && this->rooks == position.rooks
-    && this->queens == position.queens
-    && this->kings == position.kings
+    && this->pieces == position.pieces
 
     && this->material == position.material
 
@@ -201,11 +186,11 @@ bool Position::isRepetition() {
 
 bool Position::hasInsufficientMaterial() {
   // If there is only one minor left, we are unable to checkmate
-  return pawns[Color::WHITE].size() == 0 && pawns[Color::BLACK].size() == 0
-      && rooks[Color::WHITE].size() == 0 && rooks[Color::BLACK].size() == 0
-      && queens[Color::WHITE].size() == 0 && queens[Color::BLACK].size() == 0
-      && (knights[Color::WHITE].size() + bishops[Color::WHITE].size() <= 1)
-      && (knights[Color::BLACK].size() + bishops[Color::BLACK].size() <= 1);
+  return pieces[Color::WHITE][PieceType::PAWN].size() == 0 && pieces[Color::BLACK][PieceType::PAWN].size() == 0
+      && pieces[Color::WHITE][PieceType::ROOK].size() == 0 && pieces[Color::BLACK][PieceType::ROOK].size() == 0
+      && pieces[Color::WHITE][PieceType::QUEEN].size() == 0 && pieces[Color::BLACK][PieceType::QUEEN].size() == 0
+      && (pieces[Color::WHITE][PieceType::KNIGHT].size() + pieces[Color::WHITE][PieceType::BISHOP].size() <= 1)
+      && (pieces[Color::BLACK][PieceType::KNIGHT].size() + pieces[Color::BLACK][PieceType::BISHOP].size() <= 1);
 }
 
 /**
@@ -223,36 +208,9 @@ void Position::put(int piece, int square) {
   int pieceType = Piece::getType(piece);
   int color = Piece::getColor(piece);
 
-  switch (pieceType) {
-    case PieceType::PAWN:
-      pawns[color].add(square);
-      material[color] += PieceType::PAWN_VALUE;
-      break;
-    case PieceType::KNIGHT:
-      knights[color].add(square);
-      material[color] += PieceType::KNIGHT_VALUE;
-      break;
-    case PieceType::BISHOP:
-      bishops[color].add(square);
-      material[color] += PieceType::BISHOP_VALUE;
-      break;
-    case PieceType::ROOK:
-      rooks[color].add(square);
-      material[color] += PieceType::ROOK_VALUE;
-      break;
-    case PieceType::QUEEN:
-      queens[color].add(square);
-      material[color] += PieceType::QUEEN_VALUE;
-      break;
-    case PieceType::KING:
-      kings[color].add(square);
-      material[color] += PieceType::KING_VALUE;
-      break;
-    default:
-      throw std::exception();
-  }
-
   board[square] = piece;
+  pieces[color][pieceType].add(square);
+  material[color] += PieceType::getValue(pieceType);
 
   zobristKey ^= zobrist.board[piece][square];
 }
@@ -273,36 +231,9 @@ int Position::remove(int square) {
   int pieceType = Piece::getType(piece);
   int color = Piece::getColor(piece);
 
-  switch (pieceType) {
-    case PieceType::PAWN:
-      pawns[color].remove(square);
-      material[color] -= PieceType::PAWN_VALUE;
-      break;
-    case PieceType::KNIGHT:
-      knights[color].remove(square);
-      material[color] -= PieceType::KNIGHT_VALUE;
-      break;
-    case PieceType::BISHOP:
-      bishops[color].remove(square);
-      material[color] -= PieceType::BISHOP_VALUE;
-      break;
-    case PieceType::ROOK:
-      rooks[color].remove(square);
-      material[color] -= PieceType::ROOK_VALUE;
-      break;
-    case PieceType::QUEEN:
-      queens[color].remove(square);
-      material[color] -= PieceType::QUEEN_VALUE;
-      break;
-    case PieceType::KING:
-      kings[color].remove(square);
-      material[color] -= PieceType::KING_VALUE;
-      break;
-    default:
-      throw std::exception();
-  }
-
   board[square] = Piece::NOPIECE;
+  pieces[color][pieceType].remove(square);
+  material[color] -= PieceType::getValue(pieceType);
 
   zobristKey ^= zobrist.board[piece][square];
 
@@ -516,12 +447,12 @@ void Position::clearCastling(int square) {
 
 bool Position::isCheck() {
   // Check whether our king is attacked by any opponent piece
-  return isAttacked(Bitboard::next(kings[activeColor].squares), Color::opposite(activeColor));
+  return isAttacked(Bitboard::next(pieces[activeColor][PieceType::KING].squares), Color::opposite(activeColor));
 }
 
 bool Position::isCheck(int color) {
   // Check whether the king for color is attacked by any opponent piece
-  return isAttacked(Bitboard::next(kings[color].squares), Color::opposite(color));
+  return isAttacked(Bitboard::next(pieces[color][PieceType::KING].squares), Color::opposite(color));
 }
 
 /**
