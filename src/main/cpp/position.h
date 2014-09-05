@@ -20,16 +20,16 @@ namespace pulse {
 
 class Position {
 public:
-  std::array<int, Square::LENGTH> board;
+  std::array<int, Square::VALUES_LENGTH> board;
 
-  std::array<Bitboard, Color::SIZE> pawns;
-  std::array<Bitboard, Color::SIZE> knights;
-  std::array<Bitboard, Color::SIZE> bishops;
-  std::array<Bitboard, Color::SIZE> rooks;
-  std::array<Bitboard, Color::SIZE> queens;
-  std::array<Bitboard, Color::SIZE> kings;
+  std::array<Bitboard, Color::VALUES_SIZE> pawns;
+  std::array<Bitboard, Color::VALUES_SIZE> knights;
+  std::array<Bitboard, Color::VALUES_SIZE> bishops;
+  std::array<Bitboard, Color::VALUES_SIZE> rooks;
+  std::array<Bitboard, Color::VALUES_SIZE> queens;
+  std::array<Bitboard, Color::VALUES_SIZE> kings;
 
-  std::array<int, Color::SIZE> material = {};
+  std::array<int, Color::VALUES_SIZE> material = {};
 
   int castlingRights = Castling::NOCASTLING;
   int enPassantSquare = Square::NOSQUARE;
@@ -64,9 +64,9 @@ public:
 private:
   class Zobrist {
   public:
-    std::array<std::array<uint64_t, Square::LENGTH>, Piece::SIZE> board;
+    std::array<std::array<uint64_t, Square::VALUES_LENGTH>, Piece::VALUES_SIZE> board;
     std::array<uint64_t, Castling::VALUES_LENGTH> castlingRights;
-    std::array<uint64_t, Square::LENGTH> enPassantSquare;
+    std::array<uint64_t, Square::VALUES_LENGTH> enPassantSquare;
     uint64_t activeColor;
 
     static Zobrist& instance();

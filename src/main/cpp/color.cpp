@@ -9,7 +9,7 @@
 
 namespace pulse {
 
-const std::array<int, Color::SIZE> Color::values = {
+const std::array<int, Color::VALUES_SIZE> Color::values = {
   WHITE, BLACK
 };
 

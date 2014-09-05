@@ -30,8 +30,8 @@ public:
 
   static const int NOPIECE = 12;
 
-  static const int SIZE = 12;
-  static const std::array<int, SIZE> values;
+  static const int VALUES_SIZE = 12;
+  static const std::array<int, VALUES_SIZE> values;
 
   static bool isValid(int piece);
   static int valueOf(int pieceType, int color);

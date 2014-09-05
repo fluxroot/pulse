@@ -12,7 +12,7 @@ final class Position {
 
   private static final int MAX_MOVES = Depth.MAX_PLY + 1024;
 
-  final int[] board = new int[Square.LENGTH];
+  final int[] board = new int[Square.VALUES_LENGTH];
 
   final Bitboard[] pawns = new Bitboard[Color.values.length];
   final Bitboard[] knights = new Bitboard[Color.values.length];
@@ -39,15 +39,15 @@ final class Position {
   private static final class Zobrist {
     private static final SecureRandom random = new SecureRandom();
 
-    static final long[][] board = new long[Piece.values.length][Square.LENGTH];
+    static final long[][] board = new long[Piece.values.length][Square.VALUES_LENGTH];
     static final long[] castlingRights = new long[Castling.VALUES_LENGTH];
-    static final long[] enPassantSquare = new long[Square.LENGTH];
+    static final long[] enPassantSquare = new long[Square.VALUES_LENGTH];
     static final long activeColor = next();
 
     // Initialize the zobrist keys
     static {
       for (int piece : Piece.values) {
-        for (int i = 0; i < Square.LENGTH; ++i) {
+        for (int i = 0; i < Square.VALUES_LENGTH; ++i) {
           board[piece][i] = next();
         }
       }
@@ -61,7 +61,7 @@ final class Position {
       castlingRights[Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE] =
           castlingRights[Castling.BLACK_KINGSIDE] ^ castlingRights[Castling.BLACK_QUEENSIDE];
 
-      for (int i = 0; i < Square.LENGTH; ++i) {
+      for (int i = 0; i < Square.VALUES_LENGTH; ++i) {
         enPassantSquare[i] = next();
       }
     }

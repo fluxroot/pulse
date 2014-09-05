@@ -9,7 +9,7 @@
 
 namespace pulse {
 
-const std::array<int, Rank::SIZE> Rank::values = {
+const std::array<int, Rank::VALUES_SIZE> Rank::values = {
   r1, r2, r3, r4, r5, r6, r7, r8
 };
 

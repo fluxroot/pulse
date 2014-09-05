@@ -18,8 +18,8 @@ public:
 
   static const int NOCOLOR = 2;
 
-  static const int SIZE = 2;
-  static const std::array<int, SIZE> values;
+  static const int VALUES_SIZE = 2;
+  static const std::array<int, VALUES_SIZE> values;
 
   static bool isValid(int color);
   static int opposite(int color);

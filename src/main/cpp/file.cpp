@@ -11,7 +11,7 @@
 
 namespace pulse {
 
-const std::array<int, File::SIZE> File::values = {
+const std::array<int, File::VALUES_SIZE> File::values = {
   a, b, c, d, e, f, g, h
 };
 

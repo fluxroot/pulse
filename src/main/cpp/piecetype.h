@@ -24,8 +24,8 @@ public:
 
   static const int NOPIECETYPE = 6;
 
-  static const int SIZE = 6;
-  static const std::array<int, SIZE> values;
+  static const int VALUES_SIZE = 6;
+  static const std::array<int, VALUES_SIZE> values;
 
   // Piece values as defined by Larry Kaufman
   static const int PAWN_VALUE = 100;

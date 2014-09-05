@@ -9,7 +9,7 @@
 
 namespace pulse {
 
-const std::array<int, CastlingType::SIZE> CastlingType::values = {
+const std::array<int, CastlingType::VALUES_SIZE> CastlingType::values = {
   KINGSIDE, QUEENSIDE
 };
 

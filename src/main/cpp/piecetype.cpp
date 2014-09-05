@@ -12,7 +12,7 @@
 
 namespace pulse {
 
-const std::array<int, PieceType::SIZE> PieceType::values = {
+const std::array<int, PieceType::VALUES_SIZE> PieceType::values = {
   PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
 };
 

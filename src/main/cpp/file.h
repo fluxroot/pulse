@@ -24,8 +24,8 @@ public:
 
   static const int NOFILE = 8;
 
-  static const int SIZE = 8;
-  static const std::array<int, SIZE> values;
+  static const int VALUES_SIZE = 8;
+  static const std::array<int, VALUES_SIZE> values;
 
   static bool isValid(int file);
 

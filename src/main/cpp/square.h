@@ -54,9 +54,9 @@ public:
 
   static const int NOSQUARE = 127;
 
-  static const int LENGTH = 128;
-  static const int SIZE = 64;
-  static const std::array<int, SIZE> values;
+  static const int VALUES_LENGTH = 128;
+  static const int VALUES_SIZE = 64;
+  static const std::array<int, VALUES_SIZE> values;
 
   // These are our move directions
   // N = north, E = east, S = south, W = west
