@@ -106,7 +106,7 @@ private:
   uint64_t totalNodes = 0;
   int initialDepth = 1;
   int currentDepth = initialDepth;
-  int currentMaxDepth = initialDepth;
+  int currentMaxDepth = 0;
   int currentMove = Move::NOMOVE;
   int currentMoveNumber = 0;
   std::array<MoveList::MoveVariation, Depth::MAX_PLY + 1> pv;

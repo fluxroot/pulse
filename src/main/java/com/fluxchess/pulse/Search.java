@@ -56,7 +56,7 @@ final class Search implements Runnable {
   private long totalNodes = 0;
   private int initialDepth = 1;
   private int currentDepth = initialDepth;
-  private int currentMaxDepth = initialDepth;
+  private int currentMaxDepth = 0;
   private int currentMove = Move.NOMOVE;
   private int currentMoveNumber = 0;
   private final MoveVariation[] pv = new MoveVariation[Depth.MAX_PLY + 1];
