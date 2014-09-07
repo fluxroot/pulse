@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
+import static com.fluxchess.pulse.MoveList.MoveEntry;
+
 public class MoveGeneratorTest {
 
   private static final int MAX_DEPTH = 6;
@@ -40,7 +42,7 @@ public class MoveGeneratorTest {
 
     boolean isCheck = position.isCheck();
     MoveGenerator moveGenerator = moveGenerators[ply];
-    MoveList moves = moveGenerator.getMoves(position, depth, isCheck);
+    MoveList<MoveEntry> moves = moveGenerator.getMoves(position, depth, isCheck);
 
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
@@ -96,7 +98,7 @@ public class MoveGeneratorTest {
     // Get actual moves
     boolean isCheck = position.isCheck();
     MoveGenerator moveGenerator = moveGenerators[ply];
-    MoveList moves = moveGenerator.getLegalMoves(position, depth, isCheck);
+    MoveList<MoveEntry> moves = moveGenerator.getLegalMoves(position, depth, isCheck);
     Collection<GenericMove> actualMoves = new HashSet<>();
     for (int i = 0; i < moves.size; ++i) {
       actualMoves.add(Jcpi.fromMove(moves.entries[i].move));

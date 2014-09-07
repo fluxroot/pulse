@@ -239,7 +239,7 @@ void Search::run() {
     }
 
     // Populate root move list
-    MoveList& moves = moveGenerators[0].getLegalMoves(position, 1, position.isCheck());
+    MoveList<MoveEntry>& moves = moveGenerators[0].getLegalMoves(position, 1, position.isCheck());
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i]->move;
       rootMoves.entries[rootMoves.size]->move = move;
@@ -409,7 +409,7 @@ int Search::search(int depth, int alpha, int beta, int ply) {
   int searchedMoves = 0;
   bool isCheck = position.isCheck();
 
-  MoveList& moves = moveGenerators[ply].getMoves(position, depth, isCheck);
+  MoveList<MoveEntry>& moves = moveGenerators[ply].getMoves(position, depth, isCheck);
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
     int value = bestValue;
@@ -492,7 +492,7 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
   }
   //### ENDOF Stand pat
 
-  MoveList& moves = moveGenerators[ply].getMoves(position, depth, isCheck);
+  MoveList<MoveEntry>& moves = moveGenerators[ply].getMoves(position, depth, isCheck);
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
     int value = bestValue;
@@ -535,7 +535,7 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
   return bestValue;
 }
 
-void Search::savePV(int move, MoveList::MoveVariation& src, MoveList::MoveVariation& dest) {
+void Search::savePV(int move, MoveVariation& src, MoveVariation& dest) {
   dest.moves[0] = move;
   for (int i = 0; i < src.size; ++i) {
     dest.moves[i + 1] = src.moves[i];

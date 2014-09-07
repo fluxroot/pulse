@@ -6,15 +6,17 @@
  */
 package com.fluxchess.pulse;
 
+import java.lang.reflect.Array;
+
 /**
  * This class stores our moves for a specific position. For the root node we
  * will populate pv for every root move.
  */
-final class MoveList {
+final class MoveList<T extends MoveList.MoveEntry> {
 
   private static final int MAX_MOVES = 256;
 
-  final Entry[] entries = new Entry[MAX_MOVES];
+  final T[] entries;
   int size = 0;
 
   static final class MoveVariation {
@@ -22,15 +24,25 @@ final class MoveList {
     int size = 0;
   }
 
-  static final class Entry {
+  static class MoveEntry {
     int move = Move.NOMOVE;
     int value = Value.NOVALUE;
+  }
+
+  static final class RootEntry extends MoveEntry {
     final MoveVariation pv = new MoveVariation();
   }
 
-  MoveList() {
-    for (int i = 0; i < MAX_MOVES; ++i) {
-      entries[i] = new Entry();
+  MoveList(Class<T> clazz) {
+    @SuppressWarnings("unchecked")
+    final T[] entries = (T[]) Array.newInstance(clazz, MAX_MOVES);
+    this.entries = entries;
+    try {
+      for (int i = 0; i < entries.length; ++i) {
+        entries[i] = clazz.newInstance();
+      }
+    } catch (InstantiationException | IllegalAccessException e) {
+      throw new IllegalStateException(e);
     }
   }
 
@@ -39,7 +51,7 @@ final class MoveList {
    */
   void sort() {
     for (int i = 1; i < size; ++i) {
-      Entry entry = entries[i];
+      T entry = entries[i];
 
       int j = i;
       while ((j > 0) && (entries[j - 1].value < entry.value)) {

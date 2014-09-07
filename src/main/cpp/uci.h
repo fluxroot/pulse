@@ -21,7 +21,7 @@ public:
     int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove, int currentMoveNumber);
   virtual void sendStatus(
     bool force, int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove, int currentMoveNumber);
-  virtual void sendMove(MoveList::Entry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes);
+  virtual void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes);
 
   static std::string fromMove(int move);
 

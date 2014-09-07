@@ -6,14 +6,16 @@
  */
 package com.fluxchess.pulse;
 
+import static com.fluxchess.pulse.MoveList.MoveEntry;
+
 final class MoveGenerator {
 
-  private final MoveList moves = new MoveList();
+  private final MoveList<MoveEntry> moves = new MoveList<>(MoveEntry.class);
 
-  MoveList getLegalMoves(Position position, int depth, boolean isCheck) {
+  MoveList<MoveEntry> getLegalMoves(Position position, int depth, boolean isCheck) {
     assert position != null;
 
-    MoveList legalMoves = getMoves(position, depth, isCheck);
+    MoveList<MoveEntry> legalMoves = getMoves(position, depth, isCheck);
 
     int size = legalMoves.size;
     legalMoves.size = 0;
@@ -30,7 +32,7 @@ final class MoveGenerator {
     return legalMoves;
   }
 
-  MoveList getMoves(Position position, int depth, boolean isCheck) {
+  MoveList<MoveEntry> getMoves(Position position, int depth, boolean isCheck) {
     assert position != null;
 
     moves.size = 0;
@@ -67,7 +69,7 @@ final class MoveGenerator {
     return moves;
   }
 
-  private void addMoves(MoveList list, Position position) {
+  private void addMoves(MoveList<MoveEntry> list, Position position) {
     assert list != null;
 
     int activeColor = position.activeColor;
@@ -96,7 +98,7 @@ final class MoveGenerator {
     addMoves(list, square, Square.kingDirections, position);
   }
 
-  private void addMoves(MoveList list, int originSquare, int[] moveDelta, Position position) {
+  private void addMoves(MoveList<MoveEntry> list, int originSquare, int[] moveDelta, Position position) {
     assert list != null;
     assert Square.isValid(originSquare);
     assert moveDelta != null;
@@ -137,7 +139,7 @@ final class MoveGenerator {
     }
   }
 
-  private void addPawnMoves(MoveList list, int pawnSquare, Position position) {
+  private void addPawnMoves(MoveList<MoveEntry> list, int pawnSquare, Position position) {
     assert list != null;
     assert Square.isValid(pawnSquare);
 
@@ -232,7 +234,7 @@ final class MoveGenerator {
     }
   }
 
-  private void addCastlingMoves(MoveList list, int kingSquare, Position position) {
+  private void addCastlingMoves(MoveList<MoveEntry> list, int kingSquare, Position position) {
     assert list != null;
     assert Square.isValid(kingSquare);
 

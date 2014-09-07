@@ -8,13 +8,14 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
+import static com.fluxchess.pulse.MoveList.MoveEntry;
 import static org.junit.Assert.assertEquals;
 
 public class MoveListTest {
 
   @Test
   public void test() {
-    MoveList moveList = new MoveList();
+    MoveList<MoveEntry> moveList = new MoveList<>(MoveEntry.class);
 
     assertEquals(0, moveList.size);
 

@@ -10,7 +10,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
+import static com.fluxchess.pulse.MoveList.MoveEntry;
 import static com.fluxchess.pulse.MoveList.MoveVariation;
+import static com.fluxchess.pulse.MoveList.RootEntry;
 
 /**
  * This class implements our search in a separate thread to keep the main
@@ -46,7 +48,7 @@ final class Search implements Runnable {
   private boolean doTimeManagement;
 
   // Search parameters
-  private final MoveList rootMoves = new MoveList();
+  private final MoveList<RootEntry> rootMoves = new MoveList<>(RootEntry.class);
   private boolean abort;
   private long totalNodes;
   private final int initialDepth = 1;
@@ -272,7 +274,7 @@ final class Search implements Runnable {
       }
 
       // Populate root move list
-      MoveList moves = moveGenerators[0].getLegalMoves(position, 1, position.isCheck());
+      MoveList<MoveEntry> moves = moveGenerators[0].getLegalMoves(position, 1, position.isCheck());
       for (int i = 0; i < moves.size; ++i) {
         int move = moves.entries[i].move;
         rootMoves.entries[rootMoves.size].move = move;
@@ -442,7 +444,7 @@ final class Search implements Runnable {
     int searchedMoves = 0;
     boolean isCheck = position.isCheck();
 
-    MoveList moves = moveGenerators[ply].getMoves(position, depth, isCheck);
+    MoveList<MoveEntry> moves = moveGenerators[ply].getMoves(position, depth, isCheck);
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       int value = bestValue;
@@ -525,7 +527,7 @@ final class Search implements Runnable {
     }
     //### ENDOF Stand pat
 
-    MoveList moves = moveGenerators[ply].getMoves(position, depth, isCheck);
+    MoveList<MoveEntry> moves = moveGenerators[ply].getMoves(position, depth, isCheck);
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i].move;
       int value = bestValue;

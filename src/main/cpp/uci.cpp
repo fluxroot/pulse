@@ -122,7 +122,7 @@ void Uci::receivePosition(std::istringstream& input) {
 
   while (input >> token) {
     // Verify moves
-    MoveList& moves = moveGenerator.getLegalMoves(*currentPosition, 1, currentPosition->isCheck());
+    MoveList<MoveEntry>& moves = moveGenerator.getLegalMoves(*currentPosition, 1, currentPosition->isCheck());
     bool found = false;
     for (int i = 0; i < moves.size; ++i) {
       int move = moves.entries[i]->move;
@@ -272,7 +272,7 @@ void Uci::sendStatus(
   }
 }
 
-void Uci::sendMove(MoveList::Entry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) {
+void Uci::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) {
   auto timeDelta = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime);
 
   std::cout << "info";

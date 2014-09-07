@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import static com.fluxchess.pulse.MoveList.RootEntry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -42,7 +43,7 @@ public class SearchTest {
           }
 
           @Override
-          public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
+          public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
         });
     search.newDepthSearch(Notation.toPosition("3K3r/8/3k4/8/8/8/8/8 w - - 0 1"), 1);
@@ -81,7 +82,7 @@ public class SearchTest {
           }
 
           @Override
-          public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
+          public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
             if (Math.abs(entry.value) >= Value.CHECKMATE_THRESHOLD) {
               // Calculate mate distance
               int mateDepth = Value.CHECKMATE - Math.abs(entry.value);
@@ -126,7 +127,7 @@ public class SearchTest {
           }
 
           @Override
-          public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
+          public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
         });
     search.newDepthSearch(Notation.toPosition("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1"), 1);
@@ -162,7 +163,7 @@ public class SearchTest {
           }
 
           @Override
-          public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
+          public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
         });
     search.newClockSearch(Notation.toPosition("3K4/7r/3k4/8/8/8/8/8 b - - 0 1"), 10000, 0, 10000, 0, 40);
@@ -198,7 +199,7 @@ public class SearchTest {
           }
 
           @Override
-          public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
+          public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
           }
         });
     search.newClockSearch(Notation.toPosition("K1k5/8/8/8/8/8/8/8 w - - 0 1"), 10000, 0, 10000, 0, 40);

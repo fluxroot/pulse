@@ -6,6 +6,8 @@
  */
 package com.fluxchess.pulse;
 
+import static com.fluxchess.pulse.MoveList.RootEntry;
+
 interface Protocol {
 
   void sendBestMove(int bestMove, int ponderMove);
@@ -13,6 +15,6 @@ interface Protocol {
       int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber);
   void sendStatus(
       boolean force, int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber);
-  void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes);
+  void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes);
 
 }

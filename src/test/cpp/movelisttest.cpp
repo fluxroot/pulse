@@ -12,7 +12,7 @@
 using namespace pulse;
 
 TEST(movelisttest, test) {
-  MoveList moveList;
+  MoveList<MoveEntry> moveList;
 
   EXPECT_EQ(0, moveList.size);
 

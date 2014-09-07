@@ -110,7 +110,7 @@ private:
   bool doTimeManagement;
 
   // Search parameters
-  MoveList rootMoves;
+  MoveList<RootEntry> rootMoves;
   bool abort;
   uint64_t totalNodes;
   const int initialDepth = 1;
@@ -118,14 +118,14 @@ private:
   int currentMaxDepth;
   int currentMove;
   int currentMoveNumber;
-  std::array<MoveList::MoveVariation, Depth::MAX_PLY + 1> pv;
+  std::array<MoveVariation, Depth::MAX_PLY + 1> pv;
 
   void checkStopConditions();
   void updateSearch(int ply);
   void searchRoot(int depth, int alpha, int beta);
   int search(int depth, int alpha, int beta, int ply);
   int quiescent(int depth, int alpha, int beta, int ply);
-  void savePV(int move, MoveList::MoveVariation& src, MoveList::MoveVariation& dest);
+  void savePV(int move, MoveVariation& src, MoveVariation& dest);
 };
 
 }

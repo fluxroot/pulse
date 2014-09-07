@@ -13,8 +13,8 @@
 
 namespace pulse {
 
-MoveList& MoveGenerator::getLegalMoves(Position& position, int depth, bool isCheck) {
-  MoveList& legalMoves = getMoves(position, depth, isCheck);
+MoveList<MoveEntry>& MoveGenerator::getLegalMoves(Position& position, int depth, bool isCheck) {
+  MoveList<MoveEntry>& legalMoves = getMoves(position, depth, isCheck);
 
   int size = legalMoves.size;
   legalMoves.size = 0;
@@ -31,7 +31,7 @@ MoveList& MoveGenerator::getLegalMoves(Position& position, int depth, bool isChe
   return legalMoves;
 }
 
-MoveList& MoveGenerator::getMoves(Position& position, int depth, bool isCheck) {
+MoveList<MoveEntry>& MoveGenerator::getMoves(Position& position, int depth, bool isCheck) {
   moves.size = 0;
 
   if (depth > 0) {
@@ -66,7 +66,7 @@ MoveList& MoveGenerator::getMoves(Position& position, int depth, bool isCheck) {
   return moves;
 }
 
-void MoveGenerator::addMoves(MoveList& list, Position& position) {
+void MoveGenerator::addMoves(MoveList<MoveEntry>& list, Position& position) {
   int activeColor = position.activeColor;
 
   for (auto squares = position.pieces[activeColor][PieceType::PAWN].squares; squares != 0; squares = Bitboard::remainder(squares)) {
@@ -93,7 +93,7 @@ void MoveGenerator::addMoves(MoveList& list, Position& position) {
   addMoves(list, square, Square::kingDirections, position);
 }
 
-void MoveGenerator::addMoves(MoveList& list, int originSquare, const std::vector<int>& moveDelta, Position& position) {
+void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const std::vector<int>& moveDelta, Position& position) {
   assert(Square::isValid(originSquare));
 
   int originPiece = position.board[originSquare];
@@ -132,7 +132,7 @@ void MoveGenerator::addMoves(MoveList& list, int originSquare, const std::vector
   }
 }
 
-void MoveGenerator::addPawnMoves(MoveList& list, int pawnSquare, Position& position) {
+void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Position& position) {
   assert(Square::isValid(pawnSquare));
 
   int pawnPiece = position.board[pawnSquare];
@@ -226,7 +226,7 @@ void MoveGenerator::addPawnMoves(MoveList& list, int pawnSquare, Position& posit
   }
 }
 
-void MoveGenerator::addCastlingMoves(MoveList& list, int kingSquare, Position& position) {
+void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, Position& position) {
   assert(Square::isValid(kingSquare));
 
   int kingPiece = position.board[kingSquare];

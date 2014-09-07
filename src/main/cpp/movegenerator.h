@@ -14,16 +14,16 @@ namespace pulse {
 
 class MoveGenerator {
 public:
-  MoveList& getLegalMoves(Position& position, int depth, bool isCheck);
-  MoveList& getMoves(Position& position, int depth, bool isCheck);
+  MoveList<MoveEntry>& getLegalMoves(Position& position, int depth, bool isCheck);
+  MoveList<MoveEntry>& getMoves(Position& position, int depth, bool isCheck);
 
 private:
-  MoveList moves;
+  MoveList<MoveEntry> moves;
 
-  void addMoves(MoveList& list, Position& position);
-  void addMoves(MoveList& list, int originSquare, const std::vector<int>& moveDelta, Position& position);
-  void addPawnMoves(MoveList& list, int pawnSquare, Position& position);
-  void addCastlingMoves(MoveList& list, int kingSquare, Position& position);
+  void addMoves(MoveList<MoveEntry>& list, Position& position);
+  void addMoves(MoveList<MoveEntry>& list, int originSquare, const std::vector<int>& moveDelta, Position& position);
+  void addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Position& position);
+  void addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, Position& position);
 };
 
 }

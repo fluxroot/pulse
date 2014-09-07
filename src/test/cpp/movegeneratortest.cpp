@@ -154,7 +154,7 @@ uint64_t miniMax(int depth, Position& position, int ply) {
 
   bool isCheck = position.isCheck();
   MoveGenerator& moveGenerator = moveGenerators[ply];
-  MoveList& moves = moveGenerator.getMoves(position, depth, isCheck);
+  MoveList<MoveEntry>& moves = moveGenerator.getMoves(position, depth, isCheck);
 
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;

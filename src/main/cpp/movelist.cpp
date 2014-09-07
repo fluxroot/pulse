@@ -11,18 +11,23 @@
 
 namespace pulse {
 
-MoveList::MoveList() {
+template class MoveList<MoveEntry>;
+template class MoveList<RootEntry>;
+
+template<class T>
+MoveList<T>::MoveList() {
   for (unsigned int i = 0; i < entries.size(); ++i) {
-    entries[i] = std::shared_ptr<Entry>(new Entry());
+    entries[i] = std::shared_ptr<T>(new T());
   }
 }
 
 /**
  * Sorts the move list using a stable insertion sort.
  */
-void MoveList::sort() {
+template<class T>
+void MoveList<T>::sort() {
   for (int i = 1; i < size; ++i) {
-    std::shared_ptr<Entry> entry(entries[i]);
+    std::shared_ptr<T> entry(entries[i]);
 
     int j = i;
     while ((j > 0) && (entries[j - 1]->value < entry->value)) {
@@ -37,7 +42,8 @@ void MoveList::sort() {
 /**
  * Rates the moves in the list according to "Most Valuable Victim - Least Valuable Aggressor".
  */
-void MoveList::rateFromMVVLVA() {
+template<class T>
+void MoveList<T>::rateFromMVVLVA() {
   for (int i = 0; i < size; ++i) {
     int move = entries[i]->move;
     int value = 0;

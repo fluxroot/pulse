@@ -18,6 +18,9 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fluxchess.pulse.MoveList.MoveEntry;
+import static com.fluxchess.pulse.MoveList.RootEntry;
+
 /**
  * Pulse uses the Java Chess Protocol Interface (JCPI) to handle the
  * UCI protocol. We simply extend AbstractEngine and implement the required
@@ -127,7 +130,7 @@ final class Jcpi extends AbstractEngine implements Protocol {
     // Make all moves
     for (GenericMove genericMove : command.moves) {
       // Verify moves
-      MoveList moves = moveGenerator.getLegalMoves(currentPosition, 1, currentPosition.isCheck());
+      MoveList<MoveEntry> moves = moveGenerator.getLegalMoves(currentPosition, 1, currentPosition.isCheck());
       boolean found = false;
       for (int i = 0; i < moves.size; ++i) {
         int move = moves.entries[i].move;
@@ -257,7 +260,7 @@ final class Jcpi extends AbstractEngine implements Protocol {
     }
   }
 
-  public void sendMove(MoveList.Entry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
+  public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
     long timeDelta = System.currentTimeMillis() - startTime;
 
     ProtocolInformationCommand command = new ProtocolInformationCommand();
