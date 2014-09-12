@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-#include "uci.h"
+#include "pulse.h"
 #include "castlingtype.h"
 #include "file.h"
 #include "rank.h"
@@ -18,7 +18,7 @@
 
 namespace pulse {
 
-void Uci::run() {
+void Pulse::run() {
   std::cin.exceptions(std::iostream::eofbit | std::iostream::failbit | std::iostream::badbit);
   while (true) {
     std::string line;
@@ -48,13 +48,13 @@ void Uci::run() {
   }
 }
 
-void Uci::receiveQuit() {
+void Pulse::receiveQuit() {
   // We received a quit command. Stop calculating now and
   // cleanup!
   search->quit();
 }
 
-void Uci::receiveInitialize() {
+void Pulse::receiveInitialize() {
   search->stop();
 
   // We received an initialization request.
@@ -69,7 +69,7 @@ void Uci::receiveInitialize() {
   std::cout << "uciok" << std::endl;
 }
 
-void Uci::receiveReady() {
+void Pulse::receiveReady() {
   // We received a ready request. We must send the token back as soon as we
   // can. However, because we launch the search in a separate thread, our main
   // thread is able to handle the commands asynchronously to the search. If we
@@ -78,7 +78,7 @@ void Uci::receiveReady() {
   std::cout << "readyok" << std::endl;
 }
 
-void Uci::receiveNewGame() {
+void Pulse::receiveNewGame() {
   search->stop();
 
   // We received a new game command.
@@ -87,7 +87,7 @@ void Uci::receiveNewGame() {
   *currentPosition = Notation::toPosition(Notation::STANDARDPOSITION);
 }
 
-void Uci::receivePosition(std::istringstream& input) {
+void Pulse::receivePosition(std::istringstream& input) {
   search->stop();
 
   // We received an position command. Just setup the position.
@@ -141,7 +141,7 @@ void Uci::receivePosition(std::istringstream& input) {
   // Don't start searching though!
 }
 
-void Uci::receiveGo(std::istringstream& input) {
+void Pulse::receiveGo(std::istringstream& input) {
   search->stop();
 
   // We received a start command. Extract all parameters from the
@@ -216,17 +216,17 @@ void Uci::receiveGo(std::istringstream& input) {
   statusStartTime = startTime;
 }
 
-void Uci::receivePonderHit() {
+void Pulse::receivePonderHit() {
   // We received a ponder hit command. Just call ponderhit().
   search->ponderhit();
 }
 
-void Uci::receiveStop() {
+void Pulse::receiveStop() {
   // We received a stop command. If a search is running, stop it.
   search->stop();
 }
 
-void Uci::sendBestMove(int bestMove, int ponderMove) {
+void Pulse::sendBestMove(int bestMove, int ponderMove) {
   std::cout << "bestmove ";
 
   if (bestMove != Move::NOMOVE) {
@@ -242,14 +242,14 @@ void Uci::sendBestMove(int bestMove, int ponderMove) {
   std::cout << std::endl;
 }
 
-void Uci::sendStatus(
+void Pulse::sendStatus(
     int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove, int currentMoveNumber) {
   if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - statusStartTime).count() >= 1000) {
     sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
   }
 }
 
-void Uci::sendStatus(
+void Pulse::sendStatus(
     bool force, int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove, int currentMoveNumber) {
   auto timeDelta = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime);
 
@@ -272,7 +272,7 @@ void Uci::sendStatus(
   }
 }
 
-void Uci::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) {
+void Pulse::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) {
   auto timeDelta = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime);
 
   std::cout << "info";
@@ -302,7 +302,7 @@ void Uci::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint6
   statusStartTime = std::chrono::system_clock::now();
 }
 
-std::string Uci::fromMove(int move) {
+std::string Pulse::fromMove(int move) {
   std::string notation;
 
   notation += Notation::fromSquare(Move::getOriginSquare(move));

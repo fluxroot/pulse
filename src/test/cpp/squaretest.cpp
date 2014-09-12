@@ -8,7 +8,6 @@
 #include "square.h"
 #include "file.h"
 #include "rank.h"
-#include "uci.h"
 
 #include "gtest/gtest.h"
 

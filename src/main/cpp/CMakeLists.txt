@@ -16,10 +16,10 @@ add_library(core STATIC
   piece.cpp
   piecetype.cpp
   position.cpp
+  pulse.cpp
   rank.cpp
   search.cpp
   square.cpp
-  uci.cpp
   value.cpp
 )
 

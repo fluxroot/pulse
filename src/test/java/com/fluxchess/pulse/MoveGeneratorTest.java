@@ -101,7 +101,7 @@ public class MoveGeneratorTest {
     MoveList<MoveEntry> moves = moveGenerator.getLegalMoves(position, depth, isCheck);
     Collection<GenericMove> actualMoves = new HashSet<>();
     for (int i = 0; i < moves.size; ++i) {
-      actualMoves.add(Jcpi.fromMove(moves.entries[i].move));
+      actualMoves.add(Pulse.fromMove(moves.entries[i].move));
     }
 
     // Compare expected and actual moves

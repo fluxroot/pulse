@@ -12,7 +12,7 @@
 
 namespace pulse {
 
-class Uci : public Protocol {
+class Pulse : public Protocol {
 public:
   void run();
 

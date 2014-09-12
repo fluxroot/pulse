@@ -26,7 +26,7 @@ import static com.fluxchess.pulse.MoveList.RootEntry;
  * UCI protocol. We simply extend AbstractEngine and implement the required
  * methods.
  */
-final class Jcpi extends AbstractEngine implements Protocol {
+final class Pulse extends AbstractEngine implements Protocol {
 
   private Search search = new Search(this);
   private long startTime = 0;
@@ -41,7 +41,7 @@ final class Jcpi extends AbstractEngine implements Protocol {
    * This is our default constructor to create Pulse. It will use the standard
    * input and output.
    */
-  public Jcpi() {
+  public Pulse() {
   }
 
   /**
@@ -51,7 +51,7 @@ final class Jcpi extends AbstractEngine implements Protocol {
    * @param input  a buffered reader.
    * @param output a print stream.
    */
-  public Jcpi(BufferedReader input, PrintStream output) {
+  public Pulse(BufferedReader input, PrintStream output) {
     super(input, output);
   }
 
@@ -61,7 +61,7 @@ final class Jcpi extends AbstractEngine implements Protocol {
    *
    * @param handler a protocol handler.
    */
-  public Jcpi(IProtocolHandler handler) {
+  public Pulse(IProtocolHandler handler) {
     super(handler);
   }
 
@@ -250,7 +250,7 @@ final class Jcpi extends AbstractEngine implements Protocol {
       command.setTime(timeDelta);
       command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
       if (currentMove != Move.NOMOVE) {
-        command.setCurrentMove(Jcpi.fromMove(currentMove));
+        command.setCurrentMove(fromMove(currentMove));
         command.setCurrentMoveNumber(currentMoveNumber);
       }
 
@@ -279,7 +279,7 @@ final class Jcpi extends AbstractEngine implements Protocol {
     }
     List<GenericMove> moveList = new ArrayList<>();
     for (int i = 0; i < entry.pv.size; ++i) {
-      moveList.add(Jcpi.fromMove(entry.pv.moves[i]));
+      moveList.add(fromMove(entry.pv.moves[i]));
     }
     command.setMoveList(moveList);
 

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-#include "uci.h"
+#include "pulse.h"
 #include "perft.h"
 
 #include <string>
@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
         perft->run();
       }
     } else {
-      std::unique_ptr<pulse::Uci> uci(new pulse::Uci());
+      std::unique_ptr<pulse::Pulse> uci(new pulse::Pulse());
       uci->run();
     }
   } catch (std::exception e) {
