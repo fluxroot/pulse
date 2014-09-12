@@ -33,30 +33,30 @@ public class NotationTest {
     }
 
     // Test knights
-    assertEquals(Piece.WHITE_KNIGHT, position.board[Square.valueOf(File.b, Rank.r1)]);
-    assertEquals(Piece.WHITE_KNIGHT, position.board[Square.valueOf(File.g, Rank.r1)]);
-    assertEquals(Piece.BLACK_KNIGHT, position.board[Square.valueOf(File.b, Rank.r8)]);
-    assertEquals(Piece.BLACK_KNIGHT, position.board[Square.valueOf(File.g, Rank.r8)]);
+    assertEquals(Piece.WHITE_KNIGHT, position.board[Square.b1]);
+    assertEquals(Piece.WHITE_KNIGHT, position.board[Square.g1]);
+    assertEquals(Piece.BLACK_KNIGHT, position.board[Square.b8]);
+    assertEquals(Piece.BLACK_KNIGHT, position.board[Square.g8]);
 
     // Test bishops
-    assertEquals(Piece.WHITE_BISHOP, position.board[Square.valueOf(File.c, Rank.r1)]);
-    assertEquals(Piece.WHITE_BISHOP, position.board[Square.valueOf(File.f, Rank.r1)]);
-    assertEquals(Piece.BLACK_BISHOP, position.board[Square.valueOf(File.c, Rank.r8)]);
-    assertEquals(Piece.BLACK_BISHOP, position.board[Square.valueOf(File.f, Rank.r8)]);
+    assertEquals(Piece.WHITE_BISHOP, position.board[Square.c1]);
+    assertEquals(Piece.WHITE_BISHOP, position.board[Square.f1]);
+    assertEquals(Piece.BLACK_BISHOP, position.board[Square.c8]);
+    assertEquals(Piece.BLACK_BISHOP, position.board[Square.f8]);
 
     // Test rooks
-    assertEquals(Piece.WHITE_ROOK, position.board[Square.valueOf(File.a, Rank.r1)]);
-    assertEquals(Piece.WHITE_ROOK, position.board[Square.valueOf(File.h, Rank.r1)]);
-    assertEquals(Piece.BLACK_ROOK, position.board[Square.valueOf(File.a, Rank.r8)]);
-    assertEquals(Piece.BLACK_ROOK, position.board[Square.valueOf(File.h, Rank.r8)]);
+    assertEquals(Piece.WHITE_ROOK, position.board[Square.a1]);
+    assertEquals(Piece.WHITE_ROOK, position.board[Square.h1]);
+    assertEquals(Piece.BLACK_ROOK, position.board[Square.a8]);
+    assertEquals(Piece.BLACK_ROOK, position.board[Square.h8]);
 
     // Test queens
-    assertEquals(Piece.WHITE_QUEEN, position.board[Square.valueOf(File.d, Rank.r1)]);
-    assertEquals(Piece.BLACK_QUEEN, position.board[Square.valueOf(File.d, Rank.r8)]);
+    assertEquals(Piece.WHITE_QUEEN, position.board[Square.d1]);
+    assertEquals(Piece.BLACK_QUEEN, position.board[Square.d8]);
 
     // Test kings
-    assertEquals(Piece.WHITE_KING, position.board[Square.valueOf(File.e, Rank.r1)]);
-    assertEquals(Piece.BLACK_KING, position.board[Square.valueOf(File.e, Rank.r8)]);
+    assertEquals(Piece.WHITE_KING, position.board[Square.e1]);
+    assertEquals(Piece.BLACK_KING, position.board[Square.e8]);
 
     assertEquals(8 * PieceType.PAWN_VALUE
             + 2 * PieceType.KNIGHT_VALUE
