@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
       std::unique_ptr<pulse::Pulse> pulse(new pulse::Pulse());
       pulse->run();
     }
-  } catch (std::exception e) {
+  } catch (std::exception& e) {
     std::cout << "Exiting Pulse due to an exception: " << e.what() << std::endl;
     return 1;
   }
