@@ -20,8 +20,8 @@ int main(int argc, char* argv[]) {
         perft->run();
       }
     } else {
-      std::unique_ptr<pulse::Pulse> uci(new pulse::Pulse());
-      uci->run();
+      std::unique_ptr<pulse::Pulse> pulse(new pulse::Pulse());
+      pulse->run();
     }
   } catch (std::exception e) {
     std::cout << "Exiting Pulse due to an exception: " << e.what() << std::endl;
