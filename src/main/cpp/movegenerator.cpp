@@ -93,7 +93,7 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, Position& position) {
   addMoves(list, square, Square::kingDirections, position);
 }
 
-void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const std::vector<int>& moveDelta, Position& position) {
+void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const std::vector<int>& directions, Position& position) {
   assert(Square::isValid(originSquare));
 
   int originPiece = position.board[originSquare];
@@ -101,9 +101,9 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const 
   bool sliding = PieceType::isSliding(Piece::getType(originPiece));
   int oppositeColor = Color::opposite(Piece::getColor(originPiece));
 
-  // Go through all move deltas for this piece
-  for (auto delta : moveDelta) {
-    int targetSquare = originSquare + delta;
+  // Go through all move directions for this piece
+  for (auto direction : directions) {
+    int targetSquare = originSquare + direction;
 
     // Check if we're still on the board
     while (Square::isValid(targetSquare)) {
@@ -118,7 +118,7 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const 
           break;
         }
 
-        targetSquare += delta;
+        targetSquare += direction;
       } else {
         if (Piece::getColor(targetPiece) == oppositeColor) {
           // capturing move
@@ -142,9 +142,9 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
 
   // Generate only capturing moves first (i = 1)
   for (unsigned int i = 1; i < Square::pawnDirections[pawnColor].size(); ++i) {
-    int delta = Square::pawnDirections[pawnColor][i];
+    int direction = Square::pawnDirections[pawnColor][i];
 
-    int targetSquare = pawnSquare + delta;
+    int targetSquare = pawnSquare + direction;
     if (Square::isValid(targetSquare)) {
       int targetPiece = position.board[targetSquare];
 
@@ -188,10 +188,10 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
   }
 
   // Generate non-capturing moves
-  int delta = Square::pawnDirections[pawnColor][0];
+  int direction = Square::pawnDirections[pawnColor][0];
 
   // Move one rank forward
-  int targetSquare = pawnSquare + delta;
+  int targetSquare = pawnSquare + direction;
   if (Square::isValid(targetSquare) && position.board[targetSquare] == Piece::NOPIECE) {
     if ((pawnColor == Color::WHITE && Square::getRank(targetSquare) == Rank::r8)
         || (pawnColor == Color::BLACK && Square::getRank(targetSquare) == Rank::r1)) {
@@ -212,7 +212,7 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
           MoveType::NORMAL, pawnSquare, targetSquare, pawnPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
 
       // Move another rank forward
-      targetSquare += delta;
+      targetSquare += direction;
       if (Square::isValid(targetSquare) && position.board[targetSquare] == Piece::NOPIECE) {
         if ((pawnColor == Color::WHITE && Square::getRank(targetSquare) == Rank::r4)
             || (pawnColor == Color::BLACK && Square::getRank(targetSquare) == Rank::r5)) {

@@ -94,8 +94,8 @@ private:
   Zobrist& zobrist;
 
   void clearCastling(int square);
-  bool isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& moveDelta);
-  bool isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& moveDelta);
+  bool isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& directions);
+  bool isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& directions);
 };
 
 }

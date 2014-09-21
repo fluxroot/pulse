@@ -479,13 +479,13 @@ final class Position {
   /**
    * Returns whether the targetSquare is attacked by a non-sliding piece.
    */
-  private boolean isAttacked(int targetSquare, int attackerPiece, int[] moveDelta) {
+  private boolean isAttacked(int targetSquare, int attackerPiece, int[] directions) {
     assert Square.isValid(targetSquare);
     assert Piece.isValid(attackerPiece);
-    assert moveDelta != null;
+    assert directions != null;
 
-    for (int delta : moveDelta) {
-      int attackerSquare = targetSquare + delta;
+    for (int direction : directions) {
+      int attackerSquare = targetSquare + direction;
 
       if (Square.isValid(attackerSquare) && board[attackerSquare] == attackerPiece) {
         return true;
@@ -498,14 +498,14 @@ final class Position {
   /**
    * Returns whether the targetSquare is attacked by a sliding piece.
    */
-  private boolean isAttacked(int targetSquare, int attackerPiece, int queenPiece, int[] moveDelta) {
+  private boolean isAttacked(int targetSquare, int attackerPiece, int queenPiece, int[] directions) {
     assert Square.isValid(targetSquare);
     assert Piece.isValid(attackerPiece);
     assert Piece.isValid(queenPiece);
-    assert moveDelta != null;
+    assert directions != null;
 
-    for (int delta : moveDelta) {
-      int attackerSquare = targetSquare + delta;
+    for (int direction : directions) {
+      int attackerSquare = targetSquare + direction;
 
       while (Square.isValid(attackerSquare)) {
         int piece = board[attackerSquare];
@@ -517,7 +517,7 @@ final class Position {
 
           break;
         } else {
-          attackerSquare += delta;
+          attackerSquare += direction;
         }
       }
     }

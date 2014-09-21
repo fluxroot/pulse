@@ -504,12 +504,12 @@ bool Position::isAttacked(int targetSquare, int attackerColor) {
 /**
  * Returns whether the targetSquare is attacked by a non-sliding piece.
  */
-bool Position::isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& moveDelta) {
+bool Position::isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& directions) {
   assert(Square::isValid(targetSquare));
   assert(Piece::isValid(attackerPiece));
 
-  for (auto delta : moveDelta) {
-    int attackerSquare = targetSquare + delta;
+  for (auto direction : directions) {
+    int attackerSquare = targetSquare + direction;
 
     if (Square::isValid(attackerSquare) && board[attackerSquare] == attackerPiece) {
       return true;
@@ -522,13 +522,13 @@ bool Position::isAttacked(int targetSquare, int attackerPiece, const std::vector
 /**
  * Returns whether the targetSquare is attacked by a sliding piece.
  */
-bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& moveDelta) {
+bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& directions) {
   assert(Square::isValid(targetSquare));
   assert(Piece::isValid(attackerPiece));
   assert(Piece::isValid(queenPiece));
 
-  for (auto delta : moveDelta) {
-    int attackerSquare = targetSquare + delta;
+  for (auto direction : directions) {
+    int attackerSquare = targetSquare + direction;
 
     while (Square::isValid(attackerSquare)) {
       int piece = board[attackerSquare];
@@ -540,7 +540,7 @@ bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece, c
 
         break;
       } else {
-        attackerSquare += delta;
+        attackerSquare += direction;
       }
     }
   }

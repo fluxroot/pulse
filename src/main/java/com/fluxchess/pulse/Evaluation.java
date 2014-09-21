@@ -93,23 +93,23 @@ final class Evaluation {
         + queenMobility;
   }
 
-  private int evaluateMobility(int color, Position position, int square, int[] moveDelta) {
+  private int evaluateMobility(int color, Position position, int square, int[] directions) {
     assert Color.isValid(color);
     assert position != null;
     assert Piece.isValid(position.board[square]);
-    assert moveDelta != null;
+    assert directions != null;
 
     int mobility = 0;
     boolean sliding = PieceType.isSliding(Piece.getType(position.board[square]));
 
-    for (int delta : moveDelta) {
-      int targetSquare = square + delta;
+    for (int direction : directions) {
+      int targetSquare = square + direction;
 
       while (Square.isValid(targetSquare)) {
         ++mobility;
 
         if (sliding && position.board[targetSquare] == Piece.NOPIECE) {
-          targetSquare += delta;
+          targetSquare += direction;
         } else {
           break;
         }

@@ -25,7 +25,7 @@ private:
 
   int evaluateMaterial(int color, Position& position);
   int evaluateMobility(int color, Position& position);
-  int evaluateMobility(int color, Position& position, int square, const std::vector<int>& moveDelta);
+  int evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions);
 };
 
 }

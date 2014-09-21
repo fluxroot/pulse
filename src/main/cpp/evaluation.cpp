@@ -91,21 +91,21 @@ int Evaluation::evaluateMobility(int color, Position& position) {
       + queenMobility;
 }
 
-int Evaluation::evaluateMobility(int color, Position& position, int square, const std::vector<int>& moveDelta) {
+int Evaluation::evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions) {
   assert(Color::isValid(color));
   assert(Piece::isValid(position.board[square]));
 
   int mobility = 0;
   bool sliding = PieceType::isSliding(Piece::getType(position.board[square]));
 
-  for (auto delta : moveDelta) {
-    int targetSquare = square + delta;
+  for (auto direction : directions) {
+    int targetSquare = square + direction;
 
     while (Square::isValid(targetSquare)) {
       ++mobility;
 
       if (sliding && position.board[targetSquare] == Piece::NOPIECE) {
-        targetSquare += delta;
+        targetSquare += direction;
       } else {
         break;
       }

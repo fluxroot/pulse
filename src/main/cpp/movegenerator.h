@@ -21,7 +21,7 @@ private:
   MoveList<MoveEntry> moves;
 
   void addMoves(MoveList<MoveEntry>& list, Position& position);
-  void addMoves(MoveList<MoveEntry>& list, int originSquare, const std::vector<int>& moveDelta, Position& position);
+  void addMoves(MoveList<MoveEntry>& list, int originSquare, const std::vector<int>& directions, Position& position);
   void addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Position& position);
   void addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, Position& position);
 };

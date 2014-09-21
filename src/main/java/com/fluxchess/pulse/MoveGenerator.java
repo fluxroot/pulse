@@ -98,19 +98,19 @@ final class MoveGenerator {
     addMoves(list, square, Square.kingDirections, position);
   }
 
-  private void addMoves(MoveList<MoveEntry> list, int originSquare, int[] moveDelta, Position position) {
+  private void addMoves(MoveList<MoveEntry> list, int originSquare, int[] directions, Position position) {
     assert list != null;
     assert Square.isValid(originSquare);
-    assert moveDelta != null;
+    assert directions != null;
 
     int originPiece = position.board[originSquare];
     assert Piece.isValid(originPiece);
     boolean sliding = PieceType.isSliding(Piece.getType(originPiece));
     int oppositeColor = Color.opposite(Piece.getColor(originPiece));
 
-    // Go through all move deltas for this piece
-    for (int delta : moveDelta) {
-      int targetSquare = originSquare + delta;
+    // Go through all move directions for this piece
+    for (int direction : directions) {
+      int targetSquare = originSquare + direction;
 
       // Check if we're still on the board
       while (Square.isValid(targetSquare)) {
@@ -125,7 +125,7 @@ final class MoveGenerator {
             break;
           }
 
-          targetSquare += delta;
+          targetSquare += direction;
         } else {
           if (Piece.getColor(targetPiece) == oppositeColor) {
             // capturing move
@@ -150,9 +150,9 @@ final class MoveGenerator {
 
     // Generate only capturing moves first (i = 1)
     for (int i = 1; i < Square.pawnDirections[pawnColor].length; ++i) {
-      int delta = Square.pawnDirections[pawnColor][i];
+      int direction = Square.pawnDirections[pawnColor][i];
 
-      int targetSquare = pawnSquare + delta;
+      int targetSquare = pawnSquare + direction;
       if (Square.isValid(targetSquare)) {
         int targetPiece = position.board[targetSquare];
 
@@ -196,10 +196,10 @@ final class MoveGenerator {
     }
 
     // Generate non-capturing moves
-    int delta = Square.pawnDirections[pawnColor][0];
+    int direction = Square.pawnDirections[pawnColor][0];
 
     // Move one rank forward
-    int targetSquare = pawnSquare + delta;
+    int targetSquare = pawnSquare + direction;
     if (Square.isValid(targetSquare) && position.board[targetSquare] == Piece.NOPIECE) {
       if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.r8)
           || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.r1)) {
@@ -220,7 +220,7 @@ final class MoveGenerator {
             MoveType.NORMAL, pawnSquare, targetSquare, pawnPiece, Piece.NOPIECE, PieceType.NOPIECETYPE);
 
         // Move another rank forward
-        targetSquare += delta;
+        targetSquare += direction;
         if (Square.isValid(targetSquare) && position.board[targetSquare] == Piece.NOPIECE) {
           if ((pawnColor == Color.WHITE && Square.getRank(targetSquare) == Rank.r4)
               || (pawnColor == Color.BLACK && Square.getRank(targetSquare) == Rank.r5)) {
