@@ -313,4 +313,8 @@ final class Pulse extends AbstractEngine implements Protocol {
     }
   }
 
+  public Search getSearch() {
+    return search;
+  }
+
 }

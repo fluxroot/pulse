@@ -8,7 +8,7 @@ package com.fluxchess.pulse;
 
 import java.security.SecureRandom;
 
-final class Position {
+final public class Position {
 
   private static final int MAX_MOVES = Depth.MAX_PLY + 1024;
 

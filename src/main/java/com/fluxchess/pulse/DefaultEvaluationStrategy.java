@@ -6,7 +6,7 @@
  */
 package com.fluxchess.pulse;
 
-final class Evaluation {
+final class DefaultEvaluationStrategy implements EvaluationStrategy {
 
   static final int TEMPO = 1;
 
@@ -20,7 +20,8 @@ final class Evaluation {
    * @param position the position.
    * @return the evaluation value in centipawns.
    */
-  int evaluate(Position position) {
+  @Override
+  public int evaluate(Position position) {
     assert position != null;
 
     // Initialize
