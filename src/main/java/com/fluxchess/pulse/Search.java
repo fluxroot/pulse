@@ -29,7 +29,7 @@ final class Search implements Runnable {
   private boolean shutdown = false;
 
   private Position position;
-  private final Evaluation evaluation = new Evaluation();
+  private EvaluationStrategy evaluation = new DefaultEvaluationStrategy();
 
   // We will store a MoveGenerator for each ply so we don't have to create them
   // in search. (which is expensive)
@@ -72,6 +72,14 @@ final class Search implements Runnable {
         abort = true;
       }
     }
+  }
+
+  /**
+   * @param evaluation EvaluationStrategy function
+   */
+  public void setEvaluation(EvaluationStrategy evaluation) {
+    assert evaluation != null;
+    this.evaluation = evaluation;
   }
 
   void newDepthSearch(Position position, int searchDepth) {

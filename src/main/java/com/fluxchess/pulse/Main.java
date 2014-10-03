@@ -23,7 +23,6 @@ public final class Main {
       }
     } catch (Throwable t) {
       System.out.format("Exiting Pulse due to an exception: %s%n", t.getLocalizedMessage());
-      t.printStackTrace();
       System.exit(1);
     }
   }

@@ -15,9 +15,9 @@ public class EvaluationTest {
   @Test
   public void testEvaluate() {
     Position position = Notation.toPosition(Notation.STANDARDPOSITION);
-    Evaluation evaluation = new Evaluation();
+    EvaluationStrategy evaluation = new DefaultEvaluationStrategy();
 
-    assertEquals(Evaluation.TEMPO, evaluation.evaluate(position));
+    assertEquals(DefaultEvaluationStrategy.TEMPO, evaluation.evaluate(position));
   }
 
 }

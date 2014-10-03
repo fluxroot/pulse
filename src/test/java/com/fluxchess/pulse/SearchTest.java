@@ -210,5 +210,28 @@ public class SearchTest {
     assertEquals(Square.a8, Move.getOriginSquare(currentBestMove[0]));
     assertEquals(Square.a7, Move.getTargetSquare(currentBestMove[0]));
   }
+  
+  @Test(expected = AssertionError.class)
+  public void testNullEvaluationFunction() {
+    Search instance = new Search(new Protocol() {
+
+        @Override
+        public void sendBestMove(int bestMove, int ponderMove) {
+        }
+
+        @Override
+        public void sendStatus(int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber) {
+        }
+
+        @Override
+        public void sendStatus(boolean force, int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber) {
+        }
+
+        @Override
+        public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
+        }
+    });
+    instance.setEvaluation(null);
+  }
 
 }
