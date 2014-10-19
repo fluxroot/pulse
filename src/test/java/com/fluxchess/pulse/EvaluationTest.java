@@ -8,7 +8,8 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class EvaluationTest {
 
@@ -17,7 +18,7 @@ public class EvaluationTest {
     Position position = Notation.toPosition(Notation.STANDARDPOSITION);
     Evaluation evaluation = new Evaluation();
 
-    assertEquals(Evaluation.TEMPO, evaluation.evaluate(position));
+    assertThat(evaluation.evaluate(position), is(Evaluation.TEMPO));
   }
 
 }

@@ -11,7 +11,8 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class PieceTest {
 
@@ -27,7 +28,7 @@ public class PieceTest {
       for (int piecetype : PieceType.values) {
         int piece = Piece.valueOf(color, piecetype);
 
-        assertEquals(piece, Piece.values[piece]);
+        assertThat(Piece.values[piece], is(piece));
       }
     }
   }
@@ -35,42 +36,42 @@ public class PieceTest {
   @Test
   public void testIsValid() {
     for (int piece : Piece.values) {
-      assertTrue(Piece.isValid(piece));
+      assertThat(Piece.isValid(piece), is(true));
     }
 
-    assertFalse(Piece.isValid(Piece.NOPIECE));
+    assertThat(Piece.isValid(Piece.NOPIECE), is(false));
   }
 
   @Test
   public void testGetType() {
-    assertEquals(PieceType.PAWN, Piece.getType(Piece.WHITE_PAWN));
-    assertEquals(PieceType.PAWN, Piece.getType(Piece.BLACK_PAWN));
-    assertEquals(PieceType.KNIGHT, Piece.getType(Piece.WHITE_KNIGHT));
-    assertEquals(PieceType.KNIGHT, Piece.getType(Piece.BLACK_KNIGHT));
-    assertEquals(PieceType.BISHOP, Piece.getType(Piece.WHITE_BISHOP));
-    assertEquals(PieceType.BISHOP, Piece.getType(Piece.BLACK_BISHOP));
-    assertEquals(PieceType.ROOK, Piece.getType(Piece.WHITE_ROOK));
-    assertEquals(PieceType.ROOK, Piece.getType(Piece.BLACK_ROOK));
-    assertEquals(PieceType.QUEEN, Piece.getType(Piece.WHITE_QUEEN));
-    assertEquals(PieceType.QUEEN, Piece.getType(Piece.BLACK_QUEEN));
-    assertEquals(PieceType.KING, Piece.getType(Piece.WHITE_KING));
-    assertEquals(PieceType.KING, Piece.getType(Piece.BLACK_KING));
+    assertThat(Piece.getType(Piece.WHITE_PAWN), is(PieceType.PAWN));
+    assertThat(Piece.getType(Piece.BLACK_PAWN), is(PieceType.PAWN));
+    assertThat(Piece.getType(Piece.WHITE_KNIGHT), is(PieceType.KNIGHT));
+    assertThat(Piece.getType(Piece.BLACK_KNIGHT), is(PieceType.KNIGHT));
+    assertThat(Piece.getType(Piece.WHITE_BISHOP), is(PieceType.BISHOP));
+    assertThat(Piece.getType(Piece.BLACK_BISHOP), is(PieceType.BISHOP));
+    assertThat(Piece.getType(Piece.WHITE_ROOK), is(PieceType.ROOK));
+    assertThat(Piece.getType(Piece.BLACK_ROOK), is(PieceType.ROOK));
+    assertThat(Piece.getType(Piece.WHITE_QUEEN), is(PieceType.QUEEN));
+    assertThat(Piece.getType(Piece.BLACK_QUEEN), is(PieceType.QUEEN));
+    assertThat(Piece.getType(Piece.WHITE_KING), is(PieceType.KING));
+    assertThat(Piece.getType(Piece.BLACK_KING), is(PieceType.KING));
   }
 
   @Test
   public void testGetColor() {
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_PAWN));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_PAWN));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_KNIGHT));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_KNIGHT));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_BISHOP));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_BISHOP));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_ROOK));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_ROOK));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_QUEEN));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_QUEEN));
-    assertEquals(Color.WHITE, Piece.getColor(Piece.WHITE_KING));
-    assertEquals(Color.BLACK, Piece.getColor(Piece.BLACK_KING));
+    assertThat(Piece.getColor(Piece.WHITE_PAWN), is(Color.WHITE));
+    assertThat(Piece.getColor(Piece.BLACK_PAWN), is(Color.BLACK));
+    assertThat(Piece.getColor(Piece.WHITE_KNIGHT), is(Color.WHITE));
+    assertThat(Piece.getColor(Piece.BLACK_KNIGHT), is(Color.BLACK));
+    assertThat(Piece.getColor(Piece.WHITE_BISHOP), is(Color.WHITE));
+    assertThat(Piece.getColor(Piece.BLACK_BISHOP), is(Color.BLACK));
+    assertThat(Piece.getColor(Piece.WHITE_ROOK), is(Color.WHITE));
+    assertThat(Piece.getColor(Piece.BLACK_ROOK), is(Color.BLACK));
+    assertThat(Piece.getColor(Piece.WHITE_QUEEN), is(Color.WHITE));
+    assertThat(Piece.getColor(Piece.BLACK_QUEEN), is(Color.BLACK));
+    assertThat(Piece.getColor(Piece.WHITE_KING), is(Color.WHITE));
+    assertThat(Piece.getColor(Piece.BLACK_KING), is(Color.BLACK));
   }
 
 }

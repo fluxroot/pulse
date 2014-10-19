@@ -11,7 +11,8 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class FileTest {
 
@@ -24,17 +25,17 @@ public class FileTest {
   @Test
   public void testValues() {
     for (int file : File.values) {
-      assertEquals(file, File.values[file]);
+      assertThat(File.values[file], is(file));
     }
   }
 
   @Test
   public void testIsValid() {
     for (int file : File.values) {
-      assertTrue(File.isValid(file));
+      assertThat(File.isValid(file), is(true));
     }
 
-    assertFalse(File.isValid(File.NOFILE));
+    assertThat(File.isValid(File.NOFILE), is(false));
   }
 
 }

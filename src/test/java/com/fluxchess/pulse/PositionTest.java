@@ -8,8 +8,8 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class PositionTest {
 
@@ -20,12 +20,12 @@ public class PositionTest {
     // Move white pawn
     int move = Move.valueOf(MoveType.NORMAL, Square.a2, Square.a3, Piece.WHITE_PAWN, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
-    assertEquals(Color.BLACK, position.activeColor);
+    assertThat(position.activeColor, is(Color.BLACK));
 
     // Move black pawn
     move = Move.valueOf(MoveType.NORMAL, Square.b7, Square.b6, Piece.BLACK_PAWN, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
-    assertEquals(Color.WHITE, position.activeColor);
+    assertThat(position.activeColor, is(Color.WHITE));
   }
 
   @Test
@@ -35,7 +35,7 @@ public class PositionTest {
     // Move white pawn
     int move = Move.valueOf(MoveType.NORMAL, Square.a2, Square.a3, Piece.WHITE_PAWN, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
-    assertEquals(0, position.halfmoveClock);
+    assertThat(position.halfmoveClock, is(0));
 
     // Move black pawn
     move = Move.valueOf(MoveType.NORMAL, Square.b7, Square.b6, Piece.BLACK_PAWN, Piece.NOPIECE, PieceType.NOPIECETYPE);
@@ -44,7 +44,7 @@ public class PositionTest {
     // Move white knight
     move = Move.valueOf(MoveType.NORMAL, Square.b1, Square.c3, Piece.WHITE_KNIGHT, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
-    assertEquals(1, position.halfmoveClock);
+    assertThat(position.halfmoveClock, is(1));
   }
 
   @Test
@@ -54,12 +54,12 @@ public class PositionTest {
     // Move white pawn
     int move = Move.valueOf(MoveType.NORMAL, Square.a2, Square.a3, Piece.WHITE_PAWN, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
-    assertEquals(1, position.getFullmoveNumber());
+    assertThat(position.getFullmoveNumber(), is(1));
 
     // Move black pawn
     move = Move.valueOf(MoveType.NORMAL, Square.b7, Square.b6, Piece.BLACK_PAWN, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
-    assertEquals(2, position.getFullmoveNumber());
+    assertThat(position.getFullmoveNumber(), is(2));
   }
 
   @Test
@@ -86,19 +86,19 @@ public class PositionTest {
     move = Move.valueOf(MoveType.NORMAL, Square.f3, Square.g1, Piece.WHITE_KNIGHT, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
 
-    assertTrue(position.isRepetition());
+    assertThat(position.isRepetition(), is(true));
   }
 
   @Test
   public void testHasInsufficientMaterial() {
     Position position = Notation.toPosition("8/4k3/8/8/8/8/2K5/8 w - - 0 1");
-    assertTrue(position.hasInsufficientMaterial());
+    assertThat(position.hasInsufficientMaterial(), is(true));
 
     position = Notation.toPosition("8/4k3/8/2B5/8/8/2K5/8 b - - 0 1");
-    assertTrue(position.hasInsufficientMaterial());
+    assertThat(position.hasInsufficientMaterial(), is(true));
 
     position = Notation.toPosition("8/4k3/8/2B3n1/8/8/2K5/8 b - - 0 1");
-    assertTrue(position.hasInsufficientMaterial());
+    assertThat(position.hasInsufficientMaterial(), is(true));
   }
 
   @Test
@@ -110,8 +110,8 @@ public class PositionTest {
     position.makeMove(move);
     position.undoMove(move);
 
-    assertEquals(Notation.STANDARDPOSITION, Notation.fromPosition(position));
-    assertEquals(zobristKey, position.zobristKey);
+    assertThat(Notation.fromPosition(position), is(Notation.STANDARDPOSITION));
+    assertThat(position.zobristKey, is(zobristKey));
   }
 
   @Test
@@ -122,12 +122,12 @@ public class PositionTest {
     int move = Move.valueOf(MoveType.PAWNDOUBLE, Square.a2, Square.a4, Piece.WHITE_PAWN, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
 
-    assertEquals(Square.a3, position.enPassantSquare);
+    assertThat(position.enPassantSquare, is(Square.a3));
 
     position.undoMove(move);
 
-    assertEquals(Notation.STANDARDPOSITION, Notation.fromPosition(position));
-    assertEquals(zobristKey, position.zobristKey);
+    assertThat(Notation.fromPosition(position), is(Notation.STANDARDPOSITION));
+    assertThat(position.zobristKey, is(zobristKey));
   }
 
   @Test
@@ -138,12 +138,12 @@ public class PositionTest {
     int move = Move.valueOf(MoveType.PAWNPROMOTION, Square.a7, Square.a8, Piece.WHITE_PAWN, Piece.NOPIECE, PieceType.QUEEN);
     position.makeMove(move);
 
-    assertEquals(Piece.WHITE_QUEEN, position.board[Square.a8]);
+    assertThat(position.board[Square.a8], is(Piece.WHITE_QUEEN));
 
     position.undoMove(move);
 
-    assertEquals("8/P5k1/8/8/2K5/8/8/8 w - - 0 1", Notation.fromPosition(position));
-    assertEquals(zobristKey, position.zobristKey);
+    assertThat(Notation.fromPosition(position), is("8/P5k1/8/8/2K5/8/8/8 w - - 0 1"));
+    assertThat(position.zobristKey, is(zobristKey));
   }
 
   @Test
@@ -155,14 +155,14 @@ public class PositionTest {
     int move = Move.valueOf(MoveType.ENPASSANT, Square.e4, Square.d3, Piece.BLACK_PAWN, Piece.WHITE_PAWN, PieceType.NOPIECETYPE);
     position.makeMove(move);
 
-    assertEquals(Piece.NOPIECE, position.board[Square.d4]);
-    assertEquals(Piece.BLACK_PAWN, position.board[Square.d3]);
-    assertEquals(Square.NOSQUARE, position.enPassantSquare);
+    assertThat(position.board[Square.d4], is(Piece.NOPIECE));
+    assertThat(position.board[Square.d3], is(Piece.BLACK_PAWN));
+    assertThat(position.enPassantSquare, is(Square.NOSQUARE));
 
     position.undoMove(move);
 
-    assertEquals("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1", Notation.fromPosition(position));
-    assertEquals(zobristKey, position.zobristKey);
+    assertThat(Notation.fromPosition(position), is("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1"));
+    assertThat(position.zobristKey, is(zobristKey));
   }
 
   @Test
@@ -173,12 +173,12 @@ public class PositionTest {
     int move = Move.valueOf(MoveType.CASTLING, Square.e1, Square.c1, Piece.WHITE_KING, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
 
-    assertEquals(Castling.NOCASTLING, position.castlingRights & Castling.WHITE_QUEENSIDE);
+    assertThat(position.castlingRights & Castling.WHITE_QUEENSIDE, is(Castling.NOCASTLING));
 
     position.undoMove(move);
 
-    assertEquals("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", Notation.fromPosition(position));
-    assertEquals(zobristKey, position.zobristKey);
+    assertThat(Notation.fromPosition(position), is("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1"));
+    assertThat(position.zobristKey, is(zobristKey));
 
     position = Notation.toPosition("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
     zobristKey = position.zobristKey;
@@ -186,12 +186,12 @@ public class PositionTest {
     move = Move.valueOf(MoveType.CASTLING, Square.e1, Square.g1, Piece.WHITE_KING, Piece.NOPIECE, PieceType.NOPIECETYPE);
     position.makeMove(move);
 
-    assertEquals(Castling.NOCASTLING, position.castlingRights & Castling.WHITE_KINGSIDE);
+    assertThat(position.castlingRights & Castling.WHITE_KINGSIDE, is(Castling.NOCASTLING));
 
     position.undoMove(move);
 
-    assertEquals("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", Notation.fromPosition(position));
-    assertEquals(zobristKey, position.zobristKey);
+    assertThat(Notation.fromPosition(position), is("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1"));
+    assertThat(position.zobristKey, is(zobristKey));
   }
 
 }

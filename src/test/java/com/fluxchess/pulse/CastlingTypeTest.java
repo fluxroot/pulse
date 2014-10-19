@@ -11,7 +11,8 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class CastlingTypeTest {
 
@@ -24,7 +25,7 @@ public class CastlingTypeTest {
   @Test
   public void testValues() {
     for (int castlingtype : CastlingType.values) {
-      assertEquals(castlingtype, CastlingType.values[castlingtype]);
+      assertThat(CastlingType.values[castlingtype], is(castlingtype));
     }
   }
 

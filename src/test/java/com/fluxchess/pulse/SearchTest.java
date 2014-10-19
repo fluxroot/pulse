@@ -12,8 +12,8 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import static com.fluxchess.pulse.MoveList.RootEntry;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class SearchTest {
 
@@ -49,10 +49,10 @@ public class SearchTest {
     search.newDepthSearch(Notation.toPosition("3K3r/8/3k4/8/8/8/8/8 w - - 0 1"), 1);
     search.start();
 
-    assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
+    assertThat(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS), is(true));
 
-    assertEquals(Move.NOMOVE, currentBestMove[0]);
-    assertEquals(Move.NOMOVE, currentPonderMove[0]);
+    assertThat(currentBestMove[0], is(Move.NOMOVE));
+    assertThat(currentPonderMove[0], is(Move.NOMOVE));
   }
 
   @Test
@@ -93,12 +93,12 @@ public class SearchTest {
     search.newDepthSearch(Notation.toPosition("8/8/1R1P4/2B2p2/k1K2P2/4P3/8/8 w - - 3 101"), 2);
     search.start();
 
-    assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
+    assertThat(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS), is(true));
 
-    assertEquals(Square.b6, Move.getOriginSquare(currentBestMove[0]));
-    assertEquals(Square.a6, Move.getTargetSquare(currentBestMove[0]));
-    assertEquals(Move.NOMOVE, currentPonderMove[0]);
-    assertEquals(1, mate[0]);
+    assertThat(Move.getOriginSquare(currentBestMove[0]), is(Square.b6));
+    assertThat(Move.getTargetSquare(currentBestMove[0]), is(Square.a6));
+    assertThat(currentPonderMove[0], is(Move.NOMOVE));
+    assertThat(mate[0], is(1));
   }
 
   @Test
@@ -133,10 +133,10 @@ public class SearchTest {
     search.newDepthSearch(Notation.toPosition("7k/5K2/6Q1/8/8/8/8/8 b - - 1 1"), 1);
     search.start();
 
-    assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
+    assertThat(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS), is(true));
 
-    assertEquals(Move.NOMOVE, currentBestMove[0]);
-    assertEquals(Move.NOMOVE, currentPonderMove[0]);
+    assertThat(currentBestMove[0], is(Move.NOMOVE));
+    assertThat(currentPonderMove[0], is(Move.NOMOVE));
   }
 
   @Test
@@ -169,10 +169,10 @@ public class SearchTest {
     search.newClockSearch(Notation.toPosition("3K4/7r/3k4/8/8/8/8/8 b - - 0 1"), 10000, 0, 10000, 0, 40);
     search.start();
 
-    assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
+    assertThat(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS), is(true));
 
-    assertEquals(Square.h7, Move.getOriginSquare(currentBestMove[0]));
-    assertEquals(Square.h8, Move.getTargetSquare(currentBestMove[0]));
+    assertThat(Move.getOriginSquare(currentBestMove[0]), is(Square.h7));
+    assertThat(Move.getTargetSquare(currentBestMove[0]), is(Square.h8));
   }
 
   @Test
@@ -205,10 +205,10 @@ public class SearchTest {
     search.newClockSearch(Notation.toPosition("K1k5/8/8/8/8/8/8/8 w - - 0 1"), 10000, 0, 10000, 0, 40);
     search.start();
 
-    assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
+    assertThat(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS), is(true));
 
-    assertEquals(Square.a8, Move.getOriginSquare(currentBestMove[0]));
-    assertEquals(Square.a7, Move.getTargetSquare(currentBestMove[0]));
+    assertThat(Move.getOriginSquare(currentBestMove[0]), is(Square.a8));
+    assertThat(Move.getTargetSquare(currentBestMove[0]), is(Square.a7));
   }
 
 }

@@ -11,7 +11,8 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class ColorTest {
 
@@ -24,23 +25,23 @@ public class ColorTest {
   @Test
   public void testValues() {
     for (int color : Color.values) {
-      assertEquals(color, Color.values[color]);
+      assertThat(Color.values[color], is(color));
     }
   }
 
   @Test
   public void testIsValid() {
     for (int color : Color.values) {
-      assertTrue(Color.isValid(color));
+      assertThat(Color.isValid(color), is(true));
     }
 
-    assertFalse(Color.isValid(Color.NOCOLOR));
+    assertThat(Color.isValid(Color.NOCOLOR), is(false));
   }
 
   @Test
   public void testOpposite() {
-    assertEquals(Color.WHITE, Color.opposite(Color.BLACK));
-    assertEquals(Color.BLACK, Color.opposite(Color.WHITE));
+    assertThat(Color.opposite(Color.BLACK), is(Color.WHITE));
+    assertThat(Color.opposite(Color.WHITE), is(Color.BLACK));
   }
 
 }

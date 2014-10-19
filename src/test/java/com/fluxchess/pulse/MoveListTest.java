@@ -9,7 +9,8 @@ package com.fluxchess.pulse;
 import org.junit.Test;
 
 import static com.fluxchess.pulse.MoveList.MoveEntry;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class MoveListTest {
 
@@ -17,10 +18,10 @@ public class MoveListTest {
   public void test() {
     MoveList<MoveEntry> moveList = new MoveList<>(MoveEntry.class);
 
-    assertEquals(0, moveList.size);
+    assertThat(moveList.size, is(0));
 
     moveList.entries[moveList.size++].move = 1;
-    assertEquals(1, moveList.size);
+    assertThat(moveList.size, is(1));
   }
 
 }

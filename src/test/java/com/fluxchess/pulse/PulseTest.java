@@ -24,7 +24,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class PulseTest {
 
@@ -83,11 +85,11 @@ public class PulseTest {
       }
     }).run();
 
-    assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
+    assertThat(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS), is(true));
 
-    assertNotNull(bestMove[0]);
-    assertNotNull(ponderMove[0]);
-    assertEquals(2, depth[0]);
+    assertThat(bestMove[0], is(notNullValue()));
+    assertThat(ponderMove[0], is(notNullValue()));
+    assertThat(depth[0], is(2));
   }
 
   @Test
@@ -127,11 +129,11 @@ public class PulseTest {
       }
     }).run();
 
-    assertTrue(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS));
+    assertThat(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS), is(true));
 
-    assertNotNull(bestMove[0]);
-    assertNull(ponderMove[0]);
-    assertEquals(1L, nodes[0]);
+    assertThat(bestMove[0], is(notNullValue()));
+    assertThat(ponderMove[0], is(nullValue()));
+    assertThat(nodes[0], is(1L));
   }
 
   @Test
@@ -147,7 +149,7 @@ public class PulseTest {
     new Pulse(new ProtocolHandler()).run();
     long stopTime = System.currentTimeMillis();
 
-    assertTrue(stopTime - startTime >= 1000L);
+    assertThat(stopTime - startTime >= 1000L, is(true));
   }
 
   @Test
@@ -279,7 +281,7 @@ public class PulseTest {
 
     @Override
     public void send(ProtocolReadyAnswerCommand command) {
-      assertEquals("test", command.token);
+      assertThat(command.token, is("test"));
     }
 
     @Override

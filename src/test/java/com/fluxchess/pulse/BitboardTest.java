@@ -12,7 +12,8 @@ import org.junit.Test;
 import java.util.LinkedList;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class BitboardTest {
 
@@ -39,7 +40,7 @@ public class BitboardTest {
       list.add(x88square);
     }
 
-    assertEquals(-1, list.squares);
+    assertThat(list.squares, is(-1L));
   }
 
   @Test
@@ -51,7 +52,7 @@ public class BitboardTest {
       list.remove(x88square);
     }
 
-    assertEquals(0, list.squares);
+    assertThat(list.squares, is(0L));
   }
 
 }

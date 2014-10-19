@@ -11,7 +11,8 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class RankTest {
 
@@ -24,17 +25,17 @@ public class RankTest {
   @Test
   public void testValues() {
     for (int rank : Rank.values) {
-      assertEquals(rank, Rank.values[rank]);
+      assertThat(Rank.values[rank], is(rank));
     }
   }
 
   @Test
   public void testIsValid() {
     for (int rank : Rank.values) {
-      assertTrue(Rank.isValid(rank));
+      assertThat(Rank.isValid(rank), is(true));
     }
 
-    assertFalse(Rank.isValid(Rank.NORANK));
+    assertThat(Rank.isValid(Rank.NORANK), is(false));
   }
 
 }

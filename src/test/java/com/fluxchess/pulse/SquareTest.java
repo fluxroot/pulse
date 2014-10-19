@@ -11,7 +11,8 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class SquareTest {
 
@@ -27,8 +28,8 @@ public class SquareTest {
       for (int file : File.values) {
         int square = Square.valueOf(file, rank);
 
-        assertEquals(file, Square.getFile(square));
-        assertEquals(rank, Square.getRank(square));
+        assertThat(Square.getFile(square), is(file));
+        assertThat(Square.getRank(square), is(rank));
       }
     }
   }
@@ -36,10 +37,10 @@ public class SquareTest {
   @Test
   public void testIsValid() {
     for (int square : Square.values) {
-      assertTrue(Square.isValid(square));
+      assertThat(Square.isValid(square), is(true));
     }
 
-    assertFalse(Square.isValid(Square.NOSQUARE));
+    assertThat(Square.isValid(Square.NOSQUARE), is(false));
   }
 
 }
