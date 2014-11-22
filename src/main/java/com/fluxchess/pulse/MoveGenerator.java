@@ -6,15 +6,15 @@
  */
 package com.fluxchess.pulse;
 
+import org.jetbrains.annotations.NotNull;
+
 import static com.fluxchess.pulse.MoveList.MoveEntry;
 
 final class MoveGenerator {
 
   private final MoveList<MoveEntry> moves = new MoveList<>(MoveEntry.class);
 
-  MoveList<MoveEntry> getLegalMoves(Position position, int depth, boolean isCheck) {
-    assert position != null;
-
+  MoveList<MoveEntry> getLegalMoves(@NotNull Position position, int depth, boolean isCheck) {
     MoveList<MoveEntry> legalMoves = getMoves(position, depth, isCheck);
 
     int size = legalMoves.size;
@@ -32,9 +32,7 @@ final class MoveGenerator {
     return legalMoves;
   }
 
-  MoveList<MoveEntry> getMoves(Position position, int depth, boolean isCheck) {
-    assert position != null;
-
+  MoveList<MoveEntry> getMoves(@NotNull Position position, int depth, boolean isCheck) {
     moves.size = 0;
 
     if (depth > 0) {
@@ -69,9 +67,7 @@ final class MoveGenerator {
     return moves;
   }
 
-  private void addMoves(MoveList<MoveEntry> list, Position position) {
-    assert list != null;
-
+  private void addMoves(@NotNull MoveList<MoveEntry> list, @NotNull Position position) {
     int activeColor = position.activeColor;
 
     for (long squares = position.pieces[activeColor][PieceType.PAWN].squares; squares != 0; squares = Bitboard.remainder(squares)) {
@@ -98,10 +94,8 @@ final class MoveGenerator {
     addMoves(list, square, Square.kingDirections, position);
   }
 
-  private void addMoves(MoveList<MoveEntry> list, int originSquare, int[] directions, Position position) {
-    assert list != null;
+  private void addMoves(@NotNull MoveList<MoveEntry> list, int originSquare, @NotNull int[] directions, @NotNull Position position) {
     assert Square.isValid(originSquare);
-    assert directions != null;
 
     int originPiece = position.board[originSquare];
     assert Piece.isValid(originPiece);
@@ -139,8 +133,7 @@ final class MoveGenerator {
     }
   }
 
-  private void addPawnMoves(MoveList<MoveEntry> list, int pawnSquare, Position position) {
-    assert list != null;
+  private void addPawnMoves(@NotNull MoveList<MoveEntry> list, int pawnSquare, @NotNull Position position) {
     assert Square.isValid(pawnSquare);
 
     int pawnPiece = position.board[pawnSquare];
@@ -234,8 +227,7 @@ final class MoveGenerator {
     }
   }
 
-  private void addCastlingMoves(MoveList<MoveEntry> list, int kingSquare, Position position) {
-    assert list != null;
+  private void addCastlingMoves(@NotNull MoveList<MoveEntry> list, int kingSquare, @NotNull Position position) {
     assert Square.isValid(kingSquare);
 
     int kingPiece = position.board[kingSquare];

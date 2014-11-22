@@ -6,6 +6,8 @@
  */
 package com.fluxchess.pulse;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -169,9 +171,7 @@ final class Search implements Runnable {
     this.doTimeManagement = true;
   }
 
-  Search(Protocol protocol) {
-    assert protocol != null;
-
+  Search(@NotNull Protocol protocol) {
     this.protocol = protocol;
 
     for (int i = 0; i < Depth.MAX_PLY; ++i) {

@@ -6,6 +6,8 @@
  */
 package com.fluxchess.pulse;
 
+import org.jetbrains.annotations.NotNull;
+
 final class Evaluation {
 
   static final int TEMPO = 1;
@@ -20,9 +22,7 @@ final class Evaluation {
    * @param position the position.
    * @return the evaluation value in centipawns.
    */
-  int evaluate(Position position) {
-    assert position != null;
-
+  int evaluate(@NotNull Position position) {
     // Initialize
     int myColor = position.activeColor;
     int oppositeColor = Color.opposite(myColor);
@@ -45,9 +45,8 @@ final class Evaluation {
     return value;
   }
 
-  private int evaluateMaterial(int color, Position position) {
+  private int evaluateMaterial(int color, @NotNull Position position) {
     assert Color.isValid(color);
-    assert position != null;
 
     int material = position.material[color];
 
@@ -59,9 +58,8 @@ final class Evaluation {
     return material;
   }
 
-  private int evaluateMobility(int color, Position position) {
+  private int evaluateMobility(int color, @NotNull Position position) {
     assert Color.isValid(color);
-    assert position != null;
 
     int knightMobility = 0;
     for (long squares = position.pieces[color][PieceType.KNIGHT].squares; squares != 0; squares = Bitboard.remainder(squares)) {
@@ -93,11 +91,9 @@ final class Evaluation {
         + queenMobility;
   }
 
-  private int evaluateMobility(int color, Position position, int square, int[] directions) {
+  private int evaluateMobility(int color, @NotNull Position position, int square, @NotNull int[] directions) {
     assert Color.isValid(color);
-    assert position != null;
     assert Piece.isValid(position.board[square]);
-    assert directions != null;
 
     int mobility = 0;
     boolean sliding = PieceType.isSliding(Piece.getType(position.board[square]));

@@ -7,6 +7,7 @@
 package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.*;
+import org.jetbrains.annotations.NotNull;
 
 final class Notation {
 
@@ -27,9 +28,7 @@ final class Notation {
     return toGenericBoard(position).toString();
   }
 
-  static Position toPosition(GenericBoard genericBoard) {
-    assert genericBoard != null;
-
+  static Position toPosition(@NotNull GenericBoard genericBoard) {
     Position newPosition = new Position();
 
     // Initialize board
@@ -123,9 +122,7 @@ final class Notation {
     return genericBoard;
   }
 
-  static int toColor(GenericColor genericColor) {
-    assert genericColor != null;
-
+  static int toColor(@NotNull GenericColor genericColor) {
     switch (genericColor) {
       case WHITE:
         return Color.WHITE;
@@ -168,9 +165,7 @@ final class Notation {
     }
   }
 
-  static int toPiece(GenericPiece genericPiece) {
-    assert genericPiece != null;
-
+  static int toPiece(@NotNull GenericPiece genericPiece) {
     switch (genericPiece) {
       case WHITEPAWN:
         return Piece.WHITE_PAWN;
@@ -245,9 +240,7 @@ final class Notation {
     }
   }
 
-  static int toFile(GenericFile genericFile) {
-    assert genericFile != null;
-
+  static int toFile(@NotNull GenericFile genericFile) {
     switch (genericFile) {
       case Fa:
         return File.a;
@@ -294,9 +287,7 @@ final class Notation {
     }
   }
 
-  static int toRank(GenericRank genericRank) {
-    assert genericRank != null;
-
+  static int toRank(@NotNull GenericRank genericRank) {
     switch (genericRank) {
       case R1:
         return Rank.r1;
@@ -343,9 +334,7 @@ final class Notation {
     }
   }
 
-  static int toSquare(GenericPosition genericPosition) {
-    assert genericPosition != null;
-
+  static int toSquare(@NotNull GenericPosition genericPosition) {
     int square = toRank(genericPosition.rank) * 16 + toFile(genericPosition.file);
     assert Square.isValid(square);
 
