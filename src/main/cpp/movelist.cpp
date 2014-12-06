@@ -11,9 +11,6 @@
 
 namespace pulse {
 
-template class MoveList<MoveEntry>;
-template class MoveList<RootEntry>;
-
 template<class T>
 MoveList<T>::MoveList() {
   for (unsigned int i = 0; i < entries.size(); ++i) {
@@ -62,5 +59,8 @@ void MoveList<T>::rateFromMVVLVA() {
     entries[i]->value = value;
   }
 }
+
+template class MoveList<MoveEntry>;
+template class MoveList<RootEntry>;
 
 }
