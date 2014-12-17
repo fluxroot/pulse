@@ -6,9 +6,13 @@
  */
 package com.fluxchess.pulse;
 
-import java.util.concurrent.TimeUnit;
-
+import static com.fluxchess.pulse.Color.opposite;
 import static com.fluxchess.pulse.MoveList.MoveEntry;
+import static java.lang.System.currentTimeMillis;
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 final class Perft {
 
@@ -26,19 +30,19 @@ final class Perft {
 
     System.out.format("Testing %s at depth %d%n", Notation.fromPosition(position), depth);
 
-    long startTime = System.currentTimeMillis();
+    long startTime = currentTimeMillis();
     long result = miniMax(depth, position, 0);
-    long endTime = System.currentTimeMillis();
+    long endTime = currentTimeMillis();
 
     long duration = endTime - startTime;
 
     System.out.format(
         "Nodes: %d%nDuration: %02d:%02d:%02d.%03d%n",
         result,
-        TimeUnit.MILLISECONDS.toHours(duration),
-        TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
-        TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)),
-        duration - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration))
+        MILLISECONDS.toHours(duration),
+        MILLISECONDS.toMinutes(duration) - HOURS.toMinutes(MILLISECONDS.toHours(duration)),
+        MILLISECONDS.toSeconds(duration) - MINUTES.toSeconds(MILLISECONDS.toMinutes(duration)),
+        duration - SECONDS.toMillis(MILLISECONDS.toSeconds(duration))
     );
 
     System.out.format("n/ms: %d%n", result / duration);
@@ -59,7 +63,7 @@ final class Perft {
       long nodes = 0;
 
       position.makeMove(move);
-      if (!position.isCheck(Color.opposite(position.activeColor))) {
+      if (!position.isCheck(opposite(position.activeColor))) {
         nodes = miniMax(depth - 1, position, ply + 1);
       }
       position.undoMove(move);
