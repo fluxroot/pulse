@@ -12,9 +12,19 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
+import static com.fluxchess.pulse.Color.WHITE;
+import static com.fluxchess.pulse.Color.opposite;
+import static com.fluxchess.pulse.Depth.MAX_DEPTH;
+import static com.fluxchess.pulse.Depth.MAX_PLY;
+import static com.fluxchess.pulse.Move.NOMOVE;
 import static com.fluxchess.pulse.MoveList.MoveEntry;
 import static com.fluxchess.pulse.MoveList.MoveVariation;
 import static com.fluxchess.pulse.MoveList.RootEntry;
+import static com.fluxchess.pulse.Value.CHECKMATE;
+import static com.fluxchess.pulse.Value.DRAW;
+import static com.fluxchess.pulse.Value.INFINITE;
+import static com.fluxchess.pulse.Value.isCheckmate;
+import static java.lang.Math.abs;
 
 /**
  * This class implements our search in a separate thread to keep the main
@@ -35,7 +45,7 @@ final class Search implements Runnable {
 
   // We will store a MoveGenerator for each ply so we don't have to create them
   // in search. (which is expensive)
-  private final MoveGenerator[] moveGenerators = new MoveGenerator[Depth.MAX_PLY];
+  private final MoveGenerator[] moveGenerators = new MoveGenerator[MAX_PLY];
 
   // Depth search
   private int searchDepth;
@@ -58,7 +68,7 @@ final class Search implements Runnable {
   private int currentMaxDepth;
   private int currentMove;
   private int currentMoveNumber;
-  private final MoveVariation[] pv = new MoveVariation[Depth.MAX_PLY + 1];
+  private final MoveVariation[] pv = new MoveVariation[MAX_PLY + 1];
 
   /**
    * This is our search timer for time & clock & ponder searches.
@@ -78,7 +88,7 @@ final class Search implements Runnable {
 
   void newDepthSearch(Position position, int searchDepth) {
     if (position == null) throw new IllegalArgumentException();
-    if (searchDepth < 1 || searchDepth > Depth.MAX_DEPTH) throw new IllegalArgumentException();
+    if (searchDepth < 1 || searchDepth > MAX_DEPTH) throw new IllegalArgumentException();
     if (running) throw new IllegalStateException();
 
     reset();
@@ -144,7 +154,7 @@ final class Search implements Runnable {
 
     long timeLeft;
     long timeIncrement;
-    if (position.activeColor == Color.WHITE) {
+    if (position.activeColor == WHITE) {
       timeLeft = whiteTimeLeft;
       timeIncrement = whiteTimeIncrement;
     } else {
@@ -174,7 +184,7 @@ final class Search implements Runnable {
   Search(@NotNull Protocol protocol) {
     this.protocol = protocol;
 
-    for (int i = 0; i < Depth.MAX_PLY; ++i) {
+    for (int i = 0; i < MAX_PLY; ++i) {
       moveGenerators[i] = new MoveGenerator();
     }
 
@@ -189,7 +199,7 @@ final class Search implements Runnable {
   }
 
   private void reset() {
-    searchDepth = Depth.MAX_DEPTH;
+    searchDepth = MAX_DEPTH;
     searchNodes = Long.MAX_VALUE;
     searchTime = 0;
     timer = null;
@@ -200,7 +210,7 @@ final class Search implements Runnable {
     totalNodes = 0;
     currentDepth = initialDepth;
     currentMaxDepth = 0;
-    currentMove = Move.NOMOVE;
+    currentMove = NOMOVE;
     currentMoveNumber = 0;
   }
 
@@ -294,7 +304,7 @@ final class Search implements Runnable {
         currentMaxDepth = 0;
         protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
-        searchRoot(currentDepth, -Value.INFINITE, Value.INFINITE);
+        searchRoot(currentDepth, -INFINITE, INFINITE);
 
         // Sort the root move list, so that the next iteration begins with the
         // best move first.
@@ -316,8 +326,8 @@ final class Search implements Runnable {
       protocol.sendStatus(true, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
       // Send the best move and ponder move
-      int bestMove = Move.NOMOVE;
-      int ponderMove = Move.NOMOVE;
+      int bestMove = NOMOVE;
+      int ponderMove = NOMOVE;
       if (rootMoves.size > 0) {
         bestMove = rootMoves.entries[0].move;
         if (rootMoves.entries[0].pv.size >= 2) {
@@ -346,8 +356,8 @@ final class Search implements Runnable {
         } else
 
         // Check if we have a checkmate
-        if (Value.isCheckmate(rootMoves.entries[0].value)
-            && currentDepth >= (Value.CHECKMATE - Math.abs(rootMoves.entries[0].value))) {
+        if (isCheckmate(rootMoves.entries[0].value)
+            && currentDepth >= (CHECKMATE - abs(rootMoves.entries[0].value))) {
           abort = true;
         }
       }
@@ -383,7 +393,7 @@ final class Search implements Runnable {
 
     // Reset all values, so the best move is pushed to the front
     for (int i = 0; i < rootMoves.size; ++i) {
-      rootMoves.entries[i].value = -Value.INFINITE;
+      rootMoves.entries[i].value = -INFINITE;
     }
 
     for (int i = 0; i < rootMoves.size; ++i) {
@@ -430,17 +440,17 @@ final class Search implements Runnable {
     updateSearch(ply);
 
     // Abort conditions
-    if (abort || ply == Depth.MAX_PLY) {
+    if (abort || ply == MAX_PLY) {
       return evaluation.evaluate(position);
     }
 
     // Check insufficient material, repetition and fifty move rule
     if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
-      return Value.DRAW;
+      return DRAW;
     }
 
     // Initialize
-    int bestValue = -Value.INFINITE;
+    int bestValue = -INFINITE;
     int searchedMoves = 0;
     boolean isCheck = position.isCheck();
 
@@ -450,7 +460,7 @@ final class Search implements Runnable {
       int value = bestValue;
 
       position.makeMove(move);
-      if (!position.isCheck(Color.opposite(position.activeColor))) {
+      if (!position.isCheck(opposite(position.activeColor))) {
         ++searchedMoves;
         value = -search(depth - 1, -beta, -alpha, ply + 1);
       }
@@ -482,10 +492,10 @@ final class Search implements Runnable {
     if (searchedMoves == 0) {
       if (isCheck) {
         // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        return -Value.CHECKMATE + ply;
+        return -CHECKMATE + ply;
       } else {
         // We have a stale mate. Return the draw value.
-        return Value.DRAW;
+        return DRAW;
       }
     }
 
@@ -496,17 +506,17 @@ final class Search implements Runnable {
     updateSearch(ply);
 
     // Abort conditions
-    if (abort || ply == Depth.MAX_PLY) {
+    if (abort || ply == MAX_PLY) {
       return evaluation.evaluate(position);
     }
 
     // Check insufficient material, repetition and fifty move rule
     if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
-      return Value.DRAW;
+      return DRAW;
     }
 
     // Initialize
-    int bestValue = -Value.INFINITE;
+    int bestValue = -INFINITE;
     int searchedMoves = 0;
     boolean isCheck = position.isCheck();
 
@@ -533,7 +543,7 @@ final class Search implements Runnable {
       int value = bestValue;
 
       position.makeMove(move);
-      if (!position.isCheck(Color.opposite(position.activeColor))) {
+      if (!position.isCheck(opposite(position.activeColor))) {
         ++searchedMoves;
         value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
       }
@@ -564,7 +574,7 @@ final class Search implements Runnable {
     // If we cannot move, check for checkmate.
     if (searchedMoves == 0 && isCheck) {
       // We have a check mate. This is bad for us, so return a -CHECKMATE.
-      return -Value.CHECKMATE + ply;
+      return -CHECKMATE + ply;
     }
 
     return bestValue;
