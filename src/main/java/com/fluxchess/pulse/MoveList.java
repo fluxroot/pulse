@@ -8,6 +8,14 @@ package com.fluxchess.pulse;
 
 import java.lang.reflect.Array;
 
+import static com.fluxchess.pulse.Move.NOMOVE;
+import static com.fluxchess.pulse.Move.getOriginPiece;
+import static com.fluxchess.pulse.Move.getTargetPiece;
+import static com.fluxchess.pulse.PieceType.KING_VALUE;
+import static com.fluxchess.pulse.PieceType.PAWN_VALUE;
+import static com.fluxchess.pulse.PieceType.QUEEN_VALUE;
+import static com.fluxchess.pulse.Value.NOVALUE;
+
 /**
  * This class stores our moves for a specific position. For the root node we
  * will populate pv for every root move.
@@ -25,8 +33,8 @@ final class MoveList<T extends MoveList.MoveEntry> {
   }
 
   static class MoveEntry {
-    int move = Move.NOMOVE;
-    int value = Value.NOVALUE;
+    int move = NOMOVE;
+    int value = NOVALUE;
   }
 
   static final class RootEntry extends MoveEntry {
@@ -71,16 +79,16 @@ final class MoveList<T extends MoveList.MoveEntry> {
       int move = entries[i].move;
       int value = 0;
 
-      int piecetypeValue = PieceType.getValue(Piece.getType(Move.getOriginPiece(move)));
-      value += PieceType.KING_VALUE / piecetypeValue;
+      int piecetypeValue = PieceType.getValue(Piece.getType(getOriginPiece(move)));
+      value += KING_VALUE / piecetypeValue;
 
-      int target = Move.getTargetPiece(move);
+      int target = getTargetPiece(move);
       if (Piece.isValid(target)) {
         value += 10 * PieceType.getValue(Piece.getType(target));
       }
 
-      assert value >= (PieceType.KING_VALUE / PieceType.KING_VALUE)
-          && value <= (PieceType.KING_VALUE / PieceType.PAWN_VALUE) + 10 * PieceType.QUEEN_VALUE;
+      assert value >= (KING_VALUE / KING_VALUE)
+          && value <= (KING_VALUE / PAWN_VALUE) + 10 * QUEEN_VALUE;
 
       entries[i].value = value;
     }
