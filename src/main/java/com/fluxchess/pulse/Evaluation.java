@@ -8,6 +8,22 @@ package com.fluxchess.pulse;
 
 import org.jetbrains.annotations.NotNull;
 
+import static com.fluxchess.pulse.Bitboard.next;
+import static com.fluxchess.pulse.Bitboard.remainder;
+import static com.fluxchess.pulse.Color.opposite;
+import static com.fluxchess.pulse.Piece.NOPIECE;
+import static com.fluxchess.pulse.PieceType.BISHOP;
+import static com.fluxchess.pulse.PieceType.KNIGHT;
+import static com.fluxchess.pulse.PieceType.QUEEN;
+import static com.fluxchess.pulse.PieceType.ROOK;
+import static com.fluxchess.pulse.PieceType.isSliding;
+import static com.fluxchess.pulse.Square.bishopDirections;
+import static com.fluxchess.pulse.Square.knightDirections;
+import static com.fluxchess.pulse.Square.queenDirections;
+import static com.fluxchess.pulse.Square.rookDirections;
+import static com.fluxchess.pulse.Value.CHECKMATE_THRESHOLD;
+import static java.lang.Math.abs;
+
 final class Evaluation {
 
   static final int TEMPO = 1;
@@ -25,7 +41,7 @@ final class Evaluation {
   int evaluate(@NotNull Position position) {
     // Initialize
     int myColor = position.activeColor;
-    int oppositeColor = Color.opposite(myColor);
+    int oppositeColor = opposite(myColor);
     int value = 0;
 
     // Evaluate material
@@ -41,7 +57,7 @@ final class Evaluation {
     // Add Tempo
     value += TEMPO;
 
-    assert Math.abs(value) < Value.CHECKMATE_THRESHOLD;
+    assert abs(value) < CHECKMATE_THRESHOLD;
     return value;
   }
 
@@ -51,7 +67,7 @@ final class Evaluation {
     int material = position.material[color];
 
     // Add bonus for bishop pair
-    if (position.pieces[color][PieceType.BISHOP].size() >= 2) {
+    if (position.pieces[color][BISHOP].size() >= 2) {
       material += 50;
     }
 
@@ -62,27 +78,27 @@ final class Evaluation {
     assert Color.isValid(color);
 
     int knightMobility = 0;
-    for (long squares = position.pieces[color][PieceType.KNIGHT].squares; squares != 0; squares = Bitboard.remainder(squares)) {
-      int square = Bitboard.next(squares);
-      knightMobility += evaluateMobility(color, position, square, Square.knightDirections);
+    for (long squares = position.pieces[color][KNIGHT].squares; squares != 0; squares = remainder(squares)) {
+      int square = next(squares);
+      knightMobility += evaluateMobility(color, position, square, knightDirections);
     }
 
     int bishopMobility = 0;
-    for (long squares = position.pieces[color][PieceType.BISHOP].squares; squares != 0; squares = Bitboard.remainder(squares)) {
-      int square = Bitboard.next(squares);
-      bishopMobility += evaluateMobility(color, position, square, Square.bishopDirections);
+    for (long squares = position.pieces[color][BISHOP].squares; squares != 0; squares = remainder(squares)) {
+      int square = next(squares);
+      bishopMobility += evaluateMobility(color, position, square, bishopDirections);
     }
 
     int rookMobility = 0;
-    for (long squares = position.pieces[color][PieceType.ROOK].squares; squares != 0; squares = Bitboard.remainder(squares)) {
-      int square = Bitboard.next(squares);
-      rookMobility += evaluateMobility(color, position, square, Square.rookDirections);
+    for (long squares = position.pieces[color][ROOK].squares; squares != 0; squares = remainder(squares)) {
+      int square = next(squares);
+      rookMobility += evaluateMobility(color, position, square, rookDirections);
     }
 
     int queenMobility = 0;
-    for (long squares = position.pieces[color][PieceType.QUEEN].squares; squares != 0; squares = Bitboard.remainder(squares)) {
-      int square = Bitboard.next(squares);
-      queenMobility += evaluateMobility(color, position, square, Square.queenDirections);
+    for (long squares = position.pieces[color][QUEEN].squares; squares != 0; squares = remainder(squares)) {
+      int square = next(squares);
+      queenMobility += evaluateMobility(color, position, square, queenDirections);
     }
 
     return knightMobility * 4
@@ -96,7 +112,7 @@ final class Evaluation {
     assert Piece.isValid(position.board[square]);
 
     int mobility = 0;
-    boolean sliding = PieceType.isSliding(Piece.getType(position.board[square]));
+    boolean sliding = isSliding(Piece.getType(position.board[square]));
 
     for (int direction : directions) {
       int targetSquare = square + direction;
@@ -104,7 +120,7 @@ final class Evaluation {
       while (Square.isValid(targetSquare)) {
         ++mobility;
 
-        if (sliding && position.board[targetSquare] == Piece.NOPIECE) {
+        if (sliding && position.board[targetSquare] == NOPIECE) {
           targetSquare += direction;
         } else {
           break;
