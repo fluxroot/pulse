@@ -6,8 +6,69 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.models.*;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericCastling;
+import com.fluxchess.jcpi.models.GenericChessman;
+import com.fluxchess.jcpi.models.GenericColor;
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericPiece;
+import com.fluxchess.jcpi.models.GenericPosition;
+import com.fluxchess.jcpi.models.GenericRank;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 import org.jetbrains.annotations.NotNull;
+
+import static com.fluxchess.pulse.Castling.BLACK_KINGSIDE;
+import static com.fluxchess.pulse.Castling.BLACK_QUEENSIDE;
+import static com.fluxchess.pulse.Castling.NOCASTLING;
+import static com.fluxchess.pulse.Castling.WHITE_KINGSIDE;
+import static com.fluxchess.pulse.Castling.WHITE_QUEENSIDE;
+import static com.fluxchess.pulse.CastlingType.KINGSIDE;
+import static com.fluxchess.pulse.CastlingType.NOCASTLINGTYPE;
+import static com.fluxchess.pulse.CastlingType.QUEENSIDE;
+import static com.fluxchess.pulse.Color.BLACK;
+import static com.fluxchess.pulse.Color.NOCOLOR;
+import static com.fluxchess.pulse.Color.WHITE;
+import static com.fluxchess.pulse.File.NOFILE;
+import static com.fluxchess.pulse.File.a;
+import static com.fluxchess.pulse.File.b;
+import static com.fluxchess.pulse.File.c;
+import static com.fluxchess.pulse.File.d;
+import static com.fluxchess.pulse.File.e;
+import static com.fluxchess.pulse.File.f;
+import static com.fluxchess.pulse.File.g;
+import static com.fluxchess.pulse.File.h;
+import static com.fluxchess.pulse.Piece.BLACK_BISHOP;
+import static com.fluxchess.pulse.Piece.BLACK_KING;
+import static com.fluxchess.pulse.Piece.BLACK_KNIGHT;
+import static com.fluxchess.pulse.Piece.BLACK_PAWN;
+import static com.fluxchess.pulse.Piece.BLACK_QUEEN;
+import static com.fluxchess.pulse.Piece.BLACK_ROOK;
+import static com.fluxchess.pulse.Piece.NOPIECE;
+import static com.fluxchess.pulse.Piece.WHITE_BISHOP;
+import static com.fluxchess.pulse.Piece.WHITE_KING;
+import static com.fluxchess.pulse.Piece.WHITE_KNIGHT;
+import static com.fluxchess.pulse.Piece.WHITE_PAWN;
+import static com.fluxchess.pulse.Piece.WHITE_QUEEN;
+import static com.fluxchess.pulse.Piece.WHITE_ROOK;
+import static com.fluxchess.pulse.PieceType.BISHOP;
+import static com.fluxchess.pulse.PieceType.KING;
+import static com.fluxchess.pulse.PieceType.KNIGHT;
+import static com.fluxchess.pulse.PieceType.NOPIECETYPE;
+import static com.fluxchess.pulse.PieceType.PAWN;
+import static com.fluxchess.pulse.PieceType.QUEEN;
+import static com.fluxchess.pulse.PieceType.ROOK;
+import static com.fluxchess.pulse.Rank.NORANK;
+import static com.fluxchess.pulse.Rank.r1;
+import static com.fluxchess.pulse.Rank.r2;
+import static com.fluxchess.pulse.Rank.r3;
+import static com.fluxchess.pulse.Rank.r4;
+import static com.fluxchess.pulse.Rank.r5;
+import static com.fluxchess.pulse.Rank.r6;
+import static com.fluxchess.pulse.Rank.r7;
+import static com.fluxchess.pulse.Rank.r8;
+import static com.fluxchess.pulse.Square.NOSQUARE;
+import static com.fluxchess.pulse.Square.getFile;
+import static com.fluxchess.pulse.Square.getRank;
 
 final class Notation {
 
@@ -74,39 +135,39 @@ final class Notation {
 
     // Set board
     for (int square : Square.values) {
-      if (position.board[square] != Piece.NOPIECE) {
+      if (position.board[square] != NOPIECE) {
         genericBoard.setPiece(fromPiece(position.board[square]), fromSquare(square));
       }
     }
 
     // Set castling
-    if ((position.castlingRights & Castling.WHITE_KINGSIDE) != Castling.NOCASTLING) {
+    if ((position.castlingRights & WHITE_KINGSIDE) != NOCASTLING) {
       genericBoard.setCastling(
-          fromColor(Color.WHITE), fromCastlingType(CastlingType.KINGSIDE),
-          fromFile(File.h)
+          fromColor(WHITE), fromCastlingType(KINGSIDE),
+          fromFile(h)
       );
     }
-    if ((position.castlingRights & Castling.WHITE_QUEENSIDE) != Castling.NOCASTLING) {
+    if ((position.castlingRights & WHITE_QUEENSIDE) != NOCASTLING) {
       genericBoard.setCastling(
-          fromColor(Color.WHITE), fromCastlingType(CastlingType.QUEENSIDE),
-          fromFile(File.a)
+          fromColor(WHITE), fromCastlingType(QUEENSIDE),
+          fromFile(a)
       );
     }
-    if ((position.castlingRights & Castling.BLACK_KINGSIDE) != Castling.NOCASTLING) {
+    if ((position.castlingRights & BLACK_KINGSIDE) != NOCASTLING) {
       genericBoard.setCastling(
-          fromColor(Color.BLACK), fromCastlingType(CastlingType.KINGSIDE),
-          fromFile(File.h)
+          fromColor(BLACK), fromCastlingType(KINGSIDE),
+          fromFile(h)
       );
     }
-    if ((position.castlingRights & Castling.BLACK_QUEENSIDE) != Castling.NOCASTLING) {
+    if ((position.castlingRights & BLACK_QUEENSIDE) != NOCASTLING) {
       genericBoard.setCastling(
-          fromColor(Color.BLACK), fromCastlingType(CastlingType.QUEENSIDE),
-          fromFile(File.a)
+          fromColor(BLACK), fromCastlingType(QUEENSIDE),
+          fromFile(a)
       );
     }
 
     // Set en passant
-    if (position.enPassantSquare != Square.NOSQUARE) {
+    if (position.enPassantSquare != NOSQUARE) {
       genericBoard.setEnPassant(fromSquare(position.enPassantSquare));
     }
 
@@ -125,9 +186,9 @@ final class Notation {
   static int toColor(@NotNull GenericColor genericColor) {
     switch (genericColor) {
       case WHITE:
-        return Color.WHITE;
+        return WHITE;
       case BLACK:
-        return Color.BLACK;
+        return BLACK;
       default:
         throw new IllegalArgumentException();
     }
@@ -135,11 +196,11 @@ final class Notation {
 
   static GenericColor fromColor(int color) {
     switch (color) {
-      case Color.WHITE:
+      case WHITE:
         return GenericColor.WHITE;
-      case Color.BLACK:
+      case BLACK:
         return GenericColor.BLACK;
-      case Color.NOCOLOR:
+      case NOCOLOR:
       default:
         throw new IllegalArgumentException();
     }
@@ -147,19 +208,19 @@ final class Notation {
 
   static GenericChessman fromPieceType(int piecetype) {
     switch (piecetype) {
-      case PieceType.PAWN:
+      case PAWN:
         return GenericChessman.PAWN;
-      case PieceType.KNIGHT:
+      case KNIGHT:
         return GenericChessman.KNIGHT;
-      case PieceType.BISHOP:
+      case BISHOP:
         return GenericChessman.BISHOP;
-      case PieceType.ROOK:
+      case ROOK:
         return GenericChessman.ROOK;
-      case PieceType.QUEEN:
+      case QUEEN:
         return GenericChessman.QUEEN;
-      case PieceType.KING:
+      case KING:
         return GenericChessman.KING;
-      case PieceType.NOPIECETYPE:
+      case NOPIECETYPE:
       default:
         throw new IllegalArgumentException();
     }
@@ -168,29 +229,29 @@ final class Notation {
   static int toPiece(@NotNull GenericPiece genericPiece) {
     switch (genericPiece) {
       case WHITEPAWN:
-        return Piece.WHITE_PAWN;
+        return WHITE_PAWN;
       case WHITEKNIGHT:
-        return Piece.WHITE_KNIGHT;
+        return WHITE_KNIGHT;
       case WHITEBISHOP:
-        return Piece.WHITE_BISHOP;
+        return WHITE_BISHOP;
       case WHITEROOK:
-        return Piece.WHITE_ROOK;
+        return WHITE_ROOK;
       case WHITEQUEEN:
-        return Piece.WHITE_QUEEN;
+        return WHITE_QUEEN;
       case WHITEKING:
-        return Piece.WHITE_KING;
+        return WHITE_KING;
       case BLACKPAWN:
-        return Piece.BLACK_PAWN;
+        return BLACK_PAWN;
       case BLACKKNIGHT:
-        return Piece.BLACK_KNIGHT;
+        return BLACK_KNIGHT;
       case BLACKBISHOP:
-        return Piece.BLACK_BISHOP;
+        return BLACK_BISHOP;
       case BLACKROOK:
-        return Piece.BLACK_ROOK;
+        return BLACK_ROOK;
       case BLACKQUEEN:
-        return Piece.BLACK_QUEEN;
+        return BLACK_QUEEN;
       case BLACKKING:
-        return Piece.BLACK_KING;
+        return BLACK_KING;
       default:
         throw new IllegalArgumentException();
     }
@@ -198,31 +259,31 @@ final class Notation {
 
   static GenericPiece fromPiece(int piece) {
     switch (piece) {
-      case Piece.WHITE_PAWN:
+      case WHITE_PAWN:
         return GenericPiece.WHITEPAWN;
-      case Piece.WHITE_KNIGHT:
+      case WHITE_KNIGHT:
         return GenericPiece.WHITEKNIGHT;
-      case Piece.WHITE_BISHOP:
+      case WHITE_BISHOP:
         return GenericPiece.WHITEBISHOP;
-      case Piece.WHITE_ROOK:
+      case WHITE_ROOK:
         return GenericPiece.WHITEROOK;
-      case Piece.WHITE_QUEEN:
+      case WHITE_QUEEN:
         return GenericPiece.WHITEQUEEN;
-      case Piece.WHITE_KING:
+      case WHITE_KING:
         return GenericPiece.WHITEKING;
-      case Piece.BLACK_PAWN:
+      case BLACK_PAWN:
         return GenericPiece.BLACKPAWN;
-      case Piece.BLACK_KNIGHT:
+      case BLACK_KNIGHT:
         return GenericPiece.BLACKKNIGHT;
-      case Piece.BLACK_BISHOP:
+      case BLACK_BISHOP:
         return GenericPiece.BLACKBISHOP;
-      case Piece.BLACK_ROOK:
+      case BLACK_ROOK:
         return GenericPiece.BLACKROOK;
-      case Piece.BLACK_QUEEN:
+      case BLACK_QUEEN:
         return GenericPiece.BLACKQUEEN;
-      case Piece.BLACK_KING:
+      case BLACK_KING:
         return GenericPiece.BLACKKING;
-      case Piece.NOPIECE:
+      case NOPIECE:
       default:
         throw new IllegalArgumentException();
     }
@@ -230,11 +291,11 @@ final class Notation {
 
   static GenericCastling fromCastlingType(int castlingtype) {
     switch (castlingtype) {
-      case CastlingType.KINGSIDE:
+      case KINGSIDE:
         return GenericCastling.KINGSIDE;
-      case CastlingType.QUEENSIDE:
+      case QUEENSIDE:
         return GenericCastling.QUEENSIDE;
-      case CastlingType.NOCASTLINGTYPE:
+      case NOCASTLINGTYPE:
       default:
         throw new IllegalArgumentException();
     }
@@ -243,21 +304,21 @@ final class Notation {
   static int toFile(@NotNull GenericFile genericFile) {
     switch (genericFile) {
       case Fa:
-        return File.a;
+        return a;
       case Fb:
-        return File.b;
+        return b;
       case Fc:
-        return File.c;
+        return c;
       case Fd:
-        return File.d;
+        return d;
       case Fe:
-        return File.e;
+        return e;
       case Ff:
-        return File.f;
+        return f;
       case Fg:
-        return File.g;
+        return g;
       case Fh:
-        return File.h;
+        return h;
       default:
         throw new IllegalArgumentException();
     }
@@ -265,23 +326,23 @@ final class Notation {
 
   static GenericFile fromFile(int file) {
     switch (file) {
-      case File.a:
+      case a:
         return GenericFile.Fa;
-      case File.b:
+      case b:
         return GenericFile.Fb;
-      case File.c:
+      case c:
         return GenericFile.Fc;
-      case File.d:
+      case d:
         return GenericFile.Fd;
-      case File.e:
+      case e:
         return GenericFile.Fe;
-      case File.f:
+      case f:
         return GenericFile.Ff;
-      case File.g:
+      case g:
         return GenericFile.Fg;
-      case File.h:
+      case h:
         return GenericFile.Fh;
-      case File.NOFILE:
+      case NOFILE:
       default:
         throw new IllegalArgumentException();
     }
@@ -290,21 +351,21 @@ final class Notation {
   static int toRank(@NotNull GenericRank genericRank) {
     switch (genericRank) {
       case R1:
-        return Rank.r1;
+        return r1;
       case R2:
-        return Rank.r2;
+        return r2;
       case R3:
-        return Rank.r3;
+        return r3;
       case R4:
-        return Rank.r4;
+        return r4;
       case R5:
-        return Rank.r5;
+        return r5;
       case R6:
-        return Rank.r6;
+        return r6;
       case R7:
-        return Rank.r7;
+        return r7;
       case R8:
-        return Rank.r8;
+        return r8;
       default:
         throw new IllegalArgumentException();
     }
@@ -312,23 +373,23 @@ final class Notation {
 
   static GenericRank fromRank(int rank) {
     switch (rank) {
-      case Rank.r1:
+      case r1:
         return GenericRank.R1;
-      case Rank.r2:
+      case r2:
         return GenericRank.R2;
-      case Rank.r3:
+      case r3:
         return GenericRank.R3;
-      case Rank.r4:
+      case r4:
         return GenericRank.R4;
-      case Rank.r5:
+      case r5:
         return GenericRank.R5;
-      case Rank.r6:
+      case r6:
         return GenericRank.R6;
-      case Rank.r7:
+      case r7:
         return GenericRank.R7;
-      case Rank.r8:
+      case r8:
         return GenericRank.R8;
-      case Rank.NORANK:
+      case NORANK:
       default:
         throw new IllegalArgumentException();
     }
@@ -344,6 +405,6 @@ final class Notation {
   static GenericPosition fromSquare(int square) {
     assert Square.isValid(square);
 
-    return GenericPosition.valueOf(fromFile(Square.getFile(square)), fromRank(Square.getRank(square)));
+    return GenericPosition.valueOf(fromFile(getFile(square)), fromRank(getRank(square)));
   }
 }
