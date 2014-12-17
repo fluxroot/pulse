@@ -6,6 +6,15 @@
  */
 package com.fluxchess.pulse;
 
+import static com.fluxchess.pulse.Color.BLACK;
+import static com.fluxchess.pulse.Color.WHITE;
+import static com.fluxchess.pulse.PieceType.BISHOP;
+import static com.fluxchess.pulse.PieceType.KING;
+import static com.fluxchess.pulse.PieceType.KNIGHT;
+import static com.fluxchess.pulse.PieceType.PAWN;
+import static com.fluxchess.pulse.PieceType.QUEEN;
+import static com.fluxchess.pulse.PieceType.ROOK;
+
 final class Piece {
 
   static final int MASK = 0x1F;
@@ -55,36 +64,36 @@ final class Piece {
 
   static int valueOf(int color, int piecetype) {
     switch (color) {
-      case Color.WHITE:
+      case WHITE:
         switch (piecetype) {
-          case PieceType.PAWN:
+          case PAWN:
             return WHITE_PAWN;
-          case PieceType.KNIGHT:
+          case KNIGHT:
             return WHITE_KNIGHT;
-          case PieceType.BISHOP:
+          case BISHOP:
             return WHITE_BISHOP;
-          case PieceType.ROOK:
+          case ROOK:
             return WHITE_ROOK;
-          case PieceType.QUEEN:
+          case QUEEN:
             return WHITE_QUEEN;
-          case PieceType.KING:
+          case KING:
             return WHITE_KING;
           default:
             throw new IllegalArgumentException();
         }
-      case Color.BLACK:
+      case BLACK:
         switch (piecetype) {
-          case PieceType.PAWN:
+          case PAWN:
             return BLACK_PAWN;
-          case PieceType.KNIGHT:
+          case KNIGHT:
             return BLACK_KNIGHT;
-          case PieceType.BISHOP:
+          case BISHOP:
             return BLACK_BISHOP;
-          case PieceType.ROOK:
+          case ROOK:
             return BLACK_ROOK;
-          case PieceType.QUEEN:
+          case QUEEN:
             return BLACK_QUEEN;
-          case PieceType.KING:
+          case KING:
             return BLACK_KING;
           default:
             throw new IllegalArgumentException();
@@ -98,22 +107,22 @@ final class Piece {
     switch (piece) {
       case WHITE_PAWN:
       case BLACK_PAWN:
-        return PieceType.PAWN;
+        return PAWN;
       case WHITE_KNIGHT:
       case BLACK_KNIGHT:
-        return PieceType.KNIGHT;
+        return KNIGHT;
       case WHITE_BISHOP:
       case BLACK_BISHOP:
-        return PieceType.BISHOP;
+        return BISHOP;
       case WHITE_ROOK:
       case BLACK_ROOK:
-        return PieceType.ROOK;
+        return ROOK;
       case WHITE_QUEEN:
       case BLACK_QUEEN:
-        return PieceType.QUEEN;
+        return QUEEN;
       case WHITE_KING:
       case BLACK_KING:
-        return PieceType.KING;
+        return KING;
       default:
         throw new IllegalArgumentException();
     }
@@ -127,14 +136,14 @@ final class Piece {
       case WHITE_ROOK:
       case WHITE_QUEEN:
       case WHITE_KING:
-        return Color.WHITE;
+        return WHITE;
       case BLACK_PAWN:
       case BLACK_KNIGHT:
       case BLACK_BISHOP:
       case BLACK_ROOK:
       case BLACK_QUEEN:
       case BLACK_KING:
-        return Color.BLACK;
+        return BLACK;
       default:
         throw new IllegalArgumentException();
     }
