@@ -6,6 +6,11 @@
  */
 package com.fluxchess.pulse;
 
+import static com.fluxchess.pulse.CastlingType.KINGSIDE;
+import static com.fluxchess.pulse.CastlingType.QUEENSIDE;
+import static com.fluxchess.pulse.Color.BLACK;
+import static com.fluxchess.pulse.Color.WHITE;
+
 final class Castling {
 
   static final int WHITE_KINGSIDE = 1 << 0;
@@ -34,20 +39,20 @@ final class Castling {
 
   static int valueOf(int color, int castlingtype) {
     switch (color) {
-      case Color.WHITE:
+      case WHITE:
         switch (castlingtype) {
-          case CastlingType.KINGSIDE:
+          case KINGSIDE:
             return WHITE_KINGSIDE;
-          case CastlingType.QUEENSIDE:
+          case QUEENSIDE:
             return WHITE_QUEENSIDE;
           default:
             throw new IllegalArgumentException();
         }
-      case Color.BLACK:
+      case BLACK:
         switch (castlingtype) {
-          case CastlingType.KINGSIDE:
+          case KINGSIDE:
             return BLACK_KINGSIDE;
-          case CastlingType.QUEENSIDE:
+          case QUEENSIDE:
             return BLACK_QUEENSIDE;
           default:
             throw new IllegalArgumentException();
