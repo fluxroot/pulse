@@ -7,7 +7,19 @@
 package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.AbstractEngine;
-import com.fluxchess.jcpi.commands.*;
+import com.fluxchess.jcpi.commands.EngineAnalyzeCommand;
+import com.fluxchess.jcpi.commands.EngineDebugCommand;
+import com.fluxchess.jcpi.commands.EngineInitializeRequestCommand;
+import com.fluxchess.jcpi.commands.EngineNewGameCommand;
+import com.fluxchess.jcpi.commands.EnginePonderHitCommand;
+import com.fluxchess.jcpi.commands.EngineReadyRequestCommand;
+import com.fluxchess.jcpi.commands.EngineSetOptionCommand;
+import com.fluxchess.jcpi.commands.EngineStartCalculatingCommand;
+import com.fluxchess.jcpi.commands.EngineStopCalculatingCommand;
+import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
+import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
+import com.fluxchess.jcpi.commands.ProtocolInitializeAnswerCommand;
+import com.fluxchess.jcpi.commands.ProtocolReadyAnswerCommand;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericColor;
 import com.fluxchess.jcpi.models.GenericMove;
@@ -18,8 +30,22 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fluxchess.pulse.Move.NOMOVE;
+import static com.fluxchess.pulse.Move.getOriginSquare;
+import static com.fluxchess.pulse.Move.getPromotion;
+import static com.fluxchess.pulse.Move.getTargetSquare;
 import static com.fluxchess.pulse.MoveList.MoveEntry;
 import static com.fluxchess.pulse.MoveList.RootEntry;
+import static com.fluxchess.pulse.MoveType.CASTLING;
+import static com.fluxchess.pulse.MoveType.ENPASSANT;
+import static com.fluxchess.pulse.MoveType.NORMAL;
+import static com.fluxchess.pulse.MoveType.PAWNDOUBLE;
+import static com.fluxchess.pulse.MoveType.PAWNPROMOTION;
+import static com.fluxchess.pulse.Value.CHECKMATE;
+import static com.fluxchess.pulse.Value.CHECKMATE_THRESHOLD;
+import static java.lang.Integer.signum;
+import static java.lang.Math.abs;
+import static java.lang.System.currentTimeMillis;
 
 /**
  * Pulse uses the Java Chess Protocol Interface (JCPI) to handle the
@@ -201,7 +227,7 @@ final class Pulse extends AbstractEngine implements Protocol {
 
     // Go...
     search.start();
-    startTime = System.currentTimeMillis();
+    startTime = currentTimeMillis();
     statusStartTime = startTime;
   }
 
@@ -218,10 +244,10 @@ final class Pulse extends AbstractEngine implements Protocol {
   public void sendBestMove(int bestMove, int ponderMove) {
     GenericMove genericBestMove = null;
     GenericMove genericPonderMove = null;
-    if (bestMove != Move.NOMOVE) {
+    if (bestMove != NOMOVE) {
       genericBestMove = fromMove(bestMove);
 
-      if (ponderMove != Move.NOMOVE) {
+      if (ponderMove != NOMOVE) {
         genericPonderMove = fromMove(ponderMove);
       }
     }
@@ -232,14 +258,14 @@ final class Pulse extends AbstractEngine implements Protocol {
 
   public void sendStatus(
       int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber) {
-    if (System.currentTimeMillis() - statusStartTime >= 1000) {
+    if (currentTimeMillis() - statusStartTime >= 1000) {
       sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
     }
   }
 
   public void sendStatus(
       boolean force, int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber) {
-    long timeDelta = System.currentTimeMillis() - startTime;
+    long timeDelta = currentTimeMillis() - startTime;
 
     if (force || timeDelta >= 1000) {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
@@ -249,19 +275,19 @@ final class Pulse extends AbstractEngine implements Protocol {
       command.setNodes(totalNodes);
       command.setTime(timeDelta);
       command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-      if (currentMove != Move.NOMOVE) {
+      if (currentMove != NOMOVE) {
         command.setCurrentMove(fromMove(currentMove));
         command.setCurrentMoveNumber(currentMoveNumber);
       }
 
       getProtocol().send(command);
 
-      statusStartTime = System.currentTimeMillis();
+      statusStartTime = currentTimeMillis();
     }
   }
 
   public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
-    long timeDelta = System.currentTimeMillis() - startTime;
+    long timeDelta = currentTimeMillis() - startTime;
 
     ProtocolInformationCommand command = new ProtocolInformationCommand();
 
@@ -270,10 +296,10 @@ final class Pulse extends AbstractEngine implements Protocol {
     command.setNodes(totalNodes);
     command.setTime(timeDelta);
     command.setNps(timeDelta >= 1000 ? (totalNodes * 1000) / timeDelta : 0);
-    if (Math.abs(entry.value) >= Value.CHECKMATE_THRESHOLD) {
+    if (abs(entry.value) >= CHECKMATE_THRESHOLD) {
       // Calculate mate distance
-      int mateDepth = Value.CHECKMATE - Math.abs(entry.value);
-      command.setMate(Integer.signum(entry.value) * (mateDepth + 1) / 2);
+      int mateDepth = CHECKMATE - abs(entry.value);
+      command.setMate(signum(entry.value) * (mateDepth + 1) / 2);
     } else {
       command.setCentipawns(entry.value);
     }
@@ -285,28 +311,28 @@ final class Pulse extends AbstractEngine implements Protocol {
 
     getProtocol().send(command);
 
-    statusStartTime = System.currentTimeMillis();
+    statusStartTime = currentTimeMillis();
   }
 
   static GenericMove fromMove(int move) {
     int type = Move.getType(move);
-    int originSquare = Move.getOriginSquare(move);
-    int targetSquare = Move.getTargetSquare(move);
+    int originSquare = getOriginSquare(move);
+    int targetSquare = getTargetSquare(move);
 
     switch (type) {
-      case MoveType.NORMAL:
-      case MoveType.PAWNDOUBLE:
-      case MoveType.ENPASSANT:
-      case MoveType.CASTLING:
+      case NORMAL:
+      case PAWNDOUBLE:
+      case ENPASSANT:
+      case CASTLING:
         return new GenericMove(
             Notation.fromSquare(originSquare),
             Notation.fromSquare(targetSquare)
         );
-      case MoveType.PAWNPROMOTION:
+      case PAWNPROMOTION:
         return new GenericMove(
             Notation.fromSquare(originSquare),
             Notation.fromSquare(targetSquare),
-            Notation.fromPieceType(Move.getPromotion(move))
+            Notation.fromPieceType(getPromotion(move))
         );
       default:
         throw new IllegalArgumentException();
