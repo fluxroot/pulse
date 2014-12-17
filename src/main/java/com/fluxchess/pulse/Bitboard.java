@@ -6,6 +6,9 @@
  */
 package com.fluxchess.pulse;
 
+import static java.lang.Long.bitCount;
+import static java.lang.Long.numberOfTrailingZeros;
+
 /**
  * Bitboard stores squares as bits in a 64-bit long. We provide methods to
  * convert bit squares to 0x88 squares and vice versa.
@@ -15,7 +18,7 @@ final class Bitboard {
   long squares = 0;
 
   static int next(long squares) {
-    return toX88Square(Long.numberOfTrailingZeros(squares));
+    return toX88Square(numberOfTrailingZeros(squares));
   }
 
   static long remainder(long squares) {
@@ -37,7 +40,7 @@ final class Bitboard {
   }
 
   int size() {
-    return Long.bitCount(squares);
+    return bitCount(squares);
   }
 
   void add(int square) {
