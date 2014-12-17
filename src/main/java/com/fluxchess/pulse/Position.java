@@ -10,9 +10,59 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
 
+import static com.fluxchess.pulse.Bitboard.next;
+import static com.fluxchess.pulse.Castling.BLACK_KINGSIDE;
+import static com.fluxchess.pulse.Castling.BLACK_QUEENSIDE;
+import static com.fluxchess.pulse.Castling.NOCASTLING;
+import static com.fluxchess.pulse.Castling.WHITE_KINGSIDE;
+import static com.fluxchess.pulse.Castling.WHITE_QUEENSIDE;
+import static com.fluxchess.pulse.Color.BLACK;
+import static com.fluxchess.pulse.Color.WHITE;
+import static com.fluxchess.pulse.Color.opposite;
+import static com.fluxchess.pulse.Depth.MAX_PLY;
+import static com.fluxchess.pulse.Move.getOriginPiece;
+import static com.fluxchess.pulse.Move.getOriginSquare;
+import static com.fluxchess.pulse.Move.getPromotion;
+import static com.fluxchess.pulse.Move.getTargetPiece;
+import static com.fluxchess.pulse.Move.getTargetSquare;
+import static com.fluxchess.pulse.MoveType.CASTLING;
+import static com.fluxchess.pulse.MoveType.ENPASSANT;
+import static com.fluxchess.pulse.MoveType.PAWNDOUBLE;
+import static com.fluxchess.pulse.MoveType.PAWNPROMOTION;
+import static com.fluxchess.pulse.Piece.NOPIECE;
+import static com.fluxchess.pulse.PieceType.BISHOP;
+import static com.fluxchess.pulse.PieceType.KING;
+import static com.fluxchess.pulse.PieceType.KNIGHT;
+import static com.fluxchess.pulse.PieceType.PAWN;
+import static com.fluxchess.pulse.PieceType.QUEEN;
+import static com.fluxchess.pulse.PieceType.ROOK;
+import static com.fluxchess.pulse.Square.N;
+import static com.fluxchess.pulse.Square.NOSQUARE;
+import static com.fluxchess.pulse.Square.S;
+import static com.fluxchess.pulse.Square.a1;
+import static com.fluxchess.pulse.Square.a8;
+import static com.fluxchess.pulse.Square.bishopDirections;
+import static com.fluxchess.pulse.Square.c1;
+import static com.fluxchess.pulse.Square.c8;
+import static com.fluxchess.pulse.Square.d1;
+import static com.fluxchess.pulse.Square.d8;
+import static com.fluxchess.pulse.Square.e1;
+import static com.fluxchess.pulse.Square.e8;
+import static com.fluxchess.pulse.Square.f1;
+import static com.fluxchess.pulse.Square.f8;
+import static com.fluxchess.pulse.Square.g1;
+import static com.fluxchess.pulse.Square.g8;
+import static com.fluxchess.pulse.Square.h1;
+import static com.fluxchess.pulse.Square.h8;
+import static com.fluxchess.pulse.Square.kingDirections;
+import static com.fluxchess.pulse.Square.knightDirections;
+import static com.fluxchess.pulse.Square.pawnDirections;
+import static com.fluxchess.pulse.Square.rookDirections;
+import static java.lang.Math.max;
+
 final class Position {
 
-  private static final int MAX_MOVES = Depth.MAX_PLY + 1024;
+  private static final int MAX_MOVES = MAX_PLY + 1024;
 
   final int[] board = new int[Square.VALUES_LENGTH];
 
@@ -20,9 +70,9 @@ final class Position {
 
   final int[] material = new int[Color.values.length];
 
-  int castlingRights = Castling.NOCASTLING;
-  int enPassantSquare = Square.NOSQUARE;
-  int activeColor = Color.WHITE;
+  int castlingRights = NOCASTLING;
+  int enPassantSquare = NOSQUARE;
+  int activeColor = WHITE;
   int halfmoveClock = 0;
   private int halfmoveNumber = 2;
 
@@ -49,14 +99,14 @@ final class Position {
         }
       }
 
-      castlingRights[Castling.WHITE_KINGSIDE] = next();
-      castlingRights[Castling.WHITE_QUEENSIDE] = next();
-      castlingRights[Castling.BLACK_KINGSIDE] = next();
-      castlingRights[Castling.BLACK_QUEENSIDE] = next();
-      castlingRights[Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE] =
-          castlingRights[Castling.WHITE_KINGSIDE] ^ castlingRights[Castling.WHITE_QUEENSIDE];
-      castlingRights[Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE] =
-          castlingRights[Castling.BLACK_KINGSIDE] ^ castlingRights[Castling.BLACK_QUEENSIDE];
+      castlingRights[WHITE_KINGSIDE] = next();
+      castlingRights[WHITE_QUEENSIDE] = next();
+      castlingRights[BLACK_KINGSIDE] = next();
+      castlingRights[BLACK_QUEENSIDE] = next();
+      castlingRights[WHITE_KINGSIDE | WHITE_QUEENSIDE] =
+          castlingRights[WHITE_KINGSIDE] ^ castlingRights[WHITE_QUEENSIDE];
+      castlingRights[BLACK_KINGSIDE | BLACK_QUEENSIDE] =
+          castlingRights[BLACK_KINGSIDE] ^ castlingRights[BLACK_QUEENSIDE];
 
       for (int i = 0; i < Square.VALUES_LENGTH; ++i) {
         enPassantSquare[i] = next();
@@ -78,15 +128,15 @@ final class Position {
 
   private static final class State {
     private long zobristKey = 0;
-    private int castlingRights = Castling.NOCASTLING;
-    private int enPassantSquare = Square.NOSQUARE;
+    private int castlingRights = NOCASTLING;
+    private int enPassantSquare = NOSQUARE;
     private int halfmoveClock = 0;
   }
 
   Position() {
     // Initialize board
     for (int square : Square.values) {
-      board[square] = Piece.NOPIECE;
+      board[square] = NOPIECE;
     }
 
     // Initialize piece type lists
@@ -114,17 +164,17 @@ final class Position {
   void setCastlingRight(int castling) {
     assert Castling.isValid(castling);
 
-    if ((castlingRights & castling) == Castling.NOCASTLING) {
+    if ((castlingRights & castling) == NOCASTLING) {
       castlingRights |= castling;
       zobristKey ^= Zobrist.castlingRights[castling];
     }
   }
 
   void setEnPassantSquare(int enPassantSquare) {
-    if (this.enPassantSquare != Square.NOSQUARE) {
+    if (this.enPassantSquare != NOSQUARE) {
       zobristKey ^= Zobrist.enPassantSquare[this.enPassantSquare];
     }
-    if (enPassantSquare != Square.NOSQUARE) {
+    if (enPassantSquare != NOSQUARE) {
       zobristKey ^= Zobrist.enPassantSquare[enPassantSquare];
     }
     this.enPassantSquare = enPassantSquare;
@@ -144,14 +194,14 @@ final class Position {
     assert fullmoveNumber > 0;
 
     halfmoveNumber = fullmoveNumber * 2;
-    if (activeColor == Color.BLACK) {
+    if (activeColor == BLACK) {
       ++halfmoveNumber;
     }
   }
 
   boolean isRepetition() {
     // Search back until the last halfmoveClock reset
-    int j = Math.max(0, statesSize - halfmoveClock);
+    int j = max(0, statesSize - halfmoveClock);
     for (int i = statesSize - 2; i >= j; i -= 2) {
       if (zobristKey == states[i].zobristKey) {
         return true;
@@ -163,11 +213,11 @@ final class Position {
 
   boolean hasInsufficientMaterial() {
     // If there is only one minor left, we are unable to checkmate
-    return pieces[Color.WHITE][PieceType.PAWN].size() == 0 && pieces[Color.BLACK][PieceType.PAWN].size() == 0
-        && pieces[Color.WHITE][PieceType.ROOK].size() == 0 && pieces[Color.BLACK][PieceType.ROOK].size() == 0
-        && pieces[Color.WHITE][PieceType.QUEEN].size() == 0 && pieces[Color.BLACK][PieceType.QUEEN].size() == 0
-        && (pieces[Color.WHITE][PieceType.KNIGHT].size() + pieces[Color.WHITE][PieceType.BISHOP].size() <= 1)
-        && (pieces[Color.BLACK][PieceType.KNIGHT].size() + pieces[Color.BLACK][PieceType.BISHOP].size() <= 1);
+    return pieces[WHITE][PAWN].size() == 0 && pieces[BLACK][PAWN].size() == 0
+        && pieces[WHITE][ROOK].size() == 0 && pieces[BLACK][ROOK].size() == 0
+        && pieces[WHITE][QUEEN].size() == 0 && pieces[BLACK][QUEEN].size() == 0
+        && (pieces[WHITE][KNIGHT].size() + pieces[WHITE][BISHOP].size() <= 1)
+        && (pieces[BLACK][KNIGHT].size() + pieces[BLACK][BISHOP].size() <= 1);
   }
 
   /**
@@ -180,7 +230,7 @@ final class Position {
   void put(int piece, int square) {
     assert Piece.isValid(piece);
     assert Square.isValid(square);
-    assert board[square] == Piece.NOPIECE;
+    assert board[square] == NOPIECE;
 
     int piecetype = Piece.getType(piece);
     int color = Piece.getColor(piece);
@@ -208,7 +258,7 @@ final class Position {
     int piecetype = Piece.getType(piece);
     int color = Piece.getColor(piece);
 
-    board[square] = Piece.NOPIECE;
+    board[square] = NOPIECE;
     pieces[color][piecetype].remove(square);
     material[color] -= PieceType.getValue(piecetype);
 
@@ -230,20 +280,20 @@ final class Position {
 
     // Get variables
     int type = Move.getType(move);
-    int originSquare = Move.getOriginSquare(move);
-    int targetSquare = Move.getTargetSquare(move);
-    int originPiece = Move.getOriginPiece(move);
+    int originSquare = getOriginSquare(move);
+    int targetSquare = getTargetSquare(move);
+    int originPiece = getOriginPiece(move);
     int originColor = Piece.getColor(originPiece);
-    int targetPiece = Move.getTargetPiece(move);
+    int targetPiece = getTargetPiece(move);
 
     // Remove target piece and update castling rights
-    if (targetPiece != Piece.NOPIECE) {
+    if (targetPiece != NOPIECE) {
       int captureSquare = targetSquare;
-      if (type == MoveType.ENPASSANT) {
-        captureSquare += (originColor == Color.WHITE ? Square.S : Square.N);
+      if (type == ENPASSANT) {
+        captureSquare += (originColor == WHITE ? S : N);
       }
       assert targetPiece == board[captureSquare];
-      assert Piece.getType(targetPiece) != PieceType.KING;
+      assert Piece.getType(targetPiece) != KING;
       remove(captureSquare);
 
       clearCastling(captureSquare);
@@ -252,38 +302,38 @@ final class Position {
     // Move piece
     assert originPiece == board[originSquare];
     remove(originSquare);
-    if (type == MoveType.PAWNPROMOTION) {
-      put(Piece.valueOf(originColor, Move.getPromotion(move)), targetSquare);
+    if (type == PAWNPROMOTION) {
+      put(Piece.valueOf(originColor, getPromotion(move)), targetSquare);
     } else {
       put(originPiece, targetSquare);
     }
 
     // Move rook and update castling rights
-    if (type == MoveType.CASTLING) {
+    if (type == CASTLING) {
       int rookOriginSquare;
       int rookTargetSquare;
       switch (targetSquare) {
-        case Square.g1:
-          rookOriginSquare = Square.h1;
-          rookTargetSquare = Square.f1;
+        case g1:
+          rookOriginSquare = h1;
+          rookTargetSquare = f1;
           break;
-        case Square.c1:
-          rookOriginSquare = Square.a1;
-          rookTargetSquare = Square.d1;
+        case c1:
+          rookOriginSquare = a1;
+          rookTargetSquare = d1;
           break;
-        case Square.g8:
-          rookOriginSquare = Square.h8;
-          rookTargetSquare = Square.f8;
+        case g8:
+          rookOriginSquare = h8;
+          rookTargetSquare = f8;
           break;
-        case Square.c8:
-          rookOriginSquare = Square.a8;
-          rookTargetSquare = Square.d8;
+        case c8:
+          rookOriginSquare = a8;
+          rookTargetSquare = d8;
           break;
         default:
           throw new IllegalArgumentException();
       }
 
-      assert Piece.getType(board[rookOriginSquare]) == PieceType.ROOK;
+      assert Piece.getType(board[rookOriginSquare]) == ROOK;
       int rookPiece = remove(rookOriginSquare);
       put(rookPiece, rookTargetSquare);
     }
@@ -292,23 +342,23 @@ final class Position {
     clearCastling(originSquare);
 
     // Update enPassantSquare
-    if (enPassantSquare != Square.NOSQUARE) {
+    if (enPassantSquare != NOSQUARE) {
       zobristKey ^= Zobrist.enPassantSquare[enPassantSquare];
     }
-    if (type == MoveType.PAWNDOUBLE) {
-      enPassantSquare = targetSquare + (originColor == Color.WHITE ? Square.S : Square.N);
+    if (type == PAWNDOUBLE) {
+      enPassantSquare = targetSquare + (originColor == WHITE ? S : N);
       assert Square.isValid(enPassantSquare);
       zobristKey ^= Zobrist.enPassantSquare[enPassantSquare];
     } else {
-      enPassantSquare = Square.NOSQUARE;
+      enPassantSquare = NOSQUARE;
     }
 
     // Update activeColor
-    activeColor = Color.opposite(activeColor);
+    activeColor = opposite(activeColor);
     zobristKey ^= Zobrist.activeColor;
 
     // Update halfmoveClock
-    if (Piece.getType(originPiece) == PieceType.PAWN || targetPiece != Piece.NOPIECE) {
+    if (Piece.getType(originPiece) == PAWN || targetPiece != NOPIECE) {
       halfmoveClock = 0;
     } else {
       ++halfmoveClock;
@@ -321,44 +371,44 @@ final class Position {
   void undoMove(int move) {
     // Get variables
     int type = Move.getType(move);
-    int originSquare = Move.getOriginSquare(move);
-    int targetSquare = Move.getTargetSquare(move);
-    int originPiece = Move.getOriginPiece(move);
+    int originSquare = getOriginSquare(move);
+    int targetSquare = getTargetSquare(move);
+    int originPiece = getOriginPiece(move);
     int originColor = Piece.getColor(originPiece);
-    int targetPiece = Move.getTargetPiece(move);
+    int targetPiece = getTargetPiece(move);
 
     // Update fullMoveNumber
     --halfmoveNumber;
 
     // Update activeColor
-    activeColor = Color.opposite(activeColor);
+    activeColor = opposite(activeColor);
 
     // Undo move rook
-    if (type == MoveType.CASTLING) {
+    if (type == CASTLING) {
       int rookOriginSquare;
       int rookTargetSquare;
       switch (targetSquare) {
-        case Square.g1:
-          rookOriginSquare = Square.h1;
-          rookTargetSquare = Square.f1;
+        case g1:
+          rookOriginSquare = h1;
+          rookTargetSquare = f1;
           break;
-        case Square.c1:
-          rookOriginSquare = Square.a1;
-          rookTargetSquare = Square.d1;
+        case c1:
+          rookOriginSquare = a1;
+          rookTargetSquare = d1;
           break;
-        case Square.g8:
-          rookOriginSquare = Square.h8;
-          rookTargetSquare = Square.f8;
+        case g8:
+          rookOriginSquare = h8;
+          rookTargetSquare = f8;
           break;
-        case Square.c8:
-          rookOriginSquare = Square.a8;
-          rookTargetSquare = Square.d8;
+        case c8:
+          rookOriginSquare = a8;
+          rookTargetSquare = d8;
           break;
         default:
           throw new IllegalArgumentException();
       }
 
-      assert Piece.getType(board[rookTargetSquare]) == PieceType.ROOK;
+      assert Piece.getType(board[rookTargetSquare]) == ROOK;
       int rookPiece = remove(rookTargetSquare);
       put(rookPiece, rookOriginSquare);
     }
@@ -368,10 +418,10 @@ final class Position {
     put(originPiece, originSquare);
 
     // Restore target piece
-    if (targetPiece != Piece.NOPIECE) {
+    if (targetPiece != NOPIECE) {
       int captureSquare = targetSquare;
-      if (type == MoveType.ENPASSANT) {
-        captureSquare += (originColor == Color.WHITE ? Square.S : Square.N);
+      if (type == ENPASSANT) {
+        captureSquare += (originColor == WHITE ? S : N);
         assert Square.isValid(captureSquare);
       }
       put(targetPiece, captureSquare);
@@ -394,23 +444,23 @@ final class Position {
     int newCastlingRights = castlingRights;
 
     switch (square) {
-      case Square.a1:
-        newCastlingRights &= ~Castling.WHITE_QUEENSIDE;
+      case a1:
+        newCastlingRights &= ~WHITE_QUEENSIDE;
         break;
-      case Square.a8:
-        newCastlingRights &= ~Castling.BLACK_QUEENSIDE;
+      case a8:
+        newCastlingRights &= ~BLACK_QUEENSIDE;
         break;
-      case Square.h1:
-        newCastlingRights &= ~Castling.WHITE_KINGSIDE;
+      case h1:
+        newCastlingRights &= ~WHITE_KINGSIDE;
         break;
-      case Square.h8:
-        newCastlingRights &= ~Castling.BLACK_KINGSIDE;
+      case h8:
+        newCastlingRights &= ~BLACK_KINGSIDE;
         break;
-      case Square.e1:
-        newCastlingRights &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
+      case e1:
+        newCastlingRights &= ~(WHITE_KINGSIDE | WHITE_QUEENSIDE);
         break;
-      case Square.e8:
-        newCastlingRights &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
+      case e8:
+        newCastlingRights &= ~(BLACK_KINGSIDE | BLACK_QUEENSIDE);
         break;
       default:
         return;
@@ -424,12 +474,12 @@ final class Position {
 
   boolean isCheck() {
     // Check whether our king is attacked by any opponent piece
-    return isAttacked(Bitboard.next(pieces[activeColor][PieceType.KING].squares), Color.opposite(activeColor));
+    return isAttacked(next(pieces[activeColor][KING].squares), opposite(activeColor));
   }
 
   boolean isCheck(int color) {
     // Check whether the king for color is attacked by any opponent piece
-    return isAttacked(Bitboard.next(pieces[color][PieceType.KING].squares), Color.opposite(color));
+    return isAttacked(next(pieces[color][KING].squares), opposite(color));
   }
 
   /**
@@ -445,9 +495,9 @@ final class Position {
     assert Color.isValid(attackerColor);
 
     // Pawn attacks
-    int pawnPiece = Piece.valueOf(attackerColor, PieceType.PAWN);
-    for (int i = 1; i < Square.pawnDirections[attackerColor].length; ++i) {
-      int attackerSquare = targetSquare - Square.pawnDirections[attackerColor][i];
+    int pawnPiece = Piece.valueOf(attackerColor, PAWN);
+    for (int i = 1; i < pawnDirections[attackerColor].length; ++i) {
+      int attackerSquare = targetSquare - pawnDirections[attackerColor][i];
       if (Square.isValid(attackerSquare)) {
         int attackerPawn = board[attackerSquare];
 
@@ -458,24 +508,24 @@ final class Position {
     }
 
     return isAttacked(targetSquare,
-        Piece.valueOf(attackerColor, PieceType.KNIGHT),
-        Square.knightDirections)
+        Piece.valueOf(attackerColor, KNIGHT),
+        knightDirections)
 
         // The queen moves like a bishop, so check both piece types
         || isAttacked(targetSquare,
-        Piece.valueOf(attackerColor, PieceType.BISHOP),
-        Piece.valueOf(attackerColor, PieceType.QUEEN),
-        Square.bishopDirections)
+        Piece.valueOf(attackerColor, BISHOP),
+        Piece.valueOf(attackerColor, QUEEN),
+        bishopDirections)
 
         // The queen moves like a rook, so check both piece types
         || isAttacked(targetSquare,
-        Piece.valueOf(attackerColor, PieceType.ROOK),
-        Piece.valueOf(attackerColor, PieceType.QUEEN),
-        Square.rookDirections)
+        Piece.valueOf(attackerColor, ROOK),
+        Piece.valueOf(attackerColor, QUEEN),
+        rookDirections)
 
         || isAttacked(targetSquare,
-        Piece.valueOf(attackerColor, PieceType.KING),
-        Square.kingDirections);
+        Piece.valueOf(attackerColor, KING),
+        kingDirections);
   }
 
   /**
