@@ -6,6 +6,12 @@
  */
 package com.fluxchess.pulse;
 
+import static com.fluxchess.pulse.MoveType.NOMOVETYPE;
+import static com.fluxchess.pulse.Piece.NOPIECE;
+import static com.fluxchess.pulse.PieceType.NOPIECETYPE;
+import static com.fluxchess.pulse.PieceType.isValidPromotion;
+import static com.fluxchess.pulse.Square.NOSQUARE;
+
 /**
  * This class represents a move as a int value. The fields are represented by
  * the following bits.
@@ -34,12 +40,12 @@ final class Move {
   private static final int PROMOTION_MASK = PieceType.MASK << PROMOTION_SHIFT;
 
   // We don't use 0 as a null value to protect against errors.
-  static final int NOMOVE = (MoveType.NOMOVETYPE << TYPE_SHIFT)
-      | (Square.NOSQUARE << ORIGIN_SQUARE_SHIFT)
-      | (Square.NOSQUARE << TARGET_SQUARE_SHIFT)
-      | (Piece.NOPIECE << ORIGIN_PIECE_SHIFT)
-      | (Piece.NOPIECE << TARGET_PIECE_SHIFT)
-      | (PieceType.NOPIECETYPE << PROMOTION_SHIFT);
+  static final int NOMOVE = (NOMOVETYPE << TYPE_SHIFT)
+      | (NOSQUARE << ORIGIN_SQUARE_SHIFT)
+      | (NOSQUARE << TARGET_SQUARE_SHIFT)
+      | (NOPIECE << ORIGIN_PIECE_SHIFT)
+      | (NOPIECE << TARGET_PIECE_SHIFT)
+      | (NOPIECETYPE << PROMOTION_SHIFT);
 
   private Move() {
   }
@@ -64,11 +70,11 @@ final class Move {
     move |= originPiece << ORIGIN_PIECE_SHIFT;
 
     // Encode target piece
-    assert Piece.isValid(targetPiece) || targetPiece == Piece.NOPIECE;
+    assert Piece.isValid(targetPiece) || targetPiece == NOPIECE;
     move |= targetPiece << TARGET_PIECE_SHIFT;
 
     // Encode promotion
-    assert PieceType.isValidPromotion(promotion) || promotion == PieceType.NOPIECETYPE;
+    assert isValidPromotion(promotion) || promotion == NOPIECETYPE;
     move |= promotion << PROMOTION_SHIFT;
 
     return move;
@@ -104,14 +110,14 @@ final class Move {
 
   static int getTargetPiece(int move) {
     int targetPiece = (move & TARGET_PIECE_MASK) >>> TARGET_PIECE_SHIFT;
-    assert Piece.isValid(targetPiece) || targetPiece == Piece.NOPIECE;
+    assert Piece.isValid(targetPiece) || targetPiece == NOPIECE;
 
     return targetPiece;
   }
 
   static int getPromotion(int move) {
     int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
-    assert PieceType.isValidPromotion(promotion) || promotion == PieceType.NOPIECETYPE;
+    assert isValidPromotion(promotion) || promotion == NOPIECETYPE;
 
     return promotion;
   }
