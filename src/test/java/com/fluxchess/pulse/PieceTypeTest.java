@@ -10,6 +10,14 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static com.fluxchess.pulse.PieceType.BISHOP;
+import static com.fluxchess.pulse.PieceType.KING;
+import static com.fluxchess.pulse.PieceType.KNIGHT;
+import static com.fluxchess.pulse.PieceType.NOPIECETYPE;
+import static com.fluxchess.pulse.PieceType.PAWN;
+import static com.fluxchess.pulse.PieceType.QUEEN;
+import static com.fluxchess.pulse.PieceType.ROOK;
+import static com.fluxchess.pulse.PieceType.isValidPromotion;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -35,28 +43,28 @@ public class PieceTypeTest {
       assertThat(PieceType.isValid(piecetype), is(true));
     }
 
-    assertThat(PieceType.isValid(PieceType.NOPIECETYPE), is(false));
+    assertThat(PieceType.isValid(NOPIECETYPE), is(false));
   }
 
   @Test
   public void testIsValidPromotion() {
-    assertThat(PieceType.isValidPromotion(PieceType.KNIGHT), is(true));
-    assertThat(PieceType.isValidPromotion(PieceType.BISHOP), is(true));
-    assertThat(PieceType.isValidPromotion(PieceType.ROOK), is(true));
-    assertThat(PieceType.isValidPromotion(PieceType.QUEEN), is(true));
-    assertThat(PieceType.isValidPromotion(PieceType.PAWN), is(false));
-    assertThat(PieceType.isValidPromotion(PieceType.KING), is(false));
-    assertThat(PieceType.isValidPromotion(PieceType.NOPIECETYPE), is(false));
+    assertThat(isValidPromotion(KNIGHT), is(true));
+    assertThat(isValidPromotion(BISHOP), is(true));
+    assertThat(isValidPromotion(ROOK), is(true));
+    assertThat(isValidPromotion(QUEEN), is(true));
+    assertThat(isValidPromotion(PAWN), is(false));
+    assertThat(isValidPromotion(KING), is(false));
+    assertThat(isValidPromotion(NOPIECETYPE), is(false));
   }
 
   @Test
   public void testIsSliding() {
-    assertThat(PieceType.isSliding(PieceType.BISHOP), is(true));
-    assertThat(PieceType.isSliding(PieceType.ROOK), is(true));
-    assertThat(PieceType.isSliding(PieceType.QUEEN), is(true));
-    assertThat(PieceType.isSliding(PieceType.PAWN), is(false));
-    assertThat(PieceType.isSliding(PieceType.KNIGHT), is(false));
-    assertThat(PieceType.isSliding(PieceType.KING), is(false));
+    assertThat(PieceType.isSliding(BISHOP), is(true));
+    assertThat(PieceType.isSliding(ROOK), is(true));
+    assertThat(PieceType.isSliding(QUEEN), is(true));
+    assertThat(PieceType.isSliding(PAWN), is(false));
+    assertThat(PieceType.isSliding(KNIGHT), is(false));
+    assertThat(PieceType.isSliding(KING), is(false));
   }
 
 }
