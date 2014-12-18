@@ -6,8 +6,26 @@
  */
 package com.fluxchess.pulse;
 
-import com.fluxchess.jcpi.commands.*;
-import com.fluxchess.jcpi.models.*;
+import com.fluxchess.jcpi.commands.EngineAnalyzeCommand;
+import com.fluxchess.jcpi.commands.EngineDebugCommand;
+import com.fluxchess.jcpi.commands.EngineInitializeRequestCommand;
+import com.fluxchess.jcpi.commands.EngineNewGameCommand;
+import com.fluxchess.jcpi.commands.EnginePonderHitCommand;
+import com.fluxchess.jcpi.commands.EngineQuitCommand;
+import com.fluxchess.jcpi.commands.EngineReadyRequestCommand;
+import com.fluxchess.jcpi.commands.EngineSetOptionCommand;
+import com.fluxchess.jcpi.commands.EngineStartCalculatingCommand;
+import com.fluxchess.jcpi.commands.EngineStopCalculatingCommand;
+import com.fluxchess.jcpi.commands.IEngineCommand;
+import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
+import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
+import com.fluxchess.jcpi.commands.ProtocolInitializeAnswerCommand;
+import com.fluxchess.jcpi.commands.ProtocolReadyAnswerCommand;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericColor;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.GenericPosition;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 import com.fluxchess.jcpi.options.CheckboxOption;
 import com.fluxchess.jcpi.options.Options;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
@@ -22,9 +40,11 @@ import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.CoreMatchers.*;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -85,7 +105,7 @@ public class PulseTest {
       }
     }).run();
 
-    assertThat(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS), is(true));
+    assertThat(semaphore.tryAcquire(10000, MILLISECONDS), is(true));
 
     assertThat(bestMove[0], is(notNullValue()));
     assertThat(ponderMove[0], is(notNullValue()));
@@ -129,7 +149,7 @@ public class PulseTest {
       }
     }).run();
 
-    assertThat(semaphore.tryAcquire(10000, TimeUnit.MILLISECONDS), is(true));
+    assertThat(semaphore.tryAcquire(10000, MILLISECONDS), is(true));
 
     assertThat(bestMove[0], is(notNullValue()));
     assertThat(ponderMove[0], is(nullValue()));
