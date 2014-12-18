@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static com.fluxchess.pulse.File.NOFILE;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -35,7 +36,7 @@ public class FileTest {
       assertThat(File.isValid(file), is(true));
     }
 
-    assertThat(File.isValid(File.NOFILE), is(false));
+    assertThat(File.isValid(NOFILE), is(false));
   }
 
 }
