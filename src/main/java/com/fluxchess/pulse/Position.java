@@ -20,11 +20,6 @@ import static com.fluxchess.pulse.Color.BLACK;
 import static com.fluxchess.pulse.Color.WHITE;
 import static com.fluxchess.pulse.Color.opposite;
 import static com.fluxchess.pulse.Depth.MAX_PLY;
-import static com.fluxchess.pulse.Move.getOriginPiece;
-import static com.fluxchess.pulse.Move.getOriginSquare;
-import static com.fluxchess.pulse.Move.getPromotion;
-import static com.fluxchess.pulse.Move.getTargetPiece;
-import static com.fluxchess.pulse.Move.getTargetSquare;
 import static com.fluxchess.pulse.MoveType.CASTLING;
 import static com.fluxchess.pulse.MoveType.ENPASSANT;
 import static com.fluxchess.pulse.MoveType.PAWNDOUBLE;
@@ -280,11 +275,11 @@ final class Position {
 
     // Get variables
     int type = Move.getType(move);
-    int originSquare = getOriginSquare(move);
-    int targetSquare = getTargetSquare(move);
-    int originPiece = getOriginPiece(move);
+    int originSquare = Move.getOriginSquare(move);
+    int targetSquare = Move.getTargetSquare(move);
+    int originPiece = Move.getOriginPiece(move);
     int originColor = Piece.getColor(originPiece);
-    int targetPiece = getTargetPiece(move);
+    int targetPiece = Move.getTargetPiece(move);
 
     // Remove target piece and update castling rights
     if (targetPiece != NOPIECE) {
@@ -303,7 +298,7 @@ final class Position {
     assert originPiece == board[originSquare];
     remove(originSquare);
     if (type == PAWNPROMOTION) {
-      put(Piece.valueOf(originColor, getPromotion(move)), targetSquare);
+      put(Piece.valueOf(originColor, Move.getPromotion(move)), targetSquare);
     } else {
       put(originPiece, targetSquare);
     }
@@ -371,11 +366,11 @@ final class Position {
   void undoMove(int move) {
     // Get variables
     int type = Move.getType(move);
-    int originSquare = getOriginSquare(move);
-    int targetSquare = getTargetSquare(move);
-    int originPiece = getOriginPiece(move);
+    int originSquare = Move.getOriginSquare(move);
+    int targetSquare = Move.getTargetSquare(move);
+    int originPiece = Move.getOriginPiece(move);
     int originColor = Piece.getColor(originPiece);
-    int targetPiece = getTargetPiece(move);
+    int targetPiece = Move.getTargetPiece(move);
 
     // Update fullMoveNumber
     --halfmoveNumber;

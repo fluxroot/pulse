@@ -31,9 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.fluxchess.pulse.Move.NOMOVE;
-import static com.fluxchess.pulse.Move.getOriginSquare;
-import static com.fluxchess.pulse.Move.getPromotion;
-import static com.fluxchess.pulse.Move.getTargetSquare;
 import static com.fluxchess.pulse.MoveList.MoveEntry;
 import static com.fluxchess.pulse.MoveList.RootEntry;
 import static com.fluxchess.pulse.MoveType.CASTLING;
@@ -316,8 +313,8 @@ final class Pulse extends AbstractEngine implements Protocol {
 
   static GenericMove fromMove(int move) {
     int type = Move.getType(move);
-    int originSquare = getOriginSquare(move);
-    int targetSquare = getTargetSquare(move);
+    int originSquare = Move.getOriginSquare(move);
+    int targetSquare = Move.getTargetSquare(move);
 
     switch (type) {
       case NORMAL:
@@ -332,7 +329,7 @@ final class Pulse extends AbstractEngine implements Protocol {
         return new GenericMove(
             Notation.fromSquare(originSquare),
             Notation.fromSquare(targetSquare),
-            Notation.fromPieceType(getPromotion(move))
+            Notation.fromPieceType(Move.getPromotion(move))
         );
       default:
         throw new IllegalArgumentException();

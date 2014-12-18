@@ -8,9 +8,8 @@ package com.fluxchess.pulse;
 
 import java.lang.reflect.Array;
 
+import static com.fluxchess.pulse.Depth.MAX_PLY;
 import static com.fluxchess.pulse.Move.NOMOVE;
-import static com.fluxchess.pulse.Move.getOriginPiece;
-import static com.fluxchess.pulse.Move.getTargetPiece;
 import static com.fluxchess.pulse.PieceType.KING_VALUE;
 import static com.fluxchess.pulse.PieceType.PAWN_VALUE;
 import static com.fluxchess.pulse.PieceType.QUEEN_VALUE;
@@ -28,7 +27,7 @@ final class MoveList<T extends MoveList.MoveEntry> {
   int size = 0;
 
   static final class MoveVariation {
-    final int[] moves = new int[Depth.MAX_PLY];
+    final int[] moves = new int[MAX_PLY];
     int size = 0;
   }
 
@@ -79,10 +78,10 @@ final class MoveList<T extends MoveList.MoveEntry> {
       int move = entries[i].move;
       int value = 0;
 
-      int piecetypeValue = PieceType.getValue(Piece.getType(getOriginPiece(move)));
+      int piecetypeValue = PieceType.getValue(Piece.getType(Move.getOriginPiece(move)));
       value += KING_VALUE / piecetypeValue;
 
-      int target = getTargetPiece(move);
+      int target = Move.getTargetPiece(move);
       if (Piece.isValid(target)) {
         value += 10 * PieceType.getValue(Piece.getType(target));
       }

@@ -67,8 +67,6 @@ import static com.fluxchess.pulse.Rank.r6;
 import static com.fluxchess.pulse.Rank.r7;
 import static com.fluxchess.pulse.Rank.r8;
 import static com.fluxchess.pulse.Square.NOSQUARE;
-import static com.fluxchess.pulse.Square.getFile;
-import static com.fluxchess.pulse.Square.getRank;
 
 final class Notation {
 
@@ -405,6 +403,6 @@ final class Notation {
   static GenericPosition fromSquare(int square) {
     assert Square.isValid(square);
 
-    return GenericPosition.valueOf(fromFile(getFile(square)), fromRank(getRank(square)));
+    return GenericPosition.valueOf(fromFile(Square.getFile(square)), fromRank(Square.getRank(square)));
   }
 }

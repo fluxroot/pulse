@@ -17,7 +17,6 @@ import static com.fluxchess.pulse.PieceType.NOPIECETYPE;
 import static com.fluxchess.pulse.PieceType.PAWN;
 import static com.fluxchess.pulse.PieceType.QUEEN;
 import static com.fluxchess.pulse.PieceType.ROOK;
-import static com.fluxchess.pulse.PieceType.isValidPromotion;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -48,13 +47,13 @@ public class PieceTypeTest {
 
   @Test
   public void testIsValidPromotion() {
-    assertThat(isValidPromotion(KNIGHT), is(true));
-    assertThat(isValidPromotion(BISHOP), is(true));
-    assertThat(isValidPromotion(ROOK), is(true));
-    assertThat(isValidPromotion(QUEEN), is(true));
-    assertThat(isValidPromotion(PAWN), is(false));
-    assertThat(isValidPromotion(KING), is(false));
-    assertThat(isValidPromotion(NOPIECETYPE), is(false));
+    assertThat(PieceType.isValidPromotion(KNIGHT), is(true));
+    assertThat(PieceType.isValidPromotion(BISHOP), is(true));
+    assertThat(PieceType.isValidPromotion(ROOK), is(true));
+    assertThat(PieceType.isValidPromotion(QUEEN), is(true));
+    assertThat(PieceType.isValidPromotion(PAWN), is(false));
+    assertThat(PieceType.isValidPromotion(KING), is(false));
+    assertThat(PieceType.isValidPromotion(NOPIECETYPE), is(false));
   }
 
   @Test

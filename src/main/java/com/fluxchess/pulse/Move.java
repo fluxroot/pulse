@@ -9,7 +9,6 @@ package com.fluxchess.pulse;
 import static com.fluxchess.pulse.MoveType.NOMOVETYPE;
 import static com.fluxchess.pulse.Piece.NOPIECE;
 import static com.fluxchess.pulse.PieceType.NOPIECETYPE;
-import static com.fluxchess.pulse.PieceType.isValidPromotion;
 import static com.fluxchess.pulse.Square.NOSQUARE;
 
 /**
@@ -74,7 +73,7 @@ final class Move {
     move |= targetPiece << TARGET_PIECE_SHIFT;
 
     // Encode promotion
-    assert isValidPromotion(promotion) || promotion == NOPIECETYPE;
+    assert PieceType.isValidPromotion(promotion) || promotion == NOPIECETYPE;
     move |= promotion << PROMOTION_SHIFT;
 
     return move;
@@ -117,7 +116,7 @@ final class Move {
 
   static int getPromotion(int move) {
     int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
-    assert isValidPromotion(promotion) || promotion == NOPIECETYPE;
+    assert PieceType.isValidPromotion(promotion) || promotion == NOPIECETYPE;
 
     return promotion;
   }

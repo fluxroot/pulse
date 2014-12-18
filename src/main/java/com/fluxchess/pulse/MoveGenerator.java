@@ -18,7 +18,6 @@ import static com.fluxchess.pulse.Castling.WHITE_QUEENSIDE;
 import static com.fluxchess.pulse.Color.BLACK;
 import static com.fluxchess.pulse.Color.WHITE;
 import static com.fluxchess.pulse.Color.opposite;
-import static com.fluxchess.pulse.Move.getTargetPiece;
 import static com.fluxchess.pulse.MoveList.MoveEntry;
 import static com.fluxchess.pulse.MoveType.CASTLING;
 import static com.fluxchess.pulse.MoveType.ENPASSANT;
@@ -61,7 +60,6 @@ import static com.fluxchess.pulse.Square.f1;
 import static com.fluxchess.pulse.Square.f8;
 import static com.fluxchess.pulse.Square.g1;
 import static com.fluxchess.pulse.Square.g8;
-import static com.fluxchess.pulse.Square.getRank;
 import static com.fluxchess.pulse.Square.h1;
 import static com.fluxchess.pulse.Square.h8;
 import static com.fluxchess.pulse.Square.kingDirections;
@@ -113,7 +111,7 @@ final class MoveGenerator {
         int size = moves.size;
         moves.size = 0;
         for (int i = 0; i < size; ++i) {
-          if (getTargetPiece(moves.entries[i].move) != NOPIECE) {
+          if (Move.getTargetPiece(moves.entries[i].move) != NOPIECE) {
             // Add only capturing moves
             moves.entries[moves.size++].move = moves.entries[i].move;
           }
@@ -213,8 +211,8 @@ final class MoveGenerator {
           if (Piece.getColor(targetPiece) == opposite(pawnColor)) {
             // Capturing move
 
-            if ((pawnColor == WHITE && getRank(targetSquare) == r8)
-                || (pawnColor == BLACK && getRank(targetSquare) == r1)) {
+            if ((pawnColor == WHITE && Square.getRank(targetSquare) == r8)
+                || (pawnColor == BLACK && Square.getRank(targetSquare) == r1)) {
               // Pawn promotion capturing move
 
               list.entries[list.size++].move = Move.valueOf(
@@ -234,8 +232,8 @@ final class MoveGenerator {
           }
         } else if (targetSquare == position.enPassantSquare) {
           // En passant move
-          assert (pawnColor == BLACK && getRank(targetSquare) == r3)
-              || (pawnColor == WHITE && getRank(targetSquare) == r6);
+          assert (pawnColor == BLACK && Square.getRank(targetSquare) == r3)
+              || (pawnColor == WHITE && Square.getRank(targetSquare) == r6);
 
           int captureSquare = targetSquare + (pawnColor == WHITE ? S : N);
           targetPiece = position.board[captureSquare];
@@ -254,8 +252,8 @@ final class MoveGenerator {
     // Move one rank forward
     int targetSquare = pawnSquare + direction;
     if (Square.isValid(targetSquare) && position.board[targetSquare] == NOPIECE) {
-      if ((pawnColor == WHITE && getRank(targetSquare) == r8)
-          || (pawnColor == BLACK && getRank(targetSquare) == r1)) {
+      if ((pawnColor == WHITE && Square.getRank(targetSquare) == r8)
+          || (pawnColor == BLACK && Square.getRank(targetSquare) == r1)) {
         // Pawn promotion move
 
         list.entries[list.size++].move = Move.valueOf(
@@ -275,8 +273,8 @@ final class MoveGenerator {
         // Move another rank forward
         targetSquare += direction;
         if (Square.isValid(targetSquare) && position.board[targetSquare] == NOPIECE) {
-          if ((pawnColor == WHITE && getRank(targetSquare) == r4)
-              || (pawnColor == BLACK && getRank(targetSquare) == r5)) {
+          if ((pawnColor == WHITE && Square.getRank(targetSquare) == r4)
+              || (pawnColor == BLACK && Square.getRank(targetSquare) == r5)) {
             // Pawn double move
 
             list.entries[list.size++].move = Move.valueOf(
