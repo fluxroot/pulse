@@ -40,6 +40,7 @@ import static com.fluxchess.pulse.MoveType.PAWNDOUBLE;
 import static com.fluxchess.pulse.MoveType.PAWNPROMOTION;
 import static com.fluxchess.pulse.Value.CHECKMATE;
 import static com.fluxchess.pulse.Value.CHECKMATE_THRESHOLD;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.Integer.signum;
 import static java.lang.Math.abs;
 import static java.lang.System.currentTimeMillis;
@@ -119,7 +120,7 @@ final class Pulse extends AbstractEngine implements Protocol {
   }
 
   public void receive(EngineReadyRequestCommand command) {
-    if (command == null) throw new IllegalArgumentException();
+    checkNotNull(command);
 
     // We received a ready request. We must send the token back as soon as we
     // can. However, because we launch the search in a separate thread, our main
@@ -139,7 +140,7 @@ final class Pulse extends AbstractEngine implements Protocol {
   }
 
   public void receive(EngineAnalyzeCommand command) {
-    if (command == null) throw new IllegalArgumentException();
+    checkNotNull(command);
 
     search.stop();
 
@@ -173,7 +174,7 @@ final class Pulse extends AbstractEngine implements Protocol {
   }
 
   public void receive(EngineStartCalculatingCommand command) {
-    if (command == null) throw new IllegalArgumentException();
+    checkNotNull(command);
 
     search.stop();
 
