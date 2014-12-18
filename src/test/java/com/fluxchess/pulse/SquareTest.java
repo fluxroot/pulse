@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static com.fluxchess.pulse.Square.NOSQUARE;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -40,7 +41,7 @@ public class SquareTest {
       assertThat(Square.isValid(square), is(true));
     }
 
-    assertThat(Square.isValid(Square.NOSQUARE), is(false));
+    assertThat(Square.isValid(NOSQUARE), is(false));
   }
 
 }
