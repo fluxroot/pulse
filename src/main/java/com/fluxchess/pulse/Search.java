@@ -86,8 +86,7 @@ final class Search implements Runnable {
     }
   }
 
-  void newDepthSearch(Position position, int searchDepth) {
-    if (position == null) throw new IllegalArgumentException();
+  void newDepthSearch(@NotNull Position position, int searchDepth) {
     if (searchDepth < 1 || searchDepth > MAX_DEPTH) throw new IllegalArgumentException();
     if (running) throw new IllegalStateException();
 
@@ -97,8 +96,7 @@ final class Search implements Runnable {
     this.searchDepth = searchDepth;
   }
 
-  void newNodesSearch(Position position, long searchNodes) {
-    if (position == null) throw new IllegalArgumentException();
+  void newNodesSearch(@NotNull Position position, long searchNodes) {
     if (searchNodes < 1) throw new IllegalArgumentException();
     if (running) throw new IllegalStateException();
 
@@ -108,8 +106,7 @@ final class Search implements Runnable {
     this.searchNodes = searchNodes;
   }
 
-  void newTimeSearch(Position position, long searchTime) {
-    if (position == null) throw new IllegalArgumentException();
+  void newTimeSearch(@NotNull Position position, long searchTime) {
     if (searchTime < 1) throw new IllegalArgumentException();
     if (running) throw new IllegalStateException();
 
@@ -120,8 +117,7 @@ final class Search implements Runnable {
     this.timer = new Timer(true);
   }
 
-  void newInfiniteSearch(Position position) {
-    if (position == null) throw new IllegalArgumentException();
+  void newInfiniteSearch(@NotNull Position position) {
     if (running) throw new IllegalStateException();
 
     reset();
@@ -129,7 +125,7 @@ final class Search implements Runnable {
     this.position = position;
   }
 
-  void newClockSearch(Position position,
+  void newClockSearch(@NotNull Position position,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
     newPonderSearch(position,
         whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
@@ -138,9 +134,8 @@ final class Search implements Runnable {
     this.timer = new Timer(true);
   }
 
-  void newPonderSearch(Position position,
+  void newPonderSearch(@NotNull Position position,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
-    if (position == null) throw new IllegalArgumentException();
     if (whiteTimeLeft < 1) throw new IllegalArgumentException();
     if (whiteTimeIncrement < 0) throw new IllegalArgumentException();
     if (blackTimeLeft < 1) throw new IllegalArgumentException();
