@@ -10,6 +10,27 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static com.fluxchess.pulse.Color.BLACK;
+import static com.fluxchess.pulse.Color.WHITE;
+import static com.fluxchess.pulse.Piece.BLACK_BISHOP;
+import static com.fluxchess.pulse.Piece.BLACK_KING;
+import static com.fluxchess.pulse.Piece.BLACK_KNIGHT;
+import static com.fluxchess.pulse.Piece.BLACK_PAWN;
+import static com.fluxchess.pulse.Piece.BLACK_QUEEN;
+import static com.fluxchess.pulse.Piece.BLACK_ROOK;
+import static com.fluxchess.pulse.Piece.NOPIECE;
+import static com.fluxchess.pulse.Piece.WHITE_BISHOP;
+import static com.fluxchess.pulse.Piece.WHITE_KING;
+import static com.fluxchess.pulse.Piece.WHITE_KNIGHT;
+import static com.fluxchess.pulse.Piece.WHITE_PAWN;
+import static com.fluxchess.pulse.Piece.WHITE_QUEEN;
+import static com.fluxchess.pulse.Piece.WHITE_ROOK;
+import static com.fluxchess.pulse.PieceType.BISHOP;
+import static com.fluxchess.pulse.PieceType.KING;
+import static com.fluxchess.pulse.PieceType.KNIGHT;
+import static com.fluxchess.pulse.PieceType.PAWN;
+import static com.fluxchess.pulse.PieceType.QUEEN;
+import static com.fluxchess.pulse.PieceType.ROOK;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -39,39 +60,39 @@ public class PieceTest {
       assertThat(Piece.isValid(piece), is(true));
     }
 
-    assertThat(Piece.isValid(Piece.NOPIECE), is(false));
+    assertThat(Piece.isValid(NOPIECE), is(false));
   }
 
   @Test
   public void testGetType() {
-    assertThat(Piece.getType(Piece.WHITE_PAWN), is(PieceType.PAWN));
-    assertThat(Piece.getType(Piece.BLACK_PAWN), is(PieceType.PAWN));
-    assertThat(Piece.getType(Piece.WHITE_KNIGHT), is(PieceType.KNIGHT));
-    assertThat(Piece.getType(Piece.BLACK_KNIGHT), is(PieceType.KNIGHT));
-    assertThat(Piece.getType(Piece.WHITE_BISHOP), is(PieceType.BISHOP));
-    assertThat(Piece.getType(Piece.BLACK_BISHOP), is(PieceType.BISHOP));
-    assertThat(Piece.getType(Piece.WHITE_ROOK), is(PieceType.ROOK));
-    assertThat(Piece.getType(Piece.BLACK_ROOK), is(PieceType.ROOK));
-    assertThat(Piece.getType(Piece.WHITE_QUEEN), is(PieceType.QUEEN));
-    assertThat(Piece.getType(Piece.BLACK_QUEEN), is(PieceType.QUEEN));
-    assertThat(Piece.getType(Piece.WHITE_KING), is(PieceType.KING));
-    assertThat(Piece.getType(Piece.BLACK_KING), is(PieceType.KING));
+    assertThat(Piece.getType(WHITE_PAWN), is(PAWN));
+    assertThat(Piece.getType(BLACK_PAWN), is(PAWN));
+    assertThat(Piece.getType(WHITE_KNIGHT), is(KNIGHT));
+    assertThat(Piece.getType(BLACK_KNIGHT), is(KNIGHT));
+    assertThat(Piece.getType(WHITE_BISHOP), is(BISHOP));
+    assertThat(Piece.getType(BLACK_BISHOP), is(BISHOP));
+    assertThat(Piece.getType(WHITE_ROOK), is(ROOK));
+    assertThat(Piece.getType(BLACK_ROOK), is(ROOK));
+    assertThat(Piece.getType(WHITE_QUEEN), is(QUEEN));
+    assertThat(Piece.getType(BLACK_QUEEN), is(QUEEN));
+    assertThat(Piece.getType(WHITE_KING), is(KING));
+    assertThat(Piece.getType(BLACK_KING), is(KING));
   }
 
   @Test
   public void testGetColor() {
-    assertThat(Piece.getColor(Piece.WHITE_PAWN), is(Color.WHITE));
-    assertThat(Piece.getColor(Piece.BLACK_PAWN), is(Color.BLACK));
-    assertThat(Piece.getColor(Piece.WHITE_KNIGHT), is(Color.WHITE));
-    assertThat(Piece.getColor(Piece.BLACK_KNIGHT), is(Color.BLACK));
-    assertThat(Piece.getColor(Piece.WHITE_BISHOP), is(Color.WHITE));
-    assertThat(Piece.getColor(Piece.BLACK_BISHOP), is(Color.BLACK));
-    assertThat(Piece.getColor(Piece.WHITE_ROOK), is(Color.WHITE));
-    assertThat(Piece.getColor(Piece.BLACK_ROOK), is(Color.BLACK));
-    assertThat(Piece.getColor(Piece.WHITE_QUEEN), is(Color.WHITE));
-    assertThat(Piece.getColor(Piece.BLACK_QUEEN), is(Color.BLACK));
-    assertThat(Piece.getColor(Piece.WHITE_KING), is(Color.WHITE));
-    assertThat(Piece.getColor(Piece.BLACK_KING), is(Color.BLACK));
+    assertThat(Piece.getColor(WHITE_PAWN), is(WHITE));
+    assertThat(Piece.getColor(BLACK_PAWN), is(BLACK));
+    assertThat(Piece.getColor(WHITE_KNIGHT), is(WHITE));
+    assertThat(Piece.getColor(BLACK_KNIGHT), is(BLACK));
+    assertThat(Piece.getColor(WHITE_BISHOP), is(WHITE));
+    assertThat(Piece.getColor(BLACK_BISHOP), is(BLACK));
+    assertThat(Piece.getColor(WHITE_ROOK), is(WHITE));
+    assertThat(Piece.getColor(BLACK_ROOK), is(BLACK));
+    assertThat(Piece.getColor(WHITE_QUEEN), is(WHITE));
+    assertThat(Piece.getColor(BLACK_QUEEN), is(BLACK));
+    assertThat(Piece.getColor(WHITE_KING), is(WHITE));
+    assertThat(Piece.getColor(BLACK_KING), is(BLACK));
   }
 
 }
