@@ -10,6 +10,10 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static com.fluxchess.pulse.Color.BLACK;
+import static com.fluxchess.pulse.Color.NOCOLOR;
+import static com.fluxchess.pulse.Color.WHITE;
+import static com.fluxchess.pulse.Color.opposite;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -35,13 +39,13 @@ public class ColorTest {
       assertThat(Color.isValid(color), is(true));
     }
 
-    assertThat(Color.isValid(Color.NOCOLOR), is(false));
+    assertThat(Color.isValid(NOCOLOR), is(false));
   }
 
   @Test
   public void testOpposite() {
-    assertThat(Color.opposite(Color.BLACK), is(Color.WHITE));
-    assertThat(Color.opposite(Color.WHITE), is(Color.BLACK));
+    assertThat(opposite(BLACK), is(WHITE));
+    assertThat(opposite(WHITE), is(BLACK));
   }
 
 }
