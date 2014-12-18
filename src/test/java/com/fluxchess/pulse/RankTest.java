@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static com.fluxchess.pulse.Rank.NORANK;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -35,7 +36,7 @@ public class RankTest {
       assertThat(Rank.isValid(rank), is(true));
     }
 
-    assertThat(Rank.isValid(Rank.NORANK), is(false));
+    assertThat(Rank.isValid(NORANK), is(false));
   }
 
 }
