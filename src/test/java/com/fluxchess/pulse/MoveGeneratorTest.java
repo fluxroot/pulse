@@ -13,9 +13,9 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 
 import static com.fluxchess.pulse.MoveList.MoveEntry;
+import static com.google.common.collect.Sets.newHashSet;
 
 public class MoveGeneratorTest {
 
@@ -233,23 +233,23 @@ public class MoveGeneratorTest {
 
     // Get expected moves from JCPI
     GenericBoard genericBoard = Notation.toGenericBoard(position);
-    Collection<GenericMove> expectedMoves = new HashSet<>(Arrays.asList(
+    Collection<GenericMove> expectedMoves = newHashSet(Arrays.asList(
         com.fluxchess.jcpi.utils.MoveGenerator.getGenericMoves(genericBoard)
     ));
 
     // Get actual moves
     boolean isCheck = position.isCheck();
     MoveList<MoveEntry> moves = moveGenerators[ply].getLegalMoves(position, depth, isCheck);
-    Collection<GenericMove> actualMoves = new HashSet<>();
+    Collection<GenericMove> actualMoves = newHashSet();
     for (int i = 0; i < moves.size; ++i) {
       actualMoves.add(Pulse.fromMove(moves.entries[i].move));
     }
 
     // Compare expected and actual moves
-    Collection<GenericMove> invalidMoves = new HashSet<>(actualMoves);
+    Collection<GenericMove> invalidMoves = newHashSet(actualMoves);
     invalidMoves.removeAll(expectedMoves);
 
-    Collection<GenericMove> missingMoves = new HashSet<>(expectedMoves);
+    Collection<GenericMove> missingMoves = newHashSet(expectedMoves);
     missingMoves.removeAll(actualMoves);
 
     if (invalidMoves.isEmpty() && missingMoves.isEmpty()) {
