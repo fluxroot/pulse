@@ -60,15 +60,12 @@ uint64_t Perft::miniMax(int depth, Position& position, int ply) {
   MoveList<MoveEntry>& moves = moveGenerator.getMoves(position, depth, isCheck);
   for (int i = 0; i < moves.size; ++i) {
     int move = moves.entries[i]->move;
-    uint64_t nodes = 0;
 
     position.makeMove(move);
     if (!position.isCheck(Color::opposite(position.activeColor))) {
-      nodes = miniMax(depth - 1, position, ply + 1);
+      totalNodes += miniMax(depth - 1, position, ply + 1);
     }
     position.undoMove(move);
-
-    totalNodes += nodes;
   }
 
   return totalNodes;
