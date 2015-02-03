@@ -106,7 +106,7 @@ final class Pulse extends AbstractEngine implements Protocol {
 
     // We must send an initialization answer back!
     ProtocolInitializeAnswerCommand answerCommand = new ProtocolInitializeAnswerCommand(
-        "Pulse 1.5-java", "Phokham Nonava"
+        "Pulse 1.6.0-alpha-java", "Phokham Nonava"
     );
 
     // Send the answer back.
