@@ -19,18 +19,6 @@ feature set. The Java Edition requires Java 7 for compilation and
 execution. The C++ Edition is written in C++11. It has been compiled 
 successfully using g++ 4.9.1 and Visual C++ 2013. 
 
-There are two branches available in the repository.
-
-- **skeleton**  
-The skeleton branch contains just the basic code to hook up with the 
-Java Chess Protocol Interface (*Java Edition*). Start from here if you 
-want to build your own chess engine. 
-
-- **master**  
-The master branch contains a very basic chess engine. It knows all the 
-rules and plays chess, but lacks more sophisticated features. Start from 
-the skeleton branch and try to beat the master branch. :) 
-
 
 Features
 --------
