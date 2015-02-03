@@ -26,4 +26,7 @@ out/
 Debug/
 Release/
 ipch/
+
+# Other
 vendor/
+run/
