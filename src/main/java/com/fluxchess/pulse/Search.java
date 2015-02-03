@@ -24,6 +24,8 @@ import static com.fluxchess.pulse.Value.CHECKMATE;
 import static com.fluxchess.pulse.Value.DRAW;
 import static com.fluxchess.pulse.Value.INFINITE;
 import static com.fluxchess.pulse.Value.isCheckmate;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 import static java.lang.Math.abs;
 
 /**
@@ -87,8 +89,8 @@ final class Search implements Runnable {
   }
 
   void newDepthSearch(@NotNull Position position, int searchDepth) {
-    if (searchDepth < 1 || searchDepth > MAX_DEPTH) throw new IllegalArgumentException();
-    if (running) throw new IllegalStateException();
+    checkArgument(searchDepth >= 1 && searchDepth <= MAX_DEPTH);
+    checkState(!running);
 
     reset();
 
@@ -97,8 +99,8 @@ final class Search implements Runnable {
   }
 
   void newNodesSearch(@NotNull Position position, long searchNodes) {
-    if (searchNodes < 1) throw new IllegalArgumentException();
-    if (running) throw new IllegalStateException();
+    checkArgument(searchNodes >= 1);
+    checkState(!running);
 
     reset();
 
@@ -107,8 +109,8 @@ final class Search implements Runnable {
   }
 
   void newTimeSearch(@NotNull Position position, long searchTime) {
-    if (searchTime < 1) throw new IllegalArgumentException();
-    if (running) throw new IllegalStateException();
+    checkArgument(searchTime >= 1);
+    checkState(!running);
 
     reset();
 
@@ -118,7 +120,7 @@ final class Search implements Runnable {
   }
 
   void newInfiniteSearch(@NotNull Position position) {
-    if (running) throw new IllegalStateException();
+    checkState(!running);
 
     reset();
 
@@ -136,12 +138,12 @@ final class Search implements Runnable {
 
   void newPonderSearch(@NotNull Position position,
       long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
-    if (whiteTimeLeft < 1) throw new IllegalArgumentException();
-    if (whiteTimeIncrement < 0) throw new IllegalArgumentException();
-    if (blackTimeLeft < 1) throw new IllegalArgumentException();
-    if (blackTimeIncrement < 0) throw new IllegalArgumentException();
-    if (movesToGo < 0) throw new IllegalArgumentException();
-    if (running) throw new IllegalStateException();
+    checkArgument(whiteTimeLeft >= 1);
+    checkArgument(whiteTimeIncrement >= 0);
+    checkArgument(blackTimeLeft >= 1);
+    checkArgument(blackTimeIncrement >= 0);
+    checkArgument(movesToGo >= 0);
+    checkState(!running);
 
     reset();
 
