@@ -1,3 +1,25 @@
+Release Notes - Pulse - Version 1.6
+-----------------------------------
+
+* [PULSE-66] - Add Google Guava as Maven dependency
+* [PULSE-67] - Use Google Guava Preconditions
+* [PULSE-70] - Use Google Guava Collection Utilities
+* [PULSE-56] - Change threading logic
+* [PULSE-57] - Refactor Castling to use bits instead of array
+* [PULSE-58] - Merge position pieces into one array
+* [PULSE-59] - Generify MoveList
+* [PULSE-60] - Use Hamcrest for Unit Testing
+* [PULSE-62] - Add @NotNull/@Nullable annotations and remove assertions
+* [PULSE-63] - Switch from Cobertura to JaCoCo
+* [PULSE-64] - Statically Import Members where possible
+* [PULSE-65] - Use Google Guava for non-critical code
+* [PULSE-68] - Remove skeleton branch
+* [PULSE-69] - Refactoring 1.6
+* [PULSE-71] - Remove default target in switch statement where possible
+* [PULSE-53] - Add Main class as starting point
+* [PULSE-54] - Remove unused board constructor from Chess 960 id
+* [PULSE-55] - Decouple protocol from internal models
+
 Release Notes - Pulse - Version 1.5
 -----------------------------------
 
