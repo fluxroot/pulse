@@ -9,58 +9,83 @@ http://www.fluxchess.com
 
 Introduction
 ------------
-Pulse Chess is a simple chess engine with didactic intentions in mind. 
-The source code should be easy to read, so that new developers can 
-learn, how to build a chess engine. If you want to roll your own, just 
-fork it and start coding! :) 
+Pulse Chess is a simple chess engine with didactic intentions in mind.
+The source code should be easy to read, so that new developers can
+learn, how to build a chess engine. If you want to roll your own, just
+fork it and start coding! :)
 
-Pulse Chess is available in Java and C++. Both editions have the same 
-feature set. The Java Edition requires Java 7 for compilation and 
-execution. The C++ Edition is written in C++11. It has been compiled 
-successfully using g++ 4.9.1 and Visual C++ 2013. 
+Pulse Chess is available in Java and C++. Both editions have the same
+feature set. The Java Edition requires Java 7 for compilation and
+execution. The C++ Edition is written in C++11. It has been compiled
+successfully using g++ 4.9.1 and Visual C++ 2013.
 
 
 Features
 --------
-Only a couple of basic chess engine features are implemented to keep the 
-source code clean and readable. Below is a list of the major building 
-blocks. 
+Only a couple of basic chess engine features are implemented to keep the
+source code clean and readable. Below is a list of the major building
+blocks.
 
 - **UCI compatible**  
-*Java Edition*: Pulse Chess uses [JCPI] for implementing the UCI 
-protocol. 
+*Java Edition*: Pulse Chess uses [JCPI] for implementing the UCI
+protocol.
 
 - **0x88 board representation**  
 To keep things simple Pulse Chess uses a 0x88 board representation. In
 addition piece lists are kept in Bitboards.
 
 - **Only material and mobility evaluation**  
-Currently only material and mobility (to add some variation) are used 
-for calculating the evaluation function. However it should be quite easy 
-to extend it with other evaluation features. 
+Currently only material and mobility (to add some variation) are used
+for calculating the evaluation function. However it should be quite easy
+to extend it with other evaluation features.
 
 - **Using integers for type representation**  
-*Java Edition*: Although Java is quite efficient and fast in memory 
-management, it is not fast enough for chess engines. Instead of using 
-objects for important data structures, Pulse Chess uses integers to 
-exploit the Java stack. 
+*Java Edition*: Although Java is quite efficient and fast in memory
+management, it is not fast enough for chess engines. Instead of using
+objects for important data structures, Pulse Chess uses integers to
+exploit the Java stack.
 
 - **Pseudo-legal move generator**  
-To keep the source code clean and simple, a pseudo-legal move generator 
-is used. This has the advantage to skip writing a complicated legal move 
-checking method. 
+To keep the source code clean and simple, a pseudo-legal move generator
+is used. This has the advantage to skip writing a complicated legal move
+checking method.
 
 - **Basic search**  
-Pulse Chess uses a basic Alpha-beta pruning algorithm with iterative 
-deepening. This allows us to use a very simple time management. In 
-addition there's a basic Quiescent search to improve the game play. 
+Pulse Chess uses a basic Alpha-beta pruning algorithm with iterative
+deepening. This allows us to use a very simple time management. In
+addition there's a basic Quiescent search to improve the game play.
+
+
+Hack it
+-------
+Pulse Chess can hold its own against an average club player. If you want
+to make it even better, have a look at the following ideas.
+
+- **Null Move Pruning**  
+This will make you faster. A whole lot faster! If done right, it should
+give you quite a boost.
+
+- **Transposition Table**  
+Although a little bit tricky to get right from the beginning, this
+technique can make you impressively faster.
+
+- **Check Extensions**  
+This is the one extension I would choose first to implement. If you can
+control the search explosion, the tactical gain is awesome.
+
+- **Passed Pawn**  
+This will definitely improve your endgame.
+
+- **Staged move generation**  
+Tune your move generation! Don't generate every move upfront. Believe
+me, you will get a nice speed increase.
 
 
 Build it
 --------
-Pulse Chess uses [Maven] for the Java Edition and [CMake] for the C++ 
-Edition as build systems. To build it from source, use the following 
-steps. 
+Pulse Chess uses [Maven] for the Java Edition and [CMake] for the C++
+Edition as build systems. To build it from source, use the following
+steps.
 
 - get it  
     `git clone https://github.com/fluxroot/pulse.git`
