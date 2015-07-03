@@ -1,1 +1,1 @@
-java -jar pulse-@version@-uber.jar
+java -jar pulse-@version@.jar

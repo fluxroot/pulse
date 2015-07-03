@@ -26,9 +26,9 @@
       <directory>${project.build.directory}</directory>
       <outputDirectory>/</outputDirectory>
       <includes>
-        <include>*-uber.jar</include>
-        <include>*-sources.jar</include>
-        <include>*-javadoc.jar</include>
+        <include>pulse-${project.version}.jar</include>
+        <include>pulse-${project.version}-sources.jar</include>
+        <include>pulse-${project.version}-javadoc.jar</include>
       </includes>
     </fileSet>
   </fileSets>
