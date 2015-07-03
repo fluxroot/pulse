@@ -1,5 +1,11 @@
-Release Notes - Pulse - Version 1.6
------------------------------------
+Release Notes - Pulse - Version 1.6.1
+-------------------------------------
+
+* [PULSE-72] - Switch to Mingw-w64 as main compiler for C++ Edition
+* [PULSE-73] - Fix filenames for artifacts
+
+Release Notes - Pulse - Version 1.6.0
+-------------------------------------
 
 * [PULSE-66] - Add Google Guava as Maven dependency
 * [PULSE-67] - Use Google Guava Preconditions
