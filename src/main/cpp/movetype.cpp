@@ -10,16 +10,16 @@
 namespace pulse {
 
 bool MoveType::isValid(int type) {
-  switch (type) {
-    case NORMAL:
-    case PAWNDOUBLE:
-    case PAWNPROMOTION:
-    case ENPASSANT:
-    case CASTLING:
-      return true;
-    default:
-      return false;
-  }
+    switch (type) {
+        case NORMAL:
+        case PAWNDOUBLE:
+        case PAWNPROMOTION:
+        case ENPASSANT:
+        case CASTLING:
+            return true;
+        default:
+            return false;
+    }
 }
 
 }

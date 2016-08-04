@@ -13,14 +13,14 @@ namespace pulse {
 
 class Perft {
 public:
-  void run();
+    void run();
 
 private:
-  static const int MAX_DEPTH = 6;
-  
-  std::array<MoveGenerator, MAX_DEPTH> moveGenerators;
+    static const int MAX_DEPTH = 6;
 
-  uint64_t miniMax(int depth, Position& position, int ply);
+    std::array<MoveGenerator, MAX_DEPTH> moveGenerators;
+
+    uint64_t miniMax(int depth, Position& position, int ply);
 };
 
 }

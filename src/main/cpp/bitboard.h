@@ -18,25 +18,33 @@ namespace pulse {
  */
 class Bitboard {
 public:
-  uint64_t squares = 0;
+    uint64_t squares = 0;
 
-  bool operator==(const Bitboard& bitboard) const;
-  bool operator!=(const Bitboard& bitboard) const;
+    bool operator==(const Bitboard& bitboard) const;
 
-  static int numberOfTrailingZeros(uint64_t b);
-  static int bitCount(uint64_t b);
-  static int next(uint64_t squares);
-  static uint64_t remainder(uint64_t);
-  int size();
-  void add(int square);
-  void remove(int square);
+    bool operator!=(const Bitboard& bitboard) const;
+
+    static int numberOfTrailingZeros(uint64_t b);
+
+    static int bitCount(uint64_t b);
+
+    static int next(uint64_t squares);
+
+    static uint64_t remainder(uint64_t);
+
+    int size();
+
+    void add(int square);
+
+    void remove(int square);
 
 private:
-  static const uint64_t DEBRUIJN64 = 0x03F79D71B4CB0A89ULL;
-  static const std::array<int, 64> lsbTable;
+    static const uint64_t DEBRUIJN64 = 0x03F79D71B4CB0A89ULL;
+    static const std::array<int, 64> lsbTable;
 
-  static int toX88Square(int square);
-  static int toBitSquare(int square);
+    static int toX88Square(int square);
+
+    static int toBitSquare(int square);
 };
 
 }

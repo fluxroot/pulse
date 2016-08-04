@@ -13,9 +13,9 @@ namespace pulse {
 
 template<class T>
 MoveList<T>::MoveList() {
-  for (unsigned int i = 0; i < entries.size(); ++i) {
-    entries[i] = std::shared_ptr<T>(new T());
-  }
+    for (unsigned int i = 0; i < entries.size(); ++i) {
+        entries[i] = std::shared_ptr<T>(new T());
+    }
 }
 
 /**
@@ -23,17 +23,17 @@ MoveList<T>::MoveList() {
  */
 template<class T>
 void MoveList<T>::sort() {
-  for (int i = 1; i < size; ++i) {
-    std::shared_ptr<T> entry(entries[i]);
+    for (int i = 1; i < size; ++i) {
+        std::shared_ptr<T> entry(entries[i]);
 
-    int j = i;
-    while ((j > 0) && (entries[j - 1]->value < entry->value)) {
-      entries[j] = entries[j - 1];
-      --j;
+        int j = i;
+        while ((j > 0) && (entries[j - 1]->value < entry->value)) {
+            entries[j] = entries[j - 1];
+            --j;
+        }
+
+        entries[j] = entry;
     }
-
-    entries[j] = entry;
-  }
 }
 
 /**
@@ -41,26 +41,29 @@ void MoveList<T>::sort() {
  */
 template<class T>
 void MoveList<T>::rateFromMVVLVA() {
-  for (int i = 0; i < size; ++i) {
-    int move = entries[i]->move;
-    int value = 0;
+    for (int i = 0; i < size; ++i) {
+        int move = entries[i]->move;
+        int value = 0;
 
-    int piecetypeValue = PieceType::getValue(Piece::getType(Move::getOriginPiece(move)));
-    value += PieceType::KING_VALUE / piecetypeValue;
+        int piecetypeValue = PieceType::getValue(Piece::getType(Move::getOriginPiece(move)));
+        value += PieceType::KING_VALUE / piecetypeValue;
 
-    int target = Move::getTargetPiece(move);
-    if (Piece::isValid(target)) {
-      value += 10 * PieceType::getValue(Piece::getType(target));
+        int target = Move::getTargetPiece(move);
+        if (Piece::isValid(target)) {
+            value += 10 * PieceType::getValue(Piece::getType(target));
+        }
+
+        assert(value >= (PieceType::KING_VALUE / PieceType::KING_VALUE)
+               && value <= (PieceType::KING_VALUE / PieceType::PAWN_VALUE) + 10 * PieceType::QUEEN_VALUE);
+
+        entries[i]->value = value;
     }
-
-    assert(value >= (PieceType::KING_VALUE / PieceType::KING_VALUE)
-      && value <= (PieceType::KING_VALUE / PieceType::PAWN_VALUE) + 10 * PieceType::QUEEN_VALUE);
-
-    entries[i]->value = value;
-  }
 }
 
-template class MoveList<MoveEntry>;
-template class MoveList<RootEntry>;
+template
+class MoveList<MoveEntry>;
+
+template
+class MoveList<RootEntry>;
 
 }
