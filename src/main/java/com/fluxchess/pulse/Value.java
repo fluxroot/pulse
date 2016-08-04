@@ -11,28 +11,28 @@ import static java.lang.Math.abs;
 
 final class Value {
 
-  static final int INFINITE = 200000;
-  static final int CHECKMATE = 100000;
-  static final int CHECKMATE_THRESHOLD = CHECKMATE - MAX_PLY;
-  static final int DRAW = 0;
+    static final int INFINITE = 200000;
+    static final int CHECKMATE = 100000;
+    static final int CHECKMATE_THRESHOLD = CHECKMATE - MAX_PLY;
+    static final int DRAW = 0;
 
-  static final int NOVALUE = 300000;
+    static final int NOVALUE = 300000;
 
-  private Value() {
-  }
+    private Value() {
+    }
 
-  static boolean isValid(int value) {
-    int absvalue = abs(value);
+    static boolean isValid(int value) {
+        int absvalue = abs(value);
 
-    return absvalue <= CHECKMATE || absvalue == INFINITE;
-  }
+        return absvalue <= CHECKMATE || absvalue == INFINITE;
+    }
 
-  static boolean isCheckmate(int value) {
-    assert isValid(value);
+    static boolean isCheckmate(int value) {
+        assert isValid(value);
 
-    int absvalue = abs(value);
+        int absvalue = abs(value);
 
-    return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;
-  }
+        return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;
+    }
 
 }

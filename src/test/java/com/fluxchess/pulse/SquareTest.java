@@ -17,31 +17,31 @@ import static org.junit.Assert.assertThat;
 
 public class SquareTest {
 
-  @Test
-  public void testUtilityClass()
-      throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    assertUtilityClassWellDefined(Square.class);
-  }
-
-  @Test
-  public void testValues() {
-    for (int rank : Rank.values) {
-      for (int file : File.values) {
-        int square = Square.valueOf(file, rank);
-
-        assertThat(Square.getFile(square), is(file));
-        assertThat(Square.getRank(square), is(rank));
-      }
-    }
-  }
-
-  @Test
-  public void testIsValid() {
-    for (int square : Square.values) {
-      assertThat(Square.isValid(square), is(true));
+    @Test
+    public void testUtilityClass()
+            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        assertUtilityClassWellDefined(Square.class);
     }
 
-    assertThat(Square.isValid(NOSQUARE), is(false));
-  }
+    @Test
+    public void testValues() {
+        for (int rank : Rank.values) {
+            for (int file : File.values) {
+                int square = Square.valueOf(file, rank);
+
+                assertThat(Square.getFile(square), is(file));
+                assertThat(Square.getRank(square), is(rank));
+            }
+        }
+    }
+
+    @Test
+    public void testIsValid() {
+        for (int square : Square.values) {
+            assertThat(Square.isValid(square), is(true));
+        }
+
+        assertThat(Square.isValid(NOSQUARE), is(false));
+    }
 
 }

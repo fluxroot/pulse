@@ -14,14 +14,14 @@ import static org.junit.Assert.assertThat;
 
 public class MoveListTest {
 
-  @Test
-  public void test() {
-    MoveList<MoveEntry> moveList = new MoveList<>(MoveEntry.class);
+    @Test
+    public void test() {
+        MoveList<MoveEntry> moveList = new MoveList<>(MoveEntry.class);
 
-    assertThat(moveList.size, is(0));
+        assertThat(moveList.size, is(0));
 
-    moveList.entries[moveList.size++].move = 1;
-    assertThat(moveList.size, is(1));
-  }
+        moveList.entries[moveList.size++].move = 1;
+        assertThat(moveList.size, is(1));
+    }
 
 }
