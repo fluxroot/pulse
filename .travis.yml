@@ -1,0 +1,10 @@
+language: java
+sudo: false
+addons:
+  sonarqube:
+    token:
+      secure: "Vqgv/fHcelZQJoxm3yQvByQlVzneSE54RWnZuIvrR6Fw6I38JnkFv+lAsMCSWULknEjiMFkDcbrRT4SoD62QO36bEe9iwVPmcWcuzmdA8HjZ7IkQaLuQ/Yu/UunOsSmGhxX9TPG9Qjr82BkfdNrrDm1n8wlmdxEE/mqE43ExbO8="
+env:
+  - TERM=dumb
+script:
+  - mvn clean jacoco:report coveralls:report package sonar:sonar
