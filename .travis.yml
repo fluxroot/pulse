@@ -7,4 +7,4 @@ addons:
 env:
   - TERM=dumb
 script:
-  - mvn clean jacoco:report coveralls:report package sonar:sonar
+  - mvn clean package jacoco:report coveralls:report sonar:sonar
