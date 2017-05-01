@@ -1,32 +1,16 @@
 # Maven
-target/
+/target/
 
 # CMake
-build/
+/build/
+/cmake-build-debug/
 
 # Eclipse
-.settings/
-bin/
-.classpath
-.project
+/.settings/
+/bin/
+/.classpath
+/.project
 
 # IntelliJ IDEA
-.idea/
-out/
-*.iml
-
-# Visual Studio
-*.sln
-*.vcxproj
-*.vcxproj.filters
-*.suo
-*.user
-*.sdf
-*.opensdf
-Debug/
-Release/
-ipch/
-
-# Other
-vendor/
-run/
+/.idea/
+/out/
