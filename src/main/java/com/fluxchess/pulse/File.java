@@ -41,5 +41,4 @@ final class File {
                 return false;
         }
     }
-
 }

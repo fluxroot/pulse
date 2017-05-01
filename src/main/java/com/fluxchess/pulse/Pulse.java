@@ -320,5 +320,4 @@ final class Pulse extends AbstractEngine implements Protocol {
                 throw new IllegalArgumentException();
         }
     }
-
 }

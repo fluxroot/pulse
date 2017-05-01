@@ -28,11 +28,8 @@ final class Value {
     }
 
     static boolean isCheckmate(int value) {
-        assert isValid(value);
-
         int absvalue = abs(value);
 
         return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;
     }
-
 }

@@ -33,5 +33,4 @@ final class MoveType {
                 return false;
         }
     }
-
 }

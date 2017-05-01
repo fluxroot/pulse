@@ -41,5 +41,4 @@ final class Rank {
                 return false;
         }
     }
-
 }

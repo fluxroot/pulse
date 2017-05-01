@@ -61,5 +61,4 @@ final class Castling {
                 throw new IllegalArgumentException();
         }
     }
-
 }

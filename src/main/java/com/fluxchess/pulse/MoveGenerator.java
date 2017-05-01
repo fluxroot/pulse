@@ -14,7 +14,7 @@ import static com.fluxchess.pulse.Castling.*;
 import static com.fluxchess.pulse.Color.*;
 import static com.fluxchess.pulse.MoveList.MoveEntry;
 import static com.fluxchess.pulse.MoveType.*;
-import static com.fluxchess.pulse.Piece.*;
+import static com.fluxchess.pulse.Piece.NOPIECE;
 import static com.fluxchess.pulse.PieceType.*;
 import static com.fluxchess.pulse.Rank.*;
 import static com.fluxchess.pulse.Square.*;
@@ -104,10 +104,7 @@ final class MoveGenerator {
     }
 
     private void addMoves(@NotNull MoveList<MoveEntry> list, int originSquare, @NotNull int[] directions, @NotNull Position position) {
-        assert Square.isValid(originSquare);
-
         int originPiece = position.board[originSquare];
-        assert Piece.isValid(originPiece);
         boolean sliding = isSliding(Piece.getType(originPiece));
         int oppositeColor = opposite(Piece.getColor(originPiece));
 
@@ -143,11 +140,7 @@ final class MoveGenerator {
     }
 
     private void addPawnMoves(@NotNull MoveList<MoveEntry> list, int pawnSquare, @NotNull Position position) {
-        assert Square.isValid(pawnSquare);
-
         int pawnPiece = position.board[pawnSquare];
-        assert Piece.isValid(pawnPiece);
-        assert Piece.getType(pawnPiece) == PAWN;
         int pawnColor = Piece.getColor(pawnPiece);
 
         // Generate only capturing moves first (i = 1)
@@ -183,13 +176,8 @@ final class MoveGenerator {
                     }
                 } else if (targetSquare == position.enPassantSquare) {
                     // En passant move
-                    assert (pawnColor == BLACK && Square.getRank(targetSquare) == r3)
-                            || (pawnColor == WHITE && Square.getRank(targetSquare) == r6);
-
                     int captureSquare = targetSquare + (pawnColor == WHITE ? S : N);
                     targetPiece = position.board[captureSquare];
-                    assert Piece.getType(targetPiece) == PAWN;
-                    assert Piece.getColor(targetPiece) == opposite(pawnColor);
 
                     list.entries[list.size++].move = Move.valueOf(
                             ENPASSANT, pawnSquare, targetSquare, pawnPiece, targetPiece, NOPIECETYPE);
@@ -237,11 +225,7 @@ final class MoveGenerator {
     }
 
     private void addCastlingMoves(@NotNull MoveList<MoveEntry> list, int kingSquare, @NotNull Position position) {
-        assert Square.isValid(kingSquare);
-
         int kingPiece = position.board[kingSquare];
-        assert Piece.isValid(kingPiece);
-        assert Piece.getType(kingPiece) == KING;
 
         if (Piece.getColor(kingPiece) == WHITE) {
             // Do not test g1 whether it is attacked as we will test it in isLegal()
@@ -249,9 +233,6 @@ final class MoveGenerator {
                     && position.board[f1] == NOPIECE
                     && position.board[g1] == NOPIECE
                     && !position.isAttacked(f1, BLACK)) {
-                assert position.board[e1] == WHITE_KING;
-                assert position.board[h1] == WHITE_ROOK;
-
                 list.entries[list.size++].move = Move.valueOf(
                         CASTLING, kingSquare, g1, kingPiece, NOPIECE, NOPIECETYPE);
             }
@@ -261,9 +242,6 @@ final class MoveGenerator {
                     && position.board[c1] == NOPIECE
                     && position.board[d1] == NOPIECE
                     && !position.isAttacked(d1, BLACK)) {
-                assert position.board[e1] == WHITE_KING;
-                assert position.board[a1] == WHITE_ROOK;
-
                 list.entries[list.size++].move = Move.valueOf(
                         CASTLING, kingSquare, c1, kingPiece, NOPIECE, NOPIECETYPE);
             }
@@ -273,9 +251,6 @@ final class MoveGenerator {
                     && position.board[f8] == NOPIECE
                     && position.board[g8] == NOPIECE
                     && !position.isAttacked(f8, WHITE)) {
-                assert position.board[e8] == BLACK_KING;
-                assert position.board[h8] == BLACK_ROOK;
-
                 list.entries[list.size++].move = Move.valueOf(
                         CASTLING, kingSquare, g8, kingPiece, NOPIECE, NOPIECETYPE);
             }
@@ -285,13 +260,9 @@ final class MoveGenerator {
                     && position.board[c8] == NOPIECE
                     && position.board[d8] == NOPIECE
                     && !position.isAttacked(d8, WHITE)) {
-                assert position.board[e8] == BLACK_KING;
-                assert position.board[a8] == BLACK_ROOK;
-
                 list.entries[list.size++].move = Move.valueOf(
                         CASTLING, kingSquare, c8, kingPiece, NOPIECE, NOPIECETYPE);
             }
         }
     }
-
 }

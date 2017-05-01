@@ -14,8 +14,6 @@ import static com.fluxchess.pulse.Color.opposite;
 import static com.fluxchess.pulse.Piece.NOPIECE;
 import static com.fluxchess.pulse.PieceType.*;
 import static com.fluxchess.pulse.Square.*;
-import static com.fluxchess.pulse.Value.CHECKMATE_THRESHOLD;
-import static java.lang.Math.abs;
 
 final class Evaluation {
 
@@ -50,13 +48,10 @@ final class Evaluation {
         // Add Tempo
         value += TEMPO;
 
-        assert abs(value) < CHECKMATE_THRESHOLD;
         return value;
     }
 
     private int evaluateMaterial(int color, @NotNull Position position) {
-        assert Color.isValid(color);
-
         int material = position.material[color];
 
         // Add bonus for bishop pair
@@ -68,8 +63,6 @@ final class Evaluation {
     }
 
     private int evaluateMobility(int color, @NotNull Position position) {
-        assert Color.isValid(color);
-
         int knightMobility = 0;
         for (long squares = position.pieces[color][KNIGHT].squares; squares != 0; squares = remainder(squares)) {
             int square = next(squares);
@@ -101,9 +94,6 @@ final class Evaluation {
     }
 
     private int evaluateMobility(int color, @NotNull Position position, int square, @NotNull int[] directions) {
-        assert Color.isValid(color);
-        assert Piece.isValid(position.board[square]);
-
         int mobility = 0;
         boolean sliding = isSliding(Piece.getType(position.board[square]));
 
@@ -123,5 +113,4 @@ final class Evaluation {
 
         return mobility;
     }
-
 }

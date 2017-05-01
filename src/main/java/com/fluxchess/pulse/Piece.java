@@ -143,5 +143,4 @@ final class Piece {
                 throw new IllegalArgumentException();
         }
     }
-
 }

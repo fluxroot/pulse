@@ -10,7 +10,7 @@ import java.lang.reflect.Array;
 
 import static com.fluxchess.pulse.Depth.MAX_PLY;
 import static com.fluxchess.pulse.Move.NOMOVE;
-import static com.fluxchess.pulse.PieceType.*;
+import static com.fluxchess.pulse.PieceType.KING_VALUE;
 import static com.fluxchess.pulse.Value.NOVALUE;
 
 /**
@@ -39,8 +39,7 @@ final class MoveList<T extends MoveList.MoveEntry> {
     }
 
     MoveList(Class<T> clazz) {
-        @SuppressWarnings("unchecked")
-        final T[] entries = (T[]) Array.newInstance(clazz, MAX_MOVES);
+        @SuppressWarnings("unchecked") final T[] entries = (T[]) Array.newInstance(clazz, MAX_MOVES);
         this.entries = entries;
         try {
             for (int i = 0; i < entries.length; ++i) {
@@ -84,11 +83,7 @@ final class MoveList<T extends MoveList.MoveEntry> {
                 value += 10 * PieceType.getValue(Piece.getType(target));
             }
 
-            assert value >= (KING_VALUE / KING_VALUE)
-                    && value <= (KING_VALUE / PAWN_VALUE) + 10 * QUEEN_VALUE;
-
             entries[i].value = value;
         }
     }
-
 }

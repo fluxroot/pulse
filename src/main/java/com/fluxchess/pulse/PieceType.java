@@ -93,5 +93,4 @@ final class PieceType {
                 throw new IllegalArgumentException();
         }
     }
-
 }

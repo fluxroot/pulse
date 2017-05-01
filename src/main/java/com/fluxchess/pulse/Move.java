@@ -53,72 +53,47 @@ final class Move {
         int move = 0;
 
         // Encode type
-        assert MoveType.isValid(type);
         move |= type << TYPE_SHIFT;
 
         // Encode origin square
-        assert Square.isValid(originSquare);
         move |= originSquare << ORIGIN_SQUARE_SHIFT;
 
         // Encode target square
-        assert Square.isValid(targetSquare);
         move |= targetSquare << TARGET_SQUARE_SHIFT;
 
         // Encode origin piece
-        assert Piece.isValid(originPiece);
         move |= originPiece << ORIGIN_PIECE_SHIFT;
 
         // Encode target piece
-        assert Piece.isValid(targetPiece) || targetPiece == NOPIECE;
         move |= targetPiece << TARGET_PIECE_SHIFT;
 
         // Encode promotion
-        assert PieceType.isValidPromotion(promotion) || promotion == NOPIECETYPE;
         move |= promotion << PROMOTION_SHIFT;
 
         return move;
     }
 
     static int getType(int move) {
-        int type = (move & TYPE_MASK) >>> TYPE_SHIFT;
-        assert MoveType.isValid(type);
-
-        return type;
+        return (move & TYPE_MASK) >>> TYPE_SHIFT;
     }
 
     static int getOriginSquare(int move) {
-        int originSquare = (move & ORIGIN_SQUARE_MASK) >>> ORIGIN_SQUARE_SHIFT;
-        assert Square.isValid(originSquare);
-
-        return originSquare;
+        return (move & ORIGIN_SQUARE_MASK) >>> ORIGIN_SQUARE_SHIFT;
     }
 
     static int getTargetSquare(int move) {
-        int targetSquare = (move & TARGET_SQUARE_MASK) >>> TARGET_SQUARE_SHIFT;
-        assert Square.isValid(targetSquare);
-
-        return targetSquare;
+        return (move & TARGET_SQUARE_MASK) >>> TARGET_SQUARE_SHIFT;
     }
 
     static int getOriginPiece(int move) {
-        int originPiece = (move & ORIGIN_PIECE_MASK) >>> ORIGIN_PIECE_SHIFT;
-        assert Piece.isValid(originPiece);
-
-        return originPiece;
+        return (move & ORIGIN_PIECE_MASK) >>> ORIGIN_PIECE_SHIFT;
     }
 
     static int getTargetPiece(int move) {
-        int targetPiece = (move & TARGET_PIECE_MASK) >>> TARGET_PIECE_SHIFT;
-        assert Piece.isValid(targetPiece) || targetPiece == NOPIECE;
-
-        return targetPiece;
+        return (move & TARGET_PIECE_MASK) >>> TARGET_PIECE_SHIFT;
     }
 
     static int getPromotion(int move) {
-        int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
-        assert PieceType.isValidPromotion(promotion) || promotion == NOPIECETYPE;
-
-        return promotion;
+        return (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
     }
-
 }

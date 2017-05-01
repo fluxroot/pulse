@@ -27,5 +27,4 @@ public final class Main {
             System.exit(1);
         }
     }
-
 }

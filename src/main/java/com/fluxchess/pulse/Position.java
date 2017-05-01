@@ -113,8 +113,6 @@ final class Position {
     }
 
     void setActiveColor(int activeColor) {
-        assert Color.isValid(activeColor);
-
         if (this.activeColor != activeColor) {
             this.activeColor = activeColor;
             zobristKey ^= Zobrist.activeColor;
@@ -122,8 +120,6 @@ final class Position {
     }
 
     void setCastlingRight(int castling) {
-        assert Castling.isValid(castling);
-
         if ((castlingRights & castling) == NOCASTLING) {
             castlingRights |= castling;
             zobristKey ^= Zobrist.castlingRights[castling];
@@ -141,8 +137,6 @@ final class Position {
     }
 
     void setHalfmoveClock(int halfmoveClock) {
-        assert halfmoveClock >= 0;
-
         this.halfmoveClock = halfmoveClock;
     }
 
@@ -151,8 +145,6 @@ final class Position {
     }
 
     void setFullmoveNumber(int fullmoveNumber) {
-        assert fullmoveNumber > 0;
-
         halfmoveNumber = fullmoveNumber * 2;
         if (activeColor == BLACK) {
             ++halfmoveNumber;
@@ -188,10 +180,6 @@ final class Position {
      * @param square the Square.
      */
     void put(int piece, int square) {
-        assert Piece.isValid(piece);
-        assert Square.isValid(square);
-        assert board[square] == NOPIECE;
-
         int piecetype = Piece.getType(piece);
         int color = Piece.getColor(piece);
 
@@ -210,9 +198,6 @@ final class Position {
      * @return the Piece which was removed.
      */
     int remove(int square) {
-        assert Square.isValid(square);
-        assert Piece.isValid(board[square]);
-
         int piece = board[square];
 
         int piecetype = Piece.getType(piece);
@@ -236,7 +221,6 @@ final class Position {
         entry.halfmoveClock = halfmoveClock;
 
         ++statesSize;
-        assert statesSize < MAX_MOVES;
 
         // Get variables
         int type = Move.getType(move);
@@ -252,15 +236,12 @@ final class Position {
             if (type == ENPASSANT) {
                 captureSquare += (originColor == WHITE ? S : N);
             }
-            assert targetPiece == board[captureSquare];
-            assert Piece.getType(targetPiece) != KING;
             remove(captureSquare);
 
             clearCastling(captureSquare);
         }
 
         // Move piece
-        assert originPiece == board[originSquare];
         remove(originSquare);
         if (type == PAWNPROMOTION) {
             put(Piece.valueOf(originColor, Move.getPromotion(move)), targetSquare);
@@ -293,7 +274,6 @@ final class Position {
                     throw new IllegalArgumentException();
             }
 
-            assert Piece.getType(board[rookOriginSquare]) == ROOK;
             int rookPiece = remove(rookOriginSquare);
             put(rookPiece, rookTargetSquare);
         }
@@ -307,7 +287,6 @@ final class Position {
         }
         if (type == PAWNDOUBLE) {
             enPassantSquare = targetSquare + (originColor == WHITE ? S : N);
-            assert Square.isValid(enPassantSquare);
             zobristKey ^= Zobrist.enPassantSquare[enPassantSquare];
         } else {
             enPassantSquare = NOSQUARE;
@@ -368,7 +347,6 @@ final class Position {
                     throw new IllegalArgumentException();
             }
 
-            assert Piece.getType(board[rookTargetSquare]) == ROOK;
             int rookPiece = remove(rookTargetSquare);
             put(rookPiece, rookOriginSquare);
         }
@@ -382,13 +360,11 @@ final class Position {
             int captureSquare = targetSquare;
             if (type == ENPASSANT) {
                 captureSquare += (originColor == WHITE ? S : N);
-                assert Square.isValid(captureSquare);
             }
             put(targetPiece, captureSquare);
         }
 
         // Restore state
-        assert statesSize > 0;
         --statesSize;
 
         State entry = states[statesSize];
@@ -399,8 +375,6 @@ final class Position {
     }
 
     private void clearCastling(int square) {
-        assert Square.isValid(square);
-
         int newCastlingRights = castlingRights;
 
         switch (square) {
@@ -451,9 +425,6 @@ final class Position {
      * @return whether the targetSquare is attacked.
      */
     boolean isAttacked(int targetSquare, int attackerColor) {
-        assert Square.isValid(targetSquare);
-        assert Color.isValid(attackerColor);
-
         // Pawn attacks
         int pawnPiece = Piece.valueOf(attackerColor, PAWN);
         for (int i = 1; i < pawnDirections[attackerColor].length; ++i) {
@@ -492,9 +463,6 @@ final class Position {
      * Returns whether the targetSquare is attacked by a non-sliding piece.
      */
     private boolean isAttacked(int targetSquare, int attackerPiece, @NotNull int[] directions) {
-        assert Square.isValid(targetSquare);
-        assert Piece.isValid(attackerPiece);
-
         for (int direction : directions) {
             int attackerSquare = targetSquare + direction;
 
@@ -510,10 +478,6 @@ final class Position {
      * Returns whether the targetSquare is attacked by a sliding piece.
      */
     private boolean isAttacked(int targetSquare, int attackerPiece, int queenPiece, @NotNull int[] directions) {
-        assert Square.isValid(targetSquare);
-        assert Piece.isValid(attackerPiece);
-        assert Piece.isValid(queenPiece);
-
         for (int direction : directions) {
             int attackerSquare = targetSquare + direction;
 
@@ -534,5 +498,4 @@ final class Position {
 
         return false;
     }
-
 }

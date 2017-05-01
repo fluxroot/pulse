@@ -344,15 +344,10 @@ final class Notation {
     }
 
     static int toSquare(@NotNull GenericPosition genericPosition) {
-        int square = toRank(genericPosition.rank) * 16 + toFile(genericPosition.file);
-        assert Square.isValid(square);
-
-        return square;
+        return toRank(genericPosition.rank) * 16 + toFile(genericPosition.file);
     }
 
     static GenericPosition fromSquare(int square) {
-        assert Square.isValid(square);
-
         return GenericPosition.valueOf(fromFile(Square.getFile(square)), fromRank(Square.getRank(square)));
     }
 }

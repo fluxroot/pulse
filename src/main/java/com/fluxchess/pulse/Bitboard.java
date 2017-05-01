@@ -22,20 +22,14 @@ final class Bitboard {
     }
 
     static long remainder(long squares) {
-        assert squares != 0;
-
         return squares & (squares - 1);
     }
 
     private static int toX88Square(int square) {
-        assert square >= 0 && square < Long.SIZE;
-
         return ((square & ~7) << 1) | (square & 7);
     }
 
     private static int toBitSquare(int square) {
-        assert Square.isValid(square);
-
         return ((square & ~7) >>> 1) | (square & 7);
     }
 
@@ -44,17 +38,10 @@ final class Bitboard {
     }
 
     void add(int square) {
-        assert Square.isValid(square);
-        assert (squares & (1L << toBitSquare(square))) == 0;
-
         squares |= 1L << toBitSquare(square);
     }
 
     void remove(int square) {
-        assert Square.isValid(square);
-        assert (squares & (1L << toBitSquare(square))) != 0;
-
         squares &= ~(1L << toBitSquare(square));
     }
-
 }

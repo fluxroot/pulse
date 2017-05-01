@@ -40,5 +40,4 @@ final class Color {
                 throw new IllegalArgumentException();
         }
     }
-
 }

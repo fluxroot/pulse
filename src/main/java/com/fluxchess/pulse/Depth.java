@@ -13,5 +13,4 @@ final class Depth {
 
     private Depth() {
     }
-
 }

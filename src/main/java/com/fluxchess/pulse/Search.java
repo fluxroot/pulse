@@ -577,5 +577,4 @@ final class Search implements Runnable {
         System.arraycopy(src.moves, 0, dest.moves, 1, src.size);
         dest.size = src.size + 1;
     }
-
 }
