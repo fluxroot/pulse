@@ -8,7 +8,6 @@
 #include "position.h"
 #include "move.h"
 
-#include <cassert>
 #include <algorithm>
 #include <sstream>
 
@@ -122,8 +121,6 @@ bool Position::operator!=(const Position& position) const {
 }
 
 void Position::setActiveColor(int activeColor) {
-    assert(Color::isValid(activeColor));
-
     if (this->activeColor != activeColor) {
         this->activeColor = activeColor;
         zobristKey ^= zobrist.activeColor;
@@ -131,8 +128,6 @@ void Position::setActiveColor(int activeColor) {
 }
 
 void Position::setCastlingRight(int castling) {
-    assert(Castling::isValid(castling));
-
     if ((castlingRights & castling) == Castling::NOCASTLING) {
         castlingRights |= castling;
         zobristKey ^= zobrist.castlingRights[castling];
@@ -150,8 +145,6 @@ void Position::setEnPassantSquare(int enPassantSquare) {
 }
 
 void Position::setHalfmoveClock(int halfmoveClock) {
-    assert(halfmoveClock >= 0);
-
     this->halfmoveClock = halfmoveClock;
 }
 
@@ -160,8 +153,6 @@ int Position::getFullmoveNumber() const {
 }
 
 void Position::setFullmoveNumber(int fullmoveNumber) {
-    assert(fullmoveNumber > 0);
-
     halfmoveNumber = fullmoveNumber * 2;
     if (activeColor == Color::BLACK) {
         ++halfmoveNumber;
@@ -197,10 +188,6 @@ bool Position::hasInsufficientMaterial() {
  * @param square the Square.
  */
 void Position::put(int piece, int square) {
-    assert(Piece::isValid(piece));
-    assert(Square::isValid(square));
-    assert(board[square] == Piece::NOPIECE);
-
     int piecetype = Piece::getType(piece);
     int color = Piece::getColor(piece);
 
@@ -219,9 +206,6 @@ void Position::put(int piece, int square) {
  * @return the Piece which was removed.
  */
 int Position::remove(int square) {
-    assert(Square::isValid(square));
-    assert(Piece::isValid(board[square]));
-
     int piece = board[square];
 
     int piecetype = Piece::getType(piece);
@@ -245,7 +229,6 @@ void Position::makeMove(int move) {
     entry.halfmoveClock = halfmoveClock;
 
     ++statesSize;
-    assert(statesSize < MAX_MOVES);
 
     // Get variables
     int type = Move::getType(move);
@@ -261,15 +244,12 @@ void Position::makeMove(int move) {
         if (type == MoveType::ENPASSANT) {
             captureSquare += (originColor == Color::WHITE ? Square::S : Square::N);
         }
-        assert(targetPiece == board[captureSquare]);
-        assert(Piece::getType(targetPiece) != PieceType::KING);
         remove(captureSquare);
 
         clearCastling(captureSquare);
     }
 
     // Move piece
-    assert(originPiece == board[originSquare]);
     remove(originSquare);
     if (type == MoveType::PAWNPROMOTION) {
         put(Piece::valueOf(originColor, Move::getPromotion(move)), targetSquare);
@@ -302,7 +282,6 @@ void Position::makeMove(int move) {
                 throw std::exception();
         }
 
-        assert(Piece::getType(board[rookOriginSquare]) == PieceType::ROOK);
         int rookPiece = remove(rookOriginSquare);
         put(rookPiece, rookTargetSquare);
     }
@@ -316,7 +295,6 @@ void Position::makeMove(int move) {
     }
     if (type == MoveType::PAWNDOUBLE) {
         enPassantSquare = targetSquare + (originColor == Color::WHITE ? Square::S : Square::N);
-        assert(Square::isValid(enPassantSquare));
         zobristKey ^= zobrist.enPassantSquare[enPassantSquare];
     } else {
         enPassantSquare = Square::NOSQUARE;
@@ -377,7 +355,6 @@ void Position::undoMove(int move) {
                 throw std::exception();
         }
 
-        assert(Piece::getType(board[rookTargetSquare]) == PieceType::ROOK);
         int rookPiece = remove(rookTargetSquare);
         put(rookPiece, rookOriginSquare);
     }
@@ -391,13 +368,11 @@ void Position::undoMove(int move) {
         int captureSquare = targetSquare;
         if (type == MoveType::ENPASSANT) {
             captureSquare += (originColor == Color::WHITE ? Square::S : Square::N);
-            assert(Square::isValid(captureSquare));
         }
         put(targetPiece, captureSquare);
     }
 
     // Restore state
-    assert(statesSize > 0);
     --statesSize;
 
     State& entry = states[statesSize];
@@ -408,8 +383,6 @@ void Position::undoMove(int move) {
 }
 
 void Position::clearCastling(int square) {
-    assert(Square::isValid(square));
-
     int newCastlingRights = castlingRights;
 
     switch (square) {
@@ -460,9 +433,6 @@ bool Position::isCheck(int color) {
  * @return whether the targetSquare is attacked.
  */
 bool Position::isAttacked(int targetSquare, int attackerColor) {
-    assert(Square::isValid(targetSquare));
-    assert(Color::isValid(attackerColor));
-
     // Pawn attacks
     int pawnPiece = Piece::valueOf(attackerColor, PieceType::PAWN);
     for (unsigned int i = 1; i < Square::pawnDirections[attackerColor].size(); ++i) {
@@ -501,9 +471,6 @@ bool Position::isAttacked(int targetSquare, int attackerColor) {
  * Returns whether the targetSquare is attacked by a non-sliding piece.
  */
 bool Position::isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& directions) {
-    assert(Square::isValid(targetSquare));
-    assert(Piece::isValid(attackerPiece));
-
     for (auto direction : directions) {
         int attackerSquare = targetSquare + direction;
 
@@ -519,10 +486,6 @@ bool Position::isAttacked(int targetSquare, int attackerPiece, const std::vector
  * Returns whether the targetSquare is attacked by a sliding piece.
  */
 bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& directions) {
-    assert(Square::isValid(targetSquare));
-    assert(Piece::isValid(attackerPiece));
-    assert(Piece::isValid(queenPiece));
-
     for (auto direction : directions) {
         int attackerSquare = targetSquare + direction;
 

@@ -10,7 +10,6 @@
 #include "rank.h"
 #include "castlingtype.h"
 
-#include <cassert>
 #include <sstream>
 
 namespace pulse {
@@ -129,10 +128,6 @@ Position Notation::toPosition(const std::string& fen) {
                 castlingFile = File::a;
                 kingFile = File::e;
             }
-
-            assert(Castling::isValid(castling));
-            assert(File::isValid(castlingFile));
-            assert(File::isValid(kingFile));
 
             position.setCastlingRight(castling);
         }
@@ -358,8 +353,6 @@ int Notation::toPiece(char notation) {
 }
 
 char Notation::fromPiece(int piece) {
-    assert(Piece::isValid(piece));
-
     return transform(fromPieceType(Piece::getType(piece)), Piece::getColor(piece));
 }
 
@@ -399,8 +392,6 @@ int Notation::toCastling(char notation) {
 }
 
 char Notation::fromCastling(int castling) {
-    assert(Castling::isValid(castling));
-
     return transform(fromCastlingType(Castling::getType(castling)), Castling::getColor(castling));
 }
 
@@ -504,18 +495,13 @@ int Notation::toSquare(const std::string& notation) {
     int rank = toRank(notation[1]);
 
     if (file != File::NOFILE && rank != Rank::NORANK) {
-        int square = (rank << 4) + file;
-        assert(Square::isValid(square));
-
-        return square;
+        return (rank << 4) + file;
     } else {
         return Square::NOSQUARE;
     }
 }
 
 std::string Notation::fromSquare(int square) {
-    assert(Square::isValid(square));
-
     std::string notation;
     notation += fromFile(Square::getFile(square));
     notation += fromRank(Square::getRank(square));

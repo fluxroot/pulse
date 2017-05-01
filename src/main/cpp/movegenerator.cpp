@@ -8,8 +8,6 @@
 #include "movegenerator.h"
 #include "rank.h"
 
-#include <cassert>
-
 namespace pulse {
 
 MoveList<MoveEntry>& MoveGenerator::getLegalMoves(Position& position, int depth, bool isCheck) {
@@ -99,10 +97,7 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, Position& position) {
 
 void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const std::vector<int>& directions,
                              Position& position) {
-    assert(Square::isValid(originSquare));
-
     int originPiece = position.board[originSquare];
-    assert(Piece::isValid(originPiece));
     bool sliding = PieceType::isSliding(Piece::getType(originPiece));
     int oppositeColor = Color::opposite(Piece::getColor(originPiece));
 
@@ -140,11 +135,7 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const 
 }
 
 void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Position& position) {
-    assert(Square::isValid(pawnSquare));
-
     int pawnPiece = position.board[pawnSquare];
-    assert(Piece::isValid(pawnPiece));
-    assert(Piece::getType(pawnPiece) == PieceType::PAWN);
     int pawnColor = Piece::getColor(pawnPiece);
 
     // Generate only capturing moves first (i = 1)
@@ -185,13 +176,8 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
                 }
             } else if (targetSquare == position.enPassantSquare) {
                 // En passant move
-                assert((pawnColor == Color::BLACK && Square::getRank(targetSquare) == Rank::r3)
-                       || (pawnColor == Color::WHITE && Square::getRank(targetSquare) == Rank::r6));
-
                 int captureSquare = targetSquare + (pawnColor == Color::WHITE ? Square::S : Square::N);
                 targetPiece = position.board[captureSquare];
-                assert(Piece::getType(targetPiece) == PieceType::PAWN);
-                assert(Piece::getColor(targetPiece) == Color::opposite(pawnColor));
 
                 list.entries[list.size++]->move = Move::valueOf(
                         MoveType::ENPASSANT, pawnSquare, targetSquare, pawnPiece, targetPiece, PieceType::NOPIECETYPE);
@@ -240,11 +226,7 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
 }
 
 void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, Position& position) {
-    assert(Square::isValid(kingSquare));
-
     int kingPiece = position.board[kingSquare];
-    assert(Piece::isValid(kingPiece));
-    assert(Piece::getType(kingPiece) == PieceType::KING);
 
     if (Piece::getColor(kingPiece) == Color::WHITE) {
         // Do not test g1 whether it is attacked as we will test it in isLegal()
@@ -252,9 +234,6 @@ void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, 
             && position.board[Square::f1] == Piece::NOPIECE
             && position.board[Square::g1] == Piece::NOPIECE
             && !position.isAttacked(Square::f1, Color::BLACK)) {
-            assert(position.board[Square::e1] == Piece::WHITE_KING);
-            assert(position.board[Square::h1] == Piece::WHITE_ROOK);
-
             list.entries[list.size++]->move = Move::valueOf(
                     MoveType::CASTLING, kingSquare, Square::g1, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
         }
@@ -264,9 +243,6 @@ void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, 
             && position.board[Square::c1] == Piece::NOPIECE
             && position.board[Square::d1] == Piece::NOPIECE
             && !position.isAttacked(Square::d1, Color::BLACK)) {
-            assert(position.board[Square::e1] == Piece::WHITE_KING);
-            assert(position.board[Square::a1] == Piece::WHITE_ROOK);
-
             list.entries[list.size++]->move = Move::valueOf(
                     MoveType::CASTLING, kingSquare, Square::c1, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
         }
@@ -276,9 +252,6 @@ void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, 
             && position.board[Square::f8] == Piece::NOPIECE
             && position.board[Square::g8] == Piece::NOPIECE
             && !position.isAttacked(Square::f8, Color::WHITE)) {
-            assert(position.board[Square::e8] == Piece::BLACK_KING);
-            assert(position.board[Square::h8] == Piece::BLACK_ROOK);
-
             list.entries[list.size++]->move = Move::valueOf(
                     MoveType::CASTLING, kingSquare, Square::g8, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
         }
@@ -288,9 +261,6 @@ void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, 
             && position.board[Square::c8] == Piece::NOPIECE
             && position.board[Square::d8] == Piece::NOPIECE
             && !position.isAttacked(Square::d8, Color::WHITE)) {
-            assert(position.board[Square::e8] == Piece::BLACK_KING);
-            assert(position.board[Square::a8] == Piece::BLACK_ROOK);
-
             list.entries[list.size++]->move = Move::valueOf(
                     MoveType::CASTLING, kingSquare, Square::c8, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
         }

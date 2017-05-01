@@ -7,7 +7,6 @@
 
 #include "value.h"
 
-#include <cassert>
 #include <cmath>
 
 namespace pulse {
@@ -19,8 +18,6 @@ bool Value::isValid(int value) {
 }
 
 bool Value::isCheckmate(int value) {
-    assert(isValid(value));
-
     int absvalue = std::abs(value);
 
     return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;

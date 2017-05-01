@@ -7,8 +7,6 @@
 
 #include "movelist.h"
 
-#include <cassert>
-
 namespace pulse {
 
 template<class T>
@@ -52,9 +50,6 @@ void MoveList<T>::rateFromMVVLVA() {
         if (Piece::isValid(target)) {
             value += 10 * PieceType::getValue(Piece::getType(target));
         }
-
-        assert(value >= (PieceType::KING_VALUE / PieceType::KING_VALUE)
-               && value <= (PieceType::KING_VALUE / PieceType::PAWN_VALUE) + 10 * PieceType::QUEEN_VALUE);
 
         entries[i]->value = value;
     }

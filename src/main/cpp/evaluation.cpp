@@ -6,9 +6,6 @@
  */
 
 #include "evaluation.h"
-#include "value.h"
-
-#include <cassert>
 
 namespace pulse {
 
@@ -40,13 +37,10 @@ int Evaluation::evaluate(Position& position) {
     // Add Tempo
     value += TEMPO;
 
-    assert(std::abs(value) < Value::CHECKMATE_THRESHOLD);
     return value;
 }
 
 int Evaluation::evaluateMaterial(int color, Position& position) {
-    assert(Color::isValid(color));
-
     int material = position.material[color];
 
     // Add bonus for bishop pair
@@ -58,8 +52,6 @@ int Evaluation::evaluateMaterial(int color, Position& position) {
 }
 
 int Evaluation::evaluateMobility(int color, Position& position) {
-    assert(Color::isValid(color));
-
     int knightMobility = 0;
     for (auto squares = position.pieces[color][PieceType::KNIGHT].squares;
          squares != 0; squares = Bitboard::remainder(squares)) {
@@ -95,9 +87,6 @@ int Evaluation::evaluateMobility(int color, Position& position) {
 }
 
 int Evaluation::evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions) {
-    assert(Color::isValid(color));
-    assert(Piece::isValid(position.board[square]));
-
     int mobility = 0;
     bool sliding = PieceType::isSliding(Piece::getType(position.board[square]));
 

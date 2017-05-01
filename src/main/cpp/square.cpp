@@ -6,10 +6,6 @@
  */
 
 #include "square.h"
-#include "file.h"
-#include "rank.h"
-
-#include <cassert>
 
 namespace pulse {
 
@@ -58,31 +54,15 @@ bool Square::isValid(int square) {
 }
 
 int Square::valueOf(int file, int rank) {
-    assert(File::isValid(file));
-    assert(Rank::isValid(rank));
-
-    int square = (rank << 4) + file;
-    assert(isValid(square));
-
-    return square;
+    return (rank << 4) + file;
 }
 
 int Square::getFile(int square) {
-    assert(isValid(square));
-
-    int file = square & 0xF;
-    assert(File::isValid(file));
-
-    return file;
+    return square & 0xF;
 }
 
 int Square::getRank(int square) {
-    assert(isValid(square));
-
-    int rank = square >> 4;
-    assert(Rank::isValid(rank));
-
-    return rank;
+    return square >> 4;
 }
 
 }

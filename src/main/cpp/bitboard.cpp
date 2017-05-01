@@ -8,8 +8,6 @@
 #include "bitboard.h"
 #include "square.h"
 
-#include <cassert>
-
 namespace pulse {
 
 const std::array<int, 64> Bitboard::lsbTable = {
@@ -32,8 +30,6 @@ bool Bitboard::operator!=(const Bitboard& bitboard) const {
 }
 
 int Bitboard::numberOfTrailingZeros(uint64_t b) {
-    assert(b != 0);
-
     return lsbTable[((b ^ (b - 1)) * DEBRUIJN64) >> 58];
 }
 
@@ -49,20 +45,14 @@ int Bitboard::next(uint64_t squares) {
 }
 
 uint64_t Bitboard::remainder(uint64_t squares) {
-    assert(squares != 0);
-
     return squares & (squares - 1);
 }
 
 int Bitboard::toX88Square(int square) {
-    assert(square >= 0 && square < 64);
-
     return ((square & ~7) << 1) | (square & 7);
 }
 
 int Bitboard::toBitSquare(int square) {
-    assert(Square::isValid(square));
-
     return ((square & ~7) >> 1) | (square & 7);
 }
 
@@ -71,16 +61,10 @@ int Bitboard::size() {
 }
 
 void Bitboard::add(int square) {
-    assert(Square::isValid(square));
-    assert((squares & (1ULL << toBitSquare(square))) == 0);
-
     squares |= 1ULL << toBitSquare(square);
 }
 
 void Bitboard::remove(int square) {
-    assert(Square::isValid(square));
-    assert((squares & (1ULL << toBitSquare(square))) != 0);
-
     squares &= ~(1ULL << toBitSquare(square));
 }
 
