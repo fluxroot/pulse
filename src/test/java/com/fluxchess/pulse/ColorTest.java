@@ -17,32 +17,32 @@ import static org.junit.Assert.assertThat;
 
 public class ColorTest {
 
-    @Test
-    public void testUtilityClass()
-            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertUtilityClassWellDefined(Color.class);
-    }
+	@Test
+	public void testUtilityClass()
+			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		assertUtilityClassWellDefined(Color.class);
+	}
 
-    @Test
-    public void testValues() {
-        for (int color : Color.values) {
-            assertThat(Color.values[color], is(color));
-        }
-    }
+	@Test
+	public void testValues() {
+		for (int color : Color.values) {
+			assertThat(Color.values[color], is(color));
+		}
+	}
 
-    @Test
-    public void testIsValid() {
-        for (int color : Color.values) {
-            assertThat(Color.isValid(color), is(true));
-        }
+	@Test
+	public void testIsValid() {
+		for (int color : Color.values) {
+			assertThat(Color.isValid(color), is(true));
+		}
 
-        assertThat(Color.isValid(NOCOLOR), is(false));
-    }
+		assertThat(Color.isValid(NOCOLOR), is(false));
+	}
 
-    @Test
-    public void testOpposite() {
-        assertThat(opposite(BLACK), is(WHITE));
-        assertThat(opposite(WHITE), is(BLACK));
-    }
+	@Test
+	public void testOpposite() {
+		assertThat(opposite(BLACK), is(WHITE));
+		assertThat(opposite(WHITE), is(BLACK));
+	}
 
 }

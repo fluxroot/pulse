@@ -17,42 +17,42 @@ import static org.junit.Assert.assertThat;
 
 public class BitboardTest {
 
-    private LinkedList<Integer> pool = null;
+	private LinkedList<Integer> pool = null;
 
-    @Before
-    public void setUp() {
-        Random random = new Random();
-        pool = new LinkedList<>();
+	@Before
+	public void setUp() {
+		Random random = new Random();
+		pool = new LinkedList<>();
 
-        while (pool.size() < Long.SIZE) {
-            int value = random.nextInt(Long.SIZE);
-            if (!pool.contains(Square.values[value])) {
-                pool.add(Square.values[value]);
-            }
-        }
-    }
+		while (pool.size() < Long.SIZE) {
+			int value = random.nextInt(Long.SIZE);
+			if (!pool.contains(Square.values[value])) {
+				pool.add(Square.values[value]);
+			}
+		}
+	}
 
-    @Test
-    public void testAdd() {
-        Bitboard list = new Bitboard();
+	@Test
+	public void testAdd() {
+		Bitboard list = new Bitboard();
 
-        for (int x88square : pool) {
-            list.add(x88square);
-        }
+		for (int x88square : pool) {
+			list.add(x88square);
+		}
 
-        assertThat(list.squares, is(-1L));
-    }
+		assertThat(list.squares, is(-1L));
+	}
 
-    @Test
-    public void testRemove() {
-        Bitboard list = new Bitboard();
-        list.squares = -1;
+	@Test
+	public void testRemove() {
+		Bitboard list = new Bitboard();
+		list.squares = -1;
 
-        for (int x88square : pool) {
-            list.remove(x88square);
-        }
+		for (int x88square : pool) {
+			list.remove(x88square);
+		}
 
-        assertThat(list.squares, is(0L));
-    }
+		assertThat(list.squares, is(0L));
+	}
 
 }

@@ -17,26 +17,26 @@ import static org.junit.Assert.assertThat;
 
 public class RankTest {
 
-    @Test
-    public void testUtilityClass()
-            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertUtilityClassWellDefined(Rank.class);
-    }
+	@Test
+	public void testUtilityClass()
+			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		assertUtilityClassWellDefined(Rank.class);
+	}
 
-    @Test
-    public void testValues() {
-        for (int rank : Rank.values) {
-            assertThat(Rank.values[rank], is(rank));
-        }
-    }
+	@Test
+	public void testValues() {
+		for (int rank : Rank.values) {
+			assertThat(Rank.values[rank], is(rank));
+		}
+	}
 
-    @Test
-    public void testIsValid() {
-        for (int rank : Rank.values) {
-            assertThat(Rank.isValid(rank), is(true));
-        }
+	@Test
+	public void testIsValid() {
+		for (int rank : Rank.values) {
+			assertThat(Rank.isValid(rank), is(true));
+		}
 
-        assertThat(Rank.isValid(NORANK), is(false));
-    }
+		assertThat(Rank.isValid(NORANK), is(false));
+	}
 
 }

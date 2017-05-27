@@ -17,26 +17,26 @@ import static org.junit.Assert.assertThat;
 
 public class FileTest {
 
-    @Test
-    public void testUtilityClass()
-            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertUtilityClassWellDefined(File.class);
-    }
+	@Test
+	public void testUtilityClass()
+			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		assertUtilityClassWellDefined(File.class);
+	}
 
-    @Test
-    public void testValues() {
-        for (int file : File.values) {
-            assertThat(File.values[file], is(file));
-        }
-    }
+	@Test
+	public void testValues() {
+		for (int file : File.values) {
+			assertThat(File.values[file], is(file));
+		}
+	}
 
-    @Test
-    public void testIsValid() {
-        for (int file : File.values) {
-            assertThat(File.isValid(file), is(true));
-        }
+	@Test
+	public void testIsValid() {
+		for (int file : File.values) {
+			assertThat(File.isValid(file), is(true));
+		}
 
-        assertThat(File.isValid(NOFILE), is(false));
-    }
+		assertThat(File.isValid(NOFILE), is(false));
+	}
 
 }

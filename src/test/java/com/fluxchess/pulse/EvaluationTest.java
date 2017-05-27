@@ -13,12 +13,12 @@ import static org.junit.Assert.assertThat;
 
 public class EvaluationTest {
 
-    @Test
-    public void testEvaluate() {
-        Position position = Notation.toPosition(Notation.STANDARDPOSITION);
-        Evaluation evaluation = new Evaluation();
+	@Test
+	public void testEvaluate() {
+		Position position = Notation.toPosition(Notation.STANDARDPOSITION);
+		Evaluation evaluation = new Evaluation();
 
-        assertThat(evaluation.evaluate(position), is(Evaluation.TEMPO));
-    }
+		assertThat(evaluation.evaluate(position), is(Evaluation.TEMPO));
+	}
 
 }

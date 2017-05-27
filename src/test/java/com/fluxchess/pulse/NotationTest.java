@@ -25,78 +25,78 @@ import static org.junit.Assert.assertThat;
 
 public class NotationTest {
 
-    @Test
-    public void testUtilityClass()
-            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertUtilityClassWellDefined(Notation.class);
-    }
+	@Test
+	public void testUtilityClass()
+			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		assertUtilityClassWellDefined(Notation.class);
+	}
 
-    @Test
-    public void testStandardPosition() {
-        Position position = Notation.toPosition(Notation.STANDARDPOSITION);
+	@Test
+	public void testStandardPosition() {
+		Position position = Notation.toPosition(Notation.STANDARDPOSITION);
 
-        // Test pawns
-        for (int file : File.values) {
-            assertThat(position.board[Square.valueOf(file, r2)], is(WHITE_PAWN));
-            assertThat(position.board[Square.valueOf(file, r7)], is(BLACK_PAWN));
-        }
+		// Test pawns
+		for (int file : File.values) {
+			assertThat(position.board[Square.valueOf(file, r2)], is(WHITE_PAWN));
+			assertThat(position.board[Square.valueOf(file, r7)], is(BLACK_PAWN));
+		}
 
-        // Test knights
-        assertThat(position.board[b1], is(WHITE_KNIGHT));
-        assertThat(position.board[g1], is(WHITE_KNIGHT));
-        assertThat(position.board[b8], is(BLACK_KNIGHT));
-        assertThat(position.board[g8], is(BLACK_KNIGHT));
+		// Test knights
+		assertThat(position.board[b1], is(WHITE_KNIGHT));
+		assertThat(position.board[g1], is(WHITE_KNIGHT));
+		assertThat(position.board[b8], is(BLACK_KNIGHT));
+		assertThat(position.board[g8], is(BLACK_KNIGHT));
 
-        // Test bishops
-        assertThat(position.board[c1], is(WHITE_BISHOP));
-        assertThat(position.board[f1], is(WHITE_BISHOP));
-        assertThat(position.board[c8], is(BLACK_BISHOP));
-        assertThat(position.board[f8], is(BLACK_BISHOP));
+		// Test bishops
+		assertThat(position.board[c1], is(WHITE_BISHOP));
+		assertThat(position.board[f1], is(WHITE_BISHOP));
+		assertThat(position.board[c8], is(BLACK_BISHOP));
+		assertThat(position.board[f8], is(BLACK_BISHOP));
 
-        // Test rooks
-        assertThat(position.board[a1], is(WHITE_ROOK));
-        assertThat(position.board[h1], is(WHITE_ROOK));
-        assertThat(position.board[a8], is(BLACK_ROOK));
-        assertThat(position.board[h8], is(BLACK_ROOK));
+		// Test rooks
+		assertThat(position.board[a1], is(WHITE_ROOK));
+		assertThat(position.board[h1], is(WHITE_ROOK));
+		assertThat(position.board[a8], is(BLACK_ROOK));
+		assertThat(position.board[h8], is(BLACK_ROOK));
 
-        // Test queens
-        assertThat(position.board[d1], is(WHITE_QUEEN));
-        assertThat(position.board[d8], is(BLACK_QUEEN));
+		// Test queens
+		assertThat(position.board[d1], is(WHITE_QUEEN));
+		assertThat(position.board[d8], is(BLACK_QUEEN));
 
-        // Test kings
-        assertThat(position.board[e1], is(WHITE_KING));
-        assertThat(position.board[e8], is(BLACK_KING));
+		// Test kings
+		assertThat(position.board[e1], is(WHITE_KING));
+		assertThat(position.board[e8], is(BLACK_KING));
 
-        assertThat(position.material[WHITE], is((8 * PAWN_VALUE)
-                + (2 * KNIGHT_VALUE)
-                + (2 * BISHOP_VALUE)
-                + (2 * ROOK_VALUE)
-                + QUEEN_VALUE
-                + KING_VALUE));
-        assertThat(position.material[BLACK], is((8 * PAWN_VALUE)
-                + (2 * KNIGHT_VALUE)
-                + (2 * BISHOP_VALUE)
-                + (2 * ROOK_VALUE)
-                + QUEEN_VALUE
-                + KING_VALUE));
+		assertThat(position.material[WHITE], is((8 * PAWN_VALUE)
+				+ (2 * KNIGHT_VALUE)
+				+ (2 * BISHOP_VALUE)
+				+ (2 * ROOK_VALUE)
+				+ QUEEN_VALUE
+				+ KING_VALUE));
+		assertThat(position.material[BLACK], is((8 * PAWN_VALUE)
+				+ (2 * KNIGHT_VALUE)
+				+ (2 * BISHOP_VALUE)
+				+ (2 * ROOK_VALUE)
+				+ QUEEN_VALUE
+				+ KING_VALUE));
 
-        // Test castling
-        assertThat(position.castlingRights & WHITE_KINGSIDE, is(not(NOCASTLING)));
-        assertThat(position.castlingRights & WHITE_QUEENSIDE, is(not(NOCASTLING)));
-        assertThat(position.castlingRights & BLACK_KINGSIDE, is(not(NOCASTLING)));
-        assertThat(position.castlingRights & BLACK_QUEENSIDE, is(not(NOCASTLING)));
+		// Test castling
+		assertThat(position.castlingRights & WHITE_KINGSIDE, is(not(NOCASTLING)));
+		assertThat(position.castlingRights & WHITE_QUEENSIDE, is(not(NOCASTLING)));
+		assertThat(position.castlingRights & BLACK_KINGSIDE, is(not(NOCASTLING)));
+		assertThat(position.castlingRights & BLACK_QUEENSIDE, is(not(NOCASTLING)));
 
-        // Test en passant
-        assertThat(position.enPassantSquare, is(NOSQUARE));
+		// Test en passant
+		assertThat(position.enPassantSquare, is(NOSQUARE));
 
-        // Test active color
-        assertThat(position.activeColor, is(WHITE));
+		// Test active color
+		assertThat(position.activeColor, is(WHITE));
 
-        // Test half move clock
-        assertThat(position.halfmoveClock, is(0));
+		// Test half move clock
+		assertThat(position.halfmoveClock, is(0));
 
-        // Test full move number
-        assertThat(position.getFullmoveNumber(), is(1));
-    }
+		// Test full move number
+		assertThat(position.getFullmoveNumber(), is(1));
+	}
 
 }

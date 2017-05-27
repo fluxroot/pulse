@@ -21,29 +21,29 @@ import static org.junit.Assert.assertThat;
 
 public class MoveTest {
 
-    @Test
-    public void testUtilityClass()
-            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertUtilityClassWellDefined(Move.class);
-    }
+	@Test
+	public void testUtilityClass()
+			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		assertUtilityClassWellDefined(Move.class);
+	}
 
-    @Test
-    public void testCreation() {
-        int move = Move.valueOf(PAWNPROMOTION, a7, b8, WHITE_PAWN, BLACK_QUEEN, KNIGHT);
+	@Test
+	public void testCreation() {
+		int move = Move.valueOf(PAWNPROMOTION, a7, b8, WHITE_PAWN, BLACK_QUEEN, KNIGHT);
 
-        assertThat(Move.getType(move), is(PAWNPROMOTION));
-        assertThat(Move.getOriginSquare(move), is(a7));
-        assertThat(Move.getTargetSquare(move), is(b8));
-        assertThat(Move.getOriginPiece(move), is(WHITE_PAWN));
-        assertThat(Move.getTargetPiece(move), is(BLACK_QUEEN));
-        assertThat(Move.getPromotion(move), is(KNIGHT));
-    }
+		assertThat(Move.getType(move), is(PAWNPROMOTION));
+		assertThat(Move.getOriginSquare(move), is(a7));
+		assertThat(Move.getTargetSquare(move), is(b8));
+		assertThat(Move.getOriginPiece(move), is(WHITE_PAWN));
+		assertThat(Move.getTargetPiece(move), is(BLACK_QUEEN));
+		assertThat(Move.getPromotion(move), is(KNIGHT));
+	}
 
-    @Test
-    public void testPromotion() {
-        int move = Move.valueOf(PAWNPROMOTION, b7, c8, WHITE_PAWN, BLACK_QUEEN, KNIGHT);
+	@Test
+	public void testPromotion() {
+		int move = Move.valueOf(PAWNPROMOTION, b7, c8, WHITE_PAWN, BLACK_QUEEN, KNIGHT);
 
-        assertThat(Move.getPromotion(move), is(KNIGHT));
-    }
+		assertThat(Move.getPromotion(move), is(KNIGHT));
+	}
 
 }

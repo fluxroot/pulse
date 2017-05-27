@@ -16,17 +16,17 @@ import static org.junit.Assert.assertThat;
 
 public class CastlingTypeTest {
 
-    @Test
-    public void testUtilityClass()
-            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertUtilityClassWellDefined(CastlingType.class);
-    }
+	@Test
+	public void testUtilityClass()
+			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		assertUtilityClassWellDefined(CastlingType.class);
+	}
 
-    @Test
-    public void testValues() {
-        for (int castlingtype : CastlingType.values) {
-            assertThat(CastlingType.values[castlingtype], is(castlingtype));
-        }
-    }
+	@Test
+	public void testValues() {
+		for (int castlingtype : CastlingType.values) {
+			assertThat(CastlingType.values[castlingtype], is(castlingtype));
+		}
+	}
 
 }

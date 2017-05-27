@@ -15,33 +15,33 @@ import static java.lang.Long.numberOfTrailingZeros;
  */
 final class Bitboard {
 
-    long squares = 0;
+	long squares = 0;
 
-    static int next(long squares) {
-        return toX88Square(numberOfTrailingZeros(squares));
-    }
+	static int next(long squares) {
+		return toX88Square(numberOfTrailingZeros(squares));
+	}
 
-    static long remainder(long squares) {
-        return squares & (squares - 1);
-    }
+	static long remainder(long squares) {
+		return squares & (squares - 1);
+	}
 
-    private static int toX88Square(int square) {
-        return ((square & ~7) << 1) | (square & 7);
-    }
+	private static int toX88Square(int square) {
+		return ((square & ~7) << 1) | (square & 7);
+	}
 
-    private static int toBitSquare(int square) {
-        return ((square & ~7) >>> 1) | (square & 7);
-    }
+	private static int toBitSquare(int square) {
+		return ((square & ~7) >>> 1) | (square & 7);
+	}
 
-    int size() {
-        return bitCount(squares);
-    }
+	int size() {
+		return bitCount(squares);
+	}
 
-    void add(int square) {
-        squares |= 1L << toBitSquare(square);
-    }
+	void add(int square) {
+		squares |= 1L << toBitSquare(square);
+	}
 
-    void remove(int square) {
-        squares &= ~(1L << toBitSquare(square));
-    }
+	void remove(int square) {
+		squares &= ~(1L << toBitSquare(square));
+	}
 }
