@@ -7,7 +7,7 @@
 
   <groupId>com.fluxchess</groupId>
   <artifactId>pulse</artifactId>
-  <version>1.6.1-java</version>
+  <version>1.7.0-java</version>
   <name>Pulse Chess</name>
   <packaging>jar</packaging>
 

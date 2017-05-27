@@ -58,7 +58,7 @@ void Pulse::receiveInitialize() {
     // program.
 
     // We must send an initialization answer back!
-    std::cout << "id name Pulse 1.6.1-cpp" << std::endl;
+    std::cout << "id name Pulse 1.7.0-cpp" << std::endl;
     std::cout << "id author Phokham Nonava" << std::endl;
     std::cout << "uciok" << std::endl;
 }
