@@ -22,7 +22,7 @@ else()
   set(LIBRARY_PREFIX lib)
   set(LIBRARY_SUFFIX .a)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -pthread")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 endif()
 
 add_subdirectory(src/main/cpp)
