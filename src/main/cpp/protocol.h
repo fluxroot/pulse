@@ -13,18 +13,18 @@ namespace pulse {
 
 class Protocol {
 public:
-    virtual ~Protocol() {};
+	virtual ~Protocol() {};
 
-    virtual void sendBestMove(int bestMove, int ponderMove) = 0;
+	virtual void sendBestMove(int bestMove, int ponderMove) = 0;
 
-    virtual void sendStatus(
-            int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove, int currentMoveNumber) = 0;
+	virtual void sendStatus(
+			int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove, int currentMoveNumber) = 0;
 
-    virtual void sendStatus(
-            bool force, int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove,
-            int currentMoveNumber) = 0;
+	virtual void sendStatus(
+			bool force, int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove,
+			int currentMoveNumber) = 0;
 
-    virtual void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) = 0;
+	virtual void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) = 0;
 };
 
 }

@@ -14,20 +14,20 @@
 using namespace pulse;
 
 TEST(squaretest, testValues) {
-  for (auto rank : Rank::values) {
-    for (auto file : File::values) {
-      int square = Square::valueOf(file, rank);
+	for (auto rank : Rank::values) {
+		for (auto file : File::values) {
+			int square = Square::valueOf(file, rank);
 
-      EXPECT_EQ(file, Square::getFile(square));
-      EXPECT_EQ(rank, Square::getRank(square));
-    }
-  }
+			EXPECT_EQ(file, Square::getFile(square));
+			EXPECT_EQ(rank, Square::getRank(square));
+		}
+	}
 }
 
 TEST(squaretest, testIsValid) {
-  for (auto square : Square::values) {
-    EXPECT_TRUE(Square::isValid(square));
-  }
+	for (auto square : Square::values) {
+		EXPECT_TRUE(Square::isValid(square));
+	}
 
-  EXPECT_FALSE(Square::isValid(Square::NOSQUARE));
+	EXPECT_FALSE(Square::isValid(Square::NOSQUARE));
 }

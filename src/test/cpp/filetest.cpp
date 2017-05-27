@@ -12,15 +12,15 @@
 using namespace pulse;
 
 TEST(filetest, testValues) {
-  for (auto file : File::values) {
-    EXPECT_EQ(file, File::values[file]);
-  }
+	for (auto file : File::values) {
+		EXPECT_EQ(file, File::values[file]);
+	}
 }
 
 TEST(filetest, testIsValid) {
-  for (auto file : File::values) {
-    EXPECT_TRUE(File::isValid(file));
-  }
+	for (auto file : File::values) {
+		EXPECT_TRUE(File::isValid(file));
+	}
 
-  EXPECT_FALSE(File::isValid(File::NOFILE));
+	EXPECT_FALSE(File::isValid(File::NOFILE));
 }

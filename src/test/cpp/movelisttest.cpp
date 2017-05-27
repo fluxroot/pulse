@@ -12,10 +12,10 @@
 using namespace pulse;
 
 TEST(movelisttest, test) {
-  MoveList<MoveEntry> moveList;
+	MoveList<MoveEntry> moveList;
 
-  EXPECT_EQ(0, moveList.size);
+	EXPECT_EQ(0, moveList.size);
 
-  moveList.entries[moveList.size++]->move = 1;
-  EXPECT_EQ(1, moveList.size);
+	moveList.entries[moveList.size++]->move = 1;
+	EXPECT_EQ(1, moveList.size);
 }

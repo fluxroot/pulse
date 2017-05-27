@@ -13,21 +13,21 @@ namespace pulse {
 
 class Evaluation {
 public:
-    static const int TEMPO = 1;
+	static const int TEMPO = 1;
 
-    static int materialWeight;
-    static int mobilityWeight;
+	static int materialWeight;
+	static int mobilityWeight;
 
-    int evaluate(Position& position);
+	int evaluate(Position& position);
 
 private:
-    static const int MAX_WEIGHT = 100;
+	static const int MAX_WEIGHT = 100;
 
-    int evaluateMaterial(int color, Position& position);
+	int evaluateMaterial(int color, Position& position);
 
-    int evaluateMobility(int color, Position& position);
+	int evaluateMobility(int color, Position& position);
 
-    int evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions);
+	int evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions);
 };
 
 }

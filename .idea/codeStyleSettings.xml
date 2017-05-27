@@ -5,17 +5,13 @@
       <value>
         <Objective-C>
           <option name="INDENT_NAMESPACE_MEMBERS" value="0" />
+          <option name="FUNCTION_CALL_ARGUMENTS_ALIGN_MULTILINE" value="false" />
           <option name="SPACE_BEFORE_POINTER_IN_DECLARATION" value="false" />
           <option name="SPACE_AFTER_POINTER_IN_DECLARATION" value="true" />
           <option name="SPACE_BEFORE_REFERENCE_IN_DECLARATION" value="false" />
           <option name="SPACE_AFTER_REFERENCE_IN_DECLARATION" value="true" />
         </Objective-C>
         <Objective-C-extensions>
-          <option name="GENERATE_INSTANCE_VARIABLES_FOR_PROPERTIES" value="ASK" />
-          <option name="RELEASE_STYLE" value="IVAR" />
-          <option name="TAG_PREFIX_OF_BLOCK_COMMENT" value="AT" />
-          <option name="TAG_PREFIX_OF_LINE_COMMENT" value="BACK_SLASH" />
-          <option name="TYPE_QUALIFIERS_PLACEMENT" value="BEFORE" />
           <file>
             <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Import" />
             <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Macro" />
@@ -41,6 +37,11 @@
           </extensions>
         </Objective-C-extensions>
         <codeStyleSettings language="JAVA">
+          <indentOptions>
+            <option name="USE_TAB_CHARACTER" value="true" />
+          </indentOptions>
+        </codeStyleSettings>
+        <codeStyleSettings language="ObjectiveC">
           <indentOptions>
             <option name="USE_TAB_CHARACTER" value="true" />
           </indentOptions>

@@ -12,15 +12,15 @@
 namespace pulse {
 
 bool Value::isValid(int value) {
-    int absvalue = std::abs(value);
+	int absvalue = std::abs(value);
 
-    return absvalue <= CHECKMATE || absvalue == INFINITE;
+	return absvalue <= CHECKMATE || absvalue == INFINITE;
 }
 
 bool Value::isCheckmate(int value) {
-    int absvalue = std::abs(value);
+	int absvalue = std::abs(value);
 
-    return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;
+	return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;
 }
 
 }

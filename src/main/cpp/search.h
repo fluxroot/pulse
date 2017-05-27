@@ -25,130 +25,130 @@ namespace pulse {
  */
 class Search {
 public:
-    Search(Protocol& protocol);
+	Search(Protocol& protocol);
 
-    void newDepthSearch(Position& position, int searchDepth);
+	void newDepthSearch(Position& position, int searchDepth);
 
-    void newNodesSearch(Position& position, uint64_t searchNodes);
+	void newNodesSearch(Position& position, uint64_t searchNodes);
 
-    void newTimeSearch(Position& position, uint64_t searchTime);
+	void newTimeSearch(Position& position, uint64_t searchTime);
 
-    void newInfiniteSearch(Position& position);
+	void newInfiniteSearch(Position& position);
 
-    void newClockSearch(Position& position,
-                        uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft,
-                        uint64_t blackTimeIncrement, int movesToGo);
+	void newClockSearch(Position& position,
+						uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft,
+						uint64_t blackTimeIncrement, int movesToGo);
 
-    void newPonderSearch(Position& position,
-                         uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft,
-                         uint64_t blackTimeIncrement, int movesToGo);
+	void newPonderSearch(Position& position,
+						 uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft,
+						 uint64_t blackTimeIncrement, int movesToGo);
 
-    void reset();
+	void reset();
 
-    void start();
+	void start();
 
-    void stop();
+	void stop();
 
-    void ponderhit();
+	void ponderhit();
 
-    void quit();
+	void quit();
 
-    void run();
+	void run();
 
 private:
-    /**
-     * This is our search timer for time & clock & ponder searches.
-     */
-    class Timer {
-    public:
-        Timer(bool& timerStopped, bool& doTimeManagement, int& currentDepth, const int& initialDepth, bool& abort);
+	/**
+	 * This is our search timer for time & clock & ponder searches.
+	 */
+	class Timer {
+	public:
+		Timer(bool& timerStopped, bool& doTimeManagement, int& currentDepth, const int& initialDepth, bool& abort);
 
-        void start(uint64_t searchTime);
+		void start(uint64_t searchTime);
 
-        void stop();
+		void stop();
 
-    private:
-        std::mutex mutex;
-        std::condition_variable condition;
-        std::thread thread;
+	private:
+		std::mutex mutex;
+		std::condition_variable condition;
+		std::thread thread;
 
-        bool& timerStopped;
-        bool& doTimeManagement;
-        int& currentDepth;
-        const int& initialDepth;
+		bool& timerStopped;
+		bool& doTimeManagement;
+		int& currentDepth;
+		const int& initialDepth;
 
-        bool& abort;
+		bool& abort;
 
-        void run(uint64_t searchTime);
-    };
+		void run(uint64_t searchTime);
+	};
 
-    class Semaphore {
-    public:
-        Semaphore(int permits);
+	class Semaphore {
+	public:
+		Semaphore(int permits);
 
-        void acquire();
+		void acquire();
 
-        void release();
+		void release();
 
-        void drainPermits();
+		void drainPermits();
 
-    private:
-        int permits;
-        std::mutex mutex;
-        std::condition_variable condition;
-    };
+	private:
+		int permits;
+		std::mutex mutex;
+		std::condition_variable condition;
+	};
 
-    std::thread thread;
-    Semaphore wakeupSignal;
-    Semaphore runSignal;
-    Semaphore stopSignal;
-    std::recursive_mutex sync;
-    Protocol& protocol;
-    bool running = false;
-    bool shutdown = false;
+	std::thread thread;
+	Semaphore wakeupSignal;
+	Semaphore runSignal;
+	Semaphore stopSignal;
+	std::recursive_mutex sync;
+	Protocol& protocol;
+	bool running = false;
+	bool shutdown = false;
 
-    Position position;
-    Evaluation evaluation;
+	Position position;
+	Evaluation evaluation;
 
-    // We will store a MoveGenerator for each ply so we don't have to create them
-    // in search. (which is expensive)
-    std::array<MoveGenerator, Depth::MAX_PLY> moveGenerators;
+	// We will store a MoveGenerator for each ply so we don't have to create them
+	// in search. (which is expensive)
+	std::array<MoveGenerator, Depth::MAX_PLY> moveGenerators;
 
-    // Depth search
-    int searchDepth;
+	// Depth search
+	int searchDepth;
 
-    // Nodes search
-    uint64_t searchNodes;
+	// Nodes search
+	uint64_t searchNodes;
 
-    // Time & Clock & Ponder search
-    uint64_t searchTime;
-    Timer timer;
-    bool timerStopped;
-    bool runTimer;
-    bool doTimeManagement;
+	// Time & Clock & Ponder search
+	uint64_t searchTime;
+	Timer timer;
+	bool timerStopped;
+	bool runTimer;
+	bool doTimeManagement;
 
-    // Search parameters
-    MoveList<RootEntry> rootMoves;
-    bool abort;
-    uint64_t totalNodes;
-    const int initialDepth = 1;
-    int currentDepth;
-    int currentMaxDepth;
-    int currentMove;
-    int currentMoveNumber;
-    std::array<MoveVariation, Depth::MAX_PLY + 1> pv;
+	// Search parameters
+	MoveList<RootEntry> rootMoves;
+	bool abort;
+	uint64_t totalNodes;
+	const int initialDepth = 1;
+	int currentDepth;
+	int currentMaxDepth;
+	int currentMove;
+	int currentMoveNumber;
+	std::array<MoveVariation, Depth::MAX_PLY + 1> pv;
 
-    void checkStopConditions();
+	void checkStopConditions();
 
-    void updateSearch(int ply);
+	void updateSearch(int ply);
 
-    void searchRoot(int depth, int alpha, int beta);
+	void searchRoot(int depth, int alpha, int beta);
 
-    int search(int depth, int alpha, int beta, int ply);
+	int search(int depth, int alpha, int beta, int ply);
 
-    int quiescent(int depth, int alpha, int beta, int ply);
+	int quiescent(int depth, int alpha, int beta, int ply);
 
-    void savePV(int move, MoveVariation& src, MoveVariation& dest);
+	void savePV(int move, MoveVariation& src, MoveVariation& dest);
 };
 
 }
