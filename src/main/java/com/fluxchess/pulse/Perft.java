@@ -11,7 +11,7 @@ import static com.fluxchess.pulse.MoveList.MoveEntry;
 import static java.lang.System.currentTimeMillis;
 import static java.util.concurrent.TimeUnit.*;
 
-final class Perft {
+public final class Perft {
 
 	private static final int MAX_DEPTH = 6;
 

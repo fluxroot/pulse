@@ -34,7 +34,7 @@ import static java.lang.System.currentTimeMillis;
  * UCI protocol. We simply extend AbstractEngine and implement the required
  * methods.
  */
-final class Pulse extends AbstractEngine implements Protocol {
+public final class Pulse extends AbstractEngine implements Protocol {
 
 	private Search search = new Search(this);
 	private long startTime = 0;
