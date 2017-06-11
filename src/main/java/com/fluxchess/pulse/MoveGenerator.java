@@ -50,7 +50,7 @@ final class MoveGenerator {
 			addMoves(moves, position);
 
 			if (!isCheck) {
-				int square = next(position.pieces[position.activeColor][KING].squares);
+				int square = next(position.pieces[position.activeColor][KING]);
 				addCastlingMoves(moves, square, position);
 			}
 		} else {
@@ -79,27 +79,27 @@ final class MoveGenerator {
 	private void addMoves(@NotNull MoveList<MoveEntry> list, @NotNull Position position) {
 		int activeColor = position.activeColor;
 
-		for (long squares = position.pieces[activeColor][PAWN].squares; squares != 0; squares = remainder(squares)) {
+		for (long squares = position.pieces[activeColor][PAWN]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
 			addPawnMoves(list, square, position);
 		}
-		for (long squares = position.pieces[activeColor][KNIGHT].squares; squares != 0; squares = remainder(squares)) {
+		for (long squares = position.pieces[activeColor][KNIGHT]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
 			addMoves(list, square, knightDirections, position);
 		}
-		for (long squares = position.pieces[activeColor][BISHOP].squares; squares != 0; squares = remainder(squares)) {
+		for (long squares = position.pieces[activeColor][BISHOP]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
 			addMoves(list, square, bishopDirections, position);
 		}
-		for (long squares = position.pieces[activeColor][ROOK].squares; squares != 0; squares = remainder(squares)) {
+		for (long squares = position.pieces[activeColor][ROOK]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
 			addMoves(list, square, rookDirections, position);
 		}
-		for (long squares = position.pieces[activeColor][QUEEN].squares; squares != 0; squares = remainder(squares)) {
+		for (long squares = position.pieces[activeColor][QUEEN]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
 			addMoves(list, square, queenDirections, position);
 		}
-		int square = next(position.pieces[activeColor][KING].squares);
+		int square = next(position.pieces[activeColor][KING]);
 		addMoves(list, square, kingDirections, position);
 	}
 
