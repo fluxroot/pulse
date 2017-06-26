@@ -12,31 +12,21 @@
 
 namespace pulse {
 
-/**
- * Bitboard stores squares as bits in a 64-bit long. We provide methods to
- * convert bit squares to 0x88 squares and vice versa.
- */
 class Bitboard {
 public:
-	uint64_t squares = 0;
+	static uint64_t add(int square, uint64_t bitboard);
 
-	bool operator==(const Bitboard& bitboard) const;
+	static uint64_t remove(int square, uint64_t bitboard);
 
-	bool operator!=(const Bitboard& bitboard) const;
+	static int next(uint64_t bitboard);
+
+	static uint64_t remainder(uint64_t bitboard);
+
+	static int size(uint64_t bitboard);
 
 	static int numberOfTrailingZeros(uint64_t b);
 
 	static int bitCount(uint64_t b);
-
-	static int next(uint64_t squares);
-
-	static uint64_t remainder(uint64_t);
-
-	int size();
-
-	void add(int square);
-
-	void remove(int square);
 
 private:
 	static const uint64_t DEBRUIJN64 = 0x03F79D71B4CB0A89ULL;
