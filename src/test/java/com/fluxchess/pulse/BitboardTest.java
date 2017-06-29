@@ -12,6 +12,8 @@ import org.junit.Test;
 import java.util.LinkedList;
 import java.util.Random;
 
+import static com.fluxchess.pulse.Bitboard.add;
+import static com.fluxchess.pulse.Square.a6;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -33,26 +35,51 @@ public class BitboardTest {
 	}
 
 	@Test
-	public void testAdd() {
-		Bitboard list = new Bitboard();
+	public void shouldAddAllSquaresCorrectly() {
+		long bitboard = 0;
 
 		for (int x88square : pool) {
-			list.add(x88square);
+			bitboard = add(x88square, bitboard);
 		}
 
-		assertThat(list.squares, is(-1L));
+		assertThat(bitboard, is(-1L));
 	}
 
 	@Test
-	public void testRemove() {
-		Bitboard list = new Bitboard();
-		list.squares = -1;
+	public void shouldRemoveAllSquaresCorrectly() {
+		long bitboard = -1;
 
 		for (int x88square : pool) {
-			list.remove(x88square);
+			bitboard = Bitboard.remove(x88square, bitboard);
 		}
 
-		assertThat(list.squares, is(0L));
+		assertThat(bitboard, is(0L));
 	}
 
+	@Test
+	public void shouldReturnTheNextSquare() {
+		long bitboard = add(a6, 0);
+
+		int square = Bitboard.next(bitboard);
+
+		assertThat(square, is(a6));
+	}
+
+	@Test
+	public void shouldReturnCorrectRemainder() {
+		long bitboard = 0b1110100;
+
+		long remainder = Bitboard.remainder(bitboard);
+
+		assertThat(remainder, is(0b1110000L));
+	}
+
+	@Test
+	public void shouldReturnCorrectSize() {
+		long bitboard = 0b111;
+
+		int size = Bitboard.size(bitboard);
+
+		assertThat(size, is(3));
+	}
 }

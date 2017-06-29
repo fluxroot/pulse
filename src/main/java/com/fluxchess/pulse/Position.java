@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.security.SecureRandom;
 
 import static com.fluxchess.pulse.Bitboard.next;
+import static com.fluxchess.pulse.Bitboard.size;
 import static com.fluxchess.pulse.Castling.*;
 import static com.fluxchess.pulse.Color.*;
 import static com.fluxchess.pulse.Depth.MAX_PLY;
@@ -26,7 +27,7 @@ final class Position {
 
 	final int[] board = new int[Square.VALUES_LENGTH];
 
-	final Bitboard[][] pieces = new Bitboard[Color.values.length][PieceType.values.length];
+	final long[][] pieces = new long[Color.values.length][PieceType.values.length];
 
 	final int[] material = new int[Color.values.length];
 
@@ -99,13 +100,6 @@ final class Position {
 			board[square] = NOPIECE;
 		}
 
-		// Initialize piece type lists
-		for (int color : Color.values) {
-			for (int piecetype : PieceType.values) {
-				pieces[color][piecetype] = new Bitboard();
-			}
-		}
-
 		// Initialize states
 		for (int i = 0; i < states.length; ++i) {
 			states[i] = new State();
@@ -165,11 +159,11 @@ final class Position {
 
 	boolean hasInsufficientMaterial() {
 		// If there is only one minor left, we are unable to checkmate
-		return pieces[WHITE][PAWN].size() == 0 && pieces[BLACK][PAWN].size() == 0
-				&& pieces[WHITE][ROOK].size() == 0 && pieces[BLACK][ROOK].size() == 0
-				&& pieces[WHITE][QUEEN].size() == 0 && pieces[BLACK][QUEEN].size() == 0
-				&& (pieces[WHITE][KNIGHT].size() + pieces[WHITE][BISHOP].size() <= 1)
-				&& (pieces[BLACK][KNIGHT].size() + pieces[BLACK][BISHOP].size() <= 1);
+		return size(pieces[WHITE][PAWN]) == 0 && size(pieces[BLACK][PAWN]) == 0
+				&& size(pieces[WHITE][ROOK]) == 0 && size(pieces[BLACK][ROOK]) == 0
+				&& size(pieces[WHITE][QUEEN]) == 0 && size(pieces[BLACK][QUEEN]) == 0
+				&& (size(pieces[WHITE][KNIGHT]) + size(pieces[WHITE][BISHOP]) <= 1)
+				&& (size(pieces[BLACK][KNIGHT]) + size(pieces[BLACK][BISHOP]) <= 1);
 	}
 
 	/**
@@ -184,7 +178,7 @@ final class Position {
 		int color = Piece.getColor(piece);
 
 		board[square] = piece;
-		pieces[color][piecetype].add(square);
+		pieces[color][piecetype] = Bitboard.add(square, pieces[color][piecetype]);
 		material[color] += PieceType.getValue(piecetype);
 
 		zobristKey ^= Zobrist.board[piece][square];
@@ -204,7 +198,7 @@ final class Position {
 		int color = Piece.getColor(piece);
 
 		board[square] = NOPIECE;
-		pieces[color][piecetype].remove(square);
+		pieces[color][piecetype] = Bitboard.remove(square, pieces[color][piecetype]);
 		material[color] -= PieceType.getValue(piecetype);
 
 		zobristKey ^= Zobrist.board[piece][square];
@@ -408,12 +402,12 @@ final class Position {
 
 	boolean isCheck() {
 		// Check whether our king is attacked by any opponent piece
-		return isAttacked(next(pieces[activeColor][KING].squares), opposite(activeColor));
+		return isAttacked(next(pieces[activeColor][KING]), opposite(activeColor));
 	}
 
 	boolean isCheck(int color) {
 		// Check whether the king for color is attacked by any opponent piece
-		return isAttacked(next(pieces[color][KING].squares), opposite(color));
+		return isAttacked(next(pieces[color][KING]), opposite(color));
 	}
 
 	/**

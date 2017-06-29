@@ -21,12 +21,32 @@ const std::array<int, 64> Bitboard::lsbTable = {
 		13, 18, 8, 12, 7, 6, 5, 63
 };
 
-bool Bitboard::operator==(const Bitboard& bitboard) const {
-	return this->squares == bitboard.squares;
+uint64_t Bitboard::add(int square, uint64_t bitboard) {
+	return bitboard | 1ULL << toBitSquare(square);
 }
 
-bool Bitboard::operator!=(const Bitboard& bitboard) const {
-	return !(*this == bitboard);
+uint64_t Bitboard::remove(int square, uint64_t bitboard) {
+	return bitboard & ~(1ULL << toBitSquare(square));
+}
+
+int Bitboard::next(uint64_t bitboard) {
+	return toX88Square(numberOfTrailingZeros(bitboard));
+}
+
+uint64_t Bitboard::remainder(uint64_t bitboard) {
+	return bitboard & (bitboard - 1);
+}
+
+int Bitboard::size(uint64_t bitboard) {
+	return bitCount(bitboard);
+}
+
+int Bitboard::toX88Square(int square) {
+	return ((square & ~7) << 1) | (square & 7);
+}
+
+int Bitboard::toBitSquare(int square) {
+	return ((square & ~7) >> 1) | (square & 7);
 }
 
 int Bitboard::numberOfTrailingZeros(uint64_t b) {
@@ -38,34 +58,6 @@ int Bitboard::bitCount(uint64_t b) {
 	b = (b & 0x3333333333333333ULL) + ((b >> 2) & 0x3333333333333333ULL);
 	b = (b + (b >> 4)) & 0x0F0F0F0F0F0F0F0FULL;
 	return (b * 0x0101010101010101ULL) >> 56;
-}
-
-int Bitboard::next(uint64_t squares) {
-	return toX88Square(numberOfTrailingZeros(squares));
-}
-
-uint64_t Bitboard::remainder(uint64_t squares) {
-	return squares & (squares - 1);
-}
-
-int Bitboard::toX88Square(int square) {
-	return ((square & ~7) << 1) | (square & 7);
-}
-
-int Bitboard::toBitSquare(int square) {
-	return ((square & ~7) >> 1) | (square & 7);
-}
-
-int Bitboard::size() {
-	return bitCount(squares);
-}
-
-void Bitboard::add(int square) {
-	squares |= 1ULL << toBitSquare(square);
-}
-
-void Bitboard::remove(int square) {
-	squares &= ~(1ULL << toBitSquare(square));
 }
 
 }

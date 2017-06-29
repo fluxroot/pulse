@@ -8,8 +8,7 @@ package com.fluxchess.pulse;
 
 import org.jetbrains.annotations.NotNull;
 
-import static com.fluxchess.pulse.Bitboard.next;
-import static com.fluxchess.pulse.Bitboard.remainder;
+import static com.fluxchess.pulse.Bitboard.*;
 import static com.fluxchess.pulse.Color.opposite;
 import static com.fluxchess.pulse.Piece.NOPIECE;
 import static com.fluxchess.pulse.PieceType.*;
@@ -55,7 +54,7 @@ final class Evaluation {
 		int material = position.material[color];
 
 		// Add bonus for bishop pair
-		if (position.pieces[color][BISHOP].size() >= 2) {
+		if (size(position.pieces[color][BISHOP]) >= 2) {
 			material += 50;
 		}
 
@@ -64,25 +63,25 @@ final class Evaluation {
 
 	private int evaluateMobility(int color, @NotNull Position position) {
 		int knightMobility = 0;
-		for (long squares = position.pieces[color][KNIGHT].squares; squares != 0; squares = remainder(squares)) {
+		for (long squares = position.pieces[color][KNIGHT]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
 			knightMobility += evaluateMobility(color, position, square, knightDirections);
 		}
 
 		int bishopMobility = 0;
-		for (long squares = position.pieces[color][BISHOP].squares; squares != 0; squares = remainder(squares)) {
+		for (long squares = position.pieces[color][BISHOP]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
 			bishopMobility += evaluateMobility(color, position, square, bishopDirections);
 		}
 
 		int rookMobility = 0;
-		for (long squares = position.pieces[color][ROOK].squares; squares != 0; squares = remainder(squares)) {
+		for (long squares = position.pieces[color][ROOK]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
 			rookMobility += evaluateMobility(color, position, square, rookDirections);
 		}
 
 		int queenMobility = 0;
-		for (long squares = position.pieces[color][QUEEN].squares; squares != 0; squares = remainder(squares)) {
+		for (long squares = position.pieces[color][QUEEN]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
 			queenMobility += evaluateMobility(color, position, square, queenDirections);
 		}
