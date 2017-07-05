@@ -17,7 +17,7 @@ public final class Perft {
 
 	private final MoveGenerator[] moveGenerators = new MoveGenerator[MAX_DEPTH];
 
-	void run() {
+	public void run() {
 		Position position = Notation.toPosition(Notation.STANDARDPOSITION);
 		int depth = MAX_DEPTH;
 
