@@ -13,18 +13,17 @@ public final class Main {
 		// run it. JCPI takes care of the rest. It waits for the GUI
 		// to issue commands which will call our methods using the
 		// visitor pattern.
-		try {
-			if (args.length == 1) {
-				if (args[0].equalsIgnoreCase("perft")) {
-					new Perft().run();
-				}
-			} else {
-				new Pulse().run();
-			}
-		} catch (Throwable t) {
-			System.out.format("Exiting Pulse due to an exception: %s%n", t.getLocalizedMessage());
-			t.printStackTrace();
-			System.exit(1);
+		if (args.length == 0) {
+			new Pulse().run();
+		} else if (args.length == 1 && args[0].equalsIgnoreCase("perft")) {
+			new Perft().run();
+		} else {
+			printUsage();
 		}
+	}
+
+	private static void printUsage() {
+		System.out.println("Usage: pulse [perft]");
+		System.exit(1);
 	}
 }
