@@ -100,7 +100,7 @@ final class Evaluation {
 			int targetSquare = square + direction;
 
 			while (Square.isValid(targetSquare)) {
-				++mobility;
+				mobility++;
 
 				if (sliding && position.board[targetSquare] == NOPIECE) {
 					targetSquare += direction;

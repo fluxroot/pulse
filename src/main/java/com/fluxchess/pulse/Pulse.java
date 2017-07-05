@@ -140,7 +140,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 			// Verify moves
 			MoveList<MoveEntry> moves = moveGenerator.getLegalMoves(currentPosition, 1, currentPosition.isCheck());
 			boolean found = false;
-			for (int i = 0; i < moves.size; ++i) {
+			for (int i = 0; i < moves.size; i++) {
 				int move = moves.entries[i].move;
 				if (fromMove(move).equals(genericMove)) {
 					currentPosition.makeMove(move);
@@ -286,7 +286,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 			command.setCentipawns(entry.value);
 		}
 		List<GenericMove> moveList = new ArrayList<>();
-		for (int i = 0; i < entry.pv.size; ++i) {
+		for (int i = 0; i < entry.pv.size; i++) {
 			moveList.add(fromMove(entry.pv.moves[i]));
 		}
 		command.setMoveList(moveList);

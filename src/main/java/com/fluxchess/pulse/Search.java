@@ -176,11 +176,11 @@ final class Search implements Runnable {
 	Search(@NotNull Protocol protocol) {
 		this.protocol = protocol;
 
-		for (int i = 0; i < MAX_PLY; ++i) {
+		for (int i = 0; i < MAX_PLY; i++) {
 			moveGenerators[i] = new MoveGenerator();
 		}
 
-		for (int i = 0; i < pv.length; ++i) {
+		for (int i = 0; i < pv.length; i++) {
 			pv[i] = new MoveVariation();
 		}
 
@@ -277,12 +277,12 @@ final class Search implements Runnable {
 
 			// Populate root move list
 			MoveList<MoveEntry> moves = moveGenerators[0].getLegalMoves(position, 1, position.isCheck());
-			for (int i = 0; i < moves.size; ++i) {
+			for (int i = 0; i < moves.size; i++) {
 				int move = moves.entries[i].move;
 				rootMoves.entries[rootMoves.size].move = move;
 				rootMoves.entries[rootMoves.size].pv.moves[0] = move;
 				rootMoves.entries[rootMoves.size].pv.size = 1;
-				++rootMoves.size;
+				rootMoves.size++;
 			}
 
 			// Go...
@@ -291,7 +291,7 @@ final class Search implements Runnable {
 			runSignal.release();
 
 			//### BEGIN Iterative Deepening
-			for (int depth = initialDepth; depth <= searchDepth; ++depth) {
+			for (int depth = initialDepth; depth <= searchDepth; depth++) {
 				currentDepth = depth;
 				currentMaxDepth = 0;
 				protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
@@ -357,7 +357,7 @@ final class Search implements Runnable {
 	}
 
 	private void updateSearch(int ply) {
-		++totalNodes;
+		totalNodes++;
 
 		if (ply > currentMaxDepth) {
 			currentMaxDepth = ply;
@@ -384,11 +384,11 @@ final class Search implements Runnable {
 		}
 
 		// Reset all values, so the best move is pushed to the front
-		for (int i = 0; i < rootMoves.size; ++i) {
+		for (int i = 0; i < rootMoves.size; i++) {
 			rootMoves.entries[i].value = -INFINITE;
 		}
 
-		for (int i = 0; i < rootMoves.size; ++i) {
+		for (int i = 0; i < rootMoves.size; i++) {
 			int move = rootMoves.entries[i].move;
 
 			currentMove = move;
@@ -447,13 +447,13 @@ final class Search implements Runnable {
 		boolean isCheck = position.isCheck();
 
 		MoveList<MoveEntry> moves = moveGenerators[ply].getMoves(position, depth, isCheck);
-		for (int i = 0; i < moves.size; ++i) {
+		for (int i = 0; i < moves.size; i++) {
 			int move = moves.entries[i].move;
 			int value = bestValue;
 
 			position.makeMove(move);
 			if (!position.isCheck(opposite(position.activeColor))) {
-				++searchedMoves;
+				searchedMoves++;
 				value = -search(depth - 1, -beta, -alpha, ply + 1);
 			}
 			position.undoMove(move);
@@ -530,13 +530,13 @@ final class Search implements Runnable {
 		//### ENDOF Stand pat
 
 		MoveList<MoveEntry> moves = moveGenerators[ply].getMoves(position, depth, isCheck);
-		for (int i = 0; i < moves.size; ++i) {
+		for (int i = 0; i < moves.size; i++) {
 			int move = moves.entries[i].move;
 			int value = bestValue;
 
 			position.makeMove(move);
 			if (!position.isCheck(opposite(position.activeColor))) {
-				++searchedMoves;
+				searchedMoves++;
 				value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
 			}
 			position.undoMove(move);

@@ -173,7 +173,7 @@ public class MoveGeneratorTest {
 
 	@BeforeClass
 	public static void setUpClass() {
-		for (int i = 0; i < MAX_DEPTH; ++i) {
+		for (int i = 0; i < MAX_DEPTH; i++) {
 			moveGenerators[i] = new MoveGenerator();
 		}
 	}
@@ -196,7 +196,7 @@ public class MoveGeneratorTest {
 		boolean isCheck = position.isCheck();
 		MoveList<MoveEntry> moves = moveGenerators[ply].getMoves(position, depth, isCheck);
 
-		for (int i = 0; i < moves.size; ++i) {
+		for (int i = 0; i < moves.size; i++) {
 			int move = moves.entries[i].move;
 
 			position.makeMove(move);
@@ -211,7 +211,7 @@ public class MoveGeneratorTest {
 
 	@Test
 	public void testPerft() {
-		for (int i = 0; i < 4; ++i) {
+		for (int i = 0; i < 4; i++) {
 			for (P p : perftPositions) {
 				if (p.perftEntries.length > i) {
 					int depth = p.perftEntries[i].depth;
@@ -241,7 +241,7 @@ public class MoveGeneratorTest {
 		boolean isCheck = position.isCheck();
 		MoveList<MoveEntry> moves = moveGenerators[ply].getLegalMoves(position, depth, isCheck);
 		Collection<GenericMove> actualMoves = newHashSet();
-		for (int i = 0; i < moves.size; ++i) {
+		for (int i = 0; i < moves.size; i++) {
 			actualMoves.add(Pulse.fromMove(moves.entries[i].move));
 		}
 
@@ -257,7 +257,7 @@ public class MoveGeneratorTest {
 				return message;
 			}
 
-			for (int i = 0; i < moves.size; ++i) {
+			for (int i = 0; i < moves.size; i++) {
 				int move = moves.entries[i].move;
 
 				position.makeMove(move);

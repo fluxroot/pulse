@@ -28,7 +28,7 @@ final class MoveGenerator {
 
 		int size = legalMoves.size;
 		legalMoves.size = 0;
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < size; i++) {
 			int move = legalMoves.entries[i].move;
 
 			position.makeMove(move);
@@ -61,7 +61,7 @@ final class MoveGenerator {
 			if (!isCheck) {
 				int size = moves.size;
 				moves.size = 0;
-				for (int i = 0; i < size; ++i) {
+				for (int i = 0; i < size; i++) {
 					if (Move.getTargetPiece(moves.entries[i].move) != NOPIECE) {
 						// Add only capturing moves
 						moves.entries[moves.size++].move = moves.entries[i].move;
@@ -144,7 +144,7 @@ final class MoveGenerator {
 		int pawnColor = Piece.getColor(pawnPiece);
 
 		// Generate only capturing moves first (i = 1)
-		for (int i = 1; i < pawnDirections[pawnColor].length; ++i) {
+		for (int i = 1; i < pawnDirections[pawnColor].length; i++) {
 			int direction = pawnDirections[pawnColor][i];
 
 			int targetSquare = pawnSquare + direction;

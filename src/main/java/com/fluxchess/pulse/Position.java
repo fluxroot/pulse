@@ -55,7 +55,7 @@ final class Position {
 		// Initialize the zobrist keys
 		static {
 			for (int piece : Piece.values) {
-				for (int i = 0; i < Square.VALUES_LENGTH; ++i) {
+				for (int i = 0; i < Square.VALUES_LENGTH; i++) {
 					board[piece][i] = next();
 				}
 			}
@@ -69,7 +69,7 @@ final class Position {
 			castlingRights[BLACK_KINGSIDE | BLACK_QUEENSIDE] =
 					castlingRights[BLACK_KINGSIDE] ^ castlingRights[BLACK_QUEENSIDE];
 
-			for (int i = 0; i < Square.VALUES_LENGTH; ++i) {
+			for (int i = 0; i < Square.VALUES_LENGTH; i++) {
 				enPassantSquare[i] = next();
 			}
 		}
@@ -79,7 +79,7 @@ final class Position {
 			random.nextBytes(bytes);
 
 			long hash = 0L;
-			for (int i = 0; i < bytes.length; ++i) {
+			for (int i = 0; i < bytes.length; i++) {
 				hash ^= ((long) (bytes[i] & 0xFF)) << ((i * 8) % 64);
 			}
 
@@ -101,7 +101,7 @@ final class Position {
 		}
 
 		// Initialize states
-		for (int i = 0; i < states.length; ++i) {
+		for (int i = 0; i < states.length; i++) {
 			states[i] = new State();
 		}
 	}
@@ -141,7 +141,7 @@ final class Position {
 	void setFullmoveNumber(int fullmoveNumber) {
 		halfmoveNumber = fullmoveNumber * 2;
 		if (activeColor == BLACK) {
-			++halfmoveNumber;
+			halfmoveNumber++;
 		}
 	}
 
@@ -214,7 +214,7 @@ final class Position {
 		entry.enPassantSquare = enPassantSquare;
 		entry.halfmoveClock = halfmoveClock;
 
-		++statesSize;
+		statesSize++;
 
 		// Get variables
 		int type = Move.getType(move);
@@ -294,11 +294,11 @@ final class Position {
 		if (Piece.getType(originPiece) == PAWN || targetPiece != NOPIECE) {
 			halfmoveClock = 0;
 		} else {
-			++halfmoveClock;
+			halfmoveClock++;
 		}
 
 		// Update fullMoveNumber
-		++halfmoveNumber;
+		halfmoveNumber++;
 	}
 
 	void undoMove(int move) {
@@ -311,7 +311,7 @@ final class Position {
 		int targetPiece = Move.getTargetPiece(move);
 
 		// Update fullMoveNumber
-		--halfmoveNumber;
+		halfmoveNumber--;
 
 		// Update activeColor
 		activeColor = opposite(activeColor);
@@ -359,7 +359,7 @@ final class Position {
 		}
 
 		// Restore state
-		--statesSize;
+		statesSize--;
 
 		State entry = states[statesSize];
 		halfmoveClock = entry.halfmoveClock;
@@ -421,7 +421,7 @@ final class Position {
 	boolean isAttacked(int targetSquare, int attackerColor) {
 		// Pawn attacks
 		int pawnPiece = Piece.valueOf(attackerColor, PAWN);
-		for (int i = 1; i < pawnDirections[attackerColor].length; ++i) {
+		for (int i = 1; i < pawnDirections[attackerColor].length; i++) {
 			int attackerSquare = targetSquare - pawnDirections[attackerColor][i];
 			if (Square.isValid(attackerSquare)) {
 				int attackerPawn = board[attackerSquare];

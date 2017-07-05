@@ -42,7 +42,7 @@ final class MoveList<T extends MoveList.MoveEntry> {
 		@SuppressWarnings("unchecked") final T[] entries = (T[]) Array.newInstance(clazz, MAX_MOVES);
 		this.entries = entries;
 		try {
-			for (int i = 0; i < entries.length; ++i) {
+			for (int i = 0; i < entries.length; i++) {
 				entries[i] = clazz.newInstance();
 			}
 		} catch (InstantiationException | IllegalAccessException e) {
@@ -54,13 +54,13 @@ final class MoveList<T extends MoveList.MoveEntry> {
 	 * Sorts the move list using a stable insertion sort.
 	 */
 	void sort() {
-		for (int i = 1; i < size; ++i) {
+		for (int i = 1; i < size; i++) {
 			T entry = entries[i];
 
 			int j = i;
 			while ((j > 0) && (entries[j - 1].value < entry.value)) {
 				entries[j] = entries[j - 1];
-				--j;
+				j--;
 			}
 
 			entries[j] = entry;
@@ -71,7 +71,7 @@ final class MoveList<T extends MoveList.MoveEntry> {
 	 * Rates the moves in the list according to "Most Valuable Victim - Least Valuable Aggressor".
 	 */
 	void rateFromMVVLVA() {
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < size; i++) {
 			int move = entries[i].move;
 			int value = 0;
 

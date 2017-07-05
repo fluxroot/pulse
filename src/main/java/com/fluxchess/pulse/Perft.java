@@ -21,7 +21,7 @@ public final class Perft {
 		Position position = Notation.toPosition(Notation.STANDARDPOSITION);
 		int depth = MAX_DEPTH;
 
-		for (int i = 0; i < MAX_DEPTH; ++i) {
+		for (int i = 0; i < MAX_DEPTH; i++) {
 			moveGenerators[i] = new MoveGenerator();
 		}
 
@@ -55,7 +55,7 @@ public final class Perft {
 		boolean isCheck = position.isCheck();
 		MoveGenerator moveGenerator = moveGenerators[ply];
 		MoveList<MoveEntry> moves = moveGenerator.getMoves(position, depth, isCheck);
-		for (int i = 0; i < moves.size; ++i) {
+		for (int i = 0; i < moves.size; i++) {
 			int move = moves.entries[i].move;
 
 			position.makeMove(move);
