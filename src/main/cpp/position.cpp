@@ -16,7 +16,7 @@ namespace pulse {
 // Initialize the zobrist keys
 Position::Zobrist::Zobrist() {
 	for (auto piece : Piece::values) {
-		for (int i = 0; i < Square::VALUES_LENGTH; ++i) {
+		for (int i = 0; i < Square::VALUES_LENGTH; i++) {
 			board[piece][i] = next();
 		}
 	}
@@ -30,7 +30,7 @@ Position::Zobrist::Zobrist() {
 	castlingRights[Castling::BLACK_KINGSIDE | Castling::BLACK_QUEENSIDE] =
 			castlingRights[Castling::BLACK_KINGSIDE] ^ castlingRights[Castling::BLACK_QUEENSIDE];
 
-	for (int i = 0; i < Square::VALUES_LENGTH; ++i) {
+	for (int i = 0; i < Square::VALUES_LENGTH; i++) {
 		enPassantSquare[i] = next();
 	}
 
@@ -44,12 +44,12 @@ Position::Zobrist& Position::Zobrist::instance() {
 
 uint64_t Position::Zobrist::next() {
 	std::array<uint64_t, 16> bytes;
-	for (int i = 0; i < 16; ++i) {
+	for (int i = 0; i < 16; i++) {
 		bytes[i] = generator();
 	}
 
 	uint64_t hash = 0;
-	for (int i = 0; i < 16; ++i) {
+	for (int i = 0; i < 16; i++) {
 		hash ^= bytes[i] << ((i * 8) % 64);
 	}
 
@@ -155,7 +155,7 @@ int Position::getFullmoveNumber() const {
 void Position::setFullmoveNumber(int fullmoveNumber) {
 	halfmoveNumber = fullmoveNumber * 2;
 	if (activeColor == Color::BLACK) {
-		++halfmoveNumber;
+		halfmoveNumber++;
 	}
 }
 
@@ -233,7 +233,7 @@ void Position::makeMove(int move) {
 	entry.enPassantSquare = enPassantSquare;
 	entry.halfmoveClock = halfmoveClock;
 
-	++statesSize;
+	statesSize++;
 
 	// Get variables
 	int type = Move::getType(move);
@@ -313,11 +313,11 @@ void Position::makeMove(int move) {
 	if (Piece::getType(originPiece) == PieceType::PAWN || targetPiece != Piece::NOPIECE) {
 		halfmoveClock = 0;
 	} else {
-		++halfmoveClock;
+		halfmoveClock++;
 	}
 
 	// Update fullMoveNumber
-	++halfmoveNumber;
+	halfmoveNumber++;
 }
 
 void Position::undoMove(int move) {
@@ -330,7 +330,7 @@ void Position::undoMove(int move) {
 	int targetPiece = Move::getTargetPiece(move);
 
 	// Update fullMoveNumber
-	--halfmoveNumber;
+	halfmoveNumber--;
 
 	// Update activeColor
 	activeColor = Color::opposite(activeColor);
@@ -378,7 +378,7 @@ void Position::undoMove(int move) {
 	}
 
 	// Restore state
-	--statesSize;
+	statesSize--;
 
 	State& entry = states[statesSize];
 	halfmoveClock = entry.halfmoveClock;
@@ -440,7 +440,7 @@ bool Position::isCheck(int color) {
 bool Position::isAttacked(int targetSquare, int attackerColor) {
 	// Pawn attacks
 	int pawnPiece = Piece::valueOf(attackerColor, PieceType::PAWN);
-	for (unsigned int i = 1; i < Square::pawnDirections[attackerColor].size(); ++i) {
+	for (unsigned int i = 1; i < Square::pawnDirections[attackerColor].size(); i++) {
 		int attackerSquare = targetSquare - Square::pawnDirections[attackerColor][i];
 		if (Square::isValid(attackerSquare)) {
 			int attackerPawn = board[attackerSquare];

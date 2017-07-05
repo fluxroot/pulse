@@ -94,7 +94,7 @@ int Evaluation::evaluateMobility(int color, Position& position, int square, cons
 		int targetSquare = square + direction;
 
 		while (Square::isValid(targetSquare)) {
-			++mobility;
+			mobility++;
 
 			if (sliding && position.board[targetSquare] == Piece::NOPIECE) {
 				targetSquare += direction;

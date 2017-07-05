@@ -118,7 +118,7 @@ void Pulse::receivePosition(std::istringstream& input) {
 		// Verify moves
 		MoveList<MoveEntry>& moves = moveGenerator.getLegalMoves(*currentPosition, 1, currentPosition->isCheck());
 		bool found = false;
-		for (int i = 0; i < moves.size; ++i) {
+		for (int i = 0; i < moves.size; i++) {
 			int move = moves.entries[i]->move;
 			if (fromMove(move) == token) {
 				currentPosition->makeMove(move);
@@ -292,7 +292,7 @@ void Pulse::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uin
 
 	if (entry.pv.size > 0) {
 		std::cout << " pv";
-		for (int i = 0; i < entry.pv.size; ++i) {
+		for (int i = 0; i < entry.pv.size; i++) {
 			std::cout << " " << fromMove(entry.pv.moves[i]);
 		}
 	}

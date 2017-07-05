@@ -214,7 +214,7 @@ uint64_t miniMax(int depth, Position& position, int ply) {
 	bool isCheck = position.isCheck();
 	MoveList<MoveEntry>& moves = moveGenerators[ply].getMoves(position, depth, isCheck);
 
-	for (int i = 0; i < moves.size; ++i) {
+	for (int i = 0; i < moves.size; i++) {
 		int move = moves.entries[i]->move;
 
 		position.makeMove(move);
@@ -228,7 +228,7 @@ uint64_t miniMax(int depth, Position& position, int ply) {
 }
 
 TEST(movegeneratortest, testPerft) {
-	for (unsigned int i = 0; i < 4; ++i) {
+	for (unsigned int i = 0; i < 4; i++) {
 		for (const auto& p : perftPositions) {
 			if (p.perftEntries.size() > i) {
 				int depth = p.perftEntries[i].depth;

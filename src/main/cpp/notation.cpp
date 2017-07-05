@@ -53,7 +53,7 @@ Position Notation::toPosition(const std::string& fen) {
 			if (file == File::h) {
 				file = File::NOFILE;
 			} else {
-				++file;
+				file++;
 			}
 		} else if (character == '/') {
 			if (file != File::NOFILE || rank == Rank::r1) {
@@ -61,7 +61,7 @@ Position Notation::toPosition(const std::string& fen) {
 			}
 
 			file = File::a;
-			--rank;
+			rank--;
 		} else {
 			std::string s = {character};
 			int emptySquares = std::stoi(s);
@@ -77,7 +77,7 @@ Position Notation::toPosition(const std::string& fen) {
 			if (file == File::h) {
 				file = File::NOFILE;
 			} else {
-				++file;
+				file++;
 			}
 		}
 	}
@@ -182,7 +182,7 @@ std::string Notation::fromPosition(const Position& position) {
 	std::string fen;
 
 	// Pieces
-	for (auto iter = Rank::values.rbegin(); iter != Rank::values.rend(); ++iter) {
+	for (auto iter = Rank::values.rbegin(); iter != Rank::values.rend(); iter++) {
 		int rank = *iter;
 		unsigned int emptySquares = 0;
 
@@ -190,7 +190,7 @@ std::string Notation::fromPosition(const Position& position) {
 			int piece = position.board[Square::valueOf(file, rank)];
 
 			if (piece == Piece::NOPIECE) {
-				++emptySquares;
+				emptySquares++;
 			} else {
 				if (emptySquares > 0) {
 					fen += std::to_string(emptySquares);

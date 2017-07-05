@@ -15,7 +15,7 @@ MoveList<MoveEntry>& MoveGenerator::getLegalMoves(Position& position, int depth,
 
 	int size = legalMoves.size;
 	legalMoves.size = 0;
-	for (int i = 0; i < size; ++i) {
+	for (int i = 0; i < size; i++) {
 		int move = legalMoves.entries[i]->move;
 
 		position.makeMove(move);
@@ -48,7 +48,7 @@ MoveList<MoveEntry>& MoveGenerator::getMoves(Position& position, int depth, bool
 		if (!isCheck) {
 			int size = moves.size;
 			moves.size = 0;
-			for (int i = 0; i < size; ++i) {
+			for (int i = 0; i < size; i++) {
 				if (Move::getTargetPiece(moves.entries[i]->move) != Piece::NOPIECE) {
 					// Add only capturing moves
 					moves.entries[moves.size++]->move = moves.entries[i]->move;
@@ -139,7 +139,7 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
 	int pawnColor = Piece::getColor(pawnPiece);
 
 	// Generate only capturing moves first (i = 1)
-	for (unsigned int i = 1; i < Square::pawnDirections[pawnColor].size(); ++i) {
+	for (unsigned int i = 1; i < Square::pawnDirections[pawnColor].size(); i++) {
 		int direction = Square::pawnDirections[pawnColor][i];
 
 		int targetSquare = pawnSquare + direction;

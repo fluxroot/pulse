@@ -48,12 +48,12 @@ void Search::Semaphore::acquire() {
 	while (permits == 0) {
 		condition.wait(lock);
 	}
-	--permits;
+	permits--;
 }
 
 void Search::Semaphore::release() {
 	std::unique_lock<std::mutex> lock(mutex);
-	++permits;
+	permits++;
 	condition.notify_one();
 }
 
@@ -242,12 +242,12 @@ void Search::run() {
 
 		// Populate root move list
 		MoveList<MoveEntry>& moves = moveGenerators[0].getLegalMoves(position, 1, position.isCheck());
-		for (int i = 0; i < moves.size; ++i) {
+		for (int i = 0; i < moves.size; i++) {
 			int move = moves.entries[i]->move;
 			rootMoves.entries[rootMoves.size]->move = move;
 			rootMoves.entries[rootMoves.size]->pv.moves[0] = move;
 			rootMoves.entries[rootMoves.size]->pv.size = 1;
-			++rootMoves.size;
+			rootMoves.size++;
 		}
 
 		// Go...
@@ -256,7 +256,7 @@ void Search::run() {
 		runSignal.release();
 
 		//### BEGIN Iterative Deepening
-		for (int depth = initialDepth; depth <= searchDepth; ++depth) {
+		for (int depth = initialDepth; depth <= searchDepth; depth++) {
 			currentDepth = depth;
 			currentMaxDepth = 0;
 			protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
@@ -322,7 +322,7 @@ void Search::checkStopConditions() {
 }
 
 void Search::updateSearch(int ply) {
-	++totalNodes;
+	totalNodes++;
 
 	if (ply > currentMaxDepth) {
 		currentMaxDepth = ply;
@@ -349,11 +349,11 @@ void Search::searchRoot(int depth, int alpha, int beta) {
 	}
 
 	// Reset all values, so the best move is pushed to the front
-	for (int i = 0; i < rootMoves.size; ++i) {
+	for (int i = 0; i < rootMoves.size; i++) {
 		rootMoves.entries[i]->value = -Value::INFINITE;
 	}
 
-	for (int i = 0; i < rootMoves.size; ++i) {
+	for (int i = 0; i < rootMoves.size; i++) {
 		int move = rootMoves.entries[i]->move;
 
 		currentMove = move;
@@ -412,13 +412,13 @@ int Search::search(int depth, int alpha, int beta, int ply) {
 	bool isCheck = position.isCheck();
 
 	MoveList<MoveEntry>& moves = moveGenerators[ply].getMoves(position, depth, isCheck);
-	for (int i = 0; i < moves.size; ++i) {
+	for (int i = 0; i < moves.size; i++) {
 		int move = moves.entries[i]->move;
 		int value = bestValue;
 
 		position.makeMove(move);
 		if (!position.isCheck(Color::opposite(position.activeColor))) {
-			++searchedMoves;
+			searchedMoves++;
 			value = -search(depth - 1, -beta, -alpha, ply + 1);
 		}
 		position.undoMove(move);
@@ -495,13 +495,13 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 	//### ENDOF Stand pat
 
 	MoveList<MoveEntry>& moves = moveGenerators[ply].getMoves(position, depth, isCheck);
-	for (int i = 0; i < moves.size; ++i) {
+	for (int i = 0; i < moves.size; i++) {
 		int move = moves.entries[i]->move;
 		int value = bestValue;
 
 		position.makeMove(move);
 		if (!position.isCheck(Color::opposite(position.activeColor))) {
-			++searchedMoves;
+			searchedMoves++;
 			value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
 		}
 		position.undoMove(move);
@@ -539,7 +539,7 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 
 void Search::savePV(int move, MoveVariation& src, MoveVariation& dest) {
 	dest.moves[0] = move;
-	for (int i = 0; i < src.size; ++i) {
+	for (int i = 0; i < src.size; i++) {
 		dest.moves[i + 1] = src.moves[i];
 	}
 	dest.size = src.size + 1;
