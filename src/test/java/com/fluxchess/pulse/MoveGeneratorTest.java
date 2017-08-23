@@ -229,7 +229,7 @@ public class MoveGeneratorTest {
 	}
 
 	private String findMissingMoves(int depth, Position position, int ply) {
-		String message = "";
+		StringBuilder message = new StringBuilder();
 
 		// Get expected moves from JCPI
 		GenericBoard genericBoard = Notation.toGenericBoard(position);
@@ -254,29 +254,29 @@ public class MoveGeneratorTest {
 
 		if (invalidMoves.isEmpty() && missingMoves.isEmpty()) {
 			if (depth <= 1) {
-				return message;
+				return message.toString();
 			}
 
 			for (int i = 0; i < moves.size; i++) {
 				int move = moves.entries[i].move;
 
 				position.makeMove(move);
-				message += findMissingMoves(depth - 1, position, ply + 1);
+				message.append(findMissingMoves(depth - 1, position, ply + 1));
 				position.undoMove(move);
 
-				if (!message.isEmpty()) {
+				if (message.length() != 0) {
 					break;
 				}
 			}
 		} else {
-			message += String.format("Failed check for board: %s%n", genericBoard);
-			message += String.format("Expected: %s%n", expectedMoves);
-			message += String.format("  Actual: %s%n", actualMoves);
-			message += String.format(" Missing: %s%n", missingMoves);
-			message += String.format(" Invalid: %s%n", invalidMoves);
+			message.append(String.format("Failed check for board: %s%n", genericBoard));
+			message.append(String.format("Expected: %s%n", expectedMoves));
+			message.append(String.format("  Actual: %s%n", actualMoves));
+			message.append(String.format(" Missing: %s%n", missingMoves));
+			message.append(String.format(" Invalid: %s%n", invalidMoves));
 		}
 
-		return message;
+		return message.toString();
 	}
 
 }

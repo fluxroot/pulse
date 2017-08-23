@@ -16,13 +16,14 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -59,7 +60,7 @@ public class PulseTest {
 		// Test searching to a depth of 2
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
-				Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
+				singletonList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
 		EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
 		command.setDepth(2);
 		commands.add(command);
@@ -103,7 +104,7 @@ public class PulseTest {
 		// Test if we can search only 1 node
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
-				Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
+				singletonList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
 		EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
 		command.setNodes(1L);
 		commands.add(command);
@@ -157,7 +158,7 @@ public class PulseTest {
 		// Test seaching for 1 millisecond, which should be stable
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
-				Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
+				singletonList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
 		EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
 		command.setMoveTime(1L);
 		commands.add(command);
@@ -170,9 +171,9 @@ public class PulseTest {
 		// Test searching only specific moves
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
-				Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
+				singletonList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
 		EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
-		command.setSearchMoveList(Arrays.asList(
+		command.setSearchMoveList(asList(
 				new GenericMove(GenericPosition.b7, GenericPosition.b6),
 				new GenericMove(GenericPosition.f7, GenericPosition.f5)));
 		commands.add(command);
@@ -191,7 +192,7 @@ public class PulseTest {
 		// Test searching infinitely
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
-				Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
+				singletonList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
 		EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
 		command.setInfinite();
 		commands.add(command);
@@ -210,7 +211,7 @@ public class PulseTest {
 		// Test if our time management works
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
-				Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
+				singletonList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
 		EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
 		command.setClock(GenericColor.WHITE, 1000L);
 		command.setClockIncrement(GenericColor.WHITE, 0L);
@@ -226,7 +227,7 @@ public class PulseTest {
 		// Test our time management with moves to go
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
-				Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
+				singletonList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
 		EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
 		command.setClock(GenericColor.WHITE, 1000L);
 		command.setClockIncrement(GenericColor.WHITE, 0L);
@@ -243,7 +244,7 @@ public class PulseTest {
 		// Test if ponder works with time management
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
-				Arrays.asList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
+				singletonList(new GenericMove(GenericPosition.c2, GenericPosition.c4))));
 		EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
 		command.setClock(GenericColor.WHITE, 1000L);
 		command.setClockIncrement(GenericColor.WHITE, 0L);
