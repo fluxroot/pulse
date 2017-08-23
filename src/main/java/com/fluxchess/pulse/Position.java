@@ -6,8 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.security.SecureRandom;
 
 import static com.fluxchess.pulse.Bitboard.next;
@@ -456,7 +454,7 @@ final class Position {
 	/**
 	 * Returns whether the targetSquare is attacked by a non-sliding piece.
 	 */
-	private boolean isAttacked(int targetSquare, int attackerPiece, @NotNull int[] directions) {
+	private boolean isAttacked(int targetSquare, int attackerPiece, int[] directions) {
 		for (int direction : directions) {
 			int attackerSquare = targetSquare + direction;
 
@@ -471,7 +469,7 @@ final class Position {
 	/**
 	 * Returns whether the targetSquare is attacked by a sliding piece.
 	 */
-	private boolean isAttacked(int targetSquare, int attackerPiece, int queenPiece, @NotNull int[] directions) {
+	private boolean isAttacked(int targetSquare, int attackerPiece, int queenPiece, int[] directions) {
 		for (int direction : directions) {
 			int attackerSquare = targetSquare + direction;
 

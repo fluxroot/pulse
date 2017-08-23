@@ -6,8 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import org.jetbrains.annotations.NotNull;
-
 import static com.fluxchess.pulse.Bitboard.next;
 import static com.fluxchess.pulse.Bitboard.remainder;
 import static com.fluxchess.pulse.Castling.*;
@@ -23,7 +21,7 @@ final class MoveGenerator {
 
 	private final MoveList<MoveEntry> moves = new MoveList<>(MoveEntry.class);
 
-	MoveList<MoveEntry> getLegalMoves(@NotNull Position position, int depth, boolean isCheck) {
+	MoveList<MoveEntry> getLegalMoves(Position position, int depth, boolean isCheck) {
 		MoveList<MoveEntry> legalMoves = getMoves(position, depth, isCheck);
 
 		int size = legalMoves.size;
@@ -41,7 +39,7 @@ final class MoveGenerator {
 		return legalMoves;
 	}
 
-	MoveList<MoveEntry> getMoves(@NotNull Position position, int depth, boolean isCheck) {
+	MoveList<MoveEntry> getMoves(Position position, int depth, boolean isCheck) {
 		moves.size = 0;
 
 		if (depth > 0) {
@@ -76,7 +74,7 @@ final class MoveGenerator {
 		return moves;
 	}
 
-	private void addMoves(@NotNull MoveList<MoveEntry> list, @NotNull Position position) {
+	private void addMoves(MoveList<MoveEntry> list, Position position) {
 		int activeColor = position.activeColor;
 
 		for (long squares = position.pieces[activeColor][PAWN]; squares != 0; squares = remainder(squares)) {
@@ -103,7 +101,7 @@ final class MoveGenerator {
 		addMoves(list, square, kingDirections, position);
 	}
 
-	private void addMoves(@NotNull MoveList<MoveEntry> list, int originSquare, @NotNull int[] directions, @NotNull Position position) {
+	private void addMoves(MoveList<MoveEntry> list, int originSquare, int[] directions, Position position) {
 		int originPiece = position.board[originSquare];
 		boolean sliding = isSliding(Piece.getType(originPiece));
 		int oppositeColor = opposite(Piece.getColor(originPiece));
@@ -139,7 +137,7 @@ final class MoveGenerator {
 		}
 	}
 
-	private void addPawnMoves(@NotNull MoveList<MoveEntry> list, int pawnSquare, @NotNull Position position) {
+	private void addPawnMoves(MoveList<MoveEntry> list, int pawnSquare, Position position) {
 		int pawnPiece = position.board[pawnSquare];
 		int pawnColor = Piece.getColor(pawnPiece);
 
@@ -224,7 +222,7 @@ final class MoveGenerator {
 		}
 	}
 
-	private void addCastlingMoves(@NotNull MoveList<MoveEntry> list, int kingSquare, @NotNull Position position) {
+	private void addCastlingMoves(MoveList<MoveEntry> list, int kingSquare, Position position) {
 		int kingPiece = position.board[kingSquare];
 
 		if (Piece.getColor(kingPiece) == WHITE) {

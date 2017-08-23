@@ -6,8 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import org.jetbrains.annotations.NotNull;
-
 import static com.fluxchess.pulse.Bitboard.*;
 import static com.fluxchess.pulse.Color.opposite;
 import static com.fluxchess.pulse.Piece.NOPIECE;
@@ -28,7 +26,7 @@ final class Evaluation {
 	 * @param position the position.
 	 * @return the evaluation value in centipawns.
 	 */
-	int evaluate(@NotNull Position position) {
+	int evaluate(Position position) {
 		// Initialize
 		int myColor = position.activeColor;
 		int oppositeColor = opposite(myColor);
@@ -50,7 +48,7 @@ final class Evaluation {
 		return value;
 	}
 
-	private int evaluateMaterial(int color, @NotNull Position position) {
+	private int evaluateMaterial(int color, Position position) {
 		int material = position.material[color];
 
 		// Add bonus for bishop pair
@@ -61,7 +59,7 @@ final class Evaluation {
 		return material;
 	}
 
-	private int evaluateMobility(int color, @NotNull Position position) {
+	private int evaluateMobility(int color, Position position) {
 		int knightMobility = 0;
 		for (long squares = position.pieces[color][KNIGHT]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
@@ -92,7 +90,7 @@ final class Evaluation {
 				+ queenMobility;
 	}
 
-	private int evaluateMobility(int color, @NotNull Position position, int square, @NotNull int[] directions) {
+	private int evaluateMobility(int color, Position position, int square, int[] directions) {
 		int mobility = 0;
 		boolean sliding = isSliding(Piece.getType(position.board[square]));
 

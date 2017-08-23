@@ -6,8 +6,6 @@
  */
 package com.fluxchess.pulse;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -83,7 +81,7 @@ final class Search implements Runnable {
 		}
 	}
 
-	void newDepthSearch(@NotNull Position position, int searchDepth) {
+	void newDepthSearch(Position position, int searchDepth) {
 		checkArgument(searchDepth >= 1 && searchDepth <= MAX_DEPTH);
 		checkState(!running);
 
@@ -93,7 +91,7 @@ final class Search implements Runnable {
 		this.searchDepth = searchDepth;
 	}
 
-	void newNodesSearch(@NotNull Position position, long searchNodes) {
+	void newNodesSearch(Position position, long searchNodes) {
 		checkArgument(searchNodes >= 1);
 		checkState(!running);
 
@@ -103,7 +101,7 @@ final class Search implements Runnable {
 		this.searchNodes = searchNodes;
 	}
 
-	void newTimeSearch(@NotNull Position position, long searchTime) {
+	void newTimeSearch(Position position, long searchTime) {
 		checkArgument(searchTime >= 1);
 		checkState(!running);
 
@@ -114,7 +112,7 @@ final class Search implements Runnable {
 		this.timer = new Timer(true);
 	}
 
-	void newInfiniteSearch(@NotNull Position position) {
+	void newInfiniteSearch(Position position) {
 		checkState(!running);
 
 		reset();
@@ -122,7 +120,7 @@ final class Search implements Runnable {
 		this.position = position;
 	}
 
-	void newClockSearch(@NotNull Position position,
+	void newClockSearch(Position position,
 						long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
 		newPonderSearch(position,
 				whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
@@ -131,7 +129,7 @@ final class Search implements Runnable {
 		this.timer = new Timer(true);
 	}
 
-	void newPonderSearch(@NotNull Position position,
+	void newPonderSearch(Position position,
 						 long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
 		checkArgument(whiteTimeLeft >= 1);
 		checkArgument(whiteTimeIncrement >= 0);
@@ -173,7 +171,7 @@ final class Search implements Runnable {
 		this.doTimeManagement = true;
 	}
 
-	Search(@NotNull Protocol protocol) {
+	Search(Protocol protocol) {
 		this.protocol = protocol;
 
 		for (int i = 0; i < MAX_PLY; i++) {
