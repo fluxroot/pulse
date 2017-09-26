@@ -24,7 +24,6 @@ import static com.fluxchess.pulse.MoveList.RootEntry;
 import static com.fluxchess.pulse.MoveType.*;
 import static com.fluxchess.pulse.Value.CHECKMATE;
 import static com.fluxchess.pulse.Value.CHECKMATE_THRESHOLD;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.Integer.signum;
 import static java.lang.Math.abs;
 import static java.lang.System.currentTimeMillis;
@@ -104,8 +103,6 @@ public final class Pulse extends AbstractEngine implements Protocol {
 	}
 
 	public void receive(EngineReadyRequestCommand command) {
-		checkNotNull(command);
-
 		// We received a ready request. We must send the token back as soon as we
 		// can. However, because we launch the search in a separate thread, our main
 		// thread is able to handle the commands asynchronously to the search. If we
@@ -124,8 +121,6 @@ public final class Pulse extends AbstractEngine implements Protocol {
 	}
 
 	public void receive(EngineAnalyzeCommand command) {
-		checkNotNull(command);
-
 		search.stop();
 
 		// We received an analyze command. Just setup the position.
@@ -158,8 +153,6 @@ public final class Pulse extends AbstractEngine implements Protocol {
 	}
 
 	public void receive(EngineStartCalculatingCommand command) {
-		checkNotNull(command);
-
 		search.stop();
 
 		// We received a start command. Extract all parameters from the
