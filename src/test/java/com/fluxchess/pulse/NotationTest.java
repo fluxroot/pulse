@@ -8,8 +8,6 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static com.fluxchess.pulse.Castling.*;
 import static com.fluxchess.pulse.Color.BLACK;
 import static com.fluxchess.pulse.Color.WHITE;
@@ -26,8 +24,7 @@ import static org.junit.Assert.assertThat;
 public class NotationTest {
 
 	@Test
-	public void testUtilityClass()
-			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+	public void testUtilityClass() throws Exception {
 		assertUtilityClassWellDefined(Notation.class);
 	}
 
@@ -98,5 +95,4 @@ public class NotationTest {
 		// Test full move number
 		assertThat(position.getFullmoveNumber(), is(1));
 	}
-
 }

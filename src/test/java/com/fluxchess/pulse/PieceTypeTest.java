@@ -8,8 +8,6 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static com.fluxchess.pulse.PieceType.*;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
@@ -18,8 +16,7 @@ import static org.junit.Assert.assertThat;
 public class PieceTypeTest {
 
 	@Test
-	public void testUtilityClass()
-			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+	public void testUtilityClass() throws Exception {
 		assertUtilityClassWellDefined(PieceType.class);
 	}
 
@@ -28,15 +25,6 @@ public class PieceTypeTest {
 		for (int piecetype : PieceType.values) {
 			assertThat(PieceType.values[piecetype], is(piecetype));
 		}
-	}
-
-	@Test
-	public void testIsValid() {
-		for (int piecetype : PieceType.values) {
-			assertThat(PieceType.isValid(piecetype), is(true));
-		}
-
-		assertThat(PieceType.isValid(NOPIECETYPE), is(false));
 	}
 
 	@Test
@@ -59,5 +47,4 @@ public class PieceTypeTest {
 		assertThat(PieceType.isSliding(KNIGHT), is(false));
 		assertThat(PieceType.isSliding(KING), is(false));
 	}
-
 }

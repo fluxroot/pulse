@@ -8,8 +8,6 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static com.fluxchess.pulse.Color.*;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
@@ -18,8 +16,7 @@ import static org.junit.Assert.assertThat;
 public class ColorTest {
 
 	@Test
-	public void testUtilityClass()
-			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+	public void testUtilityClass() throws Exception {
 		assertUtilityClassWellDefined(Color.class);
 	}
 
@@ -31,18 +28,8 @@ public class ColorTest {
 	}
 
 	@Test
-	public void testIsValid() {
-		for (int color : Color.values) {
-			assertThat(Color.isValid(color), is(true));
-		}
-
-		assertThat(Color.isValid(NOCOLOR), is(false));
-	}
-
-	@Test
 	public void testOpposite() {
 		assertThat(opposite(BLACK), is(WHITE));
 		assertThat(opposite(WHITE), is(BLACK));
 	}
-
 }

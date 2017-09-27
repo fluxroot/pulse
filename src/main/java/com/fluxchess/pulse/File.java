@@ -25,20 +25,4 @@ final class File {
 
 	private File() {
 	}
-
-	static boolean isValid(int file) {
-		switch (file) {
-			case a:
-			case b:
-			case c:
-			case d:
-			case e:
-			case f:
-			case g:
-			case h:
-				return true;
-			default:
-				return false;
-		}
-	}
 }

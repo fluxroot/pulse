@@ -8,8 +8,6 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -17,8 +15,7 @@ import static org.junit.Assert.assertThat;
 public class CastlingTypeTest {
 
 	@Test
-	public void testUtilityClass()
-			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+	public void testUtilityClass() throws Exception {
 		assertUtilityClassWellDefined(CastlingType.class);
 	}
 
@@ -28,5 +25,4 @@ public class CastlingTypeTest {
 			assertThat(CastlingType.values[castlingtype], is(castlingtype));
 		}
 	}
-
 }

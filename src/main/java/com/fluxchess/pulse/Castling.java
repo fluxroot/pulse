@@ -25,18 +25,6 @@ final class Castling {
 	private Castling() {
 	}
 
-	static boolean isValid(int castling) {
-		switch (castling) {
-			case WHITE_KINGSIDE:
-			case WHITE_QUEENSIDE:
-			case BLACK_KINGSIDE:
-			case BLACK_QUEENSIDE:
-				return true;
-			default:
-				return false;
-		}
-	}
-
 	static int valueOf(int color, int castlingtype) {
 		switch (color) {
 			case WHITE:

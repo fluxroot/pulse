@@ -34,20 +34,6 @@ final class PieceType {
 	private PieceType() {
 	}
 
-	static boolean isValid(int piecetype) {
-		switch (piecetype) {
-			case PAWN:
-			case KNIGHT:
-			case BISHOP:
-			case ROOK:
-			case QUEEN:
-			case KING:
-				return true;
-			default:
-				return false;
-		}
-	}
-
 	static boolean isValidPromotion(int piecetype) {
 		switch (piecetype) {
 			case KNIGHT:
