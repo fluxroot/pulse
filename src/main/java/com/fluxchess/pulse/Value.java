@@ -21,15 +21,8 @@ final class Value {
 	private Value() {
 	}
 
-	static boolean isValid(int value) {
-		int absvalue = abs(value);
-
-		return absvalue <= CHECKMATE || absvalue == INFINITE;
-	}
-
 	static boolean isCheckmate(int value) {
 		int absvalue = abs(value);
-
 		return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;
 	}
 }

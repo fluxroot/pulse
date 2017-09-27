@@ -16,11 +16,3 @@ TEST(filetest, testValues) {
 		EXPECT_EQ(file, File::values[file]);
 	}
 }
-
-TEST(filetest, testIsValid) {
-	for (auto file : File::values) {
-		EXPECT_TRUE(File::isValid(file));
-	}
-
-	EXPECT_FALSE(File::isValid(File::NOFILE));
-}

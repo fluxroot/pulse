@@ -17,14 +17,6 @@ TEST(piecetypetest, testValues) {
 	}
 }
 
-TEST(piecetypetest, testIsValid) {
-	for (auto piecetype : PieceType::values) {
-		EXPECT_TRUE(PieceType::isValid(piecetype));
-	}
-
-	EXPECT_FALSE(PieceType::isValid(PieceType::NOPIECETYPE));
-}
-
 TEST(piecetypetest, testIsValidPromotion) {
 	EXPECT_TRUE(PieceType::isValidPromotion(PieceType::KNIGHT));
 	EXPECT_TRUE(PieceType::isValidPromotion(PieceType::BISHOP));

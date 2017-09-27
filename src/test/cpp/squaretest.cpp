@@ -23,11 +23,3 @@ TEST(squaretest, testValues) {
 		}
 	}
 }
-
-TEST(squaretest, testIsValid) {
-	for (auto square : Square::values) {
-		EXPECT_TRUE(Square::isValid(square));
-	}
-
-	EXPECT_FALSE(Square::isValid(Square::NOSQUARE));
-}

@@ -20,17 +20,4 @@ final class MoveType {
 
 	private MoveType() {
 	}
-
-	static boolean isValid(int type) {
-		switch (type) {
-			case NORMAL:
-			case PAWNDOUBLE:
-			case PAWNPROMOTION:
-			case ENPASSANT:
-			case CASTLING:
-				return true;
-			default:
-				return false;
-		}
-	}
 }

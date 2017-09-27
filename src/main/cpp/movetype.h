@@ -21,8 +21,6 @@ public:
 
 	static const int NOMOVETYPE = 5;
 
-	static bool isValid(int type);
-
 private:
 	MoveType();
 

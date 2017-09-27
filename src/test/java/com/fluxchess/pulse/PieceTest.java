@@ -8,8 +8,6 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static com.fluxchess.pulse.Color.BLACK;
 import static com.fluxchess.pulse.Color.WHITE;
 import static com.fluxchess.pulse.Piece.*;
@@ -21,29 +19,31 @@ import static org.junit.Assert.assertThat;
 public class PieceTest {
 
 	@Test
-	public void testUtilityClass()
-			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+	public void testUtilityClass() throws Exception {
 		assertUtilityClassWellDefined(Piece.class);
 	}
 
 	@Test
 	public void testValues() {
-		for (int color : Color.values) {
-			for (int piecetype : PieceType.values) {
-				int piece = Piece.valueOf(color, piecetype);
-
-				assertThat(Piece.values[piece], is(piece));
-			}
+		for (int piece : Piece.values) {
+			assertThat(Piece.values[piece], is(piece));
 		}
 	}
 
 	@Test
-	public void testIsValid() {
-		for (int piece : Piece.values) {
-			assertThat(Piece.isValid(piece), is(true));
-		}
-
-		assertThat(Piece.isValid(NOPIECE), is(false));
+	public void testValueOf() {
+		assertThat(Piece.valueOf(Color.WHITE, PieceType.PAWN), is(Piece.WHITE_PAWN));
+		assertThat(Piece.valueOf(Color.WHITE, PieceType.KNIGHT), is(Piece.WHITE_KNIGHT));
+		assertThat(Piece.valueOf(Color.WHITE, PieceType.BISHOP), is(Piece.WHITE_BISHOP));
+		assertThat(Piece.valueOf(Color.WHITE, PieceType.ROOK), is(Piece.WHITE_ROOK));
+		assertThat(Piece.valueOf(Color.WHITE, PieceType.QUEEN), is(Piece.WHITE_QUEEN));
+		assertThat(Piece.valueOf(Color.WHITE, PieceType.KING), is(Piece.WHITE_KING));
+		assertThat(Piece.valueOf(Color.BLACK, PieceType.PAWN), is(Piece.BLACK_PAWN));
+		assertThat(Piece.valueOf(Color.BLACK, PieceType.KNIGHT), is(Piece.BLACK_KNIGHT));
+		assertThat(Piece.valueOf(Color.BLACK, PieceType.BISHOP), is(Piece.BLACK_BISHOP));
+		assertThat(Piece.valueOf(Color.BLACK, PieceType.ROOK), is(Piece.BLACK_ROOK));
+		assertThat(Piece.valueOf(Color.BLACK, PieceType.QUEEN), is(Piece.BLACK_QUEEN));
+		assertThat(Piece.valueOf(Color.BLACK, PieceType.KING), is(Piece.BLACK_KING));
 	}
 
 	@Test
@@ -77,5 +77,4 @@ public class PieceTest {
 		assertThat(Piece.getColor(WHITE_KING), is(WHITE));
 		assertThat(Piece.getColor(BLACK_KING), is(BLACK));
 	}
-
 }

@@ -8,9 +8,6 @@ package com.fluxchess.pulse;
 
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
-import static com.fluxchess.pulse.Square.NOSQUARE;
 import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -18,8 +15,7 @@ import static org.junit.Assert.assertThat;
 public class SquareTest {
 
 	@Test
-	public void testUtilityClass()
-			throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+	public void testUtilityClass() throws Exception {
 		assertUtilityClassWellDefined(Square.class);
 	}
 
@@ -34,14 +30,4 @@ public class SquareTest {
 			}
 		}
 	}
-
-	@Test
-	public void testIsValid() {
-		for (int square : Square.values) {
-			assertThat(Square.isValid(square), is(true));
-		}
-
-		assertThat(Square.isValid(NOSQUARE), is(false));
-	}
-
 }

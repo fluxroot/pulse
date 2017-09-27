@@ -25,20 +25,4 @@ final class Rank {
 
 	private Rank() {
 	}
-
-	static boolean isValid(int rank) {
-		switch (rank) {
-			case r1:
-			case r2:
-			case r3:
-			case r4:
-			case r5:
-			case r6:
-			case r7:
-			case r8:
-				return true;
-			default:
-				return false;
-		}
-	}
 }

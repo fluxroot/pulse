@@ -35,7 +35,7 @@ public:
 
 	static bool isValid(int piece);
 
-	static int valueOf(int piecetype, int color);
+	static int valueOf(int color, int piecetype);
 
 	static int getType(int piece);
 

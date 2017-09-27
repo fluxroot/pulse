@@ -20,16 +20,6 @@ final class Color {
 	private Color() {
 	}
 
-	static boolean isValid(int color) {
-		switch (color) {
-			case WHITE:
-			case BLACK:
-				return true;
-			default:
-				return false;
-		}
-	}
-
 	static int opposite(int color) {
 		switch (color) {
 			case WHITE:

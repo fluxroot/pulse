@@ -32,6 +32,7 @@ add_dependencies(gtest_main googletest)
 
 add_executable(unittest
         bitboardtest.cpp
+        castlingtest.cpp
         castlingtypetest.cpp
         colortest.cpp
         evaluationtest.cpp
