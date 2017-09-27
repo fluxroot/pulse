@@ -14,21 +14,24 @@
 using namespace pulse;
 
 TEST(piecetest, testValues) {
-	for (auto color : Color::values) {
-		for (auto piecetype : PieceType::values) {
-			int piece = Piece::valueOf(color, piecetype);
-
-			EXPECT_EQ(piece, Piece::values[piece]);
-		}
+	for (auto piece : Piece::values) {
+		EXPECT_EQ(piece, Piece::values[piece]);
 	}
 }
 
-TEST(piecetest, testIsValid) {
-	for (auto piece : Piece::values) {
-		EXPECT_TRUE(Piece::isValid(piece));
-	}
-
-	EXPECT_FALSE(Piece::isValid(Piece::NOPIECE));
+TEST(piecetest, testValueOf) {
+	EXPECT_EQ(+Piece::WHITE_PAWN, Piece::valueOf(Color::WHITE, PieceType::PAWN));
+	EXPECT_EQ(+Piece::WHITE_KNIGHT, Piece::valueOf(Color::WHITE, PieceType::KNIGHT));
+	EXPECT_EQ(+Piece::WHITE_BISHOP, Piece::valueOf(Color::WHITE, PieceType::BISHOP));
+	EXPECT_EQ(+Piece::WHITE_ROOK, Piece::valueOf(Color::WHITE, PieceType::ROOK));
+	EXPECT_EQ(+Piece::WHITE_QUEEN, Piece::valueOf(Color::WHITE, PieceType::QUEEN));
+	EXPECT_EQ(+Piece::WHITE_KING, Piece::valueOf(Color::WHITE, PieceType::KING));
+	EXPECT_EQ(+Piece::BLACK_PAWN, Piece::valueOf(Color::BLACK, PieceType::PAWN));
+	EXPECT_EQ(+Piece::BLACK_KNIGHT, Piece::valueOf(Color::BLACK, PieceType::KNIGHT));
+	EXPECT_EQ(+Piece::BLACK_BISHOP, Piece::valueOf(Color::BLACK, PieceType::BISHOP));
+	EXPECT_EQ(+Piece::BLACK_ROOK, Piece::valueOf(Color::BLACK, PieceType::ROOK));
+	EXPECT_EQ(+Piece::BLACK_QUEEN, Piece::valueOf(Color::BLACK, PieceType::QUEEN));
+	EXPECT_EQ(+Piece::BLACK_KING, Piece::valueOf(Color::BLACK, PieceType::KING));
 }
 
 TEST(piecetest, testGetType) {

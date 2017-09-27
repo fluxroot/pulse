@@ -22,8 +22,6 @@ public:
 
 	static const int VALUES_LENGTH = 16;
 
-	static bool isValid(int castling);
-
 	static int valueOf(int color, int castlingtype);
 
 	static int getType(int castling);

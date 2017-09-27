@@ -21,8 +21,6 @@ public:
 	static const int VALUES_SIZE = 2;
 	static const std::array<int, VALUES_SIZE> values;
 
-	static bool isValid(int color);
-
 	static int opposite(int color);
 
 private:

@@ -13,20 +13,6 @@ const std::array<int, PieceType::VALUES_SIZE> PieceType::values = {
 		PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
 };
 
-bool PieceType::isValid(int piecetype) {
-	switch (piecetype) {
-		case PAWN:
-		case KNIGHT:
-		case BISHOP:
-		case ROOK:
-		case QUEEN:
-		case KING:
-			return true;
-		default:
-			return false;
-	}
-}
-
 bool PieceType::isValidPromotion(int piecetype) {
 	switch (piecetype) {
 		case KNIGHT:

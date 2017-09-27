@@ -35,8 +35,6 @@ public:
 	static const int QUEEN_VALUE = 975;
 	static const int KING_VALUE = 20000;
 
-	static bool isValid(int piecetype);
-
 	static bool isValidPromotion(int piecetype);
 
 	static bool isSliding(int piecetype);

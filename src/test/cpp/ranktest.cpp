@@ -16,11 +16,3 @@ TEST(ranktest, testValues) {
 		EXPECT_EQ(rank, Rank::values[rank]);
 	}
 }
-
-TEST(ranktest, testIsValid) {
-	for (auto rank : Rank::values) {
-		EXPECT_TRUE(Rank::isValid(rank));
-	}
-
-	EXPECT_FALSE(Rank::isValid(Rank::NORANK));
-}

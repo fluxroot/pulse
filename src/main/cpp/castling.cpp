@@ -11,18 +11,6 @@
 
 namespace pulse {
 
-bool Castling::isValid(int castling) {
-	switch (castling) {
-		case WHITE_KINGSIDE:
-		case WHITE_QUEENSIDE:
-		case BLACK_KINGSIDE:
-		case BLACK_QUEENSIDE:
-			return true;
-		default:
-			return false;
-	}
-}
-
 int Castling::valueOf(int color, int castlingtype) {
 	switch (color) {
 		case Color::WHITE:
