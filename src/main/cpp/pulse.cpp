@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Phokham Nonava
+ * Copyright (C) 2013-2019 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
@@ -58,7 +58,7 @@ void Pulse::receiveInitialize() {
 	// program.
 
 	// We must send an initialization answer back!
-	std::cout << "id name Pulse 1.7.0-cpp" << std::endl;
+	std::cout << "id name Pulse C++ 1.7.0" << std::endl;
 	std::cout << "id author Phokham Nonava" << std::endl;
 	std::cout << "uciok" << std::endl;
 }

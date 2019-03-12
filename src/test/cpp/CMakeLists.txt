@@ -1,34 +1,31 @@
+cmake_minimum_required(VERSION 3.14)
 project(test)
 
-if (MSVC)
-    set(GTEST_ARGS "-Dgtest_force_shared_crt:BOOL=ON")
-else ()
-    set(GTEST_ARGS "")
+configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+        RESULT_VARIABLE result
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download)
+if (result)
+    message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+endif ()
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+        RESULT_VARIABLE result
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download)
+if (result)
+    message(FATAL_ERROR "Build step for googletest failed: ${result}")
 endif ()
 
-include(ExternalProject)
-ExternalProject_Add(
-        googletest
-        URL https://github.com/google/googletest/archive/release-1.7.0.zip
-        URL_HASH SHA1=f89bc9f55477df2fde082481e2d709bfafdb057b
-        INSTALL_COMMAND ""
-        CMAKE_ARGS ${GTEST_ARGS}
-)
-ExternalProject_Get_Property(googletest SOURCE_DIR)
-ExternalProject_Get_Property(googletest BINARY_DIR)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-include_directories(
-        ${main_SOURCE_DIR}
-        ${SOURCE_DIR}/include
-)
+add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
+        ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
+        EXCLUDE_FROM_ALL)
 
-add_library(gtest UNKNOWN IMPORTED)
-set_target_properties(gtest PROPERTIES IMPORTED_LOCATION ${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${LIBRARY_PREFIX}gtest${LIBRARY_SUFFIX})
-add_dependencies(gtest googletest)
+if (CMAKE_VERSION VERSION_LESS 2.8.11)
+    include_directories("${gtest_SOURCE_DIR}/include")
+endif ()
 
-add_library(gtest_main UNKNOWN IMPORTED)
-set_target_properties(gtest_main PROPERTIES IMPORTED_LOCATION ${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${LIBRARY_PREFIX}gtest_main${LIBRARY_SUFFIX})
-add_dependencies(gtest_main googletest)
+include_directories(${main_SOURCE_DIR})
 
 add_executable(unittest
         bitboardtest.cpp
@@ -48,6 +45,6 @@ add_executable(unittest
         squaretest.cpp
         )
 
-target_link_libraries(unittest core gtest gtest_main)
+target_link_libraries(unittest core gtest_main)
 
 add_test(unittest unittest)

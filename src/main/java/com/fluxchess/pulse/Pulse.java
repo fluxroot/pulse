@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Phokham Nonava
+ * Copyright (C) 2013-2019 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
@@ -89,7 +89,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 
 		// We must send an initialization answer back!
 		ProtocolInitializeAnswerCommand answerCommand = new ProtocolInitializeAnswerCommand(
-				"Pulse 1.7.0-java", "Phokham Nonava"
+				"Pulse Java 1.7.0", "Phokham Nonava"
 		);
 
 		// Send the answer back.
