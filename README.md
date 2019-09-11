@@ -1,10 +1,10 @@
 Pulse Chess
 ===========
 
-Copyright (C) 2013-2016 Phokham Nonava  
+Copyright (C) 2013-2019 Phokham Nonava  
 http://www.fluxchess.com
 
-[![Build Status](https://travis-ci.org/fluxroot/pulse.svg?branch=master)](https://travis-ci.org/fluxroot/pulse) [![Coverage Status](https://img.shields.io/coveralls/fluxroot/pulse.svg)](https://coveralls.io/r/fluxroot/pulse?branch=master)
+[![CircleCI](https://circleci.com/gh/fluxroot/pulse.svg?style=svg)](https://circleci.com/gh/fluxroot/pulse)
 
 
 Introduction
@@ -15,7 +15,7 @@ learn, how to build a chess engine. If you want to roll your own, just
 fork it and start coding! :)
 
 Pulse Chess is available in Java and C++. Both editions have the same
-feature set. The Java Edition requires Java 7 for compilation and
+feature set. The Java Edition requires Java 8 for compilation and
 execution. The C++ Edition is written in C++11. It has been compiled
 successfully using g++ 4.9.1 and Visual C++ 2013.
 
@@ -93,7 +93,7 @@ steps.
 ### Java Edition
 
 - build it  
-    `mvn package`
+    `./mvnw package`
 
 - grab it  
     `cp target/pulse-<version>.zip <installation directory>`

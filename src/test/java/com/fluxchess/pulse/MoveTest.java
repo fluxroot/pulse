@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Phokham Nonava
+ * Copyright (C) 2013-2019 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
@@ -13,16 +13,10 @@ import static com.fluxchess.pulse.Piece.BLACK_QUEEN;
 import static com.fluxchess.pulse.Piece.WHITE_PAWN;
 import static com.fluxchess.pulse.PieceType.KNIGHT;
 import static com.fluxchess.pulse.Square.*;
-import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class MoveTest {
-
-	@Test
-	public void testUtilityClass() throws Exception {
-		assertUtilityClassWellDefined(Move.class);
-	}
 
 	@Test
 	public void testCreation() {

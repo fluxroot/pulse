@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Phokham Nonava
+ * Copyright (C) 2013-2019 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
@@ -14,7 +14,6 @@ import java.util.Random;
 
 import static com.fluxchess.pulse.Bitboard.add;
 import static com.fluxchess.pulse.Square.a6;
-import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -33,11 +32,6 @@ public class BitboardTest {
 				pool.add(Square.values[value]);
 			}
 		}
-	}
-
-	@Test
-	public void testUtilityClass() throws Exception {
-		assertUtilityClassWellDefined(Bitboard.class);
 	}
 
 	@Test

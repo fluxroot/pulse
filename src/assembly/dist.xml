@@ -8,7 +8,6 @@
     <fileSets>
         <fileSet>
             <directory>${project.basedir}</directory>
-            <outputDirectory>/</outputDirectory>
             <includes>
                 <include>README.md</include>
                 <include>LICENSE</include>
@@ -17,32 +16,27 @@
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/src/dist</directory>
-            <outputDirectory>/</outputDirectory>
             <includes>
                 <include>logo.bmp</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>
-            <outputDirectory>/</outputDirectory>
             <includes>
                 <include>pulse-${project.version}.jar</include>
                 <include>pulse-${project.version}-sources.jar</include>
-                <include>pulse-${project.version}-javadoc.jar</include>
             </includes>
         </fileSet>
     </fileSets>
     <files>
         <file>
             <source>${project.basedir}/src/dist/pulse</source>
-            <outputDirectory>/</outputDirectory>
             <destName>pulse-${project.version}</destName>
             <filtered>true</filtered>
             <fileMode>0755</fileMode>
         </file>
         <file>
             <source>${project.basedir}/src/dist/pulse.bat</source>
-            <outputDirectory>/</outputDirectory>
             <destName>pulse-${project.version}.bat</destName>
             <filtered>true</filtered>
             <fileMode>0755</fileMode>
