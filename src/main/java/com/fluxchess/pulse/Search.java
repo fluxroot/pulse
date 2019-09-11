@@ -17,8 +17,6 @@ import static com.fluxchess.pulse.Depth.MAX_PLY;
 import static com.fluxchess.pulse.Move.NOMOVE;
 import static com.fluxchess.pulse.MoveList.*;
 import static com.fluxchess.pulse.Value.*;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 import static java.lang.Math.abs;
 
 /**
@@ -82,9 +80,6 @@ final class Search implements Runnable {
 	}
 
 	void newDepthSearch(Position position, int searchDepth) {
-		checkArgument(searchDepth >= 1 && searchDepth <= MAX_DEPTH);
-		checkState(!running);
-
 		reset();
 
 		this.position = position;
@@ -92,9 +87,6 @@ final class Search implements Runnable {
 	}
 
 	void newNodesSearch(Position position, long searchNodes) {
-		checkArgument(searchNodes >= 1);
-		checkState(!running);
-
 		reset();
 
 		this.position = position;
@@ -102,9 +94,6 @@ final class Search implements Runnable {
 	}
 
 	void newTimeSearch(Position position, long searchTime) {
-		checkArgument(searchTime >= 1);
-		checkState(!running);
-
 		reset();
 
 		this.position = position;
@@ -113,8 +102,6 @@ final class Search implements Runnable {
 	}
 
 	void newInfiniteSearch(Position position) {
-		checkState(!running);
-
 		reset();
 
 		this.position = position;
@@ -131,13 +118,6 @@ final class Search implements Runnable {
 
 	void newPonderSearch(Position position,
 						 long whiteTimeLeft, long whiteTimeIncrement, long blackTimeLeft, long blackTimeIncrement, int movesToGo) {
-		checkArgument(whiteTimeLeft >= 1);
-		checkArgument(whiteTimeIncrement >= 0);
-		checkArgument(blackTimeLeft >= 1);
-		checkArgument(blackTimeIncrement >= 0);
-		checkArgument(movesToGo >= 0);
-		checkState(!running);
-
 		reset();
 
 		this.position = position;
