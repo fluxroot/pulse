@@ -6,17 +6,16 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class CastlingTypeTest {
+class CastlingTypeTest {
 
 	@Test
-	public void testValues() {
+	void testValues() {
 		for (int castlingtype : CastlingType.values) {
-			assertThat(CastlingType.values[castlingtype], is(castlingtype));
+			assertThat(CastlingType.values[castlingtype]).isEqualTo(castlingtype);
 		}
 	}
 }

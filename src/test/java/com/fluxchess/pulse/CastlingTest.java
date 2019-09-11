@@ -6,18 +6,17 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class CastlingTest {
+class CastlingTest {
 
 	@Test
-	public void testValueOf() {
-		assertThat(Castling.valueOf(Color.WHITE, CastlingType.KINGSIDE), is(Castling.WHITE_KINGSIDE));
-		assertThat(Castling.valueOf(Color.WHITE, CastlingType.QUEENSIDE), is(Castling.WHITE_QUEENSIDE));
-		assertThat(Castling.valueOf(Color.BLACK, CastlingType.KINGSIDE), is(Castling.BLACK_KINGSIDE));
-		assertThat(Castling.valueOf(Color.BLACK, CastlingType.QUEENSIDE), is(Castling.BLACK_QUEENSIDE));
+	void testValueOf() {
+		assertThat(Castling.valueOf(Color.WHITE, CastlingType.KINGSIDE)).isEqualTo(Castling.WHITE_KINGSIDE);
+		assertThat(Castling.valueOf(Color.WHITE, CastlingType.QUEENSIDE)).isEqualTo(Castling.WHITE_QUEENSIDE);
+		assertThat(Castling.valueOf(Color.BLACK, CastlingType.KINGSIDE)).isEqualTo(Castling.BLACK_KINGSIDE);
+		assertThat(Castling.valueOf(Color.BLACK, CastlingType.QUEENSIDE)).isEqualTo(Castling.BLACK_QUEENSIDE);
 	}
 }

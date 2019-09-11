@@ -8,8 +8,8 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericMove;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.HashSet;
 
 import static com.fluxchess.pulse.MoveList.MoveEntry;
 
-public class MoveGeneratorTest {
+class MoveGeneratorTest {
 
 	private static final P[] perftPositions = {
 			p("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", e(1, 20), e(2, 400), e(3, 8902), e(4, 197281), e(5, 4865609), e(6, 119060324)),
@@ -171,8 +171,8 @@ public class MoveGeneratorTest {
 		}
 	}
 
-	@BeforeClass
-	public static void setUpClass() {
+	@BeforeAll
+	static void setUpClass() {
 		for (int i = 0; i < MAX_DEPTH; i++) {
 			moveGenerators[i] = new MoveGenerator();
 		}
@@ -210,7 +210,7 @@ public class MoveGeneratorTest {
 	}
 
 	@Test
-	public void testPerft() {
+	void testPerft() {
 		for (int i = 0; i < 4; i++) {
 			for (P p : perftPositions) {
 				if (p.perftEntries.length > i) {
@@ -278,5 +278,4 @@ public class MoveGeneratorTest {
 
 		return message.toString();
 	}
-
 }

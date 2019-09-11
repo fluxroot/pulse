@@ -11,10 +11,9 @@ import com.fluxchess.jcpi.models.*;
 import com.fluxchess.jcpi.options.CheckboxOption;
 import com.fluxchess.jcpi.options.Options;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,16 +24,15 @@ import java.util.concurrent.Semaphore;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class PulseTest {
+class PulseTest {
 
 	private final BlockingQueue<IEngineCommand> commands = new LinkedBlockingQueue<>();
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		commands.clear();
 
 		// Put a default command list into the queue for each test
@@ -50,7 +48,7 @@ public class PulseTest {
 	}
 
 	@Test
-	public void testDepth() throws InterruptedException {
+	void testDepth() throws InterruptedException {
 		final GenericMove[] bestMove = {null};
 		final GenericMove[] ponderMove = {null};
 		final int[] depth = {0};
@@ -86,15 +84,15 @@ public class PulseTest {
 			}
 		}).run();
 
-		assertThat(semaphore.tryAcquire(10000, MILLISECONDS), is(true));
+		assertThat(semaphore.tryAcquire(10000, MILLISECONDS)).isEqualTo(true);
 
-		assertThat(bestMove[0], is(notNullValue()));
-		assertThat(ponderMove[0], is(notNullValue()));
-		assertThat(depth[0], is(2));
+		assertThat(bestMove[0]).isNotNull();
+		assertThat(ponderMove[0]).isNotNull();
+		assertThat(depth[0]).isEqualTo(2);
 	}
 
 	@Test
-	public void testNodes() throws InterruptedException {
+	void testNodes() throws InterruptedException {
 		final GenericMove[] bestMove = {null};
 		final GenericMove[] ponderMove = {null};
 		final long[] nodes = {0};
@@ -130,18 +128,18 @@ public class PulseTest {
 			}
 		}).run();
 
-		assertThat(semaphore.tryAcquire(10000, MILLISECONDS), is(true));
+		assertThat(semaphore.tryAcquire(10000, MILLISECONDS)).isEqualTo(true);
 
-		assertThat(bestMove[0], is(notNullValue()));
-		assertThat(ponderMove[0], is(nullValue()));
-		assertThat(nodes[0], is(1L));
+		assertThat(bestMove[0]).isNotNull();
+		assertThat(ponderMove[0]).isNull();
+		assertThat(nodes[0]).isEqualTo(1L);
 	}
 
 	@Test
-	public void testMoveTime() throws IllegalNotationException {
+	void testMoveTime() throws IllegalNotationException {
 		// Test searching for 1 second
 		commands.add(new EngineAnalyzeCommand(
-				new GenericBoard("8/4K3/8/7p/5QkP/6P1/8/8 b - - 2 76"), new ArrayList<GenericMove>()));
+				new GenericBoard("8/4K3/8/7p/5QkP/6P1/8/8 b - - 2 76"), new ArrayList<>()));
 		EngineStartCalculatingCommand command = new EngineStartCalculatingCommand();
 		command.setMoveTime(1000L);
 		commands.add(command);
@@ -150,11 +148,11 @@ public class PulseTest {
 		new Pulse(new ProtocolHandler()).run();
 		long stopTime = System.currentTimeMillis();
 
-		assertThat(stopTime - startTime >= 1000L, is(true));
+		assertThat(stopTime - startTime >= 1000L).isEqualTo(true);
 	}
 
 	@Test
-	public void testFastMoveTime() {
+	void testFastMoveTime() {
 		// Test seaching for 1 millisecond, which should be stable
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
@@ -167,7 +165,7 @@ public class PulseTest {
 	}
 
 	@Test
-	public void testMoves() {
+	void testMoves() {
 		// Test searching only specific moves
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
@@ -188,7 +186,7 @@ public class PulseTest {
 	}
 
 	@Test
-	public void testInfinite() {
+	void testInfinite() {
 		// Test searching infinitely
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
@@ -207,7 +205,7 @@ public class PulseTest {
 	}
 
 	@Test
-	public void testClock() {
+	void testClock() {
 		// Test if our time management works
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
@@ -223,7 +221,7 @@ public class PulseTest {
 	}
 
 	@Test
-	public void testMovesToGo() {
+	void testMovesToGo() {
 		// Test our time management with moves to go
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
@@ -240,7 +238,7 @@ public class PulseTest {
 	}
 
 	@Test
-	public void testPonder() {
+	void testPonder() {
 		// Test if ponder works with time management
 		commands.add(new EngineAnalyzeCommand(
 				new GenericBoard(GenericBoard.STANDARDSETUP),
@@ -265,12 +263,12 @@ public class PulseTest {
 	private class ProtocolHandler implements IProtocolHandler {
 
 		@Override
-		public IEngineCommand receive() throws IOException {
+		public IEngineCommand receive() {
 			IEngineCommand command = null;
 			try {
 				command = commands.take();
 			} catch (InterruptedException e) {
-				fail();
+				fail("got interrupted");
 			}
 
 			return command;
@@ -282,7 +280,7 @@ public class PulseTest {
 
 		@Override
 		public void send(ProtocolReadyAnswerCommand command) {
-			assertThat(command.token, is("test"));
+			assertThat(command.token).isEqualTo("test");
 		}
 
 		@Override
@@ -295,5 +293,4 @@ public class PulseTest {
 		}
 
 	}
-
 }

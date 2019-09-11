@@ -6,7 +6,7 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.fluxchess.pulse.Castling.*;
 import static com.fluxchess.pulse.Color.BLACK;
@@ -16,77 +16,75 @@ import static com.fluxchess.pulse.PieceType.*;
 import static com.fluxchess.pulse.Rank.r2;
 import static com.fluxchess.pulse.Rank.r7;
 import static com.fluxchess.pulse.Square.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class NotationTest {
+class NotationTest {
 
 	@Test
-	public void testStandardPosition() {
+	void testStandardPosition() {
 		Position position = Notation.toPosition(Notation.STANDARDPOSITION);
 
 		// Test pawns
 		for (int file : File.values) {
-			assertThat(position.board[Square.valueOf(file, r2)], is(WHITE_PAWN));
-			assertThat(position.board[Square.valueOf(file, r7)], is(BLACK_PAWN));
+			assertThat(position.board[Square.valueOf(file, r2)]).isEqualTo(WHITE_PAWN);
+			assertThat(position.board[Square.valueOf(file, r7)]).isEqualTo(BLACK_PAWN);
 		}
 
 		// Test knights
-		assertThat(position.board[b1], is(WHITE_KNIGHT));
-		assertThat(position.board[g1], is(WHITE_KNIGHT));
-		assertThat(position.board[b8], is(BLACK_KNIGHT));
-		assertThat(position.board[g8], is(BLACK_KNIGHT));
+		assertThat(position.board[b1]).isEqualTo(WHITE_KNIGHT);
+		assertThat(position.board[g1]).isEqualTo(WHITE_KNIGHT);
+		assertThat(position.board[b8]).isEqualTo(BLACK_KNIGHT);
+		assertThat(position.board[g8]).isEqualTo(BLACK_KNIGHT);
 
 		// Test bishops
-		assertThat(position.board[c1], is(WHITE_BISHOP));
-		assertThat(position.board[f1], is(WHITE_BISHOP));
-		assertThat(position.board[c8], is(BLACK_BISHOP));
-		assertThat(position.board[f8], is(BLACK_BISHOP));
+		assertThat(position.board[c1]).isEqualTo(WHITE_BISHOP);
+		assertThat(position.board[f1]).isEqualTo(WHITE_BISHOP);
+		assertThat(position.board[c8]).isEqualTo(BLACK_BISHOP);
+		assertThat(position.board[f8]).isEqualTo(BLACK_BISHOP);
 
 		// Test rooks
-		assertThat(position.board[a1], is(WHITE_ROOK));
-		assertThat(position.board[h1], is(WHITE_ROOK));
-		assertThat(position.board[a8], is(BLACK_ROOK));
-		assertThat(position.board[h8], is(BLACK_ROOK));
+		assertThat(position.board[a1]).isEqualTo(WHITE_ROOK);
+		assertThat(position.board[h1]).isEqualTo(WHITE_ROOK);
+		assertThat(position.board[a8]).isEqualTo(BLACK_ROOK);
+		assertThat(position.board[h8]).isEqualTo(BLACK_ROOK);
 
 		// Test queens
-		assertThat(position.board[d1], is(WHITE_QUEEN));
-		assertThat(position.board[d8], is(BLACK_QUEEN));
+		assertThat(position.board[d1]).isEqualTo(WHITE_QUEEN);
+		assertThat(position.board[d8]).isEqualTo(BLACK_QUEEN);
 
 		// Test kings
-		assertThat(position.board[e1], is(WHITE_KING));
-		assertThat(position.board[e8], is(BLACK_KING));
+		assertThat(position.board[e1]).isEqualTo(WHITE_KING);
+		assertThat(position.board[e8]).isEqualTo(BLACK_KING);
 
-		assertThat(position.material[WHITE], is((8 * PAWN_VALUE)
+		assertThat(position.material[WHITE]).isEqualTo((8 * PAWN_VALUE)
 				+ (2 * KNIGHT_VALUE)
 				+ (2 * BISHOP_VALUE)
 				+ (2 * ROOK_VALUE)
 				+ QUEEN_VALUE
-				+ KING_VALUE));
-		assertThat(position.material[BLACK], is((8 * PAWN_VALUE)
+				+ KING_VALUE);
+		assertThat(position.material[BLACK]).isEqualTo((8 * PAWN_VALUE)
 				+ (2 * KNIGHT_VALUE)
 				+ (2 * BISHOP_VALUE)
 				+ (2 * ROOK_VALUE)
 				+ QUEEN_VALUE
-				+ KING_VALUE));
+				+ KING_VALUE);
 
 		// Test castling
-		assertThat(position.castlingRights & WHITE_KINGSIDE, is(not(NOCASTLING)));
-		assertThat(position.castlingRights & WHITE_QUEENSIDE, is(not(NOCASTLING)));
-		assertThat(position.castlingRights & BLACK_KINGSIDE, is(not(NOCASTLING)));
-		assertThat(position.castlingRights & BLACK_QUEENSIDE, is(not(NOCASTLING)));
+		assertThat(position.castlingRights & WHITE_KINGSIDE).isNotEqualTo(NOCASTLING);
+		assertThat(position.castlingRights & WHITE_QUEENSIDE).isNotEqualTo(NOCASTLING);
+		assertThat(position.castlingRights & BLACK_KINGSIDE).isNotEqualTo(NOCASTLING);
+		assertThat(position.castlingRights & BLACK_QUEENSIDE).isNotEqualTo(NOCASTLING);
 
 		// Test en passant
-		assertThat(position.enPassantSquare, is(NOSQUARE));
+		assertThat(position.enPassantSquare).isEqualTo(NOSQUARE);
 
 		// Test active color
-		assertThat(position.activeColor, is(WHITE));
+		assertThat(position.activeColor).isEqualTo(WHITE);
 
 		// Test half move clock
-		assertThat(position.halfmoveClock, is(0));
+		assertThat(position.halfmoveClock).isEqualTo(0);
 
 		// Test full move number
-		assertThat(position.getFullmoveNumber(), is(1));
+		assertThat(position.getFullmoveNumber()).isEqualTo(1);
 	}
 }

@@ -22,4 +22,4 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
-      - run: ./mvnw integration-test
+      - run: ./mvnw test
