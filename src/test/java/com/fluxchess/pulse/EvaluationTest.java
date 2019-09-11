@@ -6,19 +6,17 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class EvaluationTest {
+class EvaluationTest {
 
 	@Test
-	public void testEvaluate() {
+	void testEvaluate() {
 		Position position = Notation.toPosition(Notation.STANDARDPOSITION);
 		Evaluation evaluation = new Evaluation();
 
-		assertThat(evaluation.evaluate(position), is(Evaluation.TEMPO));
+		assertThat(evaluation.evaluate(position)).isEqualTo(Evaluation.TEMPO);
 	}
-
 }

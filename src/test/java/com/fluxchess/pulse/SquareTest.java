@@ -6,21 +6,20 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class SquareTest {
+class SquareTest {
 
 	@Test
-	public void testValues() {
+	void testValues() {
 		for (int rank : Rank.values) {
 			for (int file : File.values) {
 				int square = Square.valueOf(file, rank);
 
-				assertThat(Square.getFile(square), is(file));
-				assertThat(Square.getRank(square), is(rank));
+				assertThat(Square.getFile(square)).isEqualTo(file);
+				assertThat(Square.getRank(square)).isEqualTo(rank);
 			}
 		}
 	}

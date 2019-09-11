@@ -6,24 +6,23 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.fluxchess.pulse.Color.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ColorTest {
+class ColorTest {
 
 	@Test
-	public void testValues() {
+	void testValues() {
 		for (int color : Color.values) {
-			assertThat(Color.values[color], is(color));
+			assertThat(Color.values[color]).isEqualTo(color);
 		}
 	}
 
 	@Test
-	public void testOpposite() {
-		assertThat(opposite(BLACK), is(WHITE));
-		assertThat(opposite(WHITE), is(BLACK));
+	void testOpposite() {
+		assertThat(opposite(BLACK)).isEqualTo(WHITE);
+		assertThat(opposite(WHITE)).isEqualTo(BLACK);
 	}
 }

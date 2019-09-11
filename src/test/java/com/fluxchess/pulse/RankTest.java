@@ -6,17 +6,16 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class RankTest {
+class RankTest {
 
 	@Test
-	public void testValues() {
+	void testValues() {
 		for (int rank : Rank.values) {
-			assertThat(Rank.values[rank], is(rank));
+			assertThat(Rank.values[rank]).isEqualTo(rank);
 		}
 	}
 }

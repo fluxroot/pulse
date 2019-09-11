@@ -6,23 +6,22 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.Random;
 
 import static com.fluxchess.pulse.Bitboard.add;
 import static com.fluxchess.pulse.Square.a6;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class BitboardTest {
+class BitboardTest {
 
 	private LinkedList<Integer> pool = null;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		Random random = new Random();
 		pool = new LinkedList<>();
 
@@ -35,51 +34,51 @@ public class BitboardTest {
 	}
 
 	@Test
-	public void shouldAddAllSquaresCorrectly() {
+	void shouldAddAllSquaresCorrectly() {
 		long bitboard = 0;
 
 		for (int x88square : pool) {
 			bitboard = add(x88square, bitboard);
 		}
 
-		assertThat(bitboard, is(-1L));
+		assertThat(bitboard).isEqualTo(-1L);
 	}
 
 	@Test
-	public void shouldRemoveAllSquaresCorrectly() {
+	void shouldRemoveAllSquaresCorrectly() {
 		long bitboard = -1;
 
 		for (int x88square : pool) {
 			bitboard = Bitboard.remove(x88square, bitboard);
 		}
 
-		assertThat(bitboard, is(0L));
+		assertThat(bitboard).isEqualTo(0L);
 	}
 
 	@Test
-	public void shouldReturnTheNextSquare() {
+	void shouldReturnTheNextSquare() {
 		long bitboard = add(a6, 0);
 
 		int square = Bitboard.next(bitboard);
 
-		assertThat(square, is(a6));
+		assertThat(square).isEqualTo(a6);
 	}
 
 	@Test
-	public void shouldReturnCorrectRemainder() {
+	void shouldReturnCorrectRemainder() {
 		long bitboard = 0b1110100;
 
 		long remainder = Bitboard.remainder(bitboard);
 
-		assertThat(remainder, is(0b1110000L));
+		assertThat(remainder).isEqualTo(0b1110000L);
 	}
 
 	@Test
-	public void shouldReturnCorrectSize() {
+	void shouldReturnCorrectSize() {
 		long bitboard = 0b111;
 
 		int size = Bitboard.size(bitboard);
 
-		assertThat(size, is(3));
+		assertThat(size).isEqualTo(3);
 	}
 }

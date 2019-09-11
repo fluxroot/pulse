@@ -6,22 +6,20 @@
  */
 package com.fluxchess.pulse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.fluxchess.pulse.MoveList.MoveEntry;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class MoveListTest {
+class MoveListTest {
 
 	@Test
-	public void test() {
+	void test() {
 		MoveList<MoveEntry> moveList = new MoveList<>(MoveEntry.class);
 
-		assertThat(moveList.size, is(0));
+		assertThat(moveList.size).isEqualTo(0);
 
 		moveList.entries[moveList.size++].move = 1;
-		assertThat(moveList.size, is(1));
+		assertThat(moveList.size).isEqualTo(1);
 	}
-
 }
