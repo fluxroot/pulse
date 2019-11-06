@@ -16,8 +16,8 @@ final class Evaluation {
 
 	static final int TEMPO = 1;
 
-	static int materialWeight = 100;
-	static int mobilityWeight = 80;
+	private static final int MATERIAL_WEIGHT = 100;
+	private static final int MOBILITY_WEIGHT = 80;
 	private static final int MAX_WEIGHT = 100;
 
 	/**
@@ -34,12 +34,12 @@ final class Evaluation {
 
 		// Evaluate material
 		int materialScore = (evaluateMaterial(myColor, position) - evaluateMaterial(oppositeColor, position))
-				* materialWeight / MAX_WEIGHT;
+				* MATERIAL_WEIGHT / MAX_WEIGHT;
 		value += materialScore;
 
 		// Evaluate mobility
 		int mobilityScore = (evaluateMobility(myColor, position) - evaluateMobility(oppositeColor, position))
-				* mobilityWeight / MAX_WEIGHT;
+				* MOBILITY_WEIGHT / MAX_WEIGHT;
 		value += mobilityScore;
 
 		// Add Tempo
@@ -63,25 +63,25 @@ final class Evaluation {
 		int knightMobility = 0;
 		for (long squares = position.pieces[color][KNIGHT]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
-			knightMobility += evaluateMobility(color, position, square, knightDirections);
+			knightMobility += evaluateMobility(position, square, knightDirections);
 		}
 
 		int bishopMobility = 0;
 		for (long squares = position.pieces[color][BISHOP]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
-			bishopMobility += evaluateMobility(color, position, square, bishopDirections);
+			bishopMobility += evaluateMobility(position, square, bishopDirections);
 		}
 
 		int rookMobility = 0;
 		for (long squares = position.pieces[color][ROOK]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
-			rookMobility += evaluateMobility(color, position, square, rookDirections);
+			rookMobility += evaluateMobility(position, square, rookDirections);
 		}
 
 		int queenMobility = 0;
 		for (long squares = position.pieces[color][QUEEN]; squares != 0; squares = remainder(squares)) {
 			int square = next(squares);
-			queenMobility += evaluateMobility(color, position, square, queenDirections);
+			queenMobility += evaluateMobility(position, square, queenDirections);
 		}
 
 		return knightMobility * 4
@@ -90,7 +90,7 @@ final class Evaluation {
 				+ queenMobility;
 	}
 
-	private int evaluateMobility(int color, Position position, int square, int[] directions) {
+	private int evaluateMobility(Position position, int square, int[] directions) {
 		int mobility = 0;
 		boolean sliding = isSliding(Piece.getType(position.board[square]));
 
