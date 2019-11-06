@@ -13,7 +13,7 @@ import static com.fluxchess.pulse.Color.WHITE;
 
 final class Castling {
 
-	static final int WHITE_KINGSIDE = 1 << 0;
+	static final int WHITE_KINGSIDE = 1; // 1 << 0
 	static final int WHITE_QUEENSIDE = 1 << 1;
 	static final int BLACK_KINGSIDE = 1 << 2;
 	static final int BLACK_QUEENSIDE = 1 << 3;
