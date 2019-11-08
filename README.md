@@ -96,7 +96,7 @@ steps.
     `./mvnw package`
 
 - grab it  
-    `cp target/pulse-<version>.zip <installation directory>`
+    `cp target/pulse-java-<version>.zip <installation directory>`
 
 ### C++ Edition
 
@@ -113,7 +113,7 @@ steps.
     `cmake -G "Visual Studio 12 2013" .. && cmake --build . --config Release && ctest && cpack -C Release`
 
 - grab it  
-    `cp build/pulse-<version>.zip <installation directory>`
+    `cp build/pulse-cpp-<version>.zip <installation directory>`
 
 
 Acknowledgments

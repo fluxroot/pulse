@@ -1,1 +1,1 @@
-java -jar pulse-@version@.jar
+java -jar pulse-java-@version@.jar
