@@ -81,13 +81,11 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptors>
-                                <descriptor>src/assembly/uber.xml</descriptor>
-                            </descriptors>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                     <mainClass>com.fluxchess.pulse.Main</mainClass>
                                 </manifest>
                             </archive>
