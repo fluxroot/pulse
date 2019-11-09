@@ -1,3 +1,24 @@
+Release Notes - Pulse - Version 1.7.0
+-------------------------------------
+
+* [PULSE-74] - Remove assertions
+* [PULSE-75] - Review unit tests
+* [PULSE-76] - Change indentation to 4 spaces
+* [PULSE-77] - Update to JDK 1.8
+* [PULSE-78] - Use Google Test from GitHub
+* [PULSE-79] - problems on raspberry pi (with linux) #54
+* [PULSE-80] - Switch to tabs
+* [PULSE-81] - Review code
+* [PULSE-82] - Replace Bitboard instances with long
+* [PULSE-83] - Create custom exception
+* [PULSE-84] - No static instance variables
+* [PULSE-86] - Annotate only nullable parameters
+* [PULSE-87] - required for linking #53
+* [PULSE-89] - Upgrade codebase
+* [PULSE-90] - Fix static analysis issues
+* [PULSE-91] - Fix packaging
+* [PULSE-92] - Fix abs() ambiguity
+
 Release Notes - Pulse - Version 1.6.1
 -------------------------------------
 
