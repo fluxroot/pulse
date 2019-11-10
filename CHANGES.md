@@ -19,6 +19,7 @@ Release Notes - Pulse - Version 1.7.0
 * [PULSE-91] - Fix packaging
 * [PULSE-92] - Fix abs() ambiguity
 * [PULSE-93] - Downgrade to CMake 3.10
+* [PULSE-94] - Fix mutex compilation error
 
 Release Notes - Pulse - Version 1.6.1
 -------------------------------------
