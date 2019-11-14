@@ -7,6 +7,7 @@
 package com.fluxchess.pulse;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 
 import static com.fluxchess.pulse.Depth.MAX_PLY;
 import static com.fluxchess.pulse.Move.NOMOVE;
@@ -43,9 +44,9 @@ final class MoveList<T extends MoveList.MoveEntry> {
 		this.entries = entries;
 		try {
 			for (int i = 0; i < entries.length; i++) {
-				entries[i] = clazz.newInstance();
+				entries[i] = clazz.getDeclaredConstructor().newInstance();
 			}
-		} catch (InstantiationException | IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			throw new IllegalStateException(e);
 		}
 	}
