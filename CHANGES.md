@@ -1,3 +1,8 @@
+Release Notes - Pulse - Version 1.7.1
+-------------------------------------
+
+* [PULSE-96] - Create JAR for Javadoc again
+
 Release Notes - Pulse - Version 1.7.0
 -------------------------------------
 
