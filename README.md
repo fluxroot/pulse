@@ -15,7 +15,7 @@ learn, how to build a chess engine. If you want to roll your own, just
 fork it and start coding! :)
 
 Pulse Chess is available in Java and C++. Both editions have the same
-feature set. The Java Edition requires Java 8 for compilation and
+feature set. The Java Edition requires Java 11 for compilation and
 execution. The C++ Edition is written in C++11. It has been compiled
 successfully using g++ 7.4.0 and Visual C++ 2019.
 

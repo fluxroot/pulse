@@ -1,6 +1,8 @@
 Release Notes - Pulse - Version 2.0.0
 -------------------------------------
 
+* [PULSE-97] - Use Java 11
+
 Release Notes - Pulse - Version 1.7.1
 -------------------------------------
 
