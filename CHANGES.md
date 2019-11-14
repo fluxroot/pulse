@@ -1,3 +1,6 @@
+Release Notes - Pulse - Version 2.0.0
+-------------------------------------
+
 Release Notes - Pulse - Version 1.7.1
 -------------------------------------
 
