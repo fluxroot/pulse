@@ -4,8 +4,7 @@
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-#ifndef PULSE_MOVE_H
-#define PULSE_MOVE_H
+#pragma once
 
 #include "square.h"
 #include "piece.h"
@@ -71,5 +70,3 @@ private:
 };
 
 }
-
-#endif

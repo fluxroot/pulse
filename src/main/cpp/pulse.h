@@ -4,8 +4,7 @@
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-#ifndef PULSE_PULSE_H
-#define PULSE_PULSE_H
+#pragma once
 
 #include "search.h"
 #include "notation.h"
@@ -55,5 +54,3 @@ private:
 };
 
 }
-
-#endif

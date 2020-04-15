@@ -4,8 +4,7 @@
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-#ifndef PULSE_RANK_H
-#define PULSE_RANK_H
+#pragma once
 
 #include <array>
 
@@ -36,5 +35,3 @@ private:
 };
 
 }
-
-#endif
