@@ -4,8 +4,7 @@
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-#ifndef PULSE_MOVELIST_H
-#define PULSE_MOVELIST_H
+#pragma once
 
 #include "value.h"
 #include "move.h"
@@ -53,5 +52,3 @@ public:
 };
 
 }
-
-#endif
