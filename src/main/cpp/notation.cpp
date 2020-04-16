@@ -115,7 +115,7 @@ Position Notation::toPosition(const std::string& fen) {
 					throw std::exception();
 				}
 
-				kingFile = Square::getFile(Bitboard::next(position.pieces[color][PieceType::KING]));
+				kingFile = Square::getFile(bitboard::next(position.pieces[color][PieceType::KING]));
 				if (castlingFile > kingFile) {
 					castling = Castling::valueOf(color, CastlingType::KINGSIDE);
 				} else {

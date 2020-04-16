@@ -44,7 +44,7 @@ int Evaluation::evaluateMaterial(int color, Position& position) {
 	int material = position.material[color];
 
 	// Add bonus for bishop pair
-	if (Bitboard::size(position.pieces[color][PieceType::BISHOP]) >= 2) {
+	if (bitboard::size(position.pieces[color][PieceType::BISHOP]) >= 2) {
 		material += 50;
 	}
 
@@ -54,29 +54,29 @@ int Evaluation::evaluateMaterial(int color, Position& position) {
 int Evaluation::evaluateMobility(int color, Position& position) {
 	int knightMobility = 0;
 	for (auto squares = position.pieces[color][PieceType::KNIGHT];
-		 squares != 0; squares = Bitboard::remainder(squares)) {
-		int square = Bitboard::next(squares);
+		 squares != 0; squares = bitboard::remainder(squares)) {
+		int square = bitboard::next(squares);
 		knightMobility += evaluateMobility(color, position, square, Square::knightDirections);
 	}
 
 	int bishopMobility = 0;
 	for (auto squares = position.pieces[color][PieceType::BISHOP];
-		 squares != 0; squares = Bitboard::remainder(squares)) {
-		int square = Bitboard::next(squares);
+		 squares != 0; squares = bitboard::remainder(squares)) {
+		int square = bitboard::next(squares);
 		bishopMobility += evaluateMobility(color, position, square, Square::bishopDirections);
 	}
 
 	int rookMobility = 0;
 	for (auto squares = position.pieces[color][PieceType::ROOK];
-		 squares != 0; squares = Bitboard::remainder(squares)) {
-		int square = Bitboard::next(squares);
+		 squares != 0; squares = bitboard::remainder(squares)) {
+		int square = bitboard::next(squares);
 		rookMobility += evaluateMobility(color, position, square, Square::rookDirections);
 	}
 
 	int queenMobility = 0;
 	for (auto squares = position.pieces[color][PieceType::QUEEN];
-		 squares != 0; squares = Bitboard::remainder(squares)) {
-		int square = Bitboard::next(squares);
+		 squares != 0; squares = bitboard::remainder(squares)) {
+		int square = bitboard::next(squares);
 		queenMobility += evaluateMobility(color, position, square, Square::queenDirections);
 	}
 

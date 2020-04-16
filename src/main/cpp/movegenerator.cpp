@@ -37,7 +37,7 @@ MoveList<MoveEntry>& MoveGenerator::getMoves(Position& position, int depth, bool
 		addMoves(moves, position);
 
 		if (!isCheck) {
-			int square = Bitboard::next(position.pieces[position.activeColor][PieceType::KING]);
+			int square = bitboard::next(position.pieces[position.activeColor][PieceType::KING]);
 			addCastlingMoves(moves, square, position);
 		}
 	} else {
@@ -67,31 +67,31 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, Position& position) {
 	int activeColor = position.activeColor;
 
 	for (auto squares = position.pieces[activeColor][PieceType::PAWN];
-		 squares != 0; squares = Bitboard::remainder(squares)) {
-		int square = Bitboard::next(squares);
+		 squares != 0; squares = bitboard::remainder(squares)) {
+		int square = bitboard::next(squares);
 		addPawnMoves(list, square, position);
 	}
 	for (auto squares = position.pieces[activeColor][PieceType::KNIGHT];
-		 squares != 0; squares = Bitboard::remainder(squares)) {
-		int square = Bitboard::next(squares);
+		 squares != 0; squares = bitboard::remainder(squares)) {
+		int square = bitboard::next(squares);
 		addMoves(list, square, Square::knightDirections, position);
 	}
 	for (auto squares = position.pieces[activeColor][PieceType::BISHOP];
-		 squares != 0; squares = Bitboard::remainder(squares)) {
-		int square = Bitboard::next(squares);
+		 squares != 0; squares = bitboard::remainder(squares)) {
+		int square = bitboard::next(squares);
 		addMoves(list, square, Square::bishopDirections, position);
 	}
 	for (auto squares = position.pieces[activeColor][PieceType::ROOK];
-		 squares != 0; squares = Bitboard::remainder(squares)) {
-		int square = Bitboard::next(squares);
+		 squares != 0; squares = bitboard::remainder(squares)) {
+		int square = bitboard::next(squares);
 		addMoves(list, square, Square::rookDirections, position);
 	}
 	for (auto squares = position.pieces[activeColor][PieceType::QUEEN];
-		 squares != 0; squares = Bitboard::remainder(squares)) {
-		int square = Bitboard::next(squares);
+		 squares != 0; squares = bitboard::remainder(squares)) {
+		int square = bitboard::next(squares);
 		addMoves(list, square, Square::queenDirections, position);
 	}
-	int square = Bitboard::next(position.pieces[activeColor][PieceType::KING]);
+	int square = bitboard::next(position.pieces[activeColor][PieceType::KING]);
 	addMoves(list, square, Square::kingDirections, position);
 }
 

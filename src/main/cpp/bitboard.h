@@ -9,31 +9,19 @@
 #include <array>
 #include <cstdint>
 
-namespace pulse {
+namespace pulse::bitboard {
 
-class Bitboard {
-public:
-	static uint64_t add(int square, uint64_t bitboard);
+uint64_t add(int square, uint64_t bitboard);
 
-	static uint64_t remove(int square, uint64_t bitboard);
+uint64_t remove(int square, uint64_t bitboard);
 
-	static int next(uint64_t bitboard);
+int next(uint64_t bitboard);
 
-	static uint64_t remainder(uint64_t bitboard);
+uint64_t remainder(uint64_t bitboard);
 
-	static int size(uint64_t bitboard);
+int size(uint64_t bitboard);
 
-	static int numberOfTrailingZeros(uint64_t b);
+int numberOfTrailingZeros(uint64_t b);
 
-	static int bitCount(uint64_t b);
-
-private:
-	static const uint64_t DEBRUIJN64 = 0x03F79D71B4CB0A89ULL;
-	static const std::array<int, 64> lsbTable;
-
-	static int toX88Square(int square);
-
-	static int toBitSquare(int square);
-};
-
+int bitCount(uint64_t b);
 }

@@ -173,16 +173,16 @@ bool Position::isRepetition() {
 
 bool Position::hasInsufficientMaterial() {
 	// If there is only one minor left, we are unable to checkmate
-	return Bitboard::size(pieces[Color::WHITE][PieceType::PAWN]) == 0
-		   && Bitboard::size(pieces[Color::BLACK][PieceType::PAWN]) == 0
-		   && Bitboard::size(pieces[Color::WHITE][PieceType::ROOK]) == 0
-		   && Bitboard::size(pieces[Color::BLACK][PieceType::ROOK]) == 0
-		   && Bitboard::size(pieces[Color::WHITE][PieceType::QUEEN]) == 0
-		   && Bitboard::size(pieces[Color::BLACK][PieceType::QUEEN]) == 0
-		   && (Bitboard::size(pieces[Color::WHITE][PieceType::KNIGHT]) +
-			   Bitboard::size(pieces[Color::WHITE][PieceType::BISHOP]) <= 1)
-		   && (Bitboard::size(pieces[Color::BLACK][PieceType::KNIGHT]) +
-			   Bitboard::size(pieces[Color::BLACK][PieceType::BISHOP]) <= 1);
+	return bitboard::size(pieces[Color::WHITE][PieceType::PAWN]) == 0
+		   && bitboard::size(pieces[Color::BLACK][PieceType::PAWN]) == 0
+		   && bitboard::size(pieces[Color::WHITE][PieceType::ROOK]) == 0
+		   && bitboard::size(pieces[Color::BLACK][PieceType::ROOK]) == 0
+		   && bitboard::size(pieces[Color::WHITE][PieceType::QUEEN]) == 0
+		   && bitboard::size(pieces[Color::BLACK][PieceType::QUEEN]) == 0
+		   && (bitboard::size(pieces[Color::WHITE][PieceType::KNIGHT]) +
+			   bitboard::size(pieces[Color::WHITE][PieceType::BISHOP]) <= 1)
+		   && (bitboard::size(pieces[Color::BLACK][PieceType::KNIGHT]) +
+			   bitboard::size(pieces[Color::BLACK][PieceType::BISHOP]) <= 1);
 }
 
 /**
@@ -197,7 +197,7 @@ void Position::put(int piece, int square) {
 	int color = Piece::getColor(piece);
 
 	board[square] = piece;
-	pieces[color][piecetype] = Bitboard::add(square, pieces[color][piecetype]);
+	pieces[color][piecetype] = bitboard::add(square, pieces[color][piecetype]);
 	material[color] += PieceType::getValue(piecetype);
 
 	zobristKey ^= zobrist.board[piece][square];
@@ -217,7 +217,7 @@ int Position::remove(int square) {
 	int color = Piece::getColor(piece);
 
 	board[square] = Piece::NOPIECE;
-	pieces[color][piecetype] = Bitboard::remove(square, pieces[color][piecetype]);
+	pieces[color][piecetype] = bitboard::remove(square, pieces[color][piecetype]);
 	material[color] -= PieceType::getValue(piecetype);
 
 	zobristKey ^= zobrist.board[piece][square];
@@ -421,12 +421,12 @@ void Position::clearCastling(int square) {
 
 bool Position::isCheck() {
 	// Check whether our king is attacked by any opponent piece
-	return isAttacked(Bitboard::next(pieces[activeColor][PieceType::KING]), Color::opposite(activeColor));
+	return isAttacked(bitboard::next(pieces[activeColor][PieceType::KING]), Color::opposite(activeColor));
 }
 
 bool Position::isCheck(int color) {
 	// Check whether the king for color is attacked by any opponent piece
-	return isAttacked(Bitboard::next(pieces[color][PieceType::KING]), Color::opposite(color));
+	return isAttacked(bitboard::next(pieces[color][PieceType::KING]), Color::opposite(color));
 }
 
 /**
