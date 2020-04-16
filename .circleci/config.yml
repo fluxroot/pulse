@@ -1,22 +1,30 @@
 version: 2
 jobs:
-  build:
+  build-java:
     docker:
-      - image: circleci/openjdk:11.0.5-jdk-stretch
-
+      - image: adoptopenjdk:14-jdk-hotspot
+    working_directory: ~/repo
     environment:
       TERM: dumb
-
     steps:
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo "export BUILD_NUMBER=${CIRCLE_BUILD_NUM}" >> $BASH_ENV
+
+      - run:
+          name: Install toolchain
+          command: |
+            apt-get update
+            apt-get install -y git ssh
+
       - checkout
 
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
             - v1-dependencies-
-
       - run: ./mvnw dependency:go-offline
-
       - save_cache:
           paths:
             - ~/.m2
@@ -24,5 +32,46 @@ jobs:
 
       - run: ./mvnw test
 
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
       - store_test_results:
-          path: target/surefire-reports
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
+
+  build-cpp:
+    docker:
+      - image: ubuntu:18.04
+    working_directory: ~/repo
+    environment:
+      TERM: dumb
+    steps:
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo "export BUILD_NUMBER=${CIRCLE_BUILD_NUM}" >> $BASH_ENV
+
+      - run:
+          name: Install toolchain
+          command: |
+            apt-get update
+            apt-get install -y git ssh cmake g++
+
+      - checkout
+
+      - run:
+          name: Build
+          command: |
+            mkdir build && cd build
+            cmake -DCMAKE_BUILD_TYPE=Release .. && make && make test && make package
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-java
+      - build-cpp
