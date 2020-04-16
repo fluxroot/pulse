@@ -9,9 +9,9 @@
 #include "color.h"
 #include "castlingtype.h"
 
-namespace pulse {
+namespace pulse::castling {
 
-int Castling::valueOf(int color, int castlingtype) {
+int valueOf(int color, int castlingtype) {
 	switch (color) {
 		case Color::WHITE:
 			switch (castlingtype) {
@@ -36,7 +36,7 @@ int Castling::valueOf(int color, int castlingtype) {
 	}
 }
 
-int Castling::getType(int castling) {
+int getType(int castling) {
 	switch (castling) {
 		case WHITE_KINGSIDE:
 		case BLACK_KINGSIDE:
@@ -49,7 +49,7 @@ int Castling::getType(int castling) {
 	}
 }
 
-int Castling::getColor(int castling) {
+int getColor(int castling) {
 	switch (castling) {
 		case WHITE_KINGSIDE:
 		case WHITE_QUEENSIDE:
@@ -61,5 +61,4 @@ int Castling::getColor(int castling) {
 			throw std::exception();
 	}
 }
-
 }

@@ -103,7 +103,7 @@ Position Notation::toPosition(const std::string& fen) {
 			int castlingFile;
 			int kingFile;
 			int castling = toCastling(character);
-			if (castling == Castling::NOCASTLING) {
+			if (castling == castling::NOCASTLING) {
 				castlingFile = toFile(character);
 				if (castlingFile == File::NOFILE) {
 					throw std::exception();
@@ -117,11 +117,11 @@ Position Notation::toPosition(const std::string& fen) {
 
 				kingFile = Square::getFile(bitboard::next(position.pieces[color][PieceType::KING]));
 				if (castlingFile > kingFile) {
-					castling = Castling::valueOf(color, CastlingType::KINGSIDE);
+					castling = castling::valueOf(color, CastlingType::KINGSIDE);
 				} else {
-					castling = Castling::valueOf(color, CastlingType::QUEENSIDE);
+					castling = castling::valueOf(color, CastlingType::QUEENSIDE);
 				}
-			} else if (Castling::getType(castling) == CastlingType::KINGSIDE) {
+			} else if (castling::getType(castling) == CastlingType::KINGSIDE) {
 				castlingFile = File::h;
 				kingFile = File::e;
 			} else {
@@ -218,17 +218,17 @@ std::string Notation::fromPosition(const Position& position) {
 
 	// Castling
 	std::string castlingNotation;
-	if ((position.castlingRights & Castling::WHITE_KINGSIDE) != Castling::NOCASTLING) {
-		castlingNotation += fromCastling(Castling::WHITE_KINGSIDE);
+	if ((position.castlingRights & castling::WHITE_KINGSIDE) != castling::NOCASTLING) {
+		castlingNotation += fromCastling(castling::WHITE_KINGSIDE);
 	}
-	if ((position.castlingRights & Castling::WHITE_QUEENSIDE) != Castling::NOCASTLING) {
-		castlingNotation += fromCastling(Castling::WHITE_QUEENSIDE);
+	if ((position.castlingRights & castling::WHITE_QUEENSIDE) != castling::NOCASTLING) {
+		castlingNotation += fromCastling(castling::WHITE_QUEENSIDE);
 	}
-	if ((position.castlingRights & Castling::BLACK_KINGSIDE) != Castling::NOCASTLING) {
-		castlingNotation += fromCastling(Castling::BLACK_KINGSIDE);
+	if ((position.castlingRights & castling::BLACK_KINGSIDE) != castling::NOCASTLING) {
+		castlingNotation += fromCastling(castling::BLACK_KINGSIDE);
 	}
-	if ((position.castlingRights & Castling::BLACK_QUEENSIDE) != Castling::NOCASTLING) {
-		castlingNotation += fromCastling(Castling::BLACK_QUEENSIDE);
+	if ((position.castlingRights & castling::BLACK_QUEENSIDE) != castling::NOCASTLING) {
+		castlingNotation += fromCastling(castling::BLACK_QUEENSIDE);
 	}
 	if (castlingNotation.empty()) {
 		fen += '-';
@@ -385,14 +385,14 @@ int Notation::toCastling(char notation) {
 	int castlingtype = toCastlingType(notation);
 
 	if (castlingtype != CastlingType::NOCASTLINGTYPE) {
-		return Castling::valueOf(color, castlingtype);
+		return castling::valueOf(color, castlingtype);
 	} else {
-		return Castling::NOCASTLING;
+		return castling::NOCASTLING;
 	}
 }
 
 char Notation::fromCastling(int castling) {
-	return transform(fromCastlingType(Castling::getType(castling)), Castling::getColor(castling));
+	return transform(fromCastlingType(castling::getType(castling)), castling::getColor(castling));
 }
 
 int Notation::toFile(char notation) {

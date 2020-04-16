@@ -230,7 +230,7 @@ void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, 
 
 	if (Piece::getColor(kingPiece) == Color::WHITE) {
 		// Do not test g1 whether it is attacked as we will test it in isLegal()
-		if ((position.castlingRights & Castling::WHITE_KINGSIDE) != Castling::NOCASTLING
+		if ((position.castlingRights & castling::WHITE_KINGSIDE) != castling::NOCASTLING
 			&& position.board[Square::f1] == Piece::NOPIECE
 			&& position.board[Square::g1] == Piece::NOPIECE
 			&& !position.isAttacked(Square::f1, Color::BLACK)) {
@@ -238,7 +238,7 @@ void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, 
 					MoveType::CASTLING, kingSquare, Square::g1, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
 		}
 		// Do not test c1 whether it is attacked as we will test it in isLegal()
-		if ((position.castlingRights & Castling::WHITE_QUEENSIDE) != Castling::NOCASTLING
+		if ((position.castlingRights & castling::WHITE_QUEENSIDE) != castling::NOCASTLING
 			&& position.board[Square::b1] == Piece::NOPIECE
 			&& position.board[Square::c1] == Piece::NOPIECE
 			&& position.board[Square::d1] == Piece::NOPIECE
@@ -248,7 +248,7 @@ void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, 
 		}
 	} else {
 		// Do not test g8 whether it is attacked as we will test it in isLegal()
-		if ((position.castlingRights & Castling::BLACK_KINGSIDE) != Castling::NOCASTLING
+		if ((position.castlingRights & castling::BLACK_KINGSIDE) != castling::NOCASTLING
 			&& position.board[Square::f8] == Piece::NOPIECE
 			&& position.board[Square::g8] == Piece::NOPIECE
 			&& !position.isAttacked(Square::f8, Color::WHITE)) {
@@ -256,7 +256,7 @@ void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, 
 					MoveType::CASTLING, kingSquare, Square::g8, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
 		}
 		// Do not test c8 whether it is attacked as we will test it in isLegal()
-		if ((position.castlingRights & Castling::BLACK_QUEENSIDE) != Castling::NOCASTLING
+		if ((position.castlingRights & castling::BLACK_QUEENSIDE) != castling::NOCASTLING
 			&& position.board[Square::b8] == Piece::NOPIECE
 			&& position.board[Square::c8] == Piece::NOPIECE
 			&& position.board[Square::d8] == Piece::NOPIECE

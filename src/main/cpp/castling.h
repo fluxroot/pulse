@@ -8,29 +8,20 @@
 
 #include <array>
 
-namespace pulse {
+namespace pulse::castling {
 
-class Castling {
-public:
-	static const int WHITE_KINGSIDE = 1 << 0;
-	static const int WHITE_QUEENSIDE = 1 << 1;
-	static const int BLACK_KINGSIDE = 1 << 2;
-	static const int BLACK_QUEENSIDE = 1 << 3;
+constexpr int WHITE_KINGSIDE = 1 << 0;
+constexpr int WHITE_QUEENSIDE = 1 << 1;
+constexpr int BLACK_KINGSIDE = 1 << 2;
+constexpr int BLACK_QUEENSIDE = 1 << 3;
 
-	static const int NOCASTLING = 0;
+constexpr int NOCASTLING = 0;
 
-	static const int VALUES_LENGTH = 16;
+constexpr int VALUES_LENGTH = 16;
 
-	static int valueOf(int color, int castlingtype);
+int valueOf(int color, int castlingtype);
 
-	static int getType(int castling);
+int getType(int castling);
 
-	static int getColor(int castling);
-
-private:
-	Castling();
-
-	~Castling();
-};
-
+int getColor(int castling);
 }

@@ -21,14 +21,14 @@ Position::Zobrist::Zobrist() {
 		}
 	}
 
-	castlingRights[Castling::WHITE_KINGSIDE] = next();
-	castlingRights[Castling::WHITE_QUEENSIDE] = next();
-	castlingRights[Castling::BLACK_KINGSIDE] = next();
-	castlingRights[Castling::BLACK_QUEENSIDE] = next();
-	castlingRights[Castling::WHITE_KINGSIDE | Castling::WHITE_QUEENSIDE] =
-			castlingRights[Castling::WHITE_KINGSIDE] ^ castlingRights[Castling::WHITE_QUEENSIDE];
-	castlingRights[Castling::BLACK_KINGSIDE | Castling::BLACK_QUEENSIDE] =
-			castlingRights[Castling::BLACK_KINGSIDE] ^ castlingRights[Castling::BLACK_QUEENSIDE];
+	castlingRights[castling::WHITE_KINGSIDE] = next();
+	castlingRights[castling::WHITE_QUEENSIDE] = next();
+	castlingRights[castling::BLACK_KINGSIDE] = next();
+	castlingRights[castling::BLACK_QUEENSIDE] = next();
+	castlingRights[castling::WHITE_KINGSIDE | castling::WHITE_QUEENSIDE] =
+			castlingRights[castling::WHITE_KINGSIDE] ^ castlingRights[castling::WHITE_QUEENSIDE];
+	castlingRights[castling::BLACK_KINGSIDE | castling::BLACK_QUEENSIDE] =
+			castlingRights[castling::BLACK_KINGSIDE] ^ castlingRights[castling::BLACK_QUEENSIDE];
 
 	for (int i = 0; i < Square::VALUES_LENGTH; i++) {
 		enPassantSquare[i] = next();
@@ -128,7 +128,7 @@ void Position::setActiveColor(int activeColor) {
 }
 
 void Position::setCastlingRight(int castling) {
-	if ((castlingRights & castling) == Castling::NOCASTLING) {
+	if ((castlingRights & castling) == castling::NOCASTLING) {
 		castlingRights |= castling;
 		zobristKey ^= zobrist.castlingRights[castling];
 	}
@@ -392,22 +392,22 @@ void Position::clearCastling(int square) {
 
 	switch (square) {
 		case Square::a1:
-			newCastlingRights &= ~Castling::WHITE_QUEENSIDE;
+			newCastlingRights &= ~castling::WHITE_QUEENSIDE;
 			break;
 		case Square::a8:
-			newCastlingRights &= ~Castling::BLACK_QUEENSIDE;
+			newCastlingRights &= ~castling::BLACK_QUEENSIDE;
 			break;
 		case Square::h1:
-			newCastlingRights &= ~Castling::WHITE_KINGSIDE;
+			newCastlingRights &= ~castling::WHITE_KINGSIDE;
 			break;
 		case Square::h8:
-			newCastlingRights &= ~Castling::BLACK_KINGSIDE;
+			newCastlingRights &= ~castling::BLACK_KINGSIDE;
 			break;
 		case Square::e1:
-			newCastlingRights &= ~(Castling::WHITE_KINGSIDE | Castling::WHITE_QUEENSIDE);
+			newCastlingRights &= ~(castling::WHITE_KINGSIDE | castling::WHITE_QUEENSIDE);
 			break;
 		case Square::e8:
-			newCastlingRights &= ~(Castling::BLACK_KINGSIDE | Castling::BLACK_QUEENSIDE);
+			newCastlingRights &= ~(castling::BLACK_KINGSIDE | castling::BLACK_QUEENSIDE);
 			break;
 		default:
 			return;

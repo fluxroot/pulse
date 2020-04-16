@@ -26,7 +26,7 @@ public:
 
 	std::array<int, Color::VALUES_SIZE> material = {};
 
-	int castlingRights = Castling::NOCASTLING;
+	int castlingRights = castling::NOCASTLING;
 	int enPassantSquare = Square::NOSQUARE;
 	int activeColor = Color::WHITE;
 	int halfmoveClock = 0;
@@ -77,7 +77,7 @@ private:
 	class Zobrist {
 	public:
 		std::array<std::array<uint64_t, Square::VALUES_LENGTH>, Piece::VALUES_SIZE> board;
-		std::array<uint64_t, Castling::VALUES_LENGTH> castlingRights;
+		std::array<uint64_t, castling::VALUES_LENGTH> castlingRights;
 		std::array<uint64_t, Square::VALUES_LENGTH> enPassantSquare;
 		uint64_t activeColor;
 
@@ -94,7 +94,7 @@ private:
 	class State {
 	public:
 		uint64_t zobristKey = 0;
-		int castlingRights = Castling::NOCASTLING;
+		int castlingRights = castling::NOCASTLING;
 		int enPassantSquare = Square::NOSQUARE;
 		int halfmoveClock = 0;
 	};

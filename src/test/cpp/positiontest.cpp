@@ -216,7 +216,7 @@ TEST(positiontest, testCastlingMove) {
 			PieceType::NOPIECETYPE);
 	position.makeMove(move);
 
-	EXPECT_EQ(+Castling::NOCASTLING, position.castlingRights & Castling::WHITE_QUEENSIDE);
+	EXPECT_EQ(+castling::NOCASTLING, position.castlingRights & castling::WHITE_QUEENSIDE);
 
 	position.undoMove(move);
 
@@ -230,7 +230,7 @@ TEST(positiontest, testCastlingMove) {
 			PieceType::NOPIECETYPE);
 	position.makeMove(move);
 
-	EXPECT_EQ(+Castling::NOCASTLING, position.castlingRights & Castling::WHITE_KINGSIDE);
+	EXPECT_EQ(+castling::NOCASTLING, position.castlingRights & castling::WHITE_KINGSIDE);
 
 	position.undoMove(move);
 
