@@ -36,7 +36,7 @@ public:
 
 class MoveVariation {
 public:
-	std::array<int, Depth::MAX_PLY> moves;
+	std::array<int, depth::MAX_PLY> moves;
 	int size = 0;
 };
 

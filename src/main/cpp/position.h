@@ -99,7 +99,7 @@ private:
 		int halfmoveClock = 0;
 	};
 
-	static const int MAX_MOVES = Depth::MAX_PLY + 1024;
+	static const int MAX_MOVES = depth::MAX_PLY + 1024;
 
 	int halfmoveNumber = 2;
 

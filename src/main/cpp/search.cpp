@@ -65,7 +65,7 @@ void Search::Semaphore::drainPermits() {
 }
 
 void Search::newDepthSearch(Position& position, int searchDepth) {
-	if (searchDepth < 1 || searchDepth > Depth::MAX_DEPTH) throw std::exception();
+	if (searchDepth < 1 || searchDepth > depth::MAX_DEPTH) throw std::exception();
 	if (running) throw std::exception();
 
 	reset();
@@ -167,7 +167,7 @@ Search::Search(Protocol& protocol)
 }
 
 void Search::reset() {
-	searchDepth = Depth::MAX_DEPTH;
+	searchDepth = depth::MAX_DEPTH;
 	searchNodes = std::numeric_limits<uint64_t>::max();
 	searchTime = 0;
 	runTimer = false;
@@ -399,7 +399,7 @@ int Search::search(int depth, int alpha, int beta, int ply) {
 	updateSearch(ply);
 
 	// Abort conditions
-	if (abort || ply == Depth::MAX_PLY) {
+	if (abort || ply == depth::MAX_PLY) {
 		return evaluation.evaluate(position);
 	}
 
@@ -465,7 +465,7 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 	updateSearch(ply);
 
 	// Abort conditions
-	if (abort || ply == Depth::MAX_PLY) {
+	if (abort || ply == depth::MAX_PLY) {
 		return evaluation.evaluate(position);
 	}
 
