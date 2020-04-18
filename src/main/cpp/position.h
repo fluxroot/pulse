@@ -20,14 +20,14 @@ namespace pulse {
 
 class Position {
 public:
-	std::array<int, Square::VALUES_LENGTH> board;
+	std::array<int, square::VALUES_LENGTH> board;
 
 	std::array<std::array<uint64_t, piecetype::VALUES_SIZE>, color::VALUES_SIZE> pieces = {};
 
 	std::array<int, color::VALUES_SIZE> material = {};
 
 	int castlingRights = castling::NOCASTLING;
-	int enPassantSquare = Square::NOSQUARE;
+	int enPassantSquare = square::NOSQUARE;
 	int activeColor = color::WHITE;
 	int halfmoveClock = 0;
 
@@ -76,9 +76,9 @@ public:
 private:
 	class Zobrist {
 	public:
-		std::array<std::array<uint64_t, Square::VALUES_LENGTH>, piece::VALUES_SIZE> board;
+		std::array<std::array<uint64_t, square::VALUES_LENGTH>, piece::VALUES_SIZE> board;
 		std::array<uint64_t, castling::VALUES_LENGTH> castlingRights;
-		std::array<uint64_t, Square::VALUES_LENGTH> enPassantSquare;
+		std::array<uint64_t, square::VALUES_LENGTH> enPassantSquare;
 		uint64_t activeColor;
 
 		static Zobrist& instance();
@@ -95,7 +95,7 @@ private:
 	public:
 		uint64_t zobristKey = 0;
 		int castlingRights = castling::NOCASTLING;
-		int enPassantSquare = Square::NOSQUARE;
+		int enPassantSquare = square::NOSQUARE;
 		int halfmoveClock = 0;
 	};
 

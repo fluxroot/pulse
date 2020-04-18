@@ -32,7 +32,7 @@ int evaluateMobility(int color, Position& position, int square, const std::vecto
 	for (auto direction : directions) {
 		int targetSquare = square + direction;
 
-		while (Square::isValid(targetSquare)) {
+		while (square::isValid(targetSquare)) {
 			mobility++;
 
 			if (sliding && position.board[targetSquare] == piece::NOPIECE) {
@@ -51,28 +51,28 @@ int evaluateMobility(int color, Position& position) {
 	for (auto squares = position.pieces[color][piecetype::KNIGHT];
 		 squares != 0; squares = bitboard::remainder(squares)) {
 		int square = bitboard::next(squares);
-		knightMobility += evaluateMobility(color, position, square, Square::knightDirections);
+		knightMobility += evaluateMobility(color, position, square, square::knightDirections);
 	}
 
 	int bishopMobility = 0;
 	for (auto squares = position.pieces[color][piecetype::BISHOP];
 		 squares != 0; squares = bitboard::remainder(squares)) {
 		int square = bitboard::next(squares);
-		bishopMobility += evaluateMobility(color, position, square, Square::bishopDirections);
+		bishopMobility += evaluateMobility(color, position, square, square::bishopDirections);
 	}
 
 	int rookMobility = 0;
 	for (auto squares = position.pieces[color][piecetype::ROOK];
 		 squares != 0; squares = bitboard::remainder(squares)) {
 		int square = bitboard::next(squares);
-		rookMobility += evaluateMobility(color, position, square, Square::rookDirections);
+		rookMobility += evaluateMobility(color, position, square, square::rookDirections);
 	}
 
 	int queenMobility = 0;
 	for (auto squares = position.pieces[color][piecetype::QUEEN];
 		 squares != 0; squares = bitboard::remainder(squares)) {
 		int square = bitboard::next(squares);
-		queenMobility += evaluateMobility(color, position, square, Square::queenDirections);
+		queenMobility += evaluateMobility(color, position, square, square::queenDirections);
 	}
 
 	return knightMobility * 4

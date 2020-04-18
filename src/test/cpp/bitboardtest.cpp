@@ -26,8 +26,8 @@ protected:
 		while (pool.size() < 64) {
 			std::uniform_int_distribution<int> distribution(0, 63);
 			int value = distribution(generator);
-			if (std::find(pool.begin(), pool.end(), Square::values[value]) == pool.end()) {
-				pool.push_back(Square::values[value]);
+			if (std::find(pool.begin(), pool.end(), square::values[value]) == pool.end()) {
+				pool.push_back(square::values[value]);
 			}
 		}
 	}
@@ -54,11 +54,11 @@ TEST_F(BitboardTest, shouldRemoveAllSquaresCorrectly) {
 }
 
 TEST(bitboardtest, shouldReturnTheNextSquare) {
-	uint64_t bitboard = bitboard::add(Square::a6, 0);
+	uint64_t bitboard = bitboard::add(square::a6, 0);
 
 	int square = bitboard::next(bitboard);
 
-	EXPECT_EQ(square, +Square::a6);
+	EXPECT_EQ(square, +square::a6);
 }
 
 TEST(bitboardtest, shouldReturnCorrectRemainder) {
@@ -81,7 +81,7 @@ TEST(bitboardtest, testNumberOfTrailingZeros) {
 	uint64_t bitboard = 0;
 	int i = 0;
 
-	for (auto square : Square::values) {
+	for (auto square : square::values) {
 		bitboard = bitboard::add(square, bitboard);
 
 		EXPECT_EQ(i, bitboard::numberOfTrailingZeros(bitboard));

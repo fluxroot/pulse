@@ -16,10 +16,10 @@ using namespace pulse;
 TEST(squaretest, testValues) {
 	for (auto rank : rank::values) {
 		for (auto file : file::values) {
-			int square = Square::valueOf(file, rank);
+			int square = square::valueOf(file, rank);
 
-			EXPECT_EQ(file, Square::getFile(square));
-			EXPECT_EQ(rank, Square::getRank(square));
+			EXPECT_EQ(file, square::getFile(square));
+			EXPECT_EQ(rank, square::getRank(square));
 		}
 	}
 }

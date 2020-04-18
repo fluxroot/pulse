@@ -97,7 +97,7 @@ Position toPosition(const std::string& fen) {
 				throw std::invalid_argument("Illegal file or rank");
 			}
 
-			position.put(piece, Square::valueOf(file, rank));
+			position.put(piece, square::valueOf(file, rank));
 
 			if (file == file::h) {
 				file = file::NOFILE;
@@ -164,7 +164,7 @@ Position toPosition(const std::string& fen) {
 					throw std::exception();
 				}
 
-				kingFile = Square::getFile(bitboard::next(position.pieces[color][piecetype::KING]));
+				kingFile = square::getFile(bitboard::next(position.pieces[color][piecetype::KING]));
 				if (castlingFile > kingFile) {
 					castling = castling::valueOf(color, castlingtype::KINGSIDE);
 				} else {
@@ -197,7 +197,7 @@ Position toPosition(const std::string& fen) {
 			throw std::exception();
 		}
 
-		position.setEnPassantSquare(Square::valueOf(enPassantFile, enPassantRank));
+		position.setEnPassantSquare(square::valueOf(enPassantFile, enPassantRank));
 	}
 
 	// Parse halfmove clock
@@ -236,7 +236,7 @@ std::string fromPosition(const Position& position) {
 		unsigned int emptySquares = 0;
 
 		for (auto file : file::values) {
-			int piece = position.board[Square::valueOf(file, rank)];
+			int piece = position.board[square::valueOf(file, rank)];
 
 			if (piece == piece::NOPIECE) {
 				emptySquares++;
@@ -288,7 +288,7 @@ std::string fromPosition(const Position& position) {
 	fen += ' ';
 
 	// En passant
-	if (position.enPassantSquare != Square::NOSQUARE) {
+	if (position.enPassantSquare != square::NOSQUARE) {
 		fen += fromSquare(position.enPassantSquare);
 	} else {
 		fen += '-';
@@ -527,14 +527,14 @@ int toSquare(const std::string& notation) {
 	if (file != file::NOFILE && rank != rank::NORANK) {
 		return (rank << 4) + file;
 	} else {
-		return Square::NOSQUARE;
+		return square::NOSQUARE;
 	}
 }
 
 std::string fromSquare(int square) {
 	std::string notation;
-	notation += fromFile(Square::getFile(square));
-	notation += fromRank(Square::getRank(square));
+	notation += fromFile(square::getFile(square));
+	notation += fromRank(square::getRank(square));
 
 	return notation;
 }

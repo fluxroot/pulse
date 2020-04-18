@@ -28,9 +28,9 @@ namespace {
 constexpr int TYPE_SHIFT = 0;
 constexpr int TYPE_MASK = movetype::MASK << TYPE_SHIFT;
 constexpr int ORIGIN_SQUARE_SHIFT = 3;
-constexpr int ORIGIN_SQUARE_MASK = Square::MASK << ORIGIN_SQUARE_SHIFT;
+constexpr int ORIGIN_SQUARE_MASK = square::MASK << ORIGIN_SQUARE_SHIFT;
 constexpr int TARGET_SQUARE_SHIFT = 10;
-constexpr int TARGET_SQUARE_MASK = Square::MASK << TARGET_SQUARE_SHIFT;
+constexpr int TARGET_SQUARE_MASK = square::MASK << TARGET_SQUARE_SHIFT;
 constexpr int ORIGIN_PIECE_SHIFT = 17;
 constexpr int ORIGIN_PIECE_MASK = piece::MASK << ORIGIN_PIECE_SHIFT;
 constexpr int TARGET_PIECE_SHIFT = 22;
@@ -41,8 +41,8 @@ constexpr int PROMOTION_MASK = piecetype::MASK << PROMOTION_SHIFT;
 
 // We don't use 0 as a null value to protect against errors.
 constexpr int NOMOVE = (movetype::NOMOVETYPE << TYPE_SHIFT)
-					   | (Square::NOSQUARE << ORIGIN_SQUARE_SHIFT)
-					   | (Square::NOSQUARE << TARGET_SQUARE_SHIFT)
+					   | (square::NOSQUARE << ORIGIN_SQUARE_SHIFT)
+					   | (square::NOSQUARE << TARGET_SQUARE_SHIFT)
 					   | (piece::NOPIECE << ORIGIN_PIECE_SHIFT)
 					   | (piece::NOPIECE << TARGET_PIECE_SHIFT)
 					   | (piecetype::NOPIECETYPE << PROMOTION_SHIFT);
