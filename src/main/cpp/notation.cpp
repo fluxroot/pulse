@@ -38,29 +38,29 @@ Position Notation::toPosition(const std::string& fen) {
 
 	// Parse pieces
 	token = tokens[tokensIndex++];
-	int file = File::a;
+	int file = file::a;
 	int rank = Rank::r8;
 
 	for (auto character : token) {
 		int piece = toPiece(character);
 		if (piece != Piece::NOPIECE) {
-			if (!File::isValid(file) || !Rank::isValid(rank)) {
+			if (!file::isValid(file) || !Rank::isValid(rank)) {
 				throw std::invalid_argument("Illegal file or rank");
 			}
 
 			position.put(piece, Square::valueOf(file, rank));
 
-			if (file == File::h) {
-				file = File::NOFILE;
+			if (file == file::h) {
+				file = file::NOFILE;
 			} else {
 				file++;
 			}
 		} else if (character == '/') {
-			if (file != File::NOFILE || rank == Rank::r1) {
+			if (file != file::NOFILE || rank == Rank::r1) {
 				throw std::invalid_argument("Illegal file or rank");
 			}
 
-			file = File::a;
+			file = file::a;
 			rank--;
 		} else {
 			std::string s = {character};
@@ -70,12 +70,12 @@ Position Notation::toPosition(const std::string& fen) {
 			}
 
 			file += emptySquares - 1;
-			if (!File::isValid(file)) {
+			if (!file::isValid(file)) {
 				throw std::invalid_argument("Illegal number of empty squares");
 			}
 
-			if (file == File::h) {
-				file = File::NOFILE;
+			if (file == file::h) {
+				file = file::NOFILE;
 			} else {
 				file++;
 			}
@@ -105,7 +105,7 @@ Position Notation::toPosition(const std::string& fen) {
 			int castling = toCastling(character);
 			if (castling == castling::NOCASTLING) {
 				castlingFile = toFile(character);
-				if (castlingFile == File::NOFILE) {
+				if (castlingFile == file::NOFILE) {
 					throw std::exception();
 				}
 
@@ -122,11 +122,11 @@ Position Notation::toPosition(const std::string& fen) {
 					castling = castling::valueOf(color, castlingtype::QUEENSIDE);
 				}
 			} else if (castling::getType(castling) == castlingtype::KINGSIDE) {
-				castlingFile = File::h;
-				kingFile = File::e;
+				castlingFile = file::h;
+				kingFile = file::e;
 			} else {
-				castlingFile = File::a;
-				kingFile = File::e;
+				castlingFile = file::a;
+				kingFile = file::e;
 			}
 
 			position.setCastlingRight(castling);
@@ -186,7 +186,7 @@ std::string Notation::fromPosition(const Position& position) {
 		int rank = *iter;
 		unsigned int emptySquares = 0;
 
-		for (auto file : File::values) {
+		for (auto file : file::values) {
 			int piece = position.board[Square::valueOf(file, rank)];
 
 			if (piece == Piece::NOPIECE) {
@@ -399,45 +399,45 @@ int Notation::toFile(char notation) {
 	char lowercaseNotation = std::tolower(notation);
 	switch (lowercaseNotation) {
 		case a_NOTATION:
-			return File::a;
+			return file::a;
 		case b_NOTATION:
-			return File::b;
+			return file::b;
 		case c_NOTATION:
-			return File::c;
+			return file::c;
 		case d_NOTATION:
-			return File::d;
+			return file::d;
 		case e_NOTATION:
-			return File::e;
+			return file::e;
 		case f_NOTATION:
-			return File::f;
+			return file::f;
 		case g_NOTATION:
-			return File::g;
+			return file::g;
 		case h_NOTATION:
-			return File::h;
+			return file::h;
 		default:
-			return File::NOFILE;
+			return file::NOFILE;
 	}
 }
 
 char Notation::fromFile(int file) {
 	switch (file) {
-		case File::a:
+		case file::a:
 			return a_NOTATION;
-		case File::b:
+		case file::b:
 			return b_NOTATION;
-		case File::c:
+		case file::c:
 			return c_NOTATION;
-		case File::d:
+		case file::d:
 			return d_NOTATION;
-		case File::e:
+		case file::e:
 			return e_NOTATION;
-		case File::f:
+		case file::f:
 			return f_NOTATION;
-		case File::g:
+		case file::g:
 			return g_NOTATION;
-		case File::h:
+		case file::h:
 			return h_NOTATION;
-		case File::NOFILE:
+		case file::NOFILE:
 		default:
 			throw std::exception();
 	}
@@ -494,7 +494,7 @@ int Notation::toSquare(const std::string& notation) {
 	int file = toFile(notation[0]);
 	int rank = toRank(notation[1]);
 
-	if (file != File::NOFILE && rank != Rank::NORANK) {
+	if (file != file::NOFILE && rank != Rank::NORANK) {
 		return (rank << 4) + file;
 	} else {
 		return Square::NOSQUARE;

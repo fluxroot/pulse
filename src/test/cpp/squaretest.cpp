@@ -15,7 +15,7 @@ using namespace pulse;
 
 TEST(squaretest, testValues) {
 	for (auto rank : Rank::values) {
-		for (auto file : File::values) {
+		for (auto file : file::values) {
 			int square = Square::valueOf(file, rank);
 
 			EXPECT_EQ(file, Square::getFile(square));

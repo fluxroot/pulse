@@ -12,7 +12,7 @@
 using namespace pulse;
 
 TEST(filetest, testValues) {
-	for (auto file : File::values) {
-		EXPECT_EQ(file, File::values[file]);
+	for (auto file : file::values) {
+		EXPECT_EQ(file, file::values[file]);
 	}
 }

@@ -17,7 +17,7 @@ TEST(notationtest, testStandardPosition) {
 	Position position(Notation::toPosition(Notation::STANDARDPOSITION));
 
 	// Test pawns
-	for (auto file : File::values) {
+	for (auto file : file::values) {
 		EXPECT_EQ(+Piece::WHITE_PAWN, position.board[Square::valueOf(file, Rank::r2)]);
 		EXPECT_EQ(+Piece::BLACK_PAWN, position.board[Square::valueOf(file, Rank::r7)]);
 	}

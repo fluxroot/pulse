@@ -7,13 +7,9 @@
 
 #include "file.h"
 
-namespace pulse {
+namespace pulse::file {
 
-const std::array<int, File::VALUES_SIZE> File::values = {
-		a, b, c, d, e, f, g, h
-};
-
-bool File::isValid(int file) {
+bool isValid(int file) {
 	switch (file) {
 		case a:
 		case b:
@@ -28,5 +24,4 @@ bool File::isValid(int file) {
 			return false;
 	}
 }
-
 }
