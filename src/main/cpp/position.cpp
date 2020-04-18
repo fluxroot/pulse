@@ -246,7 +246,7 @@ void Position::makeMove(int move) {
 	// Remove target piece and update castling rights
 	if (targetPiece != Piece::NOPIECE) {
 		int captureSquare = targetSquare;
-		if (type == MoveType::ENPASSANT) {
+		if (type == movetype::ENPASSANT) {
 			captureSquare += (originColor == color::WHITE ? Square::S : Square::N);
 		}
 		remove(captureSquare);
@@ -256,14 +256,14 @@ void Position::makeMove(int move) {
 
 	// Move piece
 	remove(originSquare);
-	if (type == MoveType::PAWNPROMOTION) {
+	if (type == movetype::PAWNPROMOTION) {
 		put(Piece::valueOf(originColor, move::getPromotion(move)), targetSquare);
 	} else {
 		put(originPiece, targetSquare);
 	}
 
 	// Move rook and update castling rights
-	if (type == MoveType::CASTLING) {
+	if (type == movetype::CASTLING) {
 		int rookOriginSquare;
 		int rookTargetSquare;
 		switch (targetSquare) {
@@ -298,7 +298,7 @@ void Position::makeMove(int move) {
 	if (enPassantSquare != Square::NOSQUARE) {
 		zobristKey ^= zobrist.enPassantSquare[enPassantSquare];
 	}
-	if (type == MoveType::PAWNDOUBLE) {
+	if (type == movetype::PAWNDOUBLE) {
 		enPassantSquare = targetSquare + (originColor == color::WHITE ? Square::S : Square::N);
 		zobristKey ^= zobrist.enPassantSquare[enPassantSquare];
 	} else {
@@ -336,7 +336,7 @@ void Position::undoMove(int move) {
 	activeColor = color::opposite(activeColor);
 
 	// Undo move rook
-	if (type == MoveType::CASTLING) {
+	if (type == movetype::CASTLING) {
 		int rookOriginSquare;
 		int rookTargetSquare;
 		switch (targetSquare) {
@@ -371,7 +371,7 @@ void Position::undoMove(int move) {
 	// Restore target piece
 	if (targetPiece != Piece::NOPIECE) {
 		int captureSquare = targetSquare;
-		if (type == MoveType::ENPASSANT) {
+		if (type == movetype::ENPASSANT) {
 			captureSquare += (originColor == color::WHITE ? Square::S : Square::N);
 		}
 		put(targetPiece, captureSquare);

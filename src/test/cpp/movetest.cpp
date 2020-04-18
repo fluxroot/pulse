@@ -12,10 +12,10 @@
 using namespace pulse;
 
 TEST(movetest, testCreation) {
-	int move = move::valueOf(MoveType::PAWNPROMOTION, Square::a7, Square::b8, Piece::WHITE_PAWN, Piece::BLACK_QUEEN,
+	int move = move::valueOf(movetype::PAWNPROMOTION, Square::a7, Square::b8, Piece::WHITE_PAWN, Piece::BLACK_QUEEN,
 			PieceType::KNIGHT);
 
-	EXPECT_EQ(+MoveType::PAWNPROMOTION, move::getType(move));
+	EXPECT_EQ(+movetype::PAWNPROMOTION, move::getType(move));
 	EXPECT_EQ(+Square::a7, move::getOriginSquare(move));
 	EXPECT_EQ(+Square::b8, move::getTargetSquare(move));
 	EXPECT_EQ(+Piece::WHITE_PAWN, move::getOriginPiece(move));
@@ -24,7 +24,7 @@ TEST(movetest, testCreation) {
 }
 
 TEST(movetest, testPromotion) {
-	int move = move::valueOf(MoveType::PAWNPROMOTION, Square::b7, Square::c8, Piece::WHITE_PAWN, Piece::BLACK_QUEEN,
+	int move = move::valueOf(movetype::PAWNPROMOTION, Square::b7, Square::c8, Piece::WHITE_PAWN, Piece::BLACK_QUEEN,
 			PieceType::KNIGHT);
 
 	EXPECT_EQ(+PieceType::KNIGHT, move::getPromotion(move));

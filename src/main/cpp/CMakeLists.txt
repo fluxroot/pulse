@@ -10,7 +10,6 @@ add_library(core STATIC
         move.cpp
         movegenerator.cpp
         movelist.cpp
-        movetype.cpp
         perft.cpp
         piece.cpp
         piecetype.cpp

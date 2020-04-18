@@ -26,7 +26,7 @@ namespace pulse::move {
 namespace {
 // These are our bit masks
 constexpr int TYPE_SHIFT = 0;
-constexpr int TYPE_MASK = MoveType::MASK << TYPE_SHIFT;
+constexpr int TYPE_MASK = movetype::MASK << TYPE_SHIFT;
 constexpr int ORIGIN_SQUARE_SHIFT = 3;
 constexpr int ORIGIN_SQUARE_MASK = Square::MASK << ORIGIN_SQUARE_SHIFT;
 constexpr int TARGET_SQUARE_SHIFT = 10;
@@ -40,7 +40,7 @@ constexpr int PROMOTION_MASK = PieceType::MASK << PROMOTION_SHIFT;
 }
 
 // We don't use 0 as a null value to protect against errors.
-constexpr int NOMOVE = (MoveType::NOMOVETYPE << TYPE_SHIFT)
+constexpr int NOMOVE = (movetype::NOMOVETYPE << TYPE_SHIFT)
 					   | (Square::NOSQUARE << ORIGIN_SQUARE_SHIFT)
 					   | (Square::NOSQUARE << TARGET_SQUARE_SHIFT)
 					   | (Piece::NOPIECE << ORIGIN_PIECE_SHIFT)
