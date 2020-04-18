@@ -8,9 +8,6 @@
 #include "position.h"
 #include "move.h"
 
-#include <algorithm>
-#include <sstream>
-
 namespace pulse {
 
 // Initialize the zobrist keys

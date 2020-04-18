@@ -6,7 +6,6 @@
  */
 
 #include "bitboard.h"
-#include "square.h"
 
 namespace pulse::bitboard {
 namespace {

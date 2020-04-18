@@ -46,7 +46,5 @@ int toRank(char notation);
 
 char fromRank(int rank);
 
-int toSquare(const std::string& notation);
-
 std::string fromSquare(int square);
 }
