@@ -282,9 +282,9 @@ void Pulse::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uin
 	std::cout << " time " << timeDelta.count();
 	std::cout << " nps " << (timeDelta.count() >= 1000 ? (totalNodes * 1000) / timeDelta.count() : 0);
 
-	if (std::abs(entry.value) >= Value::CHECKMATE_THRESHOLD) {
+	if (std::abs(entry.value) >= value::CHECKMATE_THRESHOLD) {
 		// Calculate mate distance
-		int mateDepth = Value::CHECKMATE - std::abs(entry.value);
+		int mateDepth = value::CHECKMATE - std::abs(entry.value);
 		std::cout << " score mate " << ((entry.value > 0) - (entry.value < 0)) * (mateDepth + 1) / 2;
 	} else {
 		std::cout << " score cp " << entry.value;

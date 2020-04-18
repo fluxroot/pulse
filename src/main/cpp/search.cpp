@@ -263,7 +263,7 @@ void Search::run() {
 			currentMaxDepth = 0;
 			protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
-			searchRoot(currentDepth, -Value::INFINITE, Value::INFINITE);
+			searchRoot(currentDepth, -value::INFINITE, value::INFINITE);
 
 			// Sort the root move list, so that the next iteration begins with the
 			// best move first.
@@ -315,8 +315,8 @@ void Search::checkStopConditions() {
 			} else
 
 				// Check if we have a checkmate
-			if (Value::isCheckmate(rootMoves.entries[0]->value)
-				&& currentDepth >= (Value::CHECKMATE - std::abs(rootMoves.entries[0]->value))) {
+			if (value::isCheckmate(rootMoves.entries[0]->value)
+				&& currentDepth >= (value::CHECKMATE - std::abs(rootMoves.entries[0]->value))) {
 				abort = true;
 			}
 		}
@@ -352,7 +352,7 @@ void Search::searchRoot(int depth, int alpha, int beta) {
 
 	// Reset all values, so the best move is pushed to the front
 	for (int i = 0; i < rootMoves.size; i++) {
-		rootMoves.entries[i]->value = -Value::INFINITE;
+		rootMoves.entries[i]->value = -value::INFINITE;
 	}
 
 	for (int i = 0; i < rootMoves.size; i++) {
@@ -405,11 +405,11 @@ int Search::search(int depth, int alpha, int beta, int ply) {
 
 	// Check insufficient material, repetition and fifty move rule
 	if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
-		return Value::DRAW;
+		return value::DRAW;
 	}
 
 	// Initialize
-	int bestValue = -Value::INFINITE;
+	int bestValue = -value::INFINITE;
 	int searchedMoves = 0;
 	bool isCheck = position.isCheck();
 
@@ -451,10 +451,10 @@ int Search::search(int depth, int alpha, int beta, int ply) {
 	if (searchedMoves == 0) {
 		if (isCheck) {
 			// We have a check mate. This is bad for us, so return a -CHECKMATE.
-			return -Value::CHECKMATE + ply;
+			return -value::CHECKMATE + ply;
 		} else {
 			// We have a stale mate. Return the draw value.
-			return Value::DRAW;
+			return value::DRAW;
 		}
 	}
 
@@ -471,11 +471,11 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 
 	// Check insufficient material, repetition and fifty move rule
 	if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
-		return Value::DRAW;
+		return value::DRAW;
 	}
 
 	// Initialize
-	int bestValue = -Value::INFINITE;
+	int bestValue = -value::INFINITE;
 	int searchedMoves = 0;
 	bool isCheck = position.isCheck();
 
@@ -533,7 +533,7 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 	// If we cannot move, check for checkmate.
 	if (searchedMoves == 0 && isCheck) {
 		// We have a check mate. This is bad for us, so return a -CHECKMATE.
-		return -Value::CHECKMATE + ply;
+		return -value::CHECKMATE + ply;
 	}
 
 	return bestValue;

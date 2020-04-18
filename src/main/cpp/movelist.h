@@ -43,7 +43,7 @@ public:
 class MoveEntry {
 public:
 	int move = move::NOMOVE;
-	int value = Value::NOVALUE;
+	int value = value::NOVALUE;
 };
 
 class RootEntry : public MoveEntry {
