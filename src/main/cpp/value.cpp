@@ -10,11 +10,10 @@
 #include <cstdlib>
 #include <cmath>
 
-namespace pulse {
+namespace pulse::value {
 
-bool Value::isCheckmate(int value) {
+bool isCheckmate(int value) {
 	int absvalue = std::abs(value);
 	return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;
 }
-
 }

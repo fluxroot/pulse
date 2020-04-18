@@ -78,7 +78,7 @@ void Pulse::receiveNewGame() {
 	// We received a new game command.
 
 	// Initialize per-game settings here.
-	*currentPosition = Notation::toPosition(Notation::STANDARDPOSITION);
+	*currentPosition = notation::toPosition(notation::STANDARDPOSITION);
 }
 
 void Pulse::receivePosition(std::istringstream& input) {
@@ -89,7 +89,7 @@ void Pulse::receivePosition(std::istringstream& input) {
 	std::string token;
 	input >> token;
 	if (token == "startpos") {
-		*currentPosition = Notation::toPosition(Notation::STANDARDPOSITION);
+		*currentPosition = notation::toPosition(notation::STANDARDPOSITION);
 
 		if (input >> token) {
 			if (token != "moves") {
@@ -107,7 +107,7 @@ void Pulse::receivePosition(std::istringstream& input) {
 			}
 		}
 
-		*currentPosition = Notation::toPosition(fen);
+		*currentPosition = notation::toPosition(fen);
 	} else {
 		throw std::exception();
 	}
@@ -225,10 +225,10 @@ void Pulse::receiveStop() {
 void Pulse::sendBestMove(int bestMove, int ponderMove) {
 	std::cout << "bestmove ";
 
-	if (bestMove != Move::NOMOVE) {
+	if (bestMove != move::NOMOVE) {
 		std::cout << fromMove(bestMove);
 
-		if (ponderMove != Move::NOMOVE) {
+		if (ponderMove != move::NOMOVE) {
 			std::cout << " ponder " << fromMove(ponderMove);
 		}
 	} else {
@@ -260,7 +260,7 @@ void Pulse::sendStatus(
 		std::cout << " time " << timeDelta.count();
 		std::cout << " nps " << (timeDelta.count() >= 1000 ? (totalNodes * 1000) / timeDelta.count() : 0);
 
-		if (currentMove != Move::NOMOVE) {
+		if (currentMove != move::NOMOVE) {
 			std::cout << " currmove " << fromMove(currentMove);
 			std::cout << " currmovenumber " << currentMoveNumber;
 		}
@@ -282,9 +282,9 @@ void Pulse::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uin
 	std::cout << " time " << timeDelta.count();
 	std::cout << " nps " << (timeDelta.count() >= 1000 ? (totalNodes * 1000) / timeDelta.count() : 0);
 
-	if (std::abs(entry.value) >= Value::CHECKMATE_THRESHOLD) {
+	if (std::abs(entry.value) >= value::CHECKMATE_THRESHOLD) {
 		// Calculate mate distance
-		int mateDepth = Value::CHECKMATE - std::abs(entry.value);
+		int mateDepth = value::CHECKMATE - std::abs(entry.value);
 		std::cout << " score mate " << ((entry.value > 0) - (entry.value < 0)) * (mateDepth + 1) / 2;
 	} else {
 		std::cout << " score cp " << entry.value;
@@ -305,15 +305,14 @@ void Pulse::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uin
 std::string Pulse::fromMove(int move) {
 	std::string notation;
 
-	notation += Notation::fromSquare(Move::getOriginSquare(move));
-	notation += Notation::fromSquare(Move::getTargetSquare(move));
+	notation += notation::fromSquare(move::getOriginSquare(move));
+	notation += notation::fromSquare(move::getTargetSquare(move));
 
-	int promotion = Move::getPromotion(move);
-	if (promotion != PieceType::NOPIECETYPE) {
-		notation += std::tolower(Notation::fromPieceType(promotion));
+	int promotion = move::getPromotion(move);
+	if (promotion != piecetype::NOPIECETYPE) {
+		notation += std::tolower(notation::fromPieceType(promotion));
 	}
 
 	return notation;
 }
-
 }

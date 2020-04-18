@@ -6,17 +6,8 @@
  */
 #pragma once
 
-namespace pulse {
+namespace pulse::depth {
 
-class Depth {
-public:
-	static const int MAX_PLY = 256;
-	static const int MAX_DEPTH = 64;
-
-private:
-	Depth();
-
-	~Depth();
-};
-
+constexpr int MAX_PLY = 256;
+constexpr int MAX_DEPTH = 64;
 }

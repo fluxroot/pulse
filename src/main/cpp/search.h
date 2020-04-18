@@ -108,11 +108,10 @@ private:
 	bool shutdown = false;
 
 	Position position;
-	Evaluation evaluation;
 
 	// We will store a MoveGenerator for each ply so we don't have to create them
 	// in search. (which is expensive)
-	std::array<MoveGenerator, Depth::MAX_PLY> moveGenerators;
+	std::array<MoveGenerator, depth::MAX_PLY> moveGenerators;
 
 	// Depth search
 	int searchDepth;
@@ -136,7 +135,7 @@ private:
 	int currentMaxDepth;
 	int currentMove;
 	int currentMoveNumber;
-	std::array<MoveVariation, Depth::MAX_PLY + 1> pv;
+	std::array<MoveVariation, depth::MAX_PLY + 1> pv;
 
 	void checkStopConditions();
 
@@ -150,5 +149,4 @@ private:
 
 	void savePV(int move, MoveVariation& src, MoveVariation& dest);
 };
-
 }

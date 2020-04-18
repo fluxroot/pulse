@@ -8,23 +8,14 @@
 
 #include "depth.h"
 
-namespace pulse {
+namespace pulse::value {
 
-class Value {
-public:
-	static const int INFINITE = 200000;
-	static const int CHECKMATE = 100000;
-	static const int CHECKMATE_THRESHOLD = CHECKMATE - Depth::MAX_PLY;
-	static const int DRAW = 0;
+constexpr int INFINITE = 200000;
+constexpr int CHECKMATE = 100000;
+constexpr int CHECKMATE_THRESHOLD = CHECKMATE - depth::MAX_PLY;
+constexpr int DRAW = 0;
 
-	static const int NOVALUE = 300000;
+constexpr int NOVALUE = 300000;
 
-	static bool isCheckmate(int value);
-
-private:
-	Value();
-
-	~Value();
-};
-
+bool isCheckmate(int value);
 }

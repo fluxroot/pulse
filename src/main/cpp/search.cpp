@@ -65,7 +65,7 @@ void Search::Semaphore::drainPermits() {
 }
 
 void Search::newDepthSearch(Position& position, int searchDepth) {
-	if (searchDepth < 1 || searchDepth > Depth::MAX_DEPTH) throw std::exception();
+	if (searchDepth < 1 || searchDepth > depth::MAX_DEPTH) throw std::exception();
 	if (running) throw std::exception();
 
 	reset();
@@ -129,7 +129,7 @@ void Search::newPonderSearch(Position& position,
 
 	uint64_t timeLeft;
 	uint64_t timeIncrement;
-	if (position.activeColor == Color::WHITE) {
+	if (position.activeColor == color::WHITE) {
 		timeLeft = whiteTimeLeft;
 		timeIncrement = whiteTimeIncrement;
 	} else {
@@ -167,7 +167,7 @@ Search::Search(Protocol& protocol)
 }
 
 void Search::reset() {
-	searchDepth = Depth::MAX_DEPTH;
+	searchDepth = depth::MAX_DEPTH;
 	searchNodes = std::numeric_limits<uint64_t>::max();
 	searchTime = 0;
 	runTimer = false;
@@ -178,7 +178,7 @@ void Search::reset() {
 	totalNodes = 0;
 	currentDepth = initialDepth;
 	currentMaxDepth = 0;
-	currentMove = Move::NOMOVE;
+	currentMove = move::NOMOVE;
 	currentMoveNumber = 0;
 }
 
@@ -263,7 +263,7 @@ void Search::run() {
 			currentMaxDepth = 0;
 			protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
-			searchRoot(currentDepth, -Value::INFINITE, Value::INFINITE);
+			searchRoot(currentDepth, -value::INFINITE, value::INFINITE);
 
 			// Sort the root move list, so that the next iteration begins with the
 			// best move first.
@@ -285,8 +285,8 @@ void Search::run() {
 		protocol.sendStatus(true, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
 		// Send the best move and ponder move
-		int bestMove = Move::NOMOVE;
-		int ponderMove = Move::NOMOVE;
+		int bestMove = move::NOMOVE;
+		int ponderMove = move::NOMOVE;
 		if (rootMoves.size > 0) {
 			bestMove = rootMoves.entries[0]->move;
 			if (rootMoves.entries[0]->pv.size >= 2) {
@@ -315,8 +315,8 @@ void Search::checkStopConditions() {
 			} else
 
 				// Check if we have a checkmate
-			if (Value::isCheckmate(rootMoves.entries[0]->value)
-				&& currentDepth >= (Value::CHECKMATE - std::abs(rootMoves.entries[0]->value))) {
+			if (value::isCheckmate(rootMoves.entries[0]->value)
+				&& currentDepth >= (value::CHECKMATE - std::abs(rootMoves.entries[0]->value))) {
 				abort = true;
 			}
 		}
@@ -352,7 +352,7 @@ void Search::searchRoot(int depth, int alpha, int beta) {
 
 	// Reset all values, so the best move is pushed to the front
 	for (int i = 0; i < rootMoves.size; i++) {
-		rootMoves.entries[i]->value = -Value::INFINITE;
+		rootMoves.entries[i]->value = -value::INFINITE;
 	}
 
 	for (int i = 0; i < rootMoves.size; i++) {
@@ -399,17 +399,17 @@ int Search::search(int depth, int alpha, int beta, int ply) {
 	updateSearch(ply);
 
 	// Abort conditions
-	if (abort || ply == Depth::MAX_PLY) {
-		return evaluation.evaluate(position);
+	if (abort || ply == depth::MAX_PLY) {
+		return evaluation::evaluate(position);
 	}
 
 	// Check insufficient material, repetition and fifty move rule
 	if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
-		return Value::DRAW;
+		return value::DRAW;
 	}
 
 	// Initialize
-	int bestValue = -Value::INFINITE;
+	int bestValue = -value::INFINITE;
 	int searchedMoves = 0;
 	bool isCheck = position.isCheck();
 
@@ -419,7 +419,7 @@ int Search::search(int depth, int alpha, int beta, int ply) {
 		int value = bestValue;
 
 		position.makeMove(move);
-		if (!position.isCheck(Color::opposite(position.activeColor))) {
+		if (!position.isCheck(color::opposite(position.activeColor))) {
 			searchedMoves++;
 			value = -search(depth - 1, -beta, -alpha, ply + 1);
 		}
@@ -451,10 +451,10 @@ int Search::search(int depth, int alpha, int beta, int ply) {
 	if (searchedMoves == 0) {
 		if (isCheck) {
 			// We have a check mate. This is bad for us, so return a -CHECKMATE.
-			return -Value::CHECKMATE + ply;
+			return -value::CHECKMATE + ply;
 		} else {
 			// We have a stale mate. Return the draw value.
-			return Value::DRAW;
+			return value::DRAW;
 		}
 	}
 
@@ -465,23 +465,23 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 	updateSearch(ply);
 
 	// Abort conditions
-	if (abort || ply == Depth::MAX_PLY) {
-		return evaluation.evaluate(position);
+	if (abort || ply == depth::MAX_PLY) {
+		return evaluation::evaluate(position);
 	}
 
 	// Check insufficient material, repetition and fifty move rule
 	if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
-		return Value::DRAW;
+		return value::DRAW;
 	}
 
 	// Initialize
-	int bestValue = -Value::INFINITE;
+	int bestValue = -value::INFINITE;
 	int searchedMoves = 0;
 	bool isCheck = position.isCheck();
 
 	//### BEGIN Stand pat
 	if (!isCheck) {
-		bestValue = evaluation.evaluate(position);
+		bestValue = evaluation::evaluate(position);
 
 		// Do we have a better value?
 		if (bestValue > alpha) {
@@ -502,7 +502,7 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 		int value = bestValue;
 
 		position.makeMove(move);
-		if (!position.isCheck(Color::opposite(position.activeColor))) {
+		if (!position.isCheck(color::opposite(position.activeColor))) {
 			searchedMoves++;
 			value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
 		}
@@ -533,7 +533,7 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 	// If we cannot move, check for checkmate.
 	if (searchedMoves == 0 && isCheck) {
 		// We have a check mate. This is bad for us, so return a -CHECKMATE.
-		return -Value::CHECKMATE + ply;
+		return -value::CHECKMATE + ply;
 	}
 
 	return bestValue;
@@ -546,5 +546,4 @@ void Search::savePV(int move, MoveVariation& src, MoveVariation& dest) {
 	}
 	dest.size = src.size + 1;
 }
-
 }

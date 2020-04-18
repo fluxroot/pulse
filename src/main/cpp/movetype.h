@@ -6,24 +6,15 @@
  */
 #pragma once
 
-namespace pulse {
+namespace pulse::movetype {
 
-class MoveType {
-public:
-	static const int MASK = 0x7;
+constexpr int MASK = 0x7;
 
-	static const int NORMAL = 0;
-	static const int PAWNDOUBLE = 1;
-	static const int PAWNPROMOTION = 2;
-	static const int ENPASSANT = 3;
-	static const int CASTLING = 4;
+constexpr int NORMAL = 0;
+constexpr int PAWNDOUBLE = 1;
+constexpr int PAWNPROMOTION = 2;
+constexpr int ENPASSANT = 3;
+constexpr int CASTLING = 4;
 
-	static const int NOMOVETYPE = 5;
-
-private:
-	MoveType();
-
-	~MoveType();
-};
-
+constexpr int NOMOVETYPE = 5;
 }

@@ -12,7 +12,7 @@
 using namespace pulse;
 
 TEST(ranktest, testValues) {
-	for (auto rank : Rank::values) {
-		EXPECT_EQ(rank, Rank::values[rank]);
+	for (auto rank : rank::values) {
+		EXPECT_EQ(rank, rank::values[rank]);
 	}
 }

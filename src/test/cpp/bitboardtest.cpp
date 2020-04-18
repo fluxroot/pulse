@@ -26,8 +26,8 @@ protected:
 		while (pool.size() < 64) {
 			std::uniform_int_distribution<int> distribution(0, 63);
 			int value = distribution(generator);
-			if (std::find(pool.begin(), pool.end(), Square::values[value]) == pool.end()) {
-				pool.push_back(Square::values[value]);
+			if (std::find(pool.begin(), pool.end(), square::values[value]) == pool.end()) {
+				pool.push_back(square::values[value]);
 			}
 		}
 	}
@@ -37,7 +37,7 @@ TEST_F(BitboardTest, shouldAddAllSquaresCorrectly) {
 	uint64_t bitboard = 0;
 
 	for (auto x88square : pool) {
-		bitboard = Bitboard::add(x88square, bitboard);
+		bitboard = bitboard::add(x88square, bitboard);
 	}
 
 	EXPECT_EQ(bitboard, std::numeric_limits<uint64_t>::max());
@@ -47,24 +47,24 @@ TEST_F(BitboardTest, shouldRemoveAllSquaresCorrectly) {
 	uint64_t bitboard = std::numeric_limits<uint64_t>::max();
 
 	for (auto x88square : pool) {
-		bitboard = Bitboard::remove(x88square, bitboard);
+		bitboard = bitboard::remove(x88square, bitboard);
 	}
 
 	EXPECT_EQ(bitboard, 0);
 }
 
 TEST(bitboardtest, shouldReturnTheNextSquare) {
-	uint64_t bitboard = Bitboard::add(Square::a6, 0);
+	uint64_t bitboard = bitboard::add(square::a6, 0);
 
-	int square = Bitboard::next(bitboard);
+	int square = bitboard::next(bitboard);
 
-	EXPECT_EQ(square, +Square::a6);
+	EXPECT_EQ(square, +square::a6);
 }
 
 TEST(bitboardtest, shouldReturnCorrectRemainder) {
 	uint64_t bitboard = 0b1110100;
 
-	uint64_t remainder = Bitboard::remainder(bitboard);
+	uint64_t remainder = bitboard::remainder(bitboard);
 
 	EXPECT_EQ(remainder, 0b1110000);
 }
@@ -72,7 +72,7 @@ TEST(bitboardtest, shouldReturnCorrectRemainder) {
 TEST(bitboardtest, shouldReturnCorrectSize) {
 	uint64_t bitboard = 0b111;
 
-	int size = Bitboard::size(bitboard);
+	int size = bitboard::size(bitboard);
 
 	EXPECT_EQ(size, 3);
 }
@@ -81,12 +81,12 @@ TEST(bitboardtest, testNumberOfTrailingZeros) {
 	uint64_t bitboard = 0;
 	int i = 0;
 
-	for (auto square : Square::values) {
-		bitboard = Bitboard::add(square, bitboard);
+	for (auto square : square::values) {
+		bitboard = bitboard::add(square, bitboard);
 
-		EXPECT_EQ(i, Bitboard::numberOfTrailingZeros(bitboard));
+		EXPECT_EQ(i, bitboard::numberOfTrailingZeros(bitboard));
 
-		bitboard = Bitboard::remove(square, bitboard);
+		bitboard = bitboard::remove(square, bitboard);
 		i++;
 	}
 }
@@ -110,6 +110,6 @@ TEST(bitboardtest, testBitCount) {
 			}
 		}
 
-		EXPECT_EQ(count, Bitboard::bitCount(bitboard));
+		EXPECT_EQ(count, bitboard::bitCount(bitboard));
 	}
 }

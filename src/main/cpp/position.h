@@ -20,15 +20,15 @@ namespace pulse {
 
 class Position {
 public:
-	std::array<int, Square::VALUES_LENGTH> board;
+	std::array<int, square::VALUES_LENGTH> board;
 
-	std::array<std::array<uint64_t, PieceType::VALUES_SIZE>, Color::VALUES_SIZE> pieces = {};
+	std::array<std::array<uint64_t, piecetype::VALUES_SIZE>, color::VALUES_SIZE> pieces = {};
 
-	std::array<int, Color::VALUES_SIZE> material = {};
+	std::array<int, color::VALUES_SIZE> material = {};
 
-	int castlingRights = Castling::NOCASTLING;
-	int enPassantSquare = Square::NOSQUARE;
-	int activeColor = Color::WHITE;
+	int castlingRights = castling::NOCASTLING;
+	int enPassantSquare = square::NOSQUARE;
+	int activeColor = color::WHITE;
 	int halfmoveClock = 0;
 
 	uint64_t zobristKey = 0;
@@ -76,9 +76,9 @@ public:
 private:
 	class Zobrist {
 	public:
-		std::array<std::array<uint64_t, Square::VALUES_LENGTH>, Piece::VALUES_SIZE> board;
-		std::array<uint64_t, Castling::VALUES_LENGTH> castlingRights;
-		std::array<uint64_t, Square::VALUES_LENGTH> enPassantSquare;
+		std::array<std::array<uint64_t, square::VALUES_LENGTH>, piece::VALUES_SIZE> board;
+		std::array<uint64_t, castling::VALUES_LENGTH> castlingRights;
+		std::array<uint64_t, square::VALUES_LENGTH> enPassantSquare;
 		uint64_t activeColor;
 
 		static Zobrist& instance();
@@ -94,12 +94,12 @@ private:
 	class State {
 	public:
 		uint64_t zobristKey = 0;
-		int castlingRights = Castling::NOCASTLING;
-		int enPassantSquare = Square::NOSQUARE;
+		int castlingRights = castling::NOCASTLING;
+		int enPassantSquare = square::NOSQUARE;
 		int halfmoveClock = 0;
 	};
 
-	static const int MAX_MOVES = Depth::MAX_PLY + 1024;
+	static const int MAX_MOVES = depth::MAX_PLY + 1024;
 
 	int halfmoveNumber = 2;
 
@@ -116,5 +116,4 @@ private:
 
 	bool isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& directions);
 };
-
 }

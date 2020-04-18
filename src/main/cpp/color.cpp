@@ -7,13 +7,9 @@
 
 #include "color.h"
 
-namespace pulse {
+namespace pulse::color {
 
-const std::array<int, Color::VALUES_SIZE> Color::values = {
-		WHITE, BLACK
-};
-
-int Color::opposite(int color) {
+int opposite(int color) {
 	switch (color) {
 		case WHITE:
 			return BLACK;
@@ -23,5 +19,4 @@ int Color::opposite(int color) {
 			throw std::exception();
 	}
 }
-
 }

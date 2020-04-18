@@ -218,7 +218,7 @@ uint64_t miniMax(int depth, Position& position, int ply) {
 		int move = moves.entries[i]->move;
 
 		position.makeMove(move);
-		if (!position.isCheck(Color::opposite(position.activeColor))) {
+		if (!position.isCheck(color::opposite(position.activeColor))) {
 			totalNodes += miniMax(depth - 1, position, ply + 1);
 		}
 		position.undoMove(move);
@@ -234,11 +234,11 @@ TEST(movegeneratortest, testPerft) {
 				int depth = p.perftEntries[i].depth;
 				uint64_t nodes = p.perftEntries[i].nodes;
 
-				Position position(Notation::toPosition(p.fen));
+				Position position(notation::toPosition(p.fen));
 
 				uint64_t result = miniMax(depth, position, 0);
 				EXPECT_EQ(nodes, result)
-									<< Notation::fromPosition(position) << ", depth " << i
+									<< notation::fromPosition(position) << ", depth " << i
 									<< ": expected " << nodes
 									<< ", actual " << result;
 			}

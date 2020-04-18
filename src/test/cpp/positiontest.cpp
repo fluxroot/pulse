@@ -14,8 +14,8 @@ using namespace pulse;
 
 TEST(positiontest, testEquals) {
 	// Standard position test
-	Position position1(Notation::toPosition(Notation::STANDARDPOSITION));
-	Position position2(Notation::toPosition(Notation::STANDARDPOSITION));
+	Position position1(notation::toPosition(notation::STANDARDPOSITION));
+	Position position2(notation::toPosition(notation::STANDARDPOSITION));
 
 	// reflexive test
 	EXPECT_EQ(position1, position1);
@@ -25,14 +25,14 @@ TEST(positiontest, testEquals) {
 	EXPECT_EQ(position2, position1);
 
 	// FEN test
-	Position position3(Notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
+	Position position3(notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
 	EXPECT_EQ(position1, position3);
 
-	Position position4(Notation::toPosition("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"));
-	Position position5(Notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1"));
-	Position position6(Notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQ - 0 1"));
-	Position position7(Notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1 1"));
-	Position position8(Notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 2"));
+	Position position4(notation::toPosition("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"));
+	Position position5(notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1"));
+	Position position6(notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQ - 0 1"));
+	Position position7(notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1 1"));
+	Position position8(notation::toPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 2"));
 
 	EXPECT_NE(position1, position4);
 	EXPECT_NE(position1, position5);
@@ -44,196 +44,196 @@ TEST(positiontest, testEquals) {
 TEST(positiontest, testToString) {
 	std::string fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
-	Position position(Notation::toPosition(fen));
+	Position position(notation::toPosition(fen));
 
-	EXPECT_EQ(fen, Notation::fromPosition(position));
+	EXPECT_EQ(fen, notation::fromPosition(position));
 }
 
 TEST(positiontest, testActiveColor) {
-	Position position(Notation::toPosition(Notation::STANDARDPOSITION));
+	Position position(notation::toPosition(notation::STANDARDPOSITION));
 
 	// Move white pawn
-	int move = Move::valueOf(MoveType::NORMAL, Square::a2, Square::a3, Piece::WHITE_PAWN, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	int move = move::valueOf(movetype::NORMAL, square::a2, square::a3, piece::WHITE_PAWN, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
-	EXPECT_EQ(+Color::BLACK, position.activeColor);
+	EXPECT_EQ(+color::BLACK, position.activeColor);
 
 	// Move black pawn
-	move = Move::valueOf(MoveType::NORMAL, Square::b7, Square::b6, Piece::BLACK_PAWN, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	move = move::valueOf(movetype::NORMAL, square::b7, square::b6, piece::BLACK_PAWN, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
-	EXPECT_EQ(+Color::WHITE, position.activeColor);
+	EXPECT_EQ(+color::WHITE, position.activeColor);
 }
 
 TEST(positiontest, testHalfMoveClock) {
-	Position position(Notation::toPosition(Notation::STANDARDPOSITION));
+	Position position(notation::toPosition(notation::STANDARDPOSITION));
 
 	// Move white pawn
-	int move = Move::valueOf(MoveType::NORMAL, Square::a2, Square::a3, Piece::WHITE_PAWN, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	int move = move::valueOf(movetype::NORMAL, square::a2, square::a3, piece::WHITE_PAWN, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 	EXPECT_EQ(0, position.halfmoveClock);
 
 	// Move black pawn
-	move = Move::valueOf(MoveType::NORMAL, Square::b7, Square::b6, Piece::BLACK_PAWN, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	move = move::valueOf(movetype::NORMAL, square::b7, square::b6, piece::BLACK_PAWN, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
 	// Move white knight
-	move = Move::valueOf(MoveType::NORMAL, Square::b1, Square::c3, Piece::WHITE_KNIGHT, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	move = move::valueOf(movetype::NORMAL, square::b1, square::c3, piece::WHITE_KNIGHT, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 	EXPECT_EQ(1, position.halfmoveClock);
 }
 
 TEST(positiontest, testFullMoveNumber) {
-	Position position(Notation::toPosition(Notation::STANDARDPOSITION));
+	Position position(notation::toPosition(notation::STANDARDPOSITION));
 
 	// Move white pawn
-	int move = Move::valueOf(MoveType::NORMAL, Square::a2, Square::a3, Piece::WHITE_PAWN, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	int move = move::valueOf(movetype::NORMAL, square::a2, square::a3, piece::WHITE_PAWN, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 	EXPECT_EQ(1, position.getFullmoveNumber());
 
 	// Move black pawn
-	move = Move::valueOf(MoveType::NORMAL, Square::b7, Square::b6, Piece::BLACK_PAWN, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	move = move::valueOf(movetype::NORMAL, square::b7, square::b6, piece::BLACK_PAWN, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 	EXPECT_EQ(2, position.getFullmoveNumber());
 }
 
 TEST(positiontest, testIsRepetition) {
-	Position position(Notation::toPosition(Notation::STANDARDPOSITION));
+	Position position(notation::toPosition(notation::STANDARDPOSITION));
 
 	// Move white knight
-	int move = Move::valueOf(MoveType::NORMAL, Square::b1, Square::c3, Piece::WHITE_KNIGHT, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	int move = move::valueOf(movetype::NORMAL, square::b1, square::c3, piece::WHITE_KNIGHT, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
 	// Move black knight
-	move = Move::valueOf(MoveType::NORMAL, Square::b8, Square::c6, Piece::BLACK_KNIGHT, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	move = move::valueOf(movetype::NORMAL, square::b8, square::c6, piece::BLACK_KNIGHT, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
 	// Move white knight
-	move = Move::valueOf(MoveType::NORMAL, Square::g1, Square::f3, Piece::WHITE_KNIGHT, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	move = move::valueOf(movetype::NORMAL, square::g1, square::f3, piece::WHITE_KNIGHT, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
 	// Move black knight
-	move = Move::valueOf(MoveType::NORMAL, Square::c6, Square::b8, Piece::BLACK_KNIGHT, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	move = move::valueOf(movetype::NORMAL, square::c6, square::b8, piece::BLACK_KNIGHT, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
 	// Move white knight
-	move = Move::valueOf(MoveType::NORMAL, Square::f3, Square::g1, Piece::WHITE_KNIGHT, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	move = move::valueOf(movetype::NORMAL, square::f3, square::g1, piece::WHITE_KNIGHT, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
 	EXPECT_TRUE(position.isRepetition());
 }
 
 TEST(positiontest, testHasInsufficientMaterial) {
-	Position position(Notation::toPosition("8/4k3/8/8/8/8/2K5/8 w - - 0 1"));
+	Position position(notation::toPosition("8/4k3/8/8/8/8/2K5/8 w - - 0 1"));
 	EXPECT_TRUE(position.hasInsufficientMaterial());
 
-	position = Notation::toPosition("8/4k3/8/2B5/8/8/2K5/8 b - - 0 1");
+	position = notation::toPosition("8/4k3/8/2B5/8/8/2K5/8 b - - 0 1");
 	EXPECT_TRUE(position.hasInsufficientMaterial());
 
-	position = Notation::toPosition("8/4k3/8/2B3n1/8/8/2K5/8 b - - 0 1");
+	position = notation::toPosition("8/4k3/8/2B3n1/8/8/2K5/8 b - - 0 1");
 	EXPECT_TRUE(position.hasInsufficientMaterial());
 }
 
 TEST(positiontest, testNormalMove) {
-	Position position(Notation::toPosition(Notation::STANDARDPOSITION));
+	Position position(notation::toPosition(notation::STANDARDPOSITION));
 	uint64_t zobristKey = position.zobristKey;
 
-	int move = Move::valueOf(MoveType::NORMAL, Square::a2, Square::a3, Piece::WHITE_PAWN, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	int move = move::valueOf(movetype::NORMAL, square::a2, square::a3, piece::WHITE_PAWN, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 	position.undoMove(move);
 
-	EXPECT_EQ(Notation::STANDARDPOSITION, Notation::fromPosition(position));
+	EXPECT_EQ(notation::STANDARDPOSITION, notation::fromPosition(position));
 	EXPECT_EQ(zobristKey, position.zobristKey);
 }
 
 TEST(positiontest, testPawnDoubleMove) {
-	Position position(Notation::toPosition(Notation::STANDARDPOSITION));
+	Position position(notation::toPosition(notation::STANDARDPOSITION));
 	uint64_t zobristKey = position.zobristKey;
 
-	int move = Move::valueOf(MoveType::PAWNDOUBLE, Square::a2, Square::a4, Piece::WHITE_PAWN, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	int move = move::valueOf(movetype::PAWNDOUBLE, square::a2, square::a4, piece::WHITE_PAWN, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
-	EXPECT_EQ(+Square::a3, position.enPassantSquare);
+	EXPECT_EQ(+square::a3, position.enPassantSquare);
 
 	position.undoMove(move);
 
-	EXPECT_EQ(Notation::STANDARDPOSITION, Notation::fromPosition(position));
+	EXPECT_EQ(notation::STANDARDPOSITION, notation::fromPosition(position));
 	EXPECT_EQ(zobristKey, position.zobristKey);
 }
 
 TEST(positiontest, testPawnPromotionMove) {
-	Position position(Notation::toPosition("8/P5k1/8/8/2K5/8/8/8 w - - 0 1"));
+	Position position(notation::toPosition("8/P5k1/8/8/2K5/8/8/8 w - - 0 1"));
 	uint64_t zobristKey = position.zobristKey;
 
-	int move = Move::valueOf(MoveType::PAWNPROMOTION, Square::a7, Square::a8, Piece::WHITE_PAWN, Piece::NOPIECE,
-			PieceType::QUEEN);
+	int move = move::valueOf(movetype::PAWNPROMOTION, square::a7, square::a8, piece::WHITE_PAWN, piece::NOPIECE,
+			piecetype::QUEEN);
 	position.makeMove(move);
 
-	EXPECT_EQ(+Piece::WHITE_QUEEN, position.board[Square::a8]);
+	EXPECT_EQ(+piece::WHITE_QUEEN, position.board[square::a8]);
 
 	position.undoMove(move);
 
-	EXPECT_EQ("8/P5k1/8/8/2K5/8/8/8 w - - 0 1", Notation::fromPosition(position));
+	EXPECT_EQ("8/P5k1/8/8/2K5/8/8/8 w - - 0 1", notation::fromPosition(position));
 	EXPECT_EQ(zobristKey, position.zobristKey);
 }
 
 TEST(positiontest, testEnPassantMove) {
-	Position position(Notation::toPosition("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1"));
+	Position position(notation::toPosition("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1"));
 	uint64_t zobristKey = position.zobristKey;
 
 	// Make en passant move
-	int move = Move::valueOf(MoveType::ENPASSANT, Square::e4, Square::d3, Piece::BLACK_PAWN, Piece::WHITE_PAWN,
-			PieceType::NOPIECETYPE);
+	int move = move::valueOf(movetype::ENPASSANT, square::e4, square::d3, piece::BLACK_PAWN, piece::WHITE_PAWN,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
-	EXPECT_EQ(+Piece::NOPIECE, position.board[Square::d4]);
-	EXPECT_EQ(+Piece::BLACK_PAWN, position.board[Square::d3]);
-	EXPECT_EQ(+Square::NOSQUARE, position.enPassantSquare);
+	EXPECT_EQ(+piece::NOPIECE, position.board[square::d4]);
+	EXPECT_EQ(+piece::BLACK_PAWN, position.board[square::d3]);
+	EXPECT_EQ(+square::NOSQUARE, position.enPassantSquare);
 
 	position.undoMove(move);
 
-	EXPECT_EQ("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1", Notation::fromPosition(position));
+	EXPECT_EQ("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1", notation::fromPosition(position));
 	EXPECT_EQ(zobristKey, position.zobristKey);
 }
 
 TEST(positiontest, testCastlingMove) {
-	Position position(Notation::toPosition("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1"));
+	Position position(notation::toPosition("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1"));
 	uint64_t zobristKey = position.zobristKey;
 
-	int move = Move::valueOf(MoveType::CASTLING, Square::e1, Square::c1, Piece::WHITE_KING, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	int move = move::valueOf(movetype::CASTLING, square::e1, square::c1, piece::WHITE_KING, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
-	EXPECT_EQ(+Castling::NOCASTLING, position.castlingRights & Castling::WHITE_QUEENSIDE);
+	EXPECT_EQ(+castling::NOCASTLING, position.castlingRights & castling::WHITE_QUEENSIDE);
 
 	position.undoMove(move);
 
-	EXPECT_EQ("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", Notation::fromPosition(position));
+	EXPECT_EQ("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", notation::fromPosition(position));
 	EXPECT_EQ(zobristKey, position.zobristKey);
 
-	position = Notation::toPosition("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
+	position = notation::toPosition("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
 	zobristKey = position.zobristKey;
 
-	move = Move::valueOf(MoveType::CASTLING, Square::e1, Square::g1, Piece::WHITE_KING, Piece::NOPIECE,
-			PieceType::NOPIECETYPE);
+	move = move::valueOf(movetype::CASTLING, square::e1, square::g1, piece::WHITE_KING, piece::NOPIECE,
+			piecetype::NOPIECETYPE);
 	position.makeMove(move);
 
-	EXPECT_EQ(+Castling::NOCASTLING, position.castlingRights & Castling::WHITE_KINGSIDE);
+	EXPECT_EQ(+castling::NOCASTLING, position.castlingRights & castling::WHITE_KINGSIDE);
 
 	position.undoMove(move);
 
-	EXPECT_EQ("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", Notation::fromPosition(position));
+	EXPECT_EQ("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", notation::fromPosition(position));
 	EXPECT_EQ(zobristKey, position.zobristKey);
 }

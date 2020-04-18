@@ -3,7 +3,6 @@ project(main)
 add_library(core STATIC
         bitboard.cpp
         castling.cpp
-        castlingtype.cpp
         color.cpp
         evaluation.cpp
         notation.cpp
@@ -11,7 +10,6 @@ add_library(core STATIC
         move.cpp
         movegenerator.cpp
         movelist.cpp
-        movetype.cpp
         perft.cpp
         piece.cpp
         piecetype.cpp

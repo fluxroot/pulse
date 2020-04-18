@@ -12,26 +12,26 @@
 using namespace pulse;
 
 TEST(piecetypetest, testValues) {
-	for (auto piecetype : PieceType::values) {
-		EXPECT_EQ(piecetype, PieceType::values[piecetype]);
+	for (auto piecetype : piecetype::values) {
+		EXPECT_EQ(piecetype, piecetype::values[piecetype]);
 	}
 }
 
 TEST(piecetypetest, testIsValidPromotion) {
-	EXPECT_TRUE(PieceType::isValidPromotion(PieceType::KNIGHT));
-	EXPECT_TRUE(PieceType::isValidPromotion(PieceType::BISHOP));
-	EXPECT_TRUE(PieceType::isValidPromotion(PieceType::ROOK));
-	EXPECT_TRUE(PieceType::isValidPromotion(PieceType::QUEEN));
-	EXPECT_FALSE(PieceType::isValidPromotion(PieceType::PAWN));
-	EXPECT_FALSE(PieceType::isValidPromotion(PieceType::KING));
-	EXPECT_FALSE(PieceType::isValidPromotion(PieceType::NOPIECETYPE));
+	EXPECT_TRUE(piecetype::isValidPromotion(piecetype::KNIGHT));
+	EXPECT_TRUE(piecetype::isValidPromotion(piecetype::BISHOP));
+	EXPECT_TRUE(piecetype::isValidPromotion(piecetype::ROOK));
+	EXPECT_TRUE(piecetype::isValidPromotion(piecetype::QUEEN));
+	EXPECT_FALSE(piecetype::isValidPromotion(piecetype::PAWN));
+	EXPECT_FALSE(piecetype::isValidPromotion(piecetype::KING));
+	EXPECT_FALSE(piecetype::isValidPromotion(piecetype::NOPIECETYPE));
 }
 
 TEST(piecetypetest, testIsSliding) {
-	EXPECT_TRUE(PieceType::isSliding(PieceType::BISHOP));
-	EXPECT_TRUE(PieceType::isSliding(PieceType::ROOK));
-	EXPECT_TRUE(PieceType::isSliding(PieceType::QUEEN));
-	EXPECT_FALSE(PieceType::isSliding(PieceType::PAWN));
-	EXPECT_FALSE(PieceType::isSliding(PieceType::KNIGHT));
-	EXPECT_FALSE(PieceType::isSliding(PieceType::KING));
+	EXPECT_TRUE(piecetype::isSliding(piecetype::BISHOP));
+	EXPECT_TRUE(piecetype::isSliding(piecetype::ROOK));
+	EXPECT_TRUE(piecetype::isSliding(piecetype::QUEEN));
+	EXPECT_FALSE(piecetype::isSliding(piecetype::PAWN));
+	EXPECT_FALSE(piecetype::isSliding(piecetype::KNIGHT));
+	EXPECT_FALSE(piecetype::isSliding(piecetype::KING));
 }

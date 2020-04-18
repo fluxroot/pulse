@@ -34,7 +34,7 @@ private:
 	std::chrono::system_clock::time_point statusStartTime;
 
 	std::unique_ptr<Position> currentPosition = std::unique_ptr<Position>(
-			new Position(Notation::toPosition(Notation::STANDARDPOSITION)));
+			new Position(notation::toPosition(notation::STANDARDPOSITION)));
 
 	void receiveInitialize();
 
@@ -52,5 +52,4 @@ private:
 
 	void receiveQuit();
 };
-
 }

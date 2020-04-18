@@ -8,42 +8,35 @@
 
 #include <array>
 
-namespace pulse {
+namespace pulse::piecetype {
 
-class PieceType {
-public:
-	static const int MASK = 0x7;
+constexpr int MASK = 0x7;
 
-	static const int PAWN = 0;
-	static const int KNIGHT = 1;
-	static const int BISHOP = 2;
-	static const int ROOK = 3;
-	static const int QUEEN = 4;
-	static const int KING = 5;
+constexpr int PAWN = 0;
+constexpr int KNIGHT = 1;
+constexpr int BISHOP = 2;
+constexpr int ROOK = 3;
+constexpr int QUEEN = 4;
+constexpr int KING = 5;
 
-	static const int NOPIECETYPE = 6;
+constexpr int NOPIECETYPE = 6;
 
-	static const int VALUES_SIZE = 6;
-	static const std::array<int, VALUES_SIZE> values;
-
-	// Piece values as defined by Larry Kaufman
-	static const int PAWN_VALUE = 100;
-	static const int KNIGHT_VALUE = 325;
-	static const int BISHOP_VALUE = 325;
-	static const int ROOK_VALUE = 500;
-	static const int QUEEN_VALUE = 975;
-	static const int KING_VALUE = 20000;
-
-	static bool isValidPromotion(int piecetype);
-
-	static bool isSliding(int piecetype);
-
-	static int getValue(int piecetype);
-
-private:
-	PieceType();
-
-	~PieceType();
+constexpr int VALUES_SIZE = 6;
+constexpr std::array<int, VALUES_SIZE> values = {
+		PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
 };
 
+// Piece values as defined by Larry Kaufman
+constexpr int PAWN_VALUE = 100;
+constexpr int KNIGHT_VALUE = 325;
+constexpr int BISHOP_VALUE = 325;
+constexpr int ROOK_VALUE = 500;
+constexpr int QUEEN_VALUE = 975;
+constexpr int KING_VALUE = 20000;
+
+bool isValidPromotion(int piecetype);
+
+bool isSliding(int piecetype);
+
+int getValue(int piecetype);
 }

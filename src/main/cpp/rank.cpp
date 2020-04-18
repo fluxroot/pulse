@@ -7,13 +7,9 @@
 
 #include "rank.h"
 
-namespace pulse {
+namespace pulse::rank {
 
-const std::array<int, Rank::VALUES_SIZE> Rank::values = {
-		r1, r2, r3, r4, r5, r6, r7, r8
-};
-
-bool Rank::isValid(int rank) {
+bool isValid(int rank) {
 	switch (rank) {
 		case r1:
 		case r2:
@@ -28,5 +24,4 @@ bool Rank::isValid(int rank) {
 			return false;
 	}
 }
-
 }

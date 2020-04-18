@@ -8,22 +8,15 @@
 
 #include <array>
 
-namespace pulse {
+namespace pulse::castlingtype {
 
-class CastlingType {
-public:
-	static const int KINGSIDE = 0;
-	static const int QUEENSIDE = 1;
+constexpr int KINGSIDE = 0;
+constexpr int QUEENSIDE = 1;
 
-	static const int NOCASTLINGTYPE = 2;
+constexpr int NOCASTLINGTYPE = 2;
 
-	static const int VALUES_SIZE = 2;
-	static const std::array<int, VALUES_SIZE> values;
-
-private:
-	CastlingType();
-
-	~CastlingType();
+constexpr int VALUES_SIZE = 2;
+constexpr std::array<int, VALUES_SIZE> values = {
+		KINGSIDE, QUEENSIDE
 };
-
 }

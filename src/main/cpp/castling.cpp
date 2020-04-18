@@ -9,24 +9,24 @@
 #include "color.h"
 #include "castlingtype.h"
 
-namespace pulse {
+namespace pulse::castling {
 
-int Castling::valueOf(int color, int castlingtype) {
+int valueOf(int color, int castlingtype) {
 	switch (color) {
-		case Color::WHITE:
+		case color::WHITE:
 			switch (castlingtype) {
-				case CastlingType::KINGSIDE:
+				case castlingtype::KINGSIDE:
 					return WHITE_KINGSIDE;
-				case CastlingType::QUEENSIDE:
+				case castlingtype::QUEENSIDE:
 					return WHITE_QUEENSIDE;
 				default:
 					throw std::exception();
 			}
-		case Color::BLACK:
+		case color::BLACK:
 			switch (castlingtype) {
-				case CastlingType::KINGSIDE:
+				case castlingtype::KINGSIDE:
 					return BLACK_KINGSIDE;
-				case CastlingType::QUEENSIDE:
+				case castlingtype::QUEENSIDE:
 					return BLACK_QUEENSIDE;
 				default:
 					throw std::exception();
@@ -36,30 +36,29 @@ int Castling::valueOf(int color, int castlingtype) {
 	}
 }
 
-int Castling::getType(int castling) {
+int getType(int castling) {
 	switch (castling) {
 		case WHITE_KINGSIDE:
 		case BLACK_KINGSIDE:
-			return CastlingType::KINGSIDE;
+			return castlingtype::KINGSIDE;
 		case WHITE_QUEENSIDE:
 		case BLACK_QUEENSIDE:
-			return CastlingType::QUEENSIDE;
+			return castlingtype::QUEENSIDE;
 		default:
 			throw std::exception();
 	}
 }
 
-int Castling::getColor(int castling) {
+int getColor(int castling) {
 	switch (castling) {
 		case WHITE_KINGSIDE:
 		case WHITE_QUEENSIDE:
-			return Color::WHITE;
+			return color::WHITE;
 		case BLACK_KINGSIDE:
 		case BLACK_QUEENSIDE:
-			return Color::BLACK;
+			return color::BLACK;
 		default:
 			throw std::exception();
 	}
 }
-
 }
