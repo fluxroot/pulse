@@ -22,7 +22,7 @@ class Position {
 public:
 	std::array<int, Square::VALUES_LENGTH> board;
 
-	std::array<std::array<uint64_t, PieceType::VALUES_SIZE>, color::VALUES_SIZE> pieces = {};
+	std::array<std::array<uint64_t, piecetype::VALUES_SIZE>, color::VALUES_SIZE> pieces = {};
 
 	std::array<int, color::VALUES_SIZE> material = {};
 

@@ -160,11 +160,11 @@ Position toPosition(const std::string& fen) {
 
 				int color = colorOf(character);
 
-				if (position.pieces[color][PieceType::KING] == 0) {
+				if (position.pieces[color][piecetype::KING] == 0) {
 					throw std::exception();
 				}
 
-				kingFile = Square::getFile(bitboard::next(position.pieces[color][PieceType::KING]));
+				kingFile = Square::getFile(bitboard::next(position.pieces[color][piecetype::KING]));
 				if (castlingFile > kingFile) {
 					castling = castling::valueOf(color, castlingtype::KINGSIDE);
 				} else {
@@ -335,37 +335,37 @@ int toPieceType(char notation) {
 	char uppercaseNotation = std::toupper(notation);
 	switch (uppercaseNotation) {
 		case PAWN_NOTATION:
-			return PieceType::PAWN;
+			return piecetype::PAWN;
 		case KNIGHT_NOTATION:
-			return PieceType::KNIGHT;
+			return piecetype::KNIGHT;
 		case BISHOP_NOTATION:
-			return PieceType::BISHOP;
+			return piecetype::BISHOP;
 		case ROOK_NOTATION:
-			return PieceType::ROOK;
+			return piecetype::ROOK;
 		case QUEEN_NOTATION:
-			return PieceType::QUEEN;
+			return piecetype::QUEEN;
 		case KING_NOTATION:
-			return PieceType::KING;
+			return piecetype::KING;
 		default:
-			return PieceType::NOPIECETYPE;
+			return piecetype::NOPIECETYPE;
 	}
 }
 
 char fromPieceType(int piecetype) {
 	switch (piecetype) {
-		case PieceType::PAWN:
+		case piecetype::PAWN:
 			return PAWN_NOTATION;
-		case PieceType::KNIGHT:
+		case piecetype::KNIGHT:
 			return KNIGHT_NOTATION;
-		case PieceType::BISHOP:
+		case piecetype::BISHOP:
 			return BISHOP_NOTATION;
-		case PieceType::ROOK:
+		case piecetype::ROOK:
 			return ROOK_NOTATION;
-		case PieceType::QUEEN:
+		case piecetype::QUEEN:
 			return QUEEN_NOTATION;
-		case PieceType::KING:
+		case piecetype::KING:
 			return KING_NOTATION;
-		case PieceType::NOPIECETYPE:
+		case piecetype::NOPIECETYPE:
 		default:
 			throw std::exception();
 	}
@@ -375,7 +375,7 @@ int toPiece(char notation) {
 	int color = colorOf(notation);
 	int piecetype = toPieceType(notation);
 
-	if (piecetype != PieceType::NOPIECETYPE) {
+	if (piecetype != piecetype::NOPIECETYPE) {
 		return piece::valueOf(color, piecetype);
 	} else {
 		return piece::NOPIECE;

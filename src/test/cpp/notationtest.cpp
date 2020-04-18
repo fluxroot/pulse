@@ -48,19 +48,19 @@ TEST(notationtest, testStandardPosition) {
 	EXPECT_EQ(+piece::WHITE_KING, position.board[Square::e1]);
 	EXPECT_EQ(+piece::BLACK_KING, position.board[Square::e8]);
 
-	EXPECT_EQ(8 * PieceType::PAWN_VALUE
-			  + 2 * PieceType::KNIGHT_VALUE
-			  + 2 * PieceType::BISHOP_VALUE
-			  + 2 * PieceType::ROOK_VALUE
-			  + PieceType::QUEEN_VALUE
-			  + PieceType::KING_VALUE,
+	EXPECT_EQ(8 * piecetype::PAWN_VALUE
+			  + 2 * piecetype::KNIGHT_VALUE
+			  + 2 * piecetype::BISHOP_VALUE
+			  + 2 * piecetype::ROOK_VALUE
+			  + piecetype::QUEEN_VALUE
+			  + piecetype::KING_VALUE,
 			position.material[color::WHITE]);
-	EXPECT_EQ(8 * PieceType::PAWN_VALUE
-			  + 2 * PieceType::KNIGHT_VALUE
-			  + 2 * PieceType::BISHOP_VALUE
-			  + 2 * PieceType::ROOK_VALUE
-			  + PieceType::QUEEN_VALUE
-			  + PieceType::KING_VALUE,
+	EXPECT_EQ(8 * piecetype::PAWN_VALUE
+			  + 2 * piecetype::KNIGHT_VALUE
+			  + 2 * piecetype::BISHOP_VALUE
+			  + 2 * piecetype::ROOK_VALUE
+			  + piecetype::QUEEN_VALUE
+			  + piecetype::KING_VALUE,
 			position.material[color::BLACK]);
 
 	// Test castling

@@ -36,7 +36,7 @@ constexpr int ORIGIN_PIECE_MASK = piece::MASK << ORIGIN_PIECE_SHIFT;
 constexpr int TARGET_PIECE_SHIFT = 22;
 constexpr int TARGET_PIECE_MASK = piece::MASK << TARGET_PIECE_SHIFT;
 constexpr int PROMOTION_SHIFT = 27;
-constexpr int PROMOTION_MASK = PieceType::MASK << PROMOTION_SHIFT;
+constexpr int PROMOTION_MASK = piecetype::MASK << PROMOTION_SHIFT;
 }
 
 // We don't use 0 as a null value to protect against errors.
@@ -45,7 +45,7 @@ constexpr int NOMOVE = (movetype::NOMOVETYPE << TYPE_SHIFT)
 					   | (Square::NOSQUARE << TARGET_SQUARE_SHIFT)
 					   | (piece::NOPIECE << ORIGIN_PIECE_SHIFT)
 					   | (piece::NOPIECE << TARGET_PIECE_SHIFT)
-					   | (PieceType::NOPIECETYPE << PROMOTION_SHIFT);
+					   | (piecetype::NOPIECETYPE << PROMOTION_SHIFT);
 
 int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion);
 

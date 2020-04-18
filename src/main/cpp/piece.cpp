@@ -35,34 +35,34 @@ int valueOf(int color, int piecetype) {
 	switch (color) {
 		case color::WHITE:
 			switch (piecetype) {
-				case PieceType::PAWN:
+				case piecetype::PAWN:
 					return WHITE_PAWN;
-				case PieceType::KNIGHT:
+				case piecetype::KNIGHT:
 					return WHITE_KNIGHT;
-				case PieceType::BISHOP:
+				case piecetype::BISHOP:
 					return WHITE_BISHOP;
-				case PieceType::ROOK:
+				case piecetype::ROOK:
 					return WHITE_ROOK;
-				case PieceType::QUEEN:
+				case piecetype::QUEEN:
 					return WHITE_QUEEN;
-				case PieceType::KING:
+				case piecetype::KING:
 					return WHITE_KING;
 				default:
 					throw std::exception();
 			}
 		case color::BLACK:
 			switch (piecetype) {
-				case PieceType::PAWN:
+				case piecetype::PAWN:
 					return BLACK_PAWN;
-				case PieceType::KNIGHT:
+				case piecetype::KNIGHT:
 					return BLACK_KNIGHT;
-				case PieceType::BISHOP:
+				case piecetype::BISHOP:
 					return BLACK_BISHOP;
-				case PieceType::ROOK:
+				case piecetype::ROOK:
 					return BLACK_ROOK;
-				case PieceType::QUEEN:
+				case piecetype::QUEEN:
 					return BLACK_QUEEN;
-				case PieceType::KING:
+				case piecetype::KING:
 					return BLACK_KING;
 				default:
 					throw std::exception();
@@ -76,22 +76,22 @@ int getType(int piece) {
 	switch (piece) {
 		case WHITE_PAWN:
 		case BLACK_PAWN:
-			return PieceType::PAWN;
+			return piecetype::PAWN;
 		case WHITE_KNIGHT:
 		case BLACK_KNIGHT:
-			return PieceType::KNIGHT;
+			return piecetype::KNIGHT;
 		case WHITE_BISHOP:
 		case BLACK_BISHOP:
-			return PieceType::BISHOP;
+			return piecetype::BISHOP;
 		case WHITE_ROOK:
 		case BLACK_ROOK:
-			return PieceType::ROOK;
+			return piecetype::ROOK;
 		case WHITE_QUEEN:
 		case BLACK_QUEEN:
-			return PieceType::QUEEN;
+			return piecetype::QUEEN;
 		case WHITE_KING:
 		case BLACK_KING:
-			return PieceType::KING;
+			return piecetype::KING;
 		default:
 			throw std::exception();
 	}

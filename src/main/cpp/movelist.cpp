@@ -43,12 +43,12 @@ void MoveList<T>::rateFromMVVLVA() {
 		int move = entries[i]->move;
 		int value = 0;
 
-		int piecetypeValue = PieceType::getValue(piece::getType(move::getOriginPiece(move)));
-		value += PieceType::KING_VALUE / piecetypeValue;
+		int piecetypeValue = piecetype::getValue(piece::getType(move::getOriginPiece(move)));
+		value += piecetype::KING_VALUE / piecetypeValue;
 
 		int target = move::getTargetPiece(move);
 		if (piece::isValid(target)) {
-			value += 10 * PieceType::getValue(piece::getType(target));
+			value += 10 * piecetype::getValue(piece::getType(target));
 		}
 
 		entries[i]->value = value;

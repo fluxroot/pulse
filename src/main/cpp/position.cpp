@@ -173,16 +173,16 @@ bool Position::isRepetition() {
 
 bool Position::hasInsufficientMaterial() {
 	// If there is only one minor left, we are unable to checkmate
-	return bitboard::size(pieces[color::WHITE][PieceType::PAWN]) == 0
-		   && bitboard::size(pieces[color::BLACK][PieceType::PAWN]) == 0
-		   && bitboard::size(pieces[color::WHITE][PieceType::ROOK]) == 0
-		   && bitboard::size(pieces[color::BLACK][PieceType::ROOK]) == 0
-		   && bitboard::size(pieces[color::WHITE][PieceType::QUEEN]) == 0
-		   && bitboard::size(pieces[color::BLACK][PieceType::QUEEN]) == 0
-		   && (bitboard::size(pieces[color::WHITE][PieceType::KNIGHT]) +
-			   bitboard::size(pieces[color::WHITE][PieceType::BISHOP]) <= 1)
-		   && (bitboard::size(pieces[color::BLACK][PieceType::KNIGHT]) +
-			   bitboard::size(pieces[color::BLACK][PieceType::BISHOP]) <= 1);
+	return bitboard::size(pieces[color::WHITE][piecetype::PAWN]) == 0
+		   && bitboard::size(pieces[color::BLACK][piecetype::PAWN]) == 0
+		   && bitboard::size(pieces[color::WHITE][piecetype::ROOK]) == 0
+		   && bitboard::size(pieces[color::BLACK][piecetype::ROOK]) == 0
+		   && bitboard::size(pieces[color::WHITE][piecetype::QUEEN]) == 0
+		   && bitboard::size(pieces[color::BLACK][piecetype::QUEEN]) == 0
+		   && (bitboard::size(pieces[color::WHITE][piecetype::KNIGHT]) +
+			   bitboard::size(pieces[color::WHITE][piecetype::BISHOP]) <= 1)
+		   && (bitboard::size(pieces[color::BLACK][piecetype::KNIGHT]) +
+			   bitboard::size(pieces[color::BLACK][piecetype::BISHOP]) <= 1);
 }
 
 /**
@@ -198,7 +198,7 @@ void Position::put(int piece, int square) {
 
 	board[square] = piece;
 	pieces[color][piecetype] = bitboard::add(square, pieces[color][piecetype]);
-	material[color] += PieceType::getValue(piecetype);
+	material[color] += piecetype::getValue(piecetype);
 
 	zobristKey ^= zobrist.board[piece][square];
 }
@@ -218,7 +218,7 @@ int Position::remove(int square) {
 
 	board[square] = piece::NOPIECE;
 	pieces[color][piecetype] = bitboard::remove(square, pieces[color][piecetype]);
-	material[color] -= PieceType::getValue(piecetype);
+	material[color] -= piecetype::getValue(piecetype);
 
 	zobristKey ^= zobrist.board[piece][square];
 
@@ -310,7 +310,7 @@ void Position::makeMove(int move) {
 	zobristKey ^= zobrist.activeColor;
 
 	// Update halfmoveClock
-	if (piece::getType(originPiece) == PieceType::PAWN || targetPiece != piece::NOPIECE) {
+	if (piece::getType(originPiece) == piecetype::PAWN || targetPiece != piece::NOPIECE) {
 		halfmoveClock = 0;
 	} else {
 		halfmoveClock++;
@@ -421,12 +421,12 @@ void Position::clearCastling(int square) {
 
 bool Position::isCheck() {
 	// Check whether our king is attacked by any opponent piece
-	return isAttacked(bitboard::next(pieces[activeColor][PieceType::KING]), color::opposite(activeColor));
+	return isAttacked(bitboard::next(pieces[activeColor][piecetype::KING]), color::opposite(activeColor));
 }
 
 bool Position::isCheck(int color) {
 	// Check whether the king for color is attacked by any opponent piece
-	return isAttacked(bitboard::next(pieces[color][PieceType::KING]), color::opposite(color));
+	return isAttacked(bitboard::next(pieces[color][piecetype::KING]), color::opposite(color));
 }
 
 /**
@@ -439,7 +439,7 @@ bool Position::isCheck(int color) {
  */
 bool Position::isAttacked(int targetSquare, int attackerColor) {
 	// Pawn attacks
-	int pawnPiece = piece::valueOf(attackerColor, PieceType::PAWN);
+	int pawnPiece = piece::valueOf(attackerColor, piecetype::PAWN);
 	for (unsigned int i = 1; i < Square::pawnDirections[attackerColor].size(); i++) {
 		int attackerSquare = targetSquare - Square::pawnDirections[attackerColor][i];
 		if (Square::isValid(attackerSquare)) {
@@ -452,23 +452,23 @@ bool Position::isAttacked(int targetSquare, int attackerColor) {
 	}
 
 	return isAttacked(targetSquare,
-			piece::valueOf(attackerColor, PieceType::KNIGHT),
+			piece::valueOf(attackerColor, piecetype::KNIGHT),
 			Square::knightDirections)
 
 		   // The queen moves like a bishop, so check both piece types
 		   || isAttacked(targetSquare,
-			piece::valueOf(attackerColor, PieceType::BISHOP),
-			piece::valueOf(attackerColor, PieceType::QUEEN),
+			piece::valueOf(attackerColor, piecetype::BISHOP),
+			piece::valueOf(attackerColor, piecetype::QUEEN),
 			Square::bishopDirections)
 
 		   // The queen moves like a rook, so check both piece types
 		   || isAttacked(targetSquare,
-			piece::valueOf(attackerColor, PieceType::ROOK),
-			piece::valueOf(attackerColor, PieceType::QUEEN),
+			piece::valueOf(attackerColor, piecetype::ROOK),
+			piece::valueOf(attackerColor, piecetype::QUEEN),
 			Square::rookDirections)
 
 		   || isAttacked(targetSquare,
-			piece::valueOf(attackerColor, PieceType::KING),
+			piece::valueOf(attackerColor, piecetype::KING),
 			Square::kingDirections);
 }
 

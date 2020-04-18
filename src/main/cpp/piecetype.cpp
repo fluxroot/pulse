@@ -7,13 +7,9 @@
 
 #include "piecetype.h"
 
-namespace pulse {
+namespace pulse::piecetype {
 
-const std::array<int, PieceType::VALUES_SIZE> PieceType::values = {
-		PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
-};
-
-bool PieceType::isValidPromotion(int piecetype) {
+bool isValidPromotion(int piecetype) {
 	switch (piecetype) {
 		case KNIGHT:
 		case BISHOP:
@@ -25,7 +21,7 @@ bool PieceType::isValidPromotion(int piecetype) {
 	}
 }
 
-bool PieceType::isSliding(int piecetype) {
+bool isSliding(int piecetype) {
 	switch (piecetype) {
 		case BISHOP:
 		case ROOK:
@@ -40,7 +36,7 @@ bool PieceType::isSliding(int piecetype) {
 	}
 }
 
-int PieceType::getValue(int piecetype) {
+int getValue(int piecetype) {
 	switch (piecetype) {
 		case PAWN:
 			return PAWN_VALUE;
@@ -58,5 +54,4 @@ int PieceType::getValue(int piecetype) {
 			throw std::exception();
 	}
 }
-
 }

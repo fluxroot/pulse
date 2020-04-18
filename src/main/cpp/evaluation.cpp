@@ -18,7 +18,7 @@ int evaluateMaterial(int color, Position& position) {
 	int material = position.material[color];
 
 	// Add bonus for bishop pair
-	if (bitboard::size(position.pieces[color][PieceType::BISHOP]) >= 2) {
+	if (bitboard::size(position.pieces[color][piecetype::BISHOP]) >= 2) {
 		material += 50;
 	}
 
@@ -27,7 +27,7 @@ int evaluateMaterial(int color, Position& position) {
 
 int evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions) {
 	int mobility = 0;
-	bool sliding = PieceType::isSliding(piece::getType(position.board[square]));
+	bool sliding = piecetype::isSliding(piece::getType(position.board[square]));
 
 	for (auto direction : directions) {
 		int targetSquare = square + direction;
@@ -48,28 +48,28 @@ int evaluateMobility(int color, Position& position, int square, const std::vecto
 
 int evaluateMobility(int color, Position& position) {
 	int knightMobility = 0;
-	for (auto squares = position.pieces[color][PieceType::KNIGHT];
+	for (auto squares = position.pieces[color][piecetype::KNIGHT];
 		 squares != 0; squares = bitboard::remainder(squares)) {
 		int square = bitboard::next(squares);
 		knightMobility += evaluateMobility(color, position, square, Square::knightDirections);
 	}
 
 	int bishopMobility = 0;
-	for (auto squares = position.pieces[color][PieceType::BISHOP];
+	for (auto squares = position.pieces[color][piecetype::BISHOP];
 		 squares != 0; squares = bitboard::remainder(squares)) {
 		int square = bitboard::next(squares);
 		bishopMobility += evaluateMobility(color, position, square, Square::bishopDirections);
 	}
 
 	int rookMobility = 0;
-	for (auto squares = position.pieces[color][PieceType::ROOK];
+	for (auto squares = position.pieces[color][piecetype::ROOK];
 		 squares != 0; squares = bitboard::remainder(squares)) {
 		int square = bitboard::next(squares);
 		rookMobility += evaluateMobility(color, position, square, Square::rookDirections);
 	}
 
 	int queenMobility = 0;
-	for (auto squares = position.pieces[color][PieceType::QUEEN];
+	for (auto squares = position.pieces[color][piecetype::QUEEN];
 		 squares != 0; squares = bitboard::remainder(squares)) {
 		int square = bitboard::next(squares);
 		queenMobility += evaluateMobility(color, position, square, Square::queenDirections);

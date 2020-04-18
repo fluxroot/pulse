@@ -309,7 +309,7 @@ std::string Pulse::fromMove(int move) {
 	notation += notation::fromSquare(move::getTargetSquare(move));
 
 	int promotion = move::getPromotion(move);
-	if (promotion != PieceType::NOPIECETYPE) {
+	if (promotion != piecetype::NOPIECETYPE) {
 		notation += std::tolower(notation::fromPieceType(promotion));
 	}
 
