@@ -520,17 +520,6 @@ char fromRank(int rank) {
 	}
 }
 
-int toSquare(const std::string& notation) {
-	int file = toFile(notation[0]);
-	int rank = toRank(notation[1]);
-
-	if (file != file::NOFILE && rank != rank::NORANK) {
-		return (rank << 4) + file;
-	} else {
-		return square::NOSQUARE;
-	}
-}
-
 std::string fromSquare(int square) {
 	std::string notation;
 	notation += fromFile(square::getFile(square));

@@ -12,7 +12,6 @@
 
 #include <random>
 #include <list>
-#include <algorithm>
 
 using namespace pulse;
 

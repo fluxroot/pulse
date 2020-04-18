@@ -15,16 +15,17 @@ class Pulse : public Protocol {
 public:
 	void run();
 
-	virtual void sendBestMove(int bestMove, int ponderMove);
+	void sendBestMove(int bestMove, int ponderMove) override;
 
-	virtual void sendStatus(
-			int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove, int currentMoveNumber);
+	void sendStatus(
+			int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove,
+			int currentMoveNumber) override;
 
-	virtual void sendStatus(
+	void sendStatus(
 			bool force, int currentDepth, int currentMaxDepth, uint64_t totalNodes, int currentMove,
-			int currentMoveNumber);
+			int currentMoveNumber) override;
 
-	virtual void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes);
+	void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) override;
 
 	static std::string fromMove(int move);
 

@@ -8,7 +8,6 @@
 #include "value.h"
 
 #include <cstdlib>
-#include <cmath>
 
 namespace pulse::value {
 
