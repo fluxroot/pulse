@@ -42,7 +42,7 @@ public:
 
 class MoveEntry {
 public:
-	int move = Move::NOMOVE;
+	int move = move::NOMOVE;
 	int value = Value::NOVALUE;
 };
 
@@ -50,5 +50,4 @@ class RootEntry : public MoveEntry {
 public:
 	MoveVariation pv;
 };
-
 }

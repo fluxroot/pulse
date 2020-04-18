@@ -7,9 +7,8 @@
 
 #include "move.h"
 
-namespace pulse {
-
-int Move::valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion) {
+namespace pulse::move {
+int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion) {
 	int move = 0;
 
 	// Encode type
@@ -33,28 +32,27 @@ int Move::valueOf(int type, int originSquare, int targetSquare, int originPiece,
 	return move;
 }
 
-int Move::getType(int move) {
+int getType(int move) {
 	return (move & TYPE_MASK) >> TYPE_SHIFT;
 }
 
-int Move::getOriginSquare(int move) {
+int getOriginSquare(int move) {
 	return (move & ORIGIN_SQUARE_MASK) >> ORIGIN_SQUARE_SHIFT;
 }
 
-int Move::getTargetSquare(int move) {
+int getTargetSquare(int move) {
 	return (move & TARGET_SQUARE_MASK) >> TARGET_SQUARE_SHIFT;
 }
 
-int Move::getOriginPiece(int move) {
+int getOriginPiece(int move) {
 	return (move & ORIGIN_PIECE_MASK) >> ORIGIN_PIECE_SHIFT;
 }
 
-int Move::getTargetPiece(int move) {
+int getTargetPiece(int move) {
 	return (move & TARGET_PIECE_MASK) >> TARGET_PIECE_SHIFT;
 }
 
-int Move::getPromotion(int move) {
+int getPromotion(int move) {
 	return (move & PROMOTION_MASK) >> PROMOTION_SHIFT;
 }
-
 }

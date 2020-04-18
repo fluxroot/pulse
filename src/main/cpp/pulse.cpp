@@ -225,10 +225,10 @@ void Pulse::receiveStop() {
 void Pulse::sendBestMove(int bestMove, int ponderMove) {
 	std::cout << "bestmove ";
 
-	if (bestMove != Move::NOMOVE) {
+	if (bestMove != move::NOMOVE) {
 		std::cout << fromMove(bestMove);
 
-		if (ponderMove != Move::NOMOVE) {
+		if (ponderMove != move::NOMOVE) {
 			std::cout << " ponder " << fromMove(ponderMove);
 		}
 	} else {
@@ -260,7 +260,7 @@ void Pulse::sendStatus(
 		std::cout << " time " << timeDelta.count();
 		std::cout << " nps " << (timeDelta.count() >= 1000 ? (totalNodes * 1000) / timeDelta.count() : 0);
 
-		if (currentMove != Move::NOMOVE) {
+		if (currentMove != move::NOMOVE) {
 			std::cout << " currmove " << fromMove(currentMove);
 			std::cout << " currmovenumber " << currentMoveNumber;
 		}
@@ -305,15 +305,14 @@ void Pulse::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uin
 std::string Pulse::fromMove(int move) {
 	std::string notation;
 
-	notation += Notation::fromSquare(Move::getOriginSquare(move));
-	notation += Notation::fromSquare(Move::getTargetSquare(move));
+	notation += Notation::fromSquare(move::getOriginSquare(move));
+	notation += Notation::fromSquare(move::getTargetSquare(move));
 
-	int promotion = Move::getPromotion(move);
+	int promotion = move::getPromotion(move);
 	if (promotion != PieceType::NOPIECETYPE) {
 		notation += std::tolower(Notation::fromPieceType(promotion));
 	}
 
 	return notation;
 }
-
 }

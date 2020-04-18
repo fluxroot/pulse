@@ -236,12 +236,12 @@ void Position::makeMove(int move) {
 	statesSize++;
 
 	// Get variables
-	int type = Move::getType(move);
-	int originSquare = Move::getOriginSquare(move);
-	int targetSquare = Move::getTargetSquare(move);
-	int originPiece = Move::getOriginPiece(move);
+	int type = move::getType(move);
+	int originSquare = move::getOriginSquare(move);
+	int targetSquare = move::getTargetSquare(move);
+	int originPiece = move::getOriginPiece(move);
 	int originColor = Piece::getColor(originPiece);
-	int targetPiece = Move::getTargetPiece(move);
+	int targetPiece = move::getTargetPiece(move);
 
 	// Remove target piece and update castling rights
 	if (targetPiece != Piece::NOPIECE) {
@@ -257,7 +257,7 @@ void Position::makeMove(int move) {
 	// Move piece
 	remove(originSquare);
 	if (type == MoveType::PAWNPROMOTION) {
-		put(Piece::valueOf(originColor, Move::getPromotion(move)), targetSquare);
+		put(Piece::valueOf(originColor, move::getPromotion(move)), targetSquare);
 	} else {
 		put(originPiece, targetSquare);
 	}
@@ -322,12 +322,12 @@ void Position::makeMove(int move) {
 
 void Position::undoMove(int move) {
 	// Get variables
-	int type = Move::getType(move);
-	int originSquare = Move::getOriginSquare(move);
-	int targetSquare = Move::getTargetSquare(move);
-	int originPiece = Move::getOriginPiece(move);
+	int type = move::getType(move);
+	int originSquare = move::getOriginSquare(move);
+	int targetSquare = move::getTargetSquare(move);
+	int originPiece = move::getOriginPiece(move);
 	int originColor = Piece::getColor(originPiece);
-	int targetPiece = Move::getTargetPiece(move);
+	int targetPiece = move::getTargetPiece(move);
 
 	// Update fullMoveNumber
 	halfmoveNumber--;

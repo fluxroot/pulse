@@ -178,7 +178,7 @@ void Search::reset() {
 	totalNodes = 0;
 	currentDepth = initialDepth;
 	currentMaxDepth = 0;
-	currentMove = Move::NOMOVE;
+	currentMove = move::NOMOVE;
 	currentMoveNumber = 0;
 }
 
@@ -285,8 +285,8 @@ void Search::run() {
 		protocol.sendStatus(true, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 
 		// Send the best move and ponder move
-		int bestMove = Move::NOMOVE;
-		int ponderMove = Move::NOMOVE;
+		int bestMove = move::NOMOVE;
+		int ponderMove = move::NOMOVE;
 		if (rootMoves.size > 0) {
 			bestMove = rootMoves.entries[0]->move;
 			if (rootMoves.entries[0]->pv.size >= 2) {
