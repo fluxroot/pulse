@@ -3,7 +3,6 @@ project(main)
 add_library(core STATIC
         bitboard.cpp
         castling.cpp
-        castlingtype.cpp
         color.cpp
         evaluation.cpp
         notation.cpp

@@ -117,11 +117,11 @@ Position Notation::toPosition(const std::string& fen) {
 
 				kingFile = Square::getFile(bitboard::next(position.pieces[color][PieceType::KING]));
 				if (castlingFile > kingFile) {
-					castling = castling::valueOf(color, CastlingType::KINGSIDE);
+					castling = castling::valueOf(color, castlingtype::KINGSIDE);
 				} else {
-					castling = castling::valueOf(color, CastlingType::QUEENSIDE);
+					castling = castling::valueOf(color, castlingtype::QUEENSIDE);
 				}
-			} else if (castling::getType(castling) == CastlingType::KINGSIDE) {
+			} else if (castling::getType(castling) == castlingtype::KINGSIDE) {
 				castlingFile = File::h;
 				kingFile = File::e;
 			} else {
@@ -360,21 +360,21 @@ int Notation::toCastlingType(char notation) {
 	char uppercaseNotation = std::toupper(notation);
 	switch (uppercaseNotation) {
 		case KINGSIDE_NOTATION:
-			return CastlingType::KINGSIDE;
+			return castlingtype::KINGSIDE;
 		case QUEENSIDE_NOTATION:
-			return CastlingType::QUEENSIDE;
+			return castlingtype::QUEENSIDE;
 		default:
-			return CastlingType::NOCASTLINGTYPE;
+			return castlingtype::NOCASTLINGTYPE;
 	}
 }
 
 char Notation::fromCastlingType(int castlingtype) {
 	switch (castlingtype) {
-		case CastlingType::KINGSIDE:
+		case castlingtype::KINGSIDE:
 			return KINGSIDE_NOTATION;
-		case CastlingType::QUEENSIDE:
+		case castlingtype::QUEENSIDE:
 			return QUEENSIDE_NOTATION;
-		case CastlingType::NOCASTLINGTYPE:
+		case castlingtype::NOCASTLINGTYPE:
 		default:
 			throw std::exception();
 	}
@@ -384,7 +384,7 @@ int Notation::toCastling(char notation) {
 	int color = colorOf(notation);
 	int castlingtype = toCastlingType(notation);
 
-	if (castlingtype != CastlingType::NOCASTLINGTYPE) {
+	if (castlingtype != castlingtype::NOCASTLINGTYPE) {
 		return castling::valueOf(color, castlingtype);
 	} else {
 		return castling::NOCASTLING;
