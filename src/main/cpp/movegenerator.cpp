@@ -150,8 +150,8 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
 				if (piece::getColor(targetPiece) == color::opposite(pawnColor)) {
 					// Capturing move
 
-					if ((pawnColor == color::WHITE && Square::getRank(targetSquare) == Rank::r8)
-						|| (pawnColor == color::BLACK && Square::getRank(targetSquare) == Rank::r1)) {
+					if ((pawnColor == color::WHITE && Square::getRank(targetSquare) == rank::r8)
+						|| (pawnColor == color::BLACK && Square::getRank(targetSquare) == rank::r1)) {
 						// Pawn promotion capturing move
 
 						list.entries[list.size++]->move = move::valueOf(
@@ -191,8 +191,8 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
 	// Move one rank forward
 	int targetSquare = pawnSquare + direction;
 	if (Square::isValid(targetSquare) && position.board[targetSquare] == piece::NOPIECE) {
-		if ((pawnColor == color::WHITE && Square::getRank(targetSquare) == Rank::r8)
-			|| (pawnColor == color::BLACK && Square::getRank(targetSquare) == Rank::r1)) {
+		if ((pawnColor == color::WHITE && Square::getRank(targetSquare) == rank::r8)
+			|| (pawnColor == color::BLACK && Square::getRank(targetSquare) == rank::r1)) {
 			// Pawn promotion move
 
 			list.entries[list.size++]->move = move::valueOf(
@@ -212,8 +212,8 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
 			// Move another rank forward
 			targetSquare += direction;
 			if (Square::isValid(targetSquare) && position.board[targetSquare] == piece::NOPIECE) {
-				if ((pawnColor == color::WHITE && Square::getRank(targetSquare) == Rank::r4)
-					|| (pawnColor == color::BLACK && Square::getRank(targetSquare) == Rank::r5)) {
+				if ((pawnColor == color::WHITE && Square::getRank(targetSquare) == rank::r4)
+					|| (pawnColor == color::BLACK && Square::getRank(targetSquare) == rank::r5)) {
 					// Pawn double move
 
 					list.entries[list.size++]->move = move::valueOf(

@@ -8,30 +8,23 @@
 
 #include <array>
 
-namespace pulse {
+namespace pulse::rank {
 
-class Rank {
-public:
-	static const int r1 = 0;
-	static const int r2 = 1;
-	static const int r3 = 2;
-	static const int r4 = 3;
-	static const int r5 = 4;
-	static const int r6 = 5;
-	static const int r7 = 6;
-	static const int r8 = 7;
+constexpr int r1 = 0;
+constexpr int r2 = 1;
+constexpr int r3 = 2;
+constexpr int r4 = 3;
+constexpr int r5 = 4;
+constexpr int r6 = 5;
+constexpr int r7 = 6;
+constexpr int r8 = 7;
 
-	static const int NORANK = 8;
+constexpr int NORANK = 8;
 
-	static const int VALUES_SIZE = 8;
-	static const std::array<int, VALUES_SIZE> values;
-
-	static bool isValid(int rank);
-
-private:
-	Rank();
-
-	~Rank();
+constexpr int VALUES_SIZE = 8;
+constexpr std::array<int, VALUES_SIZE> values = {
+		r1, r2, r3, r4, r5, r6, r7, r8
 };
 
+bool isValid(int rank);
 }

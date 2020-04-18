@@ -88,12 +88,12 @@ Position toPosition(const std::string& fen) {
 	// Parse pieces
 	token = tokens[tokensIndex++];
 	int file = file::a;
-	int rank = Rank::r8;
+	int rank = rank::r8;
 
 	for (auto character : token) {
 		int piece = toPiece(character);
 		if (piece != piece::NOPIECE) {
-			if (!file::isValid(file) || !Rank::isValid(rank)) {
+			if (!file::isValid(file) || !rank::isValid(rank)) {
 				throw std::invalid_argument("Illegal file or rank");
 			}
 
@@ -105,7 +105,7 @@ Position toPosition(const std::string& fen) {
 				file++;
 			}
 		} else if (character == '/') {
-			if (file != file::NOFILE || rank == Rank::r1) {
+			if (file != file::NOFILE || rank == rank::r1) {
 				throw std::invalid_argument("Illegal file or rank");
 			}
 
@@ -192,8 +192,8 @@ Position toPosition(const std::string& fen) {
 
 		int enPassantFile = toFile(token[0]);
 		int enPassantRank = toRank(token[1]);
-		if (!(activeColor == color::BLACK && enPassantRank == Rank::r3)
-			&& !(activeColor == color::WHITE && enPassantRank == Rank::r6)) {
+		if (!(activeColor == color::BLACK && enPassantRank == rank::r3)
+			&& !(activeColor == color::WHITE && enPassantRank == rank::r6)) {
 			throw std::exception();
 		}
 
@@ -231,7 +231,7 @@ std::string fromPosition(const Position& position) {
 	std::string fen;
 
 	// Pieces
-	for (auto iter = Rank::values.rbegin(); iter != Rank::values.rend(); iter++) {
+	for (auto iter = rank::values.rbegin(); iter != rank::values.rend(); iter++) {
 		int rank = *iter;
 		unsigned int emptySquares = 0;
 
@@ -253,7 +253,7 @@ std::string fromPosition(const Position& position) {
 			fen += std::to_string(emptySquares);
 		}
 
-		if (rank > Rank::r1) {
+		if (rank > rank::r1) {
 			fen += '/';
 		}
 	}
@@ -476,45 +476,45 @@ char fromFile(int file) {
 int toRank(char notation) {
 	switch (notation) {
 		case r1_NOTATION:
-			return Rank::r1;
+			return rank::r1;
 		case r2_NOTATION:
-			return Rank::r2;
+			return rank::r2;
 		case r3_NOTATION:
-			return Rank::r3;
+			return rank::r3;
 		case r4_NOTATION:
-			return Rank::r4;
+			return rank::r4;
 		case r5_NOTATION:
-			return Rank::r5;
+			return rank::r5;
 		case r6_NOTATION:
-			return Rank::r6;
+			return rank::r6;
 		case r7_NOTATION:
-			return Rank::r7;
+			return rank::r7;
 		case r8_NOTATION:
-			return Rank::r8;
+			return rank::r8;
 		default:
-			return Rank::NORANK;
+			return rank::NORANK;
 	}
 }
 
 char fromRank(int rank) {
 	switch (rank) {
-		case Rank::r1:
+		case rank::r1:
 			return r1_NOTATION;
-		case Rank::r2:
+		case rank::r2:
 			return r2_NOTATION;
-		case Rank::r3:
+		case rank::r3:
 			return r3_NOTATION;
-		case Rank::r4:
+		case rank::r4:
 			return r4_NOTATION;
-		case Rank::r5:
+		case rank::r5:
 			return r5_NOTATION;
-		case Rank::r6:
+		case rank::r6:
 			return r6_NOTATION;
-		case Rank::r7:
+		case rank::r7:
 			return r7_NOTATION;
-		case Rank::r8:
+		case rank::r8:
 			return r8_NOTATION;
-		case Rank::NORANK:
+		case rank::NORANK:
 		default:
 			throw std::exception();
 	}
@@ -524,7 +524,7 @@ int toSquare(const std::string& notation) {
 	int file = toFile(notation[0]);
 	int rank = toRank(notation[1]);
 
-	if (file != file::NOFILE && rank != Rank::NORANK) {
+	if (file != file::NOFILE && rank != rank::NORANK) {
 		return (rank << 4) + file;
 	} else {
 		return Square::NOSQUARE;

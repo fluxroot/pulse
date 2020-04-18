@@ -14,7 +14,7 @@
 using namespace pulse;
 
 TEST(squaretest, testValues) {
-	for (auto rank : Rank::values) {
+	for (auto rank : rank::values) {
 		for (auto file : file::values) {
 			int square = Square::valueOf(file, rank);
 

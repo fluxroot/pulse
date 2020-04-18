@@ -18,8 +18,8 @@ TEST(notationtest, testStandardPosition) {
 
 	// Test pawns
 	for (auto file : file::values) {
-		EXPECT_EQ(+piece::WHITE_PAWN, position.board[Square::valueOf(file, Rank::r2)]);
-		EXPECT_EQ(+piece::BLACK_PAWN, position.board[Square::valueOf(file, Rank::r7)]);
+		EXPECT_EQ(+piece::WHITE_PAWN, position.board[Square::valueOf(file, rank::r2)]);
+		EXPECT_EQ(+piece::BLACK_PAWN, position.board[Square::valueOf(file, rank::r7)]);
 	}
 
 	// Test knights
