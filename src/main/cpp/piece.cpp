@@ -9,14 +9,9 @@
 #include "color.h"
 #include "piecetype.h"
 
-namespace pulse {
+namespace pulse::piece {
 
-const std::array<int, Piece::VALUES_SIZE> Piece::values = {
-		WHITE_PAWN, WHITE_KNIGHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING,
-		BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING
-};
-
-bool Piece::isValid(int piece) {
+bool isValid(int piece) {
 	switch (piece) {
 		case WHITE_PAWN:
 		case WHITE_KNIGHT:
@@ -36,7 +31,7 @@ bool Piece::isValid(int piece) {
 	}
 }
 
-int Piece::valueOf(int color, int piecetype) {
+int valueOf(int color, int piecetype) {
 	switch (color) {
 		case color::WHITE:
 			switch (piecetype) {
@@ -77,7 +72,7 @@ int Piece::valueOf(int color, int piecetype) {
 	}
 }
 
-int Piece::getType(int piece) {
+int getType(int piece) {
 	switch (piece) {
 		case WHITE_PAWN:
 		case BLACK_PAWN:
@@ -102,7 +97,7 @@ int Piece::getType(int piece) {
 	}
 }
 
-int Piece::getColor(int piece) {
+int getColor(int piece) {
 	switch (piece) {
 		case WHITE_PAWN:
 		case WHITE_KNIGHT:

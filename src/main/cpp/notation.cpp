@@ -92,7 +92,7 @@ Position toPosition(const std::string& fen) {
 
 	for (auto character : token) {
 		int piece = toPiece(character);
-		if (piece != Piece::NOPIECE) {
+		if (piece != piece::NOPIECE) {
 			if (!file::isValid(file) || !Rank::isValid(rank)) {
 				throw std::invalid_argument("Illegal file or rank");
 			}
@@ -238,7 +238,7 @@ std::string fromPosition(const Position& position) {
 		for (auto file : file::values) {
 			int piece = position.board[Square::valueOf(file, rank)];
 
-			if (piece == Piece::NOPIECE) {
+			if (piece == piece::NOPIECE) {
 				emptySquares++;
 			} else {
 				if (emptySquares > 0) {
@@ -376,14 +376,14 @@ int toPiece(char notation) {
 	int piecetype = toPieceType(notation);
 
 	if (piecetype != PieceType::NOPIECETYPE) {
-		return Piece::valueOf(color, piecetype);
+		return piece::valueOf(color, piecetype);
 	} else {
-		return Piece::NOPIECE;
+		return piece::NOPIECE;
 	}
 }
 
 char fromPiece(int piece) {
-	return transform(fromPieceType(Piece::getType(piece)), Piece::getColor(piece));
+	return transform(fromPieceType(piece::getType(piece)), piece::getColor(piece));
 }
 
 int toCastlingType(char notation) {

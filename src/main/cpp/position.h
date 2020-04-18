@@ -76,7 +76,7 @@ public:
 private:
 	class Zobrist {
 	public:
-		std::array<std::array<uint64_t, Square::VALUES_LENGTH>, Piece::VALUES_SIZE> board;
+		std::array<std::array<uint64_t, Square::VALUES_LENGTH>, piece::VALUES_SIZE> board;
 		std::array<uint64_t, castling::VALUES_LENGTH> castlingRights;
 		std::array<uint64_t, Square::VALUES_LENGTH> enPassantSquare;
 		uint64_t activeColor;

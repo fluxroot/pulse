@@ -27,7 +27,7 @@ int evaluateMaterial(int color, Position& position) {
 
 int evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions) {
 	int mobility = 0;
-	bool sliding = PieceType::isSliding(Piece::getType(position.board[square]));
+	bool sliding = PieceType::isSliding(piece::getType(position.board[square]));
 
 	for (auto direction : directions) {
 		int targetSquare = square + direction;
@@ -35,7 +35,7 @@ int evaluateMobility(int color, Position& position, int square, const std::vecto
 		while (Square::isValid(targetSquare)) {
 			mobility++;
 
-			if (sliding && position.board[targetSquare] == Piece::NOPIECE) {
+			if (sliding && position.board[targetSquare] == piece::NOPIECE) {
 				targetSquare += direction;
 			} else {
 				break;

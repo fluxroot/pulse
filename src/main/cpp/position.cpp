@@ -15,7 +15,7 @@ namespace pulse {
 
 // Initialize the zobrist keys
 Position::Zobrist::Zobrist() {
-	for (auto piece : Piece::values) {
+	for (auto piece : piece::values) {
 		for (int i = 0; i < Square::VALUES_LENGTH; i++) {
 			board[piece][i] = next();
 		}
@@ -58,7 +58,7 @@ uint64_t Position::Zobrist::next() {
 
 Position::Position()
 		: zobrist(Zobrist::instance()) {
-	board.fill(+Piece::NOPIECE);
+	board.fill(+piece::NOPIECE);
 }
 
 Position::Position(const Position& position)
@@ -193,8 +193,8 @@ bool Position::hasInsufficientMaterial() {
  * @param square the Square.
  */
 void Position::put(int piece, int square) {
-	int piecetype = Piece::getType(piece);
-	int color = Piece::getColor(piece);
+	int piecetype = piece::getType(piece);
+	int color = piece::getColor(piece);
 
 	board[square] = piece;
 	pieces[color][piecetype] = bitboard::add(square, pieces[color][piecetype]);
@@ -213,10 +213,10 @@ void Position::put(int piece, int square) {
 int Position::remove(int square) {
 	int piece = board[square];
 
-	int piecetype = Piece::getType(piece);
-	int color = Piece::getColor(piece);
+	int piecetype = piece::getType(piece);
+	int color = piece::getColor(piece);
 
-	board[square] = Piece::NOPIECE;
+	board[square] = piece::NOPIECE;
 	pieces[color][piecetype] = bitboard::remove(square, pieces[color][piecetype]);
 	material[color] -= PieceType::getValue(piecetype);
 
@@ -240,11 +240,11 @@ void Position::makeMove(int move) {
 	int originSquare = move::getOriginSquare(move);
 	int targetSquare = move::getTargetSquare(move);
 	int originPiece = move::getOriginPiece(move);
-	int originColor = Piece::getColor(originPiece);
+	int originColor = piece::getColor(originPiece);
 	int targetPiece = move::getTargetPiece(move);
 
 	// Remove target piece and update castling rights
-	if (targetPiece != Piece::NOPIECE) {
+	if (targetPiece != piece::NOPIECE) {
 		int captureSquare = targetSquare;
 		if (type == movetype::ENPASSANT) {
 			captureSquare += (originColor == color::WHITE ? Square::S : Square::N);
@@ -257,7 +257,7 @@ void Position::makeMove(int move) {
 	// Move piece
 	remove(originSquare);
 	if (type == movetype::PAWNPROMOTION) {
-		put(Piece::valueOf(originColor, move::getPromotion(move)), targetSquare);
+		put(piece::valueOf(originColor, move::getPromotion(move)), targetSquare);
 	} else {
 		put(originPiece, targetSquare);
 	}
@@ -310,7 +310,7 @@ void Position::makeMove(int move) {
 	zobristKey ^= zobrist.activeColor;
 
 	// Update halfmoveClock
-	if (Piece::getType(originPiece) == PieceType::PAWN || targetPiece != Piece::NOPIECE) {
+	if (piece::getType(originPiece) == PieceType::PAWN || targetPiece != piece::NOPIECE) {
 		halfmoveClock = 0;
 	} else {
 		halfmoveClock++;
@@ -326,7 +326,7 @@ void Position::undoMove(int move) {
 	int originSquare = move::getOriginSquare(move);
 	int targetSquare = move::getTargetSquare(move);
 	int originPiece = move::getOriginPiece(move);
-	int originColor = Piece::getColor(originPiece);
+	int originColor = piece::getColor(originPiece);
 	int targetPiece = move::getTargetPiece(move);
 
 	// Update fullMoveNumber
@@ -369,7 +369,7 @@ void Position::undoMove(int move) {
 	put(originPiece, originSquare);
 
 	// Restore target piece
-	if (targetPiece != Piece::NOPIECE) {
+	if (targetPiece != piece::NOPIECE) {
 		int captureSquare = targetSquare;
 		if (type == movetype::ENPASSANT) {
 			captureSquare += (originColor == color::WHITE ? Square::S : Square::N);
@@ -439,7 +439,7 @@ bool Position::isCheck(int color) {
  */
 bool Position::isAttacked(int targetSquare, int attackerColor) {
 	// Pawn attacks
-	int pawnPiece = Piece::valueOf(attackerColor, PieceType::PAWN);
+	int pawnPiece = piece::valueOf(attackerColor, PieceType::PAWN);
 	for (unsigned int i = 1; i < Square::pawnDirections[attackerColor].size(); i++) {
 		int attackerSquare = targetSquare - Square::pawnDirections[attackerColor][i];
 		if (Square::isValid(attackerSquare)) {
@@ -452,23 +452,23 @@ bool Position::isAttacked(int targetSquare, int attackerColor) {
 	}
 
 	return isAttacked(targetSquare,
-			Piece::valueOf(attackerColor, PieceType::KNIGHT),
+			piece::valueOf(attackerColor, PieceType::KNIGHT),
 			Square::knightDirections)
 
 		   // The queen moves like a bishop, so check both piece types
 		   || isAttacked(targetSquare,
-			Piece::valueOf(attackerColor, PieceType::BISHOP),
-			Piece::valueOf(attackerColor, PieceType::QUEEN),
+			piece::valueOf(attackerColor, PieceType::BISHOP),
+			piece::valueOf(attackerColor, PieceType::QUEEN),
 			Square::bishopDirections)
 
 		   // The queen moves like a rook, so check both piece types
 		   || isAttacked(targetSquare,
-			Piece::valueOf(attackerColor, PieceType::ROOK),
-			Piece::valueOf(attackerColor, PieceType::QUEEN),
+			piece::valueOf(attackerColor, PieceType::ROOK),
+			piece::valueOf(attackerColor, PieceType::QUEEN),
 			Square::rookDirections)
 
 		   || isAttacked(targetSquare,
-			Piece::valueOf(attackerColor, PieceType::KING),
+			piece::valueOf(attackerColor, PieceType::KING),
 			Square::kingDirections);
 }
 
@@ -497,7 +497,7 @@ bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece, c
 		while (Square::isValid(attackerSquare)) {
 			int piece = board[attackerSquare];
 
-			if (Piece::isValid(piece)) {
+			if (piece::isValid(piece)) {
 				if (piece == attackerPiece || piece == queenPiece) {
 					return true;
 				}

@@ -32,9 +32,9 @@ constexpr int ORIGIN_SQUARE_MASK = Square::MASK << ORIGIN_SQUARE_SHIFT;
 constexpr int TARGET_SQUARE_SHIFT = 10;
 constexpr int TARGET_SQUARE_MASK = Square::MASK << TARGET_SQUARE_SHIFT;
 constexpr int ORIGIN_PIECE_SHIFT = 17;
-constexpr int ORIGIN_PIECE_MASK = Piece::MASK << ORIGIN_PIECE_SHIFT;
+constexpr int ORIGIN_PIECE_MASK = piece::MASK << ORIGIN_PIECE_SHIFT;
 constexpr int TARGET_PIECE_SHIFT = 22;
-constexpr int TARGET_PIECE_MASK = Piece::MASK << TARGET_PIECE_SHIFT;
+constexpr int TARGET_PIECE_MASK = piece::MASK << TARGET_PIECE_SHIFT;
 constexpr int PROMOTION_SHIFT = 27;
 constexpr int PROMOTION_MASK = PieceType::MASK << PROMOTION_SHIFT;
 }
@@ -43,8 +43,8 @@ constexpr int PROMOTION_MASK = PieceType::MASK << PROMOTION_SHIFT;
 constexpr int NOMOVE = (movetype::NOMOVETYPE << TYPE_SHIFT)
 					   | (Square::NOSQUARE << ORIGIN_SQUARE_SHIFT)
 					   | (Square::NOSQUARE << TARGET_SQUARE_SHIFT)
-					   | (Piece::NOPIECE << ORIGIN_PIECE_SHIFT)
-					   | (Piece::NOPIECE << TARGET_PIECE_SHIFT)
+					   | (piece::NOPIECE << ORIGIN_PIECE_SHIFT)
+					   | (piece::NOPIECE << TARGET_PIECE_SHIFT)
 					   | (PieceType::NOPIECETYPE << PROMOTION_SHIFT);
 
 int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion);

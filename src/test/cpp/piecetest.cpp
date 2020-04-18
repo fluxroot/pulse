@@ -14,52 +14,52 @@
 using namespace pulse;
 
 TEST(piecetest, testValues) {
-	for (auto piece : Piece::values) {
-		EXPECT_EQ(piece, Piece::values[piece]);
+	for (auto piece : piece::values) {
+		EXPECT_EQ(piece, piece::values[piece]);
 	}
 }
 
 TEST(piecetest, testValueOf) {
-	EXPECT_EQ(+Piece::WHITE_PAWN, Piece::valueOf(color::WHITE, PieceType::PAWN));
-	EXPECT_EQ(+Piece::WHITE_KNIGHT, Piece::valueOf(color::WHITE, PieceType::KNIGHT));
-	EXPECT_EQ(+Piece::WHITE_BISHOP, Piece::valueOf(color::WHITE, PieceType::BISHOP));
-	EXPECT_EQ(+Piece::WHITE_ROOK, Piece::valueOf(color::WHITE, PieceType::ROOK));
-	EXPECT_EQ(+Piece::WHITE_QUEEN, Piece::valueOf(color::WHITE, PieceType::QUEEN));
-	EXPECT_EQ(+Piece::WHITE_KING, Piece::valueOf(color::WHITE, PieceType::KING));
-	EXPECT_EQ(+Piece::BLACK_PAWN, Piece::valueOf(color::BLACK, PieceType::PAWN));
-	EXPECT_EQ(+Piece::BLACK_KNIGHT, Piece::valueOf(color::BLACK, PieceType::KNIGHT));
-	EXPECT_EQ(+Piece::BLACK_BISHOP, Piece::valueOf(color::BLACK, PieceType::BISHOP));
-	EXPECT_EQ(+Piece::BLACK_ROOK, Piece::valueOf(color::BLACK, PieceType::ROOK));
-	EXPECT_EQ(+Piece::BLACK_QUEEN, Piece::valueOf(color::BLACK, PieceType::QUEEN));
-	EXPECT_EQ(+Piece::BLACK_KING, Piece::valueOf(color::BLACK, PieceType::KING));
+	EXPECT_EQ(+piece::WHITE_PAWN, piece::valueOf(color::WHITE, PieceType::PAWN));
+	EXPECT_EQ(+piece::WHITE_KNIGHT, piece::valueOf(color::WHITE, PieceType::KNIGHT));
+	EXPECT_EQ(+piece::WHITE_BISHOP, piece::valueOf(color::WHITE, PieceType::BISHOP));
+	EXPECT_EQ(+piece::WHITE_ROOK, piece::valueOf(color::WHITE, PieceType::ROOK));
+	EXPECT_EQ(+piece::WHITE_QUEEN, piece::valueOf(color::WHITE, PieceType::QUEEN));
+	EXPECT_EQ(+piece::WHITE_KING, piece::valueOf(color::WHITE, PieceType::KING));
+	EXPECT_EQ(+piece::BLACK_PAWN, piece::valueOf(color::BLACK, PieceType::PAWN));
+	EXPECT_EQ(+piece::BLACK_KNIGHT, piece::valueOf(color::BLACK, PieceType::KNIGHT));
+	EXPECT_EQ(+piece::BLACK_BISHOP, piece::valueOf(color::BLACK, PieceType::BISHOP));
+	EXPECT_EQ(+piece::BLACK_ROOK, piece::valueOf(color::BLACK, PieceType::ROOK));
+	EXPECT_EQ(+piece::BLACK_QUEEN, piece::valueOf(color::BLACK, PieceType::QUEEN));
+	EXPECT_EQ(+piece::BLACK_KING, piece::valueOf(color::BLACK, PieceType::KING));
 }
 
 TEST(piecetest, testGetType) {
-	EXPECT_EQ(+PieceType::PAWN, Piece::getType(Piece::WHITE_PAWN));
-	EXPECT_EQ(+PieceType::PAWN, Piece::getType(Piece::BLACK_PAWN));
-	EXPECT_EQ(+PieceType::KNIGHT, Piece::getType(Piece::WHITE_KNIGHT));
-	EXPECT_EQ(+PieceType::KNIGHT, Piece::getType(Piece::BLACK_KNIGHT));
-	EXPECT_EQ(+PieceType::BISHOP, Piece::getType(Piece::WHITE_BISHOP));
-	EXPECT_EQ(+PieceType::BISHOP, Piece::getType(Piece::BLACK_BISHOP));
-	EXPECT_EQ(+PieceType::ROOK, Piece::getType(Piece::WHITE_ROOK));
-	EXPECT_EQ(+PieceType::ROOK, Piece::getType(Piece::BLACK_ROOK));
-	EXPECT_EQ(+PieceType::QUEEN, Piece::getType(Piece::WHITE_QUEEN));
-	EXPECT_EQ(+PieceType::QUEEN, Piece::getType(Piece::BLACK_QUEEN));
-	EXPECT_EQ(+PieceType::KING, Piece::getType(Piece::WHITE_KING));
-	EXPECT_EQ(+PieceType::KING, Piece::getType(Piece::BLACK_KING));
+	EXPECT_EQ(+PieceType::PAWN, piece::getType(piece::WHITE_PAWN));
+	EXPECT_EQ(+PieceType::PAWN, piece::getType(piece::BLACK_PAWN));
+	EXPECT_EQ(+PieceType::KNIGHT, piece::getType(piece::WHITE_KNIGHT));
+	EXPECT_EQ(+PieceType::KNIGHT, piece::getType(piece::BLACK_KNIGHT));
+	EXPECT_EQ(+PieceType::BISHOP, piece::getType(piece::WHITE_BISHOP));
+	EXPECT_EQ(+PieceType::BISHOP, piece::getType(piece::BLACK_BISHOP));
+	EXPECT_EQ(+PieceType::ROOK, piece::getType(piece::WHITE_ROOK));
+	EXPECT_EQ(+PieceType::ROOK, piece::getType(piece::BLACK_ROOK));
+	EXPECT_EQ(+PieceType::QUEEN, piece::getType(piece::WHITE_QUEEN));
+	EXPECT_EQ(+PieceType::QUEEN, piece::getType(piece::BLACK_QUEEN));
+	EXPECT_EQ(+PieceType::KING, piece::getType(piece::WHITE_KING));
+	EXPECT_EQ(+PieceType::KING, piece::getType(piece::BLACK_KING));
 }
 
 TEST(piecetest, testGetColor) {
-	EXPECT_EQ(+color::WHITE, Piece::getColor(Piece::WHITE_PAWN));
-	EXPECT_EQ(+color::BLACK, Piece::getColor(Piece::BLACK_PAWN));
-	EXPECT_EQ(+color::WHITE, Piece::getColor(Piece::WHITE_KNIGHT));
-	EXPECT_EQ(+color::BLACK, Piece::getColor(Piece::BLACK_KNIGHT));
-	EXPECT_EQ(+color::WHITE, Piece::getColor(Piece::WHITE_BISHOP));
-	EXPECT_EQ(+color::BLACK, Piece::getColor(Piece::BLACK_BISHOP));
-	EXPECT_EQ(+color::WHITE, Piece::getColor(Piece::WHITE_ROOK));
-	EXPECT_EQ(+color::BLACK, Piece::getColor(Piece::BLACK_ROOK));
-	EXPECT_EQ(+color::WHITE, Piece::getColor(Piece::WHITE_QUEEN));
-	EXPECT_EQ(+color::BLACK, Piece::getColor(Piece::BLACK_QUEEN));
-	EXPECT_EQ(+color::WHITE, Piece::getColor(Piece::WHITE_KING));
-	EXPECT_EQ(+color::BLACK, Piece::getColor(Piece::BLACK_KING));
+	EXPECT_EQ(+color::WHITE, piece::getColor(piece::WHITE_PAWN));
+	EXPECT_EQ(+color::BLACK, piece::getColor(piece::BLACK_PAWN));
+	EXPECT_EQ(+color::WHITE, piece::getColor(piece::WHITE_KNIGHT));
+	EXPECT_EQ(+color::BLACK, piece::getColor(piece::BLACK_KNIGHT));
+	EXPECT_EQ(+color::WHITE, piece::getColor(piece::WHITE_BISHOP));
+	EXPECT_EQ(+color::BLACK, piece::getColor(piece::BLACK_BISHOP));
+	EXPECT_EQ(+color::WHITE, piece::getColor(piece::WHITE_ROOK));
+	EXPECT_EQ(+color::BLACK, piece::getColor(piece::BLACK_ROOK));
+	EXPECT_EQ(+color::WHITE, piece::getColor(piece::WHITE_QUEEN));
+	EXPECT_EQ(+color::BLACK, piece::getColor(piece::BLACK_QUEEN));
+	EXPECT_EQ(+color::WHITE, piece::getColor(piece::WHITE_KING));
+	EXPECT_EQ(+color::BLACK, piece::getColor(piece::BLACK_KING));
 }

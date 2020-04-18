@@ -49,7 +49,7 @@ MoveList<MoveEntry>& MoveGenerator::getMoves(Position& position, int depth, bool
 			int size = moves.size;
 			moves.size = 0;
 			for (int i = 0; i < size; i++) {
-				if (move::getTargetPiece(moves.entries[i]->move) != Piece::NOPIECE) {
+				if (move::getTargetPiece(moves.entries[i]->move) != piece::NOPIECE) {
 					// Add only capturing moves
 					moves.entries[moves.size++]->move = moves.entries[i]->move;
 				}
@@ -98,8 +98,8 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, Position& position) {
 void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const std::vector<int>& directions,
 							 Position& position) {
 	int originPiece = position.board[originSquare];
-	bool sliding = PieceType::isSliding(Piece::getType(originPiece));
-	int oppositeColor = color::opposite(Piece::getColor(originPiece));
+	bool sliding = PieceType::isSliding(piece::getType(originPiece));
+	int oppositeColor = color::opposite(piece::getColor(originPiece));
 
 	// Go through all move directions for this piece
 	for (auto direction : directions) {
@@ -109,10 +109,10 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const 
 		while (Square::isValid(targetSquare)) {
 			int targetPiece = position.board[targetSquare];
 
-			if (targetPiece == Piece::NOPIECE) {
+			if (targetPiece == piece::NOPIECE) {
 				// quiet move
 				list.entries[list.size++]->move = move::valueOf(
-						movetype::NORMAL, originSquare, targetSquare, originPiece, Piece::NOPIECE,
+						movetype::NORMAL, originSquare, targetSquare, originPiece, piece::NOPIECE,
 						PieceType::NOPIECETYPE);
 
 				if (!sliding) {
@@ -121,7 +121,7 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const 
 
 				targetSquare += direction;
 			} else {
-				if (Piece::getColor(targetPiece) == oppositeColor) {
+				if (piece::getColor(targetPiece) == oppositeColor) {
 					// capturing move
 					list.entries[list.size++]->move = move::valueOf(
 							movetype::NORMAL, originSquare, targetSquare, originPiece, targetPiece,
@@ -136,7 +136,7 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const 
 
 void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Position& position) {
 	int pawnPiece = position.board[pawnSquare];
-	int pawnColor = Piece::getColor(pawnPiece);
+	int pawnColor = piece::getColor(pawnPiece);
 
 	// Generate only capturing moves first (i = 1)
 	for (unsigned int i = 1; i < Square::pawnDirections[pawnColor].size(); i++) {
@@ -146,8 +146,8 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
 		if (Square::isValid(targetSquare)) {
 			int targetPiece = position.board[targetSquare];
 
-			if (targetPiece != Piece::NOPIECE) {
-				if (Piece::getColor(targetPiece) == color::opposite(pawnColor)) {
+			if (targetPiece != piece::NOPIECE) {
+				if (piece::getColor(targetPiece) == color::opposite(pawnColor)) {
 					// Capturing move
 
 					if ((pawnColor == color::WHITE && Square::getRank(targetSquare) == Rank::r8)
@@ -190,34 +190,34 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
 
 	// Move one rank forward
 	int targetSquare = pawnSquare + direction;
-	if (Square::isValid(targetSquare) && position.board[targetSquare] == Piece::NOPIECE) {
+	if (Square::isValid(targetSquare) && position.board[targetSquare] == piece::NOPIECE) {
 		if ((pawnColor == color::WHITE && Square::getRank(targetSquare) == Rank::r8)
 			|| (pawnColor == color::BLACK && Square::getRank(targetSquare) == Rank::r1)) {
 			// Pawn promotion move
 
 			list.entries[list.size++]->move = move::valueOf(
-					movetype::PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece::NOPIECE, PieceType::QUEEN);
+					movetype::PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, piece::NOPIECE, PieceType::QUEEN);
 			list.entries[list.size++]->move = move::valueOf(
-					movetype::PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece::NOPIECE, PieceType::ROOK);
+					movetype::PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, piece::NOPIECE, PieceType::ROOK);
 			list.entries[list.size++]->move = move::valueOf(
-					movetype::PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece::NOPIECE, PieceType::BISHOP);
+					movetype::PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, piece::NOPIECE, PieceType::BISHOP);
 			list.entries[list.size++]->move = move::valueOf(
-					movetype::PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, Piece::NOPIECE, PieceType::KNIGHT);
+					movetype::PAWNPROMOTION, pawnSquare, targetSquare, pawnPiece, piece::NOPIECE, PieceType::KNIGHT);
 		} else {
 			// Normal move
 
 			list.entries[list.size++]->move = move::valueOf(
-					movetype::NORMAL, pawnSquare, targetSquare, pawnPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
+					movetype::NORMAL, pawnSquare, targetSquare, pawnPiece, piece::NOPIECE, PieceType::NOPIECETYPE);
 
 			// Move another rank forward
 			targetSquare += direction;
-			if (Square::isValid(targetSquare) && position.board[targetSquare] == Piece::NOPIECE) {
+			if (Square::isValid(targetSquare) && position.board[targetSquare] == piece::NOPIECE) {
 				if ((pawnColor == color::WHITE && Square::getRank(targetSquare) == Rank::r4)
 					|| (pawnColor == color::BLACK && Square::getRank(targetSquare) == Rank::r5)) {
 					// Pawn double move
 
 					list.entries[list.size++]->move = move::valueOf(
-							movetype::PAWNDOUBLE, pawnSquare, targetSquare, pawnPiece, Piece::NOPIECE,
+							movetype::PAWNDOUBLE, pawnSquare, targetSquare, pawnPiece, piece::NOPIECE,
 							PieceType::NOPIECETYPE);
 				}
 			}
@@ -228,41 +228,41 @@ void MoveGenerator::addPawnMoves(MoveList<MoveEntry>& list, int pawnSquare, Posi
 void MoveGenerator::addCastlingMoves(MoveList<MoveEntry>& list, int kingSquare, Position& position) {
 	int kingPiece = position.board[kingSquare];
 
-	if (Piece::getColor(kingPiece) == color::WHITE) {
+	if (piece::getColor(kingPiece) == color::WHITE) {
 		// Do not test g1 whether it is attacked as we will test it in isLegal()
 		if ((position.castlingRights & castling::WHITE_KINGSIDE) != castling::NOCASTLING
-			&& position.board[Square::f1] == Piece::NOPIECE
-			&& position.board[Square::g1] == Piece::NOPIECE
+			&& position.board[Square::f1] == piece::NOPIECE
+			&& position.board[Square::g1] == piece::NOPIECE
 			&& !position.isAttacked(Square::f1, color::BLACK)) {
 			list.entries[list.size++]->move = move::valueOf(
-					movetype::CASTLING, kingSquare, Square::g1, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
+					movetype::CASTLING, kingSquare, Square::g1, kingPiece, piece::NOPIECE, PieceType::NOPIECETYPE);
 		}
 		// Do not test c1 whether it is attacked as we will test it in isLegal()
 		if ((position.castlingRights & castling::WHITE_QUEENSIDE) != castling::NOCASTLING
-			&& position.board[Square::b1] == Piece::NOPIECE
-			&& position.board[Square::c1] == Piece::NOPIECE
-			&& position.board[Square::d1] == Piece::NOPIECE
+			&& position.board[Square::b1] == piece::NOPIECE
+			&& position.board[Square::c1] == piece::NOPIECE
+			&& position.board[Square::d1] == piece::NOPIECE
 			&& !position.isAttacked(Square::d1, color::BLACK)) {
 			list.entries[list.size++]->move = move::valueOf(
-					movetype::CASTLING, kingSquare, Square::c1, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
+					movetype::CASTLING, kingSquare, Square::c1, kingPiece, piece::NOPIECE, PieceType::NOPIECETYPE);
 		}
 	} else {
 		// Do not test g8 whether it is attacked as we will test it in isLegal()
 		if ((position.castlingRights & castling::BLACK_KINGSIDE) != castling::NOCASTLING
-			&& position.board[Square::f8] == Piece::NOPIECE
-			&& position.board[Square::g8] == Piece::NOPIECE
+			&& position.board[Square::f8] == piece::NOPIECE
+			&& position.board[Square::g8] == piece::NOPIECE
 			&& !position.isAttacked(Square::f8, color::WHITE)) {
 			list.entries[list.size++]->move = move::valueOf(
-					movetype::CASTLING, kingSquare, Square::g8, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
+					movetype::CASTLING, kingSquare, Square::g8, kingPiece, piece::NOPIECE, PieceType::NOPIECETYPE);
 		}
 		// Do not test c8 whether it is attacked as we will test it in isLegal()
 		if ((position.castlingRights & castling::BLACK_QUEENSIDE) != castling::NOCASTLING
-			&& position.board[Square::b8] == Piece::NOPIECE
-			&& position.board[Square::c8] == Piece::NOPIECE
-			&& position.board[Square::d8] == Piece::NOPIECE
+			&& position.board[Square::b8] == piece::NOPIECE
+			&& position.board[Square::c8] == piece::NOPIECE
+			&& position.board[Square::d8] == piece::NOPIECE
 			&& !position.isAttacked(Square::d8, color::WHITE)) {
 			list.entries[list.size++]->move = move::valueOf(
-					movetype::CASTLING, kingSquare, Square::c8, kingPiece, Piece::NOPIECE, PieceType::NOPIECETYPE);
+					movetype::CASTLING, kingSquare, Square::c8, kingPiece, piece::NOPIECE, PieceType::NOPIECETYPE);
 		}
 	}
 }
