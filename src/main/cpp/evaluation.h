@@ -8,25 +8,9 @@
 
 #include "position.h"
 
-namespace pulse {
+namespace pulse::evaluation {
 
-class Evaluation {
-public:
-	static const int TEMPO = 1;
+constexpr int TEMPO = 1;
 
-	static int materialWeight;
-	static int mobilityWeight;
-
-	int evaluate(Position& position);
-
-private:
-	static const int MAX_WEIGHT = 100;
-
-	int evaluateMaterial(int color, Position& position);
-
-	int evaluateMobility(int color, Position& position);
-
-	int evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions);
-};
-
+int evaluate(Position& position);
 }

@@ -7,40 +7,14 @@
 
 #include "evaluation.h"
 
-namespace pulse {
+namespace pulse::evaluation {
+namespace {
+constexpr int materialWeight = 100;
+constexpr int mobilityWeight = 80;
 
-int Evaluation::materialWeight = 100;
-int Evaluation::mobilityWeight = 80;
+constexpr int MAX_WEIGHT = 100;
 
-/**
- * Evaluates the position.
- *
- * @param position the position.
- * @return the evaluation value in centipawns.
- */
-int Evaluation::evaluate(Position& position) {
-	// Initialize
-	int myColor = position.activeColor;
-	int oppositeColor = color::opposite(myColor);
-	int value = 0;
-
-	// Evaluate material
-	int materialScore = (evaluateMaterial(myColor, position) - evaluateMaterial(oppositeColor, position))
-						* materialWeight / MAX_WEIGHT;
-	value += materialScore;
-
-	// Evaluate mobility
-	int mobilityScore = (evaluateMobility(myColor, position) - evaluateMobility(oppositeColor, position))
-						* mobilityWeight / MAX_WEIGHT;
-	value += mobilityScore;
-
-	// Add Tempo
-	value += TEMPO;
-
-	return value;
-}
-
-int Evaluation::evaluateMaterial(int color, Position& position) {
+int evaluateMaterial(int color, Position& position) {
 	int material = position.material[color];
 
 	// Add bonus for bishop pair
@@ -51,7 +25,28 @@ int Evaluation::evaluateMaterial(int color, Position& position) {
 	return material;
 }
 
-int Evaluation::evaluateMobility(int color, Position& position) {
+int evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions) {
+	int mobility = 0;
+	bool sliding = PieceType::isSliding(Piece::getType(position.board[square]));
+
+	for (auto direction : directions) {
+		int targetSquare = square + direction;
+
+		while (Square::isValid(targetSquare)) {
+			mobility++;
+
+			if (sliding && position.board[targetSquare] == Piece::NOPIECE) {
+				targetSquare += direction;
+			} else {
+				break;
+			}
+		}
+	}
+
+	return mobility;
+}
+
+int evaluateMobility(int color, Position& position) {
 	int knightMobility = 0;
 	for (auto squares = position.pieces[color][PieceType::KNIGHT];
 		 squares != 0; squares = bitboard::remainder(squares)) {
@@ -85,25 +80,33 @@ int Evaluation::evaluateMobility(int color, Position& position) {
 		   + rookMobility * 2
 		   + queenMobility;
 }
+}
 
-int Evaluation::evaluateMobility(int color, Position& position, int square, const std::vector<int>& directions) {
-	int mobility = 0;
-	bool sliding = PieceType::isSliding(Piece::getType(position.board[square]));
+/**
+ * Evaluates the position.
+ *
+ * @param position the position.
+ * @return the evaluation value in centipawns.
+ */
+int evaluate(Position& position) {
+	// Initialize
+	int myColor = position.activeColor;
+	int oppositeColor = color::opposite(myColor);
+	int value = 0;
 
-	for (auto direction : directions) {
-		int targetSquare = square + direction;
+	// Evaluate material
+	int materialScore = (evaluateMaterial(myColor, position) - evaluateMaterial(oppositeColor, position))
+						* materialWeight / MAX_WEIGHT;
+	value += materialScore;
 
-		while (Square::isValid(targetSquare)) {
-			mobility++;
+	// Evaluate mobility
+	int mobilityScore = (evaluateMobility(myColor, position) - evaluateMobility(oppositeColor, position))
+						* mobilityWeight / MAX_WEIGHT;
+	value += mobilityScore;
 
-			if (sliding && position.board[targetSquare] == Piece::NOPIECE) {
-				targetSquare += direction;
-			} else {
-				break;
-			}
-		}
-	}
+	// Add Tempo
+	value += TEMPO;
 
-	return mobility;
+	return value;
 }
 }
