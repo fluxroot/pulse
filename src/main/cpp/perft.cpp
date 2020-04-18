@@ -15,10 +15,10 @@
 namespace pulse {
 
 void Perft::run() {
-	std::unique_ptr<Position> position(new Position(Notation::toPosition(Notation::STANDARDPOSITION)));
+	std::unique_ptr<Position> position(new Position(notation::toPosition(notation::STANDARDPOSITION)));
 	int depth = MAX_DEPTH;
 
-	std::cout << "Testing " << Notation::fromPosition(*position) << " at depth " << depth << std::endl;
+	std::cout << "Testing " << notation::fromPosition(*position) << " at depth " << depth << std::endl;
 
 	auto startTime = std::chrono::system_clock::now();
 	uint64_t result = miniMax(depth, *position, 0);

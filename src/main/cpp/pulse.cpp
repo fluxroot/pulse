@@ -78,7 +78,7 @@ void Pulse::receiveNewGame() {
 	// We received a new game command.
 
 	// Initialize per-game settings here.
-	*currentPosition = Notation::toPosition(Notation::STANDARDPOSITION);
+	*currentPosition = notation::toPosition(notation::STANDARDPOSITION);
 }
 
 void Pulse::receivePosition(std::istringstream& input) {
@@ -89,7 +89,7 @@ void Pulse::receivePosition(std::istringstream& input) {
 	std::string token;
 	input >> token;
 	if (token == "startpos") {
-		*currentPosition = Notation::toPosition(Notation::STANDARDPOSITION);
+		*currentPosition = notation::toPosition(notation::STANDARDPOSITION);
 
 		if (input >> token) {
 			if (token != "moves") {
@@ -107,7 +107,7 @@ void Pulse::receivePosition(std::istringstream& input) {
 			}
 		}
 
-		*currentPosition = Notation::toPosition(fen);
+		*currentPosition = notation::toPosition(fen);
 	} else {
 		throw std::exception();
 	}
@@ -305,12 +305,12 @@ void Pulse::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uin
 std::string Pulse::fromMove(int move) {
 	std::string notation;
 
-	notation += Notation::fromSquare(move::getOriginSquare(move));
-	notation += Notation::fromSquare(move::getTargetSquare(move));
+	notation += notation::fromSquare(move::getOriginSquare(move));
+	notation += notation::fromSquare(move::getTargetSquare(move));
 
 	int promotion = move::getPromotion(move);
 	if (promotion != PieceType::NOPIECETYPE) {
-		notation += std::tolower(Notation::fromPieceType(promotion));
+		notation += std::tolower(notation::fromPieceType(promotion));
 	}
 
 	return notation;

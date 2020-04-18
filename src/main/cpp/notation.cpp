@@ -12,11 +12,60 @@
 
 #include <sstream>
 
-namespace pulse {
+namespace pulse::notation {
+namespace {
+constexpr char WHITE_NOTATION = 'w';
+constexpr char BLACK_NOTATION = 'b';
 
-const std::string Notation::STANDARDPOSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+constexpr char PAWN_NOTATION = 'P';
+constexpr char KNIGHT_NOTATION = 'N';
+constexpr char BISHOP_NOTATION = 'B';
+constexpr char ROOK_NOTATION = 'R';
+constexpr char QUEEN_NOTATION = 'Q';
+constexpr char KING_NOTATION = 'K';
 
-Position Notation::toPosition(const std::string& fen) {
+constexpr char KINGSIDE_NOTATION = 'K';
+constexpr char QUEENSIDE_NOTATION = 'Q';
+
+constexpr char a_NOTATION = 'a';
+constexpr char b_NOTATION = 'b';
+constexpr char c_NOTATION = 'c';
+constexpr char d_NOTATION = 'd';
+constexpr char e_NOTATION = 'e';
+constexpr char f_NOTATION = 'f';
+constexpr char g_NOTATION = 'g';
+constexpr char h_NOTATION = 'h';
+
+constexpr char r1_NOTATION = '1';
+constexpr char r2_NOTATION = '2';
+constexpr char r3_NOTATION = '3';
+constexpr char r4_NOTATION = '4';
+constexpr char r5_NOTATION = '5';
+constexpr char r6_NOTATION = '6';
+constexpr char r7_NOTATION = '7';
+constexpr char r8_NOTATION = '8';
+
+int colorOf(char notation) {
+	if (std::islower(notation)) {
+		return color::BLACK;
+	} else {
+		return color::WHITE;
+	}
+}
+
+char transform(char notation, int color) {
+	switch (color) {
+		case color::WHITE:
+			return std::toupper(notation);
+		case color::BLACK:
+			return std::tolower(notation);
+		default:
+			throw std::exception();
+	}
+}
+}
+
+Position toPosition(const std::string& fen) {
 	Position position;
 
 	// Clean and split into tokens
@@ -178,7 +227,7 @@ Position Notation::toPosition(const std::string& fen) {
 	return position;
 }
 
-std::string Notation::fromPosition(const Position& position) {
+std::string fromPosition(const Position& position) {
 	std::string fen;
 
 	// Pieces
@@ -258,7 +307,7 @@ std::string Notation::fromPosition(const Position& position) {
 	return fen;
 }
 
-int Notation::toColor(char notation) {
+int toColor(char notation) {
 	char lowercaseNotation = std::tolower(notation);
 	switch (lowercaseNotation) {
 		case WHITE_NOTATION:
@@ -270,7 +319,7 @@ int Notation::toColor(char notation) {
 	}
 }
 
-char Notation::fromColor(int color) {
+char fromColor(int color) {
 	switch (color) {
 		case color::WHITE:
 			return WHITE_NOTATION;
@@ -282,26 +331,7 @@ char Notation::fromColor(int color) {
 	}
 }
 
-int Notation::colorOf(char notation) {
-	if (std::islower(notation)) {
-		return color::BLACK;
-	} else {
-		return color::WHITE;
-	}
-}
-
-char Notation::transform(char notation, int color) {
-	switch (color) {
-		case color::WHITE:
-			return std::toupper(notation);
-		case color::BLACK:
-			return std::tolower(notation);
-		default:
-			throw std::exception();
-	}
-}
-
-int Notation::toPieceType(char notation) {
+int toPieceType(char notation) {
 	char uppercaseNotation = std::toupper(notation);
 	switch (uppercaseNotation) {
 		case PAWN_NOTATION:
@@ -321,7 +351,7 @@ int Notation::toPieceType(char notation) {
 	}
 }
 
-char Notation::fromPieceType(int piecetype) {
+char fromPieceType(int piecetype) {
 	switch (piecetype) {
 		case PieceType::PAWN:
 			return PAWN_NOTATION;
@@ -341,7 +371,7 @@ char Notation::fromPieceType(int piecetype) {
 	}
 }
 
-int Notation::toPiece(char notation) {
+int toPiece(char notation) {
 	int color = colorOf(notation);
 	int piecetype = toPieceType(notation);
 
@@ -352,11 +382,11 @@ int Notation::toPiece(char notation) {
 	}
 }
 
-char Notation::fromPiece(int piece) {
+char fromPiece(int piece) {
 	return transform(fromPieceType(Piece::getType(piece)), Piece::getColor(piece));
 }
 
-int Notation::toCastlingType(char notation) {
+int toCastlingType(char notation) {
 	char uppercaseNotation = std::toupper(notation);
 	switch (uppercaseNotation) {
 		case KINGSIDE_NOTATION:
@@ -368,7 +398,7 @@ int Notation::toCastlingType(char notation) {
 	}
 }
 
-char Notation::fromCastlingType(int castlingtype) {
+char fromCastlingType(int castlingtype) {
 	switch (castlingtype) {
 		case castlingtype::KINGSIDE:
 			return KINGSIDE_NOTATION;
@@ -380,7 +410,7 @@ char Notation::fromCastlingType(int castlingtype) {
 	}
 }
 
-int Notation::toCastling(char notation) {
+int toCastling(char notation) {
 	int color = colorOf(notation);
 	int castlingtype = toCastlingType(notation);
 
@@ -391,11 +421,11 @@ int Notation::toCastling(char notation) {
 	}
 }
 
-char Notation::fromCastling(int castling) {
+char fromCastling(int castling) {
 	return transform(fromCastlingType(castling::getType(castling)), castling::getColor(castling));
 }
 
-int Notation::toFile(char notation) {
+int toFile(char notation) {
 	char lowercaseNotation = std::tolower(notation);
 	switch (lowercaseNotation) {
 		case a_NOTATION:
@@ -419,7 +449,7 @@ int Notation::toFile(char notation) {
 	}
 }
 
-char Notation::fromFile(int file) {
+char fromFile(int file) {
 	switch (file) {
 		case file::a:
 			return a_NOTATION;
@@ -443,7 +473,7 @@ char Notation::fromFile(int file) {
 	}
 }
 
-int Notation::toRank(char notation) {
+int toRank(char notation) {
 	switch (notation) {
 		case r1_NOTATION:
 			return Rank::r1;
@@ -466,7 +496,7 @@ int Notation::toRank(char notation) {
 	}
 }
 
-char Notation::fromRank(int rank) {
+char fromRank(int rank) {
 	switch (rank) {
 		case Rank::r1:
 			return r1_NOTATION;
@@ -490,7 +520,7 @@ char Notation::fromRank(int rank) {
 	}
 }
 
-int Notation::toSquare(const std::string& notation) {
+int toSquare(const std::string& notation) {
 	int file = toFile(notation[0]);
 	int rank = toRank(notation[1]);
 
@@ -501,7 +531,7 @@ int Notation::toSquare(const std::string& notation) {
 	}
 }
 
-std::string Notation::fromSquare(int square) {
+std::string fromSquare(int square) {
 	std::string notation;
 	notation += fromFile(Square::getFile(square));
 	notation += fromRank(Square::getRank(square));

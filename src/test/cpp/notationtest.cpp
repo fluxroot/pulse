@@ -14,7 +14,7 @@
 using namespace pulse;
 
 TEST(notationtest, testStandardPosition) {
-	Position position(Notation::toPosition(Notation::STANDARDPOSITION));
+	Position position(notation::toPosition(notation::STANDARDPOSITION));
 
 	// Test pawns
 	for (auto file : file::values) {
