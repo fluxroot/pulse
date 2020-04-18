@@ -56,13 +56,13 @@ TEST(positiontest, testActiveColor) {
 	int move = Move::valueOf(MoveType::NORMAL, Square::a2, Square::a3, Piece::WHITE_PAWN, Piece::NOPIECE,
 			PieceType::NOPIECETYPE);
 	position.makeMove(move);
-	EXPECT_EQ(+Color::BLACK, position.activeColor);
+	EXPECT_EQ(+color::BLACK, position.activeColor);
 
 	// Move black pawn
 	move = Move::valueOf(MoveType::NORMAL, Square::b7, Square::b6, Piece::BLACK_PAWN, Piece::NOPIECE,
 			PieceType::NOPIECETYPE);
 	position.makeMove(move);
-	EXPECT_EQ(+Color::WHITE, position.activeColor);
+	EXPECT_EQ(+color::WHITE, position.activeColor);
 }
 
 TEST(positiontest, testHalfMoveClock) {

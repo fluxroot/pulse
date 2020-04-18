@@ -8,24 +8,17 @@
 
 #include <array>
 
-namespace pulse {
+namespace pulse::color {
 
-class Color {
-public:
-	static const int WHITE = 0;
-	static const int BLACK = 1;
+constexpr int WHITE = 0;
+constexpr int BLACK = 1;
 
-	static const int NOCOLOR = 2;
+constexpr int NOCOLOR = 2;
 
-	static const int VALUES_SIZE = 2;
-	static const std::array<int, VALUES_SIZE> values;
-
-	static int opposite(int color);
-
-private:
-	Color();
-
-	~Color();
+constexpr int VALUES_SIZE = 2;
+constexpr std::array<int, VALUES_SIZE> values = {
+		WHITE, BLACK
 };
 
+int opposite(int color);
 }

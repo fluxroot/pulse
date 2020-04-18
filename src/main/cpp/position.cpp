@@ -154,7 +154,7 @@ int Position::getFullmoveNumber() const {
 
 void Position::setFullmoveNumber(int fullmoveNumber) {
 	halfmoveNumber = fullmoveNumber * 2;
-	if (activeColor == Color::BLACK) {
+	if (activeColor == color::BLACK) {
 		halfmoveNumber++;
 	}
 }
@@ -173,16 +173,16 @@ bool Position::isRepetition() {
 
 bool Position::hasInsufficientMaterial() {
 	// If there is only one minor left, we are unable to checkmate
-	return bitboard::size(pieces[Color::WHITE][PieceType::PAWN]) == 0
-		   && bitboard::size(pieces[Color::BLACK][PieceType::PAWN]) == 0
-		   && bitboard::size(pieces[Color::WHITE][PieceType::ROOK]) == 0
-		   && bitboard::size(pieces[Color::BLACK][PieceType::ROOK]) == 0
-		   && bitboard::size(pieces[Color::WHITE][PieceType::QUEEN]) == 0
-		   && bitboard::size(pieces[Color::BLACK][PieceType::QUEEN]) == 0
-		   && (bitboard::size(pieces[Color::WHITE][PieceType::KNIGHT]) +
-			   bitboard::size(pieces[Color::WHITE][PieceType::BISHOP]) <= 1)
-		   && (bitboard::size(pieces[Color::BLACK][PieceType::KNIGHT]) +
-			   bitboard::size(pieces[Color::BLACK][PieceType::BISHOP]) <= 1);
+	return bitboard::size(pieces[color::WHITE][PieceType::PAWN]) == 0
+		   && bitboard::size(pieces[color::BLACK][PieceType::PAWN]) == 0
+		   && bitboard::size(pieces[color::WHITE][PieceType::ROOK]) == 0
+		   && bitboard::size(pieces[color::BLACK][PieceType::ROOK]) == 0
+		   && bitboard::size(pieces[color::WHITE][PieceType::QUEEN]) == 0
+		   && bitboard::size(pieces[color::BLACK][PieceType::QUEEN]) == 0
+		   && (bitboard::size(pieces[color::WHITE][PieceType::KNIGHT]) +
+			   bitboard::size(pieces[color::WHITE][PieceType::BISHOP]) <= 1)
+		   && (bitboard::size(pieces[color::BLACK][PieceType::KNIGHT]) +
+			   bitboard::size(pieces[color::BLACK][PieceType::BISHOP]) <= 1);
 }
 
 /**
@@ -247,7 +247,7 @@ void Position::makeMove(int move) {
 	if (targetPiece != Piece::NOPIECE) {
 		int captureSquare = targetSquare;
 		if (type == MoveType::ENPASSANT) {
-			captureSquare += (originColor == Color::WHITE ? Square::S : Square::N);
+			captureSquare += (originColor == color::WHITE ? Square::S : Square::N);
 		}
 		remove(captureSquare);
 
@@ -299,14 +299,14 @@ void Position::makeMove(int move) {
 		zobristKey ^= zobrist.enPassantSquare[enPassantSquare];
 	}
 	if (type == MoveType::PAWNDOUBLE) {
-		enPassantSquare = targetSquare + (originColor == Color::WHITE ? Square::S : Square::N);
+		enPassantSquare = targetSquare + (originColor == color::WHITE ? Square::S : Square::N);
 		zobristKey ^= zobrist.enPassantSquare[enPassantSquare];
 	} else {
 		enPassantSquare = Square::NOSQUARE;
 	}
 
 	// Update activeColor
-	activeColor = Color::opposite(activeColor);
+	activeColor = color::opposite(activeColor);
 	zobristKey ^= zobrist.activeColor;
 
 	// Update halfmoveClock
@@ -333,7 +333,7 @@ void Position::undoMove(int move) {
 	halfmoveNumber--;
 
 	// Update activeColor
-	activeColor = Color::opposite(activeColor);
+	activeColor = color::opposite(activeColor);
 
 	// Undo move rook
 	if (type == MoveType::CASTLING) {
@@ -372,7 +372,7 @@ void Position::undoMove(int move) {
 	if (targetPiece != Piece::NOPIECE) {
 		int captureSquare = targetSquare;
 		if (type == MoveType::ENPASSANT) {
-			captureSquare += (originColor == Color::WHITE ? Square::S : Square::N);
+			captureSquare += (originColor == color::WHITE ? Square::S : Square::N);
 		}
 		put(targetPiece, captureSquare);
 	}
@@ -421,12 +421,12 @@ void Position::clearCastling(int square) {
 
 bool Position::isCheck() {
 	// Check whether our king is attacked by any opponent piece
-	return isAttacked(bitboard::next(pieces[activeColor][PieceType::KING]), Color::opposite(activeColor));
+	return isAttacked(bitboard::next(pieces[activeColor][PieceType::KING]), color::opposite(activeColor));
 }
 
 bool Position::isCheck(int color) {
 	// Check whether the king for color is attacked by any opponent piece
-	return isAttacked(bitboard::next(pieces[color][PieceType::KING]), Color::opposite(color));
+	return isAttacked(bitboard::next(pieces[color][PieceType::KING]), color::opposite(color));
 }
 
 /**
@@ -511,5 +511,4 @@ bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece, c
 
 	return false;
 }
-
 }

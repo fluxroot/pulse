@@ -14,8 +14,8 @@
 using namespace pulse;
 
 TEST(castlingtest, testValueOf) {
-	EXPECT_EQ(+castling::WHITE_KINGSIDE, castling::valueOf(Color::WHITE, castlingtype::KINGSIDE));
-	EXPECT_EQ(+castling::WHITE_QUEENSIDE, castling::valueOf(Color::WHITE, castlingtype::QUEENSIDE));
-	EXPECT_EQ(+castling::BLACK_KINGSIDE, castling::valueOf(Color::BLACK, castlingtype::KINGSIDE));
-	EXPECT_EQ(+castling::BLACK_QUEENSIDE, castling::valueOf(Color::BLACK, castlingtype::QUEENSIDE));
+	EXPECT_EQ(+castling::WHITE_KINGSIDE, castling::valueOf(color::WHITE, castlingtype::KINGSIDE));
+	EXPECT_EQ(+castling::WHITE_QUEENSIDE, castling::valueOf(color::WHITE, castlingtype::QUEENSIDE));
+	EXPECT_EQ(+castling::BLACK_KINGSIDE, castling::valueOf(color::BLACK, castlingtype::KINGSIDE));
+	EXPECT_EQ(+castling::BLACK_QUEENSIDE, castling::valueOf(color::BLACK, castlingtype::QUEENSIDE));
 }

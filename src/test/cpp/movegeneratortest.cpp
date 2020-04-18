@@ -218,7 +218,7 @@ uint64_t miniMax(int depth, Position& position, int ply) {
 		int move = moves.entries[i]->move;
 
 		position.makeMove(move);
-		if (!position.isCheck(Color::opposite(position.activeColor))) {
+		if (!position.isCheck(color::opposite(position.activeColor))) {
 			totalNodes += miniMax(depth - 1, position, ply + 1);
 		}
 		position.undoMove(move);

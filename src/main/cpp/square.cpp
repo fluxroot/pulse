@@ -21,8 +21,8 @@ const std::array<int, Square::VALUES_SIZE> Square::values = {
 };
 
 const std::vector<std::vector<int>> Square::pawnDirections = {
-		{N, NE, NW}, // Color::WHITE
-		{S, SE, SW}  // Color::BLACK
+		{N, NE, NW}, // color::WHITE
+		{S, SE, SW}  // color::BLACK
 };
 const std::vector<int> Square::knightDirections = {
 		N + N + E,
@@ -64,5 +64,4 @@ int Square::getFile(int square) {
 int Square::getRank(int square) {
 	return square >> 4;
 }
-
 }

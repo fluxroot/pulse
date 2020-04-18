@@ -13,7 +13,7 @@ namespace pulse::castling {
 
 int valueOf(int color, int castlingtype) {
 	switch (color) {
-		case Color::WHITE:
+		case color::WHITE:
 			switch (castlingtype) {
 				case castlingtype::KINGSIDE:
 					return WHITE_KINGSIDE;
@@ -22,7 +22,7 @@ int valueOf(int color, int castlingtype) {
 				default:
 					throw std::exception();
 			}
-		case Color::BLACK:
+		case color::BLACK:
 			switch (castlingtype) {
 				case castlingtype::KINGSIDE:
 					return BLACK_KINGSIDE;
@@ -53,10 +53,10 @@ int getColor(int castling) {
 	switch (castling) {
 		case WHITE_KINGSIDE:
 		case WHITE_QUEENSIDE:
-			return Color::WHITE;
+			return color::WHITE;
 		case BLACK_KINGSIDE:
 		case BLACK_QUEENSIDE:
-			return Color::BLACK;
+			return color::BLACK;
 		default:
 			throw std::exception();
 	}

@@ -129,7 +129,7 @@ void Search::newPonderSearch(Position& position,
 
 	uint64_t timeLeft;
 	uint64_t timeIncrement;
-	if (position.activeColor == Color::WHITE) {
+	if (position.activeColor == color::WHITE) {
 		timeLeft = whiteTimeLeft;
 		timeIncrement = whiteTimeIncrement;
 	} else {
@@ -419,7 +419,7 @@ int Search::search(int depth, int alpha, int beta, int ply) {
 		int value = bestValue;
 
 		position.makeMove(move);
-		if (!position.isCheck(Color::opposite(position.activeColor))) {
+		if (!position.isCheck(color::opposite(position.activeColor))) {
 			searchedMoves++;
 			value = -search(depth - 1, -beta, -alpha, ply + 1);
 		}
@@ -502,7 +502,7 @@ int Search::quiescent(int depth, int alpha, int beta, int ply) {
 		int value = bestValue;
 
 		position.makeMove(move);
-		if (!position.isCheck(Color::opposite(position.activeColor))) {
+		if (!position.isCheck(color::opposite(position.activeColor))) {
 			searchedMoves++;
 			value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
 		}
@@ -546,5 +546,4 @@ void Search::savePV(int move, MoveVariation& src, MoveVariation& dest) {
 	}
 	dest.size = src.size + 1;
 }
-
 }

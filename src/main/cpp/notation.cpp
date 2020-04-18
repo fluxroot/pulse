@@ -90,7 +90,7 @@ Position Notation::toPosition(const std::string& fen) {
 	}
 
 	int activeColor = toColor(token[0]);
-	if (activeColor == Color::NOCOLOR) {
+	if (activeColor == color::NOCOLOR) {
 		throw std::exception();
 	}
 	position.setActiveColor(activeColor);
@@ -143,8 +143,8 @@ Position Notation::toPosition(const std::string& fen) {
 
 		int enPassantFile = toFile(token[0]);
 		int enPassantRank = toRank(token[1]);
-		if (!(activeColor == Color::BLACK && enPassantRank == Rank::r3)
-			&& !(activeColor == Color::WHITE && enPassantRank == Rank::r6)) {
+		if (!(activeColor == color::BLACK && enPassantRank == Rank::r3)
+			&& !(activeColor == color::WHITE && enPassantRank == Rank::r6)) {
 			throw std::exception();
 		}
 
@@ -262,21 +262,21 @@ int Notation::toColor(char notation) {
 	char lowercaseNotation = std::tolower(notation);
 	switch (lowercaseNotation) {
 		case WHITE_NOTATION:
-			return Color::WHITE;
+			return color::WHITE;
 		case BLACK_NOTATION:
-			return Color::BLACK;
+			return color::BLACK;
 		default:
-			return Color::NOCOLOR;
+			return color::NOCOLOR;
 	}
 }
 
 char Notation::fromColor(int color) {
 	switch (color) {
-		case Color::WHITE:
+		case color::WHITE:
 			return WHITE_NOTATION;
-		case Color::BLACK:
+		case color::BLACK:
 			return BLACK_NOTATION;
-		case Color::NOCOLOR:
+		case color::NOCOLOR:
 		default:
 			throw std::exception();
 	}
@@ -284,17 +284,17 @@ char Notation::fromColor(int color) {
 
 int Notation::colorOf(char notation) {
 	if (std::islower(notation)) {
-		return Color::BLACK;
+		return color::BLACK;
 	} else {
-		return Color::WHITE;
+		return color::WHITE;
 	}
 }
 
 char Notation::transform(char notation, int color) {
 	switch (color) {
-		case Color::WHITE:
+		case color::WHITE:
 			return std::toupper(notation);
-		case Color::BLACK:
+		case color::BLACK:
 			return std::tolower(notation);
 		default:
 			throw std::exception();
@@ -508,5 +508,4 @@ std::string Notation::fromSquare(int square) {
 
 	return notation;
 }
-
 }

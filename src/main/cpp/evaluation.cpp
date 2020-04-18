@@ -21,7 +21,7 @@ int Evaluation::mobilityWeight = 80;
 int Evaluation::evaluate(Position& position) {
 	// Initialize
 	int myColor = position.activeColor;
-	int oppositeColor = Color::opposite(myColor);
+	int oppositeColor = color::opposite(myColor);
 	int value = 0;
 
 	// Evaluate material
@@ -106,5 +106,4 @@ int Evaluation::evaluateMobility(int color, Position& position, int square, cons
 
 	return mobility;
 }
-
 }

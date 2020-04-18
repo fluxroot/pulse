@@ -22,13 +22,13 @@ class Position {
 public:
 	std::array<int, Square::VALUES_LENGTH> board;
 
-	std::array<std::array<uint64_t, PieceType::VALUES_SIZE>, Color::VALUES_SIZE> pieces = {};
+	std::array<std::array<uint64_t, PieceType::VALUES_SIZE>, color::VALUES_SIZE> pieces = {};
 
-	std::array<int, Color::VALUES_SIZE> material = {};
+	std::array<int, color::VALUES_SIZE> material = {};
 
 	int castlingRights = castling::NOCASTLING;
 	int enPassantSquare = Square::NOSQUARE;
-	int activeColor = Color::WHITE;
+	int activeColor = color::WHITE;
 	int halfmoveClock = 0;
 
 	uint64_t zobristKey = 0;
@@ -116,5 +116,4 @@ private:
 
 	bool isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& directions);
 };
-
 }

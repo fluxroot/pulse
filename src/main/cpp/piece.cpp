@@ -38,7 +38,7 @@ bool Piece::isValid(int piece) {
 
 int Piece::valueOf(int color, int piecetype) {
 	switch (color) {
-		case Color::WHITE:
+		case color::WHITE:
 			switch (piecetype) {
 				case PieceType::PAWN:
 					return WHITE_PAWN;
@@ -55,7 +55,7 @@ int Piece::valueOf(int color, int piecetype) {
 				default:
 					throw std::exception();
 			}
-		case Color::BLACK:
+		case color::BLACK:
 			switch (piecetype) {
 				case PieceType::PAWN:
 					return BLACK_PAWN;
@@ -110,17 +110,16 @@ int Piece::getColor(int piece) {
 		case WHITE_ROOK:
 		case WHITE_QUEEN:
 		case WHITE_KING:
-			return Color::WHITE;
+			return color::WHITE;
 		case BLACK_PAWN:
 		case BLACK_KNIGHT:
 		case BLACK_BISHOP:
 		case BLACK_ROOK:
 		case BLACK_QUEEN:
 		case BLACK_KING:
-			return Color::BLACK;
+			return color::BLACK;
 		default:
 			throw std::exception();
 	}
 }
-
 }

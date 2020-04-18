@@ -54,14 +54,14 @@ TEST(notationtest, testStandardPosition) {
 			  + 2 * PieceType::ROOK_VALUE
 			  + PieceType::QUEEN_VALUE
 			  + PieceType::KING_VALUE,
-			position.material[Color::WHITE]);
+			position.material[color::WHITE]);
 	EXPECT_EQ(8 * PieceType::PAWN_VALUE
 			  + 2 * PieceType::KNIGHT_VALUE
 			  + 2 * PieceType::BISHOP_VALUE
 			  + 2 * PieceType::ROOK_VALUE
 			  + PieceType::QUEEN_VALUE
 			  + PieceType::KING_VALUE,
-			position.material[Color::BLACK]);
+			position.material[color::BLACK]);
 
 	// Test castling
 	EXPECT_NE(+castling::NOCASTLING, position.castlingRights & castling::WHITE_KINGSIDE);
@@ -73,7 +73,7 @@ TEST(notationtest, testStandardPosition) {
 	EXPECT_EQ(+Square::NOSQUARE, position.enPassantSquare);
 
 	// Test active color
-	EXPECT_EQ(+Color::WHITE, position.activeColor);
+	EXPECT_EQ(+color::WHITE, position.activeColor);
 
 	// Test half move clock
 	EXPECT_EQ(0, position.halfmoveClock);

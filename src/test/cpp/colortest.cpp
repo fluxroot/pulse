@@ -12,12 +12,12 @@
 using namespace pulse;
 
 TEST(colortest, testValues) {
-	for (auto color : Color::values) {
-		EXPECT_EQ(color, Color::values[color]);
+	for (auto color : color::values) {
+		EXPECT_EQ(color, color::values[color]);
 	}
 }
 
 TEST(colortest, testOpposite) {
-	EXPECT_EQ(+Color::WHITE, Color::opposite(Color::BLACK));
-	EXPECT_EQ(+Color::BLACK, Color::opposite(Color::WHITE));
+	EXPECT_EQ(+color::WHITE, color::opposite(color::BLACK));
+	EXPECT_EQ(+color::BLACK, color::opposite(color::WHITE));
 }
