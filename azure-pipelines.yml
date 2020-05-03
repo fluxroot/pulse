@@ -1,0 +1,21 @@
+variables:
+  BUILD_NUMBER: $(Build.BuildNumber)
+
+jobs:
+  - job: buildPulseJava
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+      - script: echo $BUILD_NUMBER
+
+  - job: buildPulseCppLinuxX64
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+      - script: echo $BUILD_NUMBER
+
+  - job: buildPulseCppWindowsX64
+    pool:
+      vmImage: 'windows-2019'
+    steps:
+      - script: echo %BUILD_NUMBER%
