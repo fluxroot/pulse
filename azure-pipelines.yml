@@ -1,21 +1,36 @@
 variables:
   BUILD_NUMBER: $(Build.BuildNumber)
+  TERM: dumb
 
 jobs:
   - job: buildPulseJava
     pool:
       vmImage: 'ubuntu-18.04'
+    container: adoptopenjdk:14-jdk-hotspot
     steps:
-      - script: echo $BUILD_NUMBER
+      - script: ./mvnw test
 
   - job: buildPulseCppLinuxX64
     pool:
       vmImage: 'ubuntu-18.04'
+    container: fluxroot/buildz:cpp-1.0.0
     steps:
-      - script: echo $BUILD_NUMBER
+      - script: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          make
+          make test
+          make package
 
   - job: buildPulseCppWindowsX64
     pool:
       vmImage: 'windows-2019'
     steps:
-      - script: echo %BUILD_NUMBER%
+      - script: |
+          mkdir build
+          cd build
+          cmake -G "Visual Studio 16 2019" -A x64 ..
+          cmake --build . --config Release
+          ctest
+          cpack -C Release
