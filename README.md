@@ -4,7 +4,7 @@ Pulse Chess
 Copyright (C) 2013-2019 Phokham Nonava  
 http://www.fluxchess.com
 
-[![CircleCI](https://circleci.com/gh/fluxroot/pulse.svg?style=svg)](https://circleci.com/gh/fluxroot/pulse)
+[![Build Status](https://dev.azure.com/fluxroot/pulse/_apis/build/status/fluxroot.pulse?branchName=master)](https://dev.azure.com/fluxroot/pulse/_build/latest?definitionId=2&branchName=master)
 
 
 Introduction
