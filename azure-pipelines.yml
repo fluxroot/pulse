@@ -3,6 +3,7 @@ variables:
   TERM: dumb
   DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
 
+name: $(Build.BuildId)
 jobs:
   - job: buildPulseJava
     displayName: 'Build Pulse Java'
@@ -12,6 +13,9 @@ jobs:
     steps:
       - script: ./mvnw package
         displayName: 'Build'
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results'
+        condition: succeededOrFailed()
       - task: CopyFiles@2
         displayName: 'Copy Artifacts'
         inputs:
