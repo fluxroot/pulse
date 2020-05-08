@@ -1,16 +1,35 @@
 variables:
   BUILD_NUMBER: $(Build.BuildNumber)
   TERM: dumb
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
 
 jobs:
   - job: buildPulseJava
+    displayName: 'Build Pulse Java'
     pool:
       vmImage: 'ubuntu-18.04'
     container: adoptopenjdk:14-jdk-hotspot
     steps:
-      - script: ./mvnw test
+      - script: ./mvnw package
+        displayName: 'Build'
+      - task: CopyFiles@2
+        displayName: 'Copy Artifacts'
+        inputs:
+          contents: 'target/pulse-java-*.zip'
+          targetFolder: '$(Build.ArtifactStagingDirectory)'
+      - task: UniversalPackages@0
+        displayName: 'Publish'
+        inputs:
+          command: publish
+          publishDirectory: '$(Build.ArtifactStagingDirectory)'
+          vstsFeedPublish: 'pulse/pulse'
+          vstsFeedPackagePublish: 'pulse-java'
+          versionOption: custom
+          versionPublish: '2.0.0-$(Build.BuildNumber)'
+          packagePublishDescription: 'A Didactic Java/C++ Chess Engine'
 
-  - job: buildPulseCppLinuxX64
+  - job: buildPulseCppLinux
+    displayName: 'Build Pulse C++ Linux'
     pool:
       vmImage: 'ubuntu-18.04'
     container: fluxroot/buildz:cpp-1.0.0
@@ -22,8 +41,25 @@ jobs:
           make
           make test
           make package
+        displayName: 'Build'
+      - task: CopyFiles@2
+        displayName: 'Copy Artifacts'
+        inputs:
+          contents: 'build/pulse-cpp-*.zip'
+          targetFolder: '$(Build.ArtifactStagingDirectory)'
+      - task: UniversalPackages@0
+        displayName: 'Publish'
+        inputs:
+          command: publish
+          publishDirectory: '$(Build.ArtifactStagingDirectory)'
+          vstsFeedPublish: 'pulse/pulse'
+          vstsFeedPackagePublish: 'pulse-cpp-linux'
+          versionOption: custom
+          versionPublish: '2.0.0-$(Build.BuildNumber)'
+          packagePublishDescription: 'A Didactic Java/C++ Chess Engine'
 
-  - job: buildPulseCppWindowsX64
+  - job: buildPulseCppWindows
+    displayName: 'Build Pulse C++ Windows'
     pool:
       vmImage: 'windows-2019'
     steps:
@@ -34,3 +70,19 @@ jobs:
           cmake --build . --config Release
           ctest
           cpack -C Release
+        displayName: 'Build'
+      - task: CopyFiles@2
+        displayName: 'Copy Artifacts'
+        inputs:
+          contents: 'build/pulse-cpp-*.zip'
+          targetFolder: '$(Build.ArtifactStagingDirectory)'
+      - task: UniversalPackages@0
+        displayName: 'Publish'
+        inputs:
+          command: publish
+          publishDirectory: '$(Build.ArtifactStagingDirectory)'
+          vstsFeedPublish: 'pulse/pulse'
+          vstsFeedPackagePublish: 'pulse-cpp-windows'
+          versionOption: custom
+          versionPublish: '2.0.0-$(Build.BuildNumber)'
+          packagePublishDescription: 'A Didactic Java/C++ Chess Engine'
