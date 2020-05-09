@@ -1,6 +1,4 @@
 variables:
-  BUILD_NUMBER: $(Build.BuildNumber)
-  TERM: dumb
   DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
 
 name: $(Build.BuildId)
@@ -23,6 +21,7 @@ jobs:
           targetFolder: '$(Build.ArtifactStagingDirectory)'
       - task: UniversalPackages@0
         displayName: 'Publish'
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
         inputs:
           command: publish
           publishDirectory: '$(Build.ArtifactStagingDirectory)'
@@ -39,13 +38,18 @@ jobs:
     container: fluxroot/buildz:cpp-1.0.0
     steps:
       - script: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          make
-          make test
+          mkdir build && \
+          cd build && \
+          cmake -DCMAKE_BUILD_TYPE=Release .. && \
+          make && \
+          make test && \
           make package
         displayName: 'Build'
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results'
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFiles: '**/test-results/unittest.xml'
       - task: CopyFiles@2
         displayName: 'Copy Artifacts'
         inputs:
@@ -53,6 +57,7 @@ jobs:
           targetFolder: '$(Build.ArtifactStagingDirectory)'
       - task: UniversalPackages@0
         displayName: 'Publish'
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
         inputs:
           command: publish
           publishDirectory: '$(Build.ArtifactStagingDirectory)'
@@ -68,13 +73,18 @@ jobs:
       vmImage: 'windows-2019'
     steps:
       - script: |
-          mkdir build
-          cd build
-          cmake -G "Visual Studio 16 2019" -A x64 ..
-          cmake --build . --config Release
-          ctest
+          mkdir build &&^
+          cd build &&^
+          cmake -G "Visual Studio 16 2019" -A x64 .. &&^
+          cmake --build . --config Release &&^
+          ctest &&^
           cpack -C Release
         displayName: 'Build'
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results'
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFiles: '**/test-results/unittest.xml'
       - task: CopyFiles@2
         displayName: 'Copy Artifacts'
         inputs:
@@ -82,6 +92,7 @@ jobs:
           targetFolder: '$(Build.ArtifactStagingDirectory)'
       - task: UniversalPackages@0
         displayName: 'Publish'
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
         inputs:
           command: publish
           publishDirectory: '$(Build.ArtifactStagingDirectory)'
