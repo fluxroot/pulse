@@ -47,4 +47,4 @@ add_executable(unittest
 
 target_link_libraries(unittest core gtest_main)
 
-add_test(unittest unittest)
+add_test(unittest unittest --gtest_output=xml:test-results/)
