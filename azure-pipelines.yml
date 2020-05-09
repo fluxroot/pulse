@@ -14,17 +14,19 @@ jobs:
       - task: PublishTestResults@2
         displayName: 'Publish Test Results'
         condition: succeededOrFailed()
+      - publish: 'target/pulse-java-2.0.0.zip'
+        artifact: 'pulse-java'
       - task: CopyFiles@2
         displayName: 'Copy Artifacts'
         inputs:
           contents: 'target/pulse-java-*.zip'
-          targetFolder: '$(Build.ArtifactStagingDirectory)'
+          targetFolder: $(Build.ArtifactStagingDirectory)
       - task: UniversalPackages@0
         displayName: 'Publish'
         condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
         inputs:
           command: publish
-          publishDirectory: '$(Build.ArtifactStagingDirectory)'
+          publishDirectory: $(Build.ArtifactStagingDirectory)
           vstsFeedPublish: 'pulse/pulse'
           vstsFeedPackagePublish: 'pulse-java'
           versionOption: custom
@@ -50,17 +52,19 @@ jobs:
         condition: succeededOrFailed()
         inputs:
           testResultsFiles: '**/test-results/unittest.xml'
+      - publish: 'build/pulse-cpp-2.0.0.zip'
+        artifact: 'pulse-cpp-linux'
       - task: CopyFiles@2
         displayName: 'Copy Artifacts'
         inputs:
           contents: 'build/pulse-cpp-*.zip'
-          targetFolder: '$(Build.ArtifactStagingDirectory)'
+          targetFolder: $(Build.ArtifactStagingDirectory)
       - task: UniversalPackages@0
         displayName: 'Publish'
         condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
         inputs:
           command: publish
-          publishDirectory: '$(Build.ArtifactStagingDirectory)'
+          publishDirectory: $(Build.ArtifactStagingDirectory)
           vstsFeedPublish: 'pulse/pulse'
           vstsFeedPackagePublish: 'pulse-cpp-linux'
           versionOption: custom
@@ -85,17 +89,19 @@ jobs:
         condition: succeededOrFailed()
         inputs:
           testResultsFiles: '**/test-results/unittest.xml'
+      - publish: 'build/pulse-cpp-2.0.0.zip'
+        artifact: 'pulse-cpp-windows'
       - task: CopyFiles@2
         displayName: 'Copy Artifacts'
         inputs:
           contents: 'build/pulse-cpp-*.zip'
-          targetFolder: '$(Build.ArtifactStagingDirectory)'
+          targetFolder: $(Build.ArtifactStagingDirectory)
       - task: UniversalPackages@0
         displayName: 'Publish'
         condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
         inputs:
           command: publish
-          publishDirectory: '$(Build.ArtifactStagingDirectory)'
+          publishDirectory: $(Build.ArtifactStagingDirectory)
           vstsFeedPublish: 'pulse/pulse'
           vstsFeedPackagePublish: 'pulse-cpp-windows'
           versionOption: custom
