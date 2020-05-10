@@ -9,8 +9,16 @@ set(CPACK_PACKAGE_VERSION_MINOR 0)
 set(CPACK_PACKAGE_VERSION_PATCH 0)
 set(pulse_VERSION "${pulse_VERSION_MAJOR}.${pulse_VERSION_MINOR}.${pulse_VERSION_PATCH}")
 
+if (CMAKE_SYSTEM_NAME STREQUAL Windows)
+    set(PLATFORM_SUFFIX windows)
+elseif (CMAKE_SYSTEM_NAME STREQUAL Linux)
+    set(PLATFORM_SUFFIX linux)
+else ()
+    message(FATAL_ERROR "Unknown platform ${CMAKE_SYSTEM_NAME}")
+endif ()
+
 set(CPACK_GENERATOR ZIP)
-set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-cpp-${pulse_VERSION}")
+set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-cpp-${PLATFORM_SUFFIX}-${pulse_VERSION}")
 include(CPack)
 
 enable_testing()
