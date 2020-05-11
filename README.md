@@ -110,7 +110,7 @@ steps.
     `cmake -G "Visual Studio 16 2019" -A x64 .. && cmake --build . --config Release && ctest && cpack -C Release`
 
 - grab it  
-    `cp build/pulse-cpp-<version>.zip <installation directory>`
+    `cp build/pulse-cpp-<windows|linux>-<version>.zip <installation directory>`
 
 
 Acknowledgments
