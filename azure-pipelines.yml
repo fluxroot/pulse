@@ -36,7 +36,7 @@ jobs:
         condition: succeededOrFailed()
         inputs:
           testResultsFiles: '**/test-results/unittest.xml'
-      - publish: build/pulse-cpp-linux-2.0.0.zip
+      - publish: build/pulse-cpp-linux-2.0.0.tar.gz
         artifact: pulse-cpp-linux
 
   - job: buildPulseCppWindows

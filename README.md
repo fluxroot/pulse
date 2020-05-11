@@ -17,7 +17,7 @@ fork it and start coding! :)
 Pulse Chess is available in Java and C++. Both editions have the same
 feature set. The Java Edition requires Java 11 for compilation and
 execution. The C++ Edition is written in C++17. It has been compiled
-successfully using g++ 7.4.0 and Visual C++ 2019.
+successfully using g++ 7.5.0 and Visual C++ 2019.
 
 
 Features
@@ -110,7 +110,8 @@ steps.
     `cmake -G "Visual Studio 16 2019" -A x64 .. && cmake --build . --config Release && ctest && cpack -C Release`
 
 - grab it  
-    `cp build/pulse-cpp-<windows|linux>-<version>.zip <installation directory>`
+    `cp build/pulse-cpp-windows-<version>.zip <installation directory>` or  
+    `cp build/pulse-cpp-linux-<version>.tar.gz <installation directory>`
 
 
 Acknowledgments
