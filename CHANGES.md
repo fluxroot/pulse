@@ -1,3 +1,8 @@
+Release Notes - Pulse - Version 1.7.2
+-------------------------------------
+
+* [PULSE-101] - Fix timer for C++
+
 Release Notes - Pulse - Version 1.7.1
 -------------------------------------
 
