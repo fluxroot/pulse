@@ -1,0 +1,61 @@
+variables:
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+
+name: $(Build.BuildId)
+jobs:
+  - job: buildPulseJava
+    displayName: 'Build Pulse Java'
+    pool:
+      vmImage: ubuntu-18.04
+    container: adoptopenjdk:8-jdk-hotspot
+    steps:
+      - script: ./mvnw package
+        displayName: 'Build'
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results'
+        condition: succeededOrFailed()
+      - publish: target/pulse-java-1.7.2.zip
+        artifact: pulse-java
+
+  - job: buildPulseCppLinux
+    displayName: 'Build Pulse C++ Linux'
+    pool:
+      vmImage: ubuntu-18.04
+    container: fluxroot/buildz:cpp-1.0.0
+    steps:
+      - script: |
+          mkdir build && \
+          cd build && \
+          cmake -DCMAKE_BUILD_TYPE=Release .. && \
+          make && \
+          make test && \
+          make package
+        displayName: 'Build'
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results'
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFiles: '**/test-results/unittest.xml'
+      - publish: build/pulse-cpp-linux-1.7.2.tar.gz
+        artifact: pulse-cpp-linux
+
+  - job: buildPulseCppWindows
+    displayName: 'Build Pulse C++ Windows'
+    pool:
+      vmImage: windows-2019
+    steps:
+      - script: |
+          mkdir build &&^
+          cd build &&^
+          cmake -G "Visual Studio 16 2019" -A x64 .. &&^
+          cmake --build . --config Release &&^
+          ctest &&^
+          cpack -C Release
+        displayName: 'Build'
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results'
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFiles: '**/test-results/unittest.xml'
+      - publish: build/pulse-cpp-windows-1.7.2.zip
+        artifact: pulse-cpp-windows
