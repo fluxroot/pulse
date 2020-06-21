@@ -19,15 +19,15 @@ Search::Timer::Timer(bool& timerStopped, bool& doTimeManagement, int& currentDep
 
 void Search::Timer::run(uint64_t searchTime) {
 	std::unique_lock<std::mutex> lock(mutex);
-	if (condition.wait_for(lock, std::chrono::milliseconds(searchTime), [=] { return timerStopped; })) {
+	if (!condition.wait_for(lock, std::chrono::milliseconds(searchTime), [=] { return timerStopped; })) {
+		// Timer timed-out
+		timerStopped = true;
+
 		// If we finished the first iteration, we should have a result.
 		// In this case abort the search.
 		if (!doTimeManagement || currentDepth > initialDepth) {
 			abort = true;
 		}
-	} else {
-		// Timer timed-out
-		timerStopped = true;
 	}
 }
 
