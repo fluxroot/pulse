@@ -1,8 +1,8 @@
 Pulse Chess
 ===========
 
-Copyright (C) 2013-2019 Phokham Nonava  
-http://www.fluxchess.com
+Copyright 2013-2019 Phokham Nonava  
+https://www.fluxchess.com
 
 [![Build Status](https://dev.azure.com/fluxroot/pulse/_apis/build/status/fluxroot.pulse?branchName=master)](https://dev.azure.com/fluxroot/pulse/_build/latest?definitionId=2&branchName=master)
 
