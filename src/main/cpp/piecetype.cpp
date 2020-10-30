@@ -5,6 +5,7 @@
  * found in the LICENSE file.
  */
 
+#include <exception>
 #include "piecetype.h"
 
 namespace pulse::piecetype {
