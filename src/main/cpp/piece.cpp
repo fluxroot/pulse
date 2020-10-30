@@ -5,6 +5,7 @@
  * found in the LICENSE file.
  */
 
+#include <exception>
 #include "piece.h"
 #include "color.h"
 #include "piecetype.h"
