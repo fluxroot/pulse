@@ -5,6 +5,7 @@
  * found in the LICENSE file.
  */
 
+#include <exception>
 #include "castling.h"
 #include "color.h"
 #include "castlingtype.h"
