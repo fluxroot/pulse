@@ -116,10 +116,10 @@ void Search::newClockSearch(Position& position,
 void Search::newPonderSearch(Position& position,
 							 uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft,
 							 uint64_t blackTimeIncrement, int movesToGo) {
-	if (whiteTimeLeft < 1) throw std::exception();
-	if (whiteTimeIncrement < 0) throw std::exception();
-	if (blackTimeLeft < 1) throw std::exception();
-	if (blackTimeIncrement < 0) throw std::exception();
+	if (whiteTimeLeft < 1 && position.activeColor == Color::WHITE) throw std::exception();
+	if (whiteTimeIncrement < 0 && position.activeColor == Color::WHITE) throw std::exception();
+	if (blackTimeLeft < 1 && position.activeColor == Color::BLACK) throw std::exception();
+	if (blackTimeIncrement < 0 && position.activeColor == Color::BLACK) throw std::exception();
 	if (movesToGo < 0) throw std::exception();
 	if (running) throw std::exception();
 
@@ -546,5 +546,4 @@ void Search::savePV(int move, MoveVariation& src, MoveVariation& dest) {
 	}
 	dest.size = src.size + 1;
 }
-
 }
