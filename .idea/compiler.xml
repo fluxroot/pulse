@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="pulse" />
+        <module name="pulse-java" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="pulse" target="11" />
+      <module name="pulse-java" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
