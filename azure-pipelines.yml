@@ -14,7 +14,7 @@ jobs:
       - task: PublishTestResults@2
         displayName: 'Publish Test Results'
         condition: succeededOrFailed()
-      - publish: target/pulse-java-1.7.2.zip
+      - publish: target/pulse-java-1.7.3.zip
         artifact: pulse-java
 
   - job: buildPulseCppLinux
@@ -36,7 +36,7 @@ jobs:
         condition: succeededOrFailed()
         inputs:
           testResultsFiles: '**/test-results/unittest.xml'
-      - publish: build/pulse-cpp-linux-1.7.2.tar.gz
+      - publish: build/pulse-cpp-linux-1.7.3.tar.gz
         artifact: pulse-cpp-linux
 
   - job: buildPulseCppWindows
@@ -57,5 +57,5 @@ jobs:
         condition: succeededOrFailed()
         inputs:
           testResultsFiles: '**/test-results/unittest.xml'
-      - publish: build/pulse-cpp-windows-1.7.2.zip
+      - publish: build/pulse-cpp-windows-1.7.3.zip
         artifact: pulse-cpp-windows
