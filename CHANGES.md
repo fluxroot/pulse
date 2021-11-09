@@ -1,6 +1,8 @@
 Release Notes - Pulse - Version 1.7.3
 -------------------------------------
 
+* \#84: Use precondition for active color only
+
 Release Notes - Pulse - Version 1.7.2
 -------------------------------------
 
