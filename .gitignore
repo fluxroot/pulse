@@ -4,6 +4,7 @@
 # CMake
 /build/
 /cmake-build-debug/
+/cmake-build-debug-wsl/
 
 # Eclipse
 /.settings/
