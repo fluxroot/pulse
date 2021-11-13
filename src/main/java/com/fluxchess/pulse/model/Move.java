@@ -14,13 +14,14 @@ import static com.fluxchess.pulse.model.Square.NOSQUARE;
 /**
  * This class represents a move as a int value. The fields are represented by
  * the following bits.
- * <p/>
- * <code> 0 -  2</code>: type (required)
- * <code> 3 -  9</code>: origin square (required)
- * <code>10 - 16</code>: target square (required)
- * <code>17 - 21</code>: origin piece (required)
- * <code>22 - 26</code>: target piece (optional)
- * <code>27 - 29</code>: promotion type (optional)
+ * <ul>
+ * <li><code> 0 -  2</code>: type (required)</li>
+ * <li><code> 3 -  9</code>: origin square (required)</li>
+ * <li><code>10 - 16</code>: target square (required)</li>
+ * <li><code>17 - 21</code>: origin piece (required)</li>
+ * <li><code>22 - 26</code>: target piece (optional)</li>
+ * <li><code>27 - 29</code>: promotion type (optional)</li>
+ * </ul>
  */
 public final class Move {
 
