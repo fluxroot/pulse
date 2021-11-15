@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <locale>
 
 namespace pulse {
 
@@ -310,7 +311,7 @@ std::string Pulse::fromMove(int move) {
 
 	int promotion = move::getPromotion(move);
 	if (promotion != piecetype::NOPIECETYPE) {
-		notation += std::tolower(notation::fromPieceType(promotion));
+		notation += std::tolower(notation::fromPieceType(promotion), std::locale());
 	}
 
 	return notation;

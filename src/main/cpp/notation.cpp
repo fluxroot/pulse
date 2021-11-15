@@ -11,6 +11,7 @@
 #include "castlingtype.h"
 
 #include <sstream>
+#include <locale>
 
 namespace pulse::notation {
 namespace {
@@ -56,9 +57,9 @@ int colorOf(char notation) {
 char transform(char notation, int color) {
 	switch (color) {
 		case color::WHITE:
-			return std::toupper(notation);
+			return std::toupper(notation, std::locale());
 		case color::BLACK:
-			return std::tolower(notation);
+			return std::tolower(notation, std::locale());
 		default:
 			throw std::exception();
 	}
@@ -90,7 +91,7 @@ Position toPosition(const std::string& fen) {
 	int file = file::a;
 	int rank = rank::r8;
 
-	for (auto character : token) {
+	for (auto character: token) {
 		int piece = toPiece(character);
 		if (piece != piece::NOPIECE) {
 			if (!file::isValid(file) || !rank::isValid(rank)) {
@@ -148,7 +149,7 @@ Position toPosition(const std::string& fen) {
 	token = tokens[tokensIndex++];
 
 	if (token.compare("-") != 0) {
-		for (auto character : token) {
+		for (auto character: token) {
 			int castlingFile;
 			int kingFile;
 			int castling = toCastling(character);
@@ -235,7 +236,7 @@ std::string fromPosition(const Position& position) {
 		int rank = *iter;
 		unsigned int emptySquares = 0;
 
-		for (auto file : file::values) {
+		for (auto file: file::values) {
 			int piece = position.board[square::valueOf(file, rank)];
 
 			if (piece == piece::NOPIECE) {
@@ -308,7 +309,7 @@ std::string fromPosition(const Position& position) {
 }
 
 int toColor(char notation) {
-	char lowercaseNotation = std::tolower(notation);
+	char lowercaseNotation = std::tolower(notation, std::locale());
 	switch (lowercaseNotation) {
 		case WHITE_NOTATION:
 			return color::WHITE;
@@ -426,7 +427,7 @@ char fromCastling(int castling) {
 }
 
 int toFile(char notation) {
-	char lowercaseNotation = std::tolower(notation);
+	char lowercaseNotation = std::tolower(notation, std::locale());
 	switch (lowercaseNotation) {
 		case a_NOTATION:
 			return file::a;
