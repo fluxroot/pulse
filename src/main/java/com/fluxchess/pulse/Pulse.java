@@ -35,7 +35,7 @@ import static java.lang.System.currentTimeMillis;
  */
 public final class Pulse extends AbstractEngine implements Protocol {
 
-	private Search search = new Search(this);
+	private final Search search = new Search(this);
 	private long startTime = 0;
 	private long statusStartTime = 0;
 
