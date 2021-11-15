@@ -6,6 +6,8 @@
  */
 #pragma once
 
+#include <memory>
+
 #include "search.h"
 #include "notation.h"
 
@@ -30,12 +32,12 @@ public:
 	static std::string fromMove(int move);
 
 private:
-	std::unique_ptr<Search> search = std::unique_ptr<Search>(new Search(*this));
+	std::unique_ptr<Search> search = std::make_unique<Search>(*this);
 	std::chrono::system_clock::time_point startTime;
 	std::chrono::system_clock::time_point statusStartTime;
 
-	std::unique_ptr<Position> currentPosition = std::unique_ptr<Position>(
-			new Position(notation::toPosition(notation::STANDARDPOSITION)));
+	std::unique_ptr<Position> currentPosition = std::make_unique<Position>(
+			notation::toPosition(notation::STANDARDPOSITION));
 
 	void receiveInitialize();
 
