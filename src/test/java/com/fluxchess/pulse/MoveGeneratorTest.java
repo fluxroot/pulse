@@ -8,6 +8,7 @@ package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.pulse.model.Color;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -152,6 +153,7 @@ class MoveGeneratorTest {
 	private static final MoveGenerator[] moveGenerators = new MoveGenerator[MAX_DEPTH];
 
 	private static final class P {
+
 		private final String fen;
 		private final E[] perftEntries;
 
@@ -162,6 +164,7 @@ class MoveGeneratorTest {
 	}
 
 	private static final class E {
+
 		private final int depth;
 		private final long nodes;
 

@@ -1,35 +1,35 @@
 /*
- * Copyright (C) 2013-2019 Phokham Nonava
+ * Copyright (C) 2013-2021 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-package com.fluxchess.pulse;
+package com.fluxchess.pulse.model;
 
-import static com.fluxchess.pulse.Color.BLACK;
-import static com.fluxchess.pulse.Color.WHITE;
-import static com.fluxchess.pulse.PieceType.*;
+import static com.fluxchess.pulse.model.Color.BLACK;
+import static com.fluxchess.pulse.model.Color.WHITE;
+import static com.fluxchess.pulse.model.PieceType.*;
 
-final class Piece {
+public final class Piece {
 
-	static final int MASK = 0x1F;
+	public static final int MASK = 0x1F;
 
-	static final int WHITE_PAWN = 0;
-	static final int WHITE_KNIGHT = 1;
-	static final int WHITE_BISHOP = 2;
-	static final int WHITE_ROOK = 3;
-	static final int WHITE_QUEEN = 4;
-	static final int WHITE_KING = 5;
-	static final int BLACK_PAWN = 6;
-	static final int BLACK_KNIGHT = 7;
-	static final int BLACK_BISHOP = 8;
-	static final int BLACK_ROOK = 9;
-	static final int BLACK_QUEEN = 10;
-	static final int BLACK_KING = 11;
+	public static final int WHITE_PAWN = 0;
+	public static final int WHITE_KNIGHT = 1;
+	public static final int WHITE_BISHOP = 2;
+	public static final int WHITE_ROOK = 3;
+	public static final int WHITE_QUEEN = 4;
+	public static final int WHITE_KING = 5;
+	public static final int BLACK_PAWN = 6;
+	public static final int BLACK_KNIGHT = 7;
+	public static final int BLACK_BISHOP = 8;
+	public static final int BLACK_ROOK = 9;
+	public static final int BLACK_QUEEN = 10;
+	public static final int BLACK_KING = 11;
 
-	static final int NOPIECE = 12;
+	public static final int NOPIECE = 12;
 
-	static final int[] values = {
+	public static final int[] values = {
 			WHITE_PAWN, WHITE_KNIGHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING,
 			BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING
 	};
@@ -37,7 +37,7 @@ final class Piece {
 	private Piece() {
 	}
 
-	static boolean isValid(int piece) {
+	public static boolean isValid(int piece) {
 		switch (piece) {
 			case WHITE_PAWN:
 			case WHITE_KNIGHT:
@@ -57,7 +57,7 @@ final class Piece {
 		}
 	}
 
-	static int valueOf(int color, int piecetype) {
+	public static int valueOf(int color, int piecetype) {
 		switch (color) {
 			case WHITE:
 				switch (piecetype) {
@@ -98,7 +98,7 @@ final class Piece {
 		}
 	}
 
-	static int getType(int piece) {
+	public static int getType(int piece) {
 		switch (piece) {
 			case WHITE_PAWN:
 			case BLACK_PAWN:
@@ -123,7 +123,7 @@ final class Piece {
 		}
 	}
 
-	static int getColor(int piece) {
+	public static int getColor(int piece) {
 		switch (piece) {
 			case WHITE_PAWN:
 			case WHITE_KNIGHT:

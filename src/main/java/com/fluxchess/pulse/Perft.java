@@ -6,8 +6,8 @@
  */
 package com.fluxchess.pulse;
 
-import static com.fluxchess.pulse.Color.opposite;
 import static com.fluxchess.pulse.MoveList.MoveEntry;
+import static com.fluxchess.pulse.model.Color.opposite;
 import static java.lang.System.currentTimeMillis;
 import static java.util.concurrent.TimeUnit.*;
 

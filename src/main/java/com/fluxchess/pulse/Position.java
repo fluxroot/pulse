@@ -6,17 +6,19 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.pulse.model.*;
+
 import java.security.SecureRandom;
 
 import static com.fluxchess.pulse.Bitboard.next;
 import static com.fluxchess.pulse.Bitboard.size;
-import static com.fluxchess.pulse.Castling.*;
-import static com.fluxchess.pulse.Color.*;
-import static com.fluxchess.pulse.Depth.MAX_PLY;
-import static com.fluxchess.pulse.MoveType.*;
-import static com.fluxchess.pulse.Piece.NOPIECE;
-import static com.fluxchess.pulse.PieceType.*;
-import static com.fluxchess.pulse.Square.*;
+import static com.fluxchess.pulse.model.Castling.*;
+import static com.fluxchess.pulse.model.Color.*;
+import static com.fluxchess.pulse.model.Depth.MAX_PLY;
+import static com.fluxchess.pulse.model.MoveType.*;
+import static com.fluxchess.pulse.model.Piece.NOPIECE;
+import static com.fluxchess.pulse.model.PieceType.*;
+import static com.fluxchess.pulse.model.Square.*;
 import static java.lang.Math.max;
 
 final class Position {
@@ -43,6 +45,7 @@ final class Position {
 	private int statesSize = 0;
 
 	private static final class Zobrist {
+
 		private static final SecureRandom random = new SecureRandom();
 
 		static final long[][] board = new long[Piece.values.length][Square.VALUES_LENGTH];
@@ -86,6 +89,7 @@ final class Position {
 	}
 
 	private static final class State {
+
 		private long zobristKey = 0;
 		private int castlingRights = NOCASTLING;
 		private int enPassantSquare = NOSQUARE;

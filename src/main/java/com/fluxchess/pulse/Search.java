@@ -10,13 +10,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
-import static com.fluxchess.pulse.Color.WHITE;
-import static com.fluxchess.pulse.Color.opposite;
-import static com.fluxchess.pulse.Depth.MAX_DEPTH;
-import static com.fluxchess.pulse.Depth.MAX_PLY;
-import static com.fluxchess.pulse.Move.NOMOVE;
 import static com.fluxchess.pulse.MoveList.*;
-import static com.fluxchess.pulse.Value.*;
+import static com.fluxchess.pulse.model.Color.WHITE;
+import static com.fluxchess.pulse.model.Color.opposite;
+import static com.fluxchess.pulse.model.Depth.MAX_DEPTH;
+import static com.fluxchess.pulse.model.Depth.MAX_PLY;
+import static com.fluxchess.pulse.model.Move.NOMOVE;
+import static com.fluxchess.pulse.model.Value.*;
 import static java.lang.Math.abs;
 
 /**
@@ -67,6 +67,7 @@ final class Search implements Runnable {
 	 * This is our search timer for time & clock & ponder searches.
 	 */
 	private final class SearchTimer extends TimerTask {
+
 		@Override
 		public void run() {
 			timerStopped = true;

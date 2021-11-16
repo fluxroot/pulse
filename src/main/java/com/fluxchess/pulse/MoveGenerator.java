@@ -6,16 +6,20 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.pulse.model.Move;
+import com.fluxchess.pulse.model.Piece;
+import com.fluxchess.pulse.model.Square;
+
 import static com.fluxchess.pulse.Bitboard.next;
 import static com.fluxchess.pulse.Bitboard.remainder;
-import static com.fluxchess.pulse.Castling.*;
-import static com.fluxchess.pulse.Color.*;
 import static com.fluxchess.pulse.MoveList.MoveEntry;
-import static com.fluxchess.pulse.MoveType.*;
-import static com.fluxchess.pulse.Piece.NOPIECE;
-import static com.fluxchess.pulse.PieceType.*;
-import static com.fluxchess.pulse.Rank.*;
-import static com.fluxchess.pulse.Square.*;
+import static com.fluxchess.pulse.model.Castling.*;
+import static com.fluxchess.pulse.model.Color.*;
+import static com.fluxchess.pulse.model.MoveType.*;
+import static com.fluxchess.pulse.model.Piece.NOPIECE;
+import static com.fluxchess.pulse.model.PieceType.*;
+import static com.fluxchess.pulse.model.Rank.*;
+import static com.fluxchess.pulse.model.Square.*;
 
 final class MoveGenerator {
 

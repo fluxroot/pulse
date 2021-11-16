@@ -12,18 +12,19 @@ import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericColor;
 import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
+import com.fluxchess.pulse.model.Move;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.fluxchess.pulse.Move.NOMOVE;
 import static com.fluxchess.pulse.MoveList.MoveEntry;
 import static com.fluxchess.pulse.MoveList.RootEntry;
-import static com.fluxchess.pulse.MoveType.*;
-import static com.fluxchess.pulse.Value.CHECKMATE;
-import static com.fluxchess.pulse.Value.CHECKMATE_THRESHOLD;
+import static com.fluxchess.pulse.model.Move.NOMOVE;
+import static com.fluxchess.pulse.model.MoveType.*;
+import static com.fluxchess.pulse.model.Value.CHECKMATE;
+import static com.fluxchess.pulse.model.Value.CHECKMATE_THRESHOLD;
 import static java.lang.Integer.signum;
 import static java.lang.Math.abs;
 import static java.lang.System.currentTimeMillis;

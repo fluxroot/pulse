@@ -7,15 +7,19 @@
 package com.fluxchess.pulse;
 
 import com.fluxchess.jcpi.models.*;
+import com.fluxchess.pulse.model.Castling;
+import com.fluxchess.pulse.model.CastlingType;
+import com.fluxchess.pulse.model.Color;
+import com.fluxchess.pulse.model.Square;
 
-import static com.fluxchess.pulse.Castling.*;
-import static com.fluxchess.pulse.CastlingType.*;
-import static com.fluxchess.pulse.Color.*;
-import static com.fluxchess.pulse.File.*;
-import static com.fluxchess.pulse.Piece.*;
-import static com.fluxchess.pulse.PieceType.*;
-import static com.fluxchess.pulse.Rank.*;
-import static com.fluxchess.pulse.Square.NOSQUARE;
+import static com.fluxchess.pulse.model.Castling.*;
+import static com.fluxchess.pulse.model.CastlingType.*;
+import static com.fluxchess.pulse.model.Color.*;
+import static com.fluxchess.pulse.model.File.*;
+import static com.fluxchess.pulse.model.Piece.*;
+import static com.fluxchess.pulse.model.PieceType.*;
+import static com.fluxchess.pulse.model.Rank.*;
+import static com.fluxchess.pulse.model.Square.NOSQUARE;
 
 final class Notation {
 

@@ -1,26 +1,26 @@
 /*
- * Copyright (C) 2013-2019 Phokham Nonava
+ * Copyright (C) 2013-2021 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-package com.fluxchess.pulse;
+package com.fluxchess.pulse.model;
 
-final class Color {
+public final class Color {
 
-	static final int WHITE = 0;
-	static final int BLACK = 1;
+	public static final int WHITE = 0;
+	public static final int BLACK = 1;
 
-	static final int NOCOLOR = 2;
+	public static final int NOCOLOR = 2;
 
-	static final int[] values = {
+	public static final int[] values = {
 			WHITE, BLACK
 	};
 
 	private Color() {
 	}
 
-	static int opposite(int color) {
+	public static int opposite(int color) {
 		switch (color) {
 			case WHITE:
 				return BLACK;

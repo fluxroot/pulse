@@ -1,14 +1,14 @@
 /*
- * Copyright (C) 2013-2019 Phokham Nonava
+ * Copyright (C) 2013-2021 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-package com.fluxchess.pulse;
+package com.fluxchess.pulse.model;
 
 import org.junit.jupiter.api.Test;
 
-import static com.fluxchess.pulse.PieceType.*;
+import static com.fluxchess.pulse.model.PieceType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PieceTypeTest {

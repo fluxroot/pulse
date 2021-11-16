@@ -6,13 +6,17 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.pulse.model.Move;
+import com.fluxchess.pulse.model.Piece;
+import com.fluxchess.pulse.model.PieceType;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 
-import static com.fluxchess.pulse.Depth.MAX_PLY;
-import static com.fluxchess.pulse.Move.NOMOVE;
-import static com.fluxchess.pulse.PieceType.KING_VALUE;
-import static com.fluxchess.pulse.Value.NOVALUE;
+import static com.fluxchess.pulse.model.Depth.MAX_PLY;
+import static com.fluxchess.pulse.model.Move.NOMOVE;
+import static com.fluxchess.pulse.model.PieceType.KING_VALUE;
+import static com.fluxchess.pulse.model.Value.NOVALUE;
 
 /**
  * This class stores our moves for a specific position. For the root node we
@@ -26,16 +30,19 @@ final class MoveList<T extends MoveList.MoveEntry> {
 	int size = 0;
 
 	static final class MoveVariation {
+
 		final int[] moves = new int[MAX_PLY];
 		int size = 0;
 	}
 
 	static class MoveEntry {
+
 		int move = NOMOVE;
 		int value = NOVALUE;
 	}
 
 	static final class RootEntry extends MoveEntry {
+
 		final MoveVariation pv = new MoveVariation();
 	}
 

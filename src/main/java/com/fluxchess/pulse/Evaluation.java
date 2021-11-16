@@ -6,11 +6,14 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.pulse.model.Piece;
+import com.fluxchess.pulse.model.Square;
+
 import static com.fluxchess.pulse.Bitboard.*;
-import static com.fluxchess.pulse.Color.opposite;
-import static com.fluxchess.pulse.Piece.NOPIECE;
-import static com.fluxchess.pulse.PieceType.*;
-import static com.fluxchess.pulse.Square.*;
+import static com.fluxchess.pulse.model.Color.opposite;
+import static com.fluxchess.pulse.model.Piece.NOPIECE;
+import static com.fluxchess.pulse.model.PieceType.*;
+import static com.fluxchess.pulse.model.Square.*;
 
 final class Evaluation {
 

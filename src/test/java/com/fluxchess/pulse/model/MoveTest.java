@@ -1,18 +1,18 @@
 /*
- * Copyright (C) 2013-2019 Phokham Nonava
+ * Copyright (C) 2013-2021 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-package com.fluxchess.pulse;
+package com.fluxchess.pulse.model;
 
 import org.junit.jupiter.api.Test;
 
-import static com.fluxchess.pulse.MoveType.PAWNPROMOTION;
-import static com.fluxchess.pulse.Piece.BLACK_QUEEN;
-import static com.fluxchess.pulse.Piece.WHITE_PAWN;
-import static com.fluxchess.pulse.PieceType.KNIGHT;
-import static com.fluxchess.pulse.Square.*;
+import static com.fluxchess.pulse.model.MoveType.PAWNPROMOTION;
+import static com.fluxchess.pulse.model.Piece.BLACK_QUEEN;
+import static com.fluxchess.pulse.model.Piece.WHITE_PAWN;
+import static com.fluxchess.pulse.model.PieceType.KNIGHT;
+import static com.fluxchess.pulse.model.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MoveTest {

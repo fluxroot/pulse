@@ -6,16 +6,17 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.pulse.model.Move;
 import org.junit.jupiter.api.Test;
 
-import static com.fluxchess.pulse.Castling.*;
-import static com.fluxchess.pulse.Color.BLACK;
-import static com.fluxchess.pulse.Color.WHITE;
-import static com.fluxchess.pulse.MoveType.*;
-import static com.fluxchess.pulse.Piece.*;
-import static com.fluxchess.pulse.PieceType.NOPIECETYPE;
-import static com.fluxchess.pulse.PieceType.QUEEN;
-import static com.fluxchess.pulse.Square.*;
+import static com.fluxchess.pulse.model.Castling.*;
+import static com.fluxchess.pulse.model.Color.BLACK;
+import static com.fluxchess.pulse.model.Color.WHITE;
+import static com.fluxchess.pulse.model.MoveType.*;
+import static com.fluxchess.pulse.model.Piece.*;
+import static com.fluxchess.pulse.model.PieceType.NOPIECETYPE;
+import static com.fluxchess.pulse.model.PieceType.QUEEN;
+import static com.fluxchess.pulse.model.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PositionTest {

@@ -6,16 +6,18 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.pulse.model.File;
+import com.fluxchess.pulse.model.Square;
 import org.junit.jupiter.api.Test;
 
-import static com.fluxchess.pulse.Castling.*;
-import static com.fluxchess.pulse.Color.BLACK;
-import static com.fluxchess.pulse.Color.WHITE;
-import static com.fluxchess.pulse.Piece.*;
-import static com.fluxchess.pulse.PieceType.*;
-import static com.fluxchess.pulse.Rank.r2;
-import static com.fluxchess.pulse.Rank.r7;
-import static com.fluxchess.pulse.Square.*;
+import static com.fluxchess.pulse.model.Castling.*;
+import static com.fluxchess.pulse.model.Color.BLACK;
+import static com.fluxchess.pulse.model.Color.WHITE;
+import static com.fluxchess.pulse.model.Piece.*;
+import static com.fluxchess.pulse.model.PieceType.*;
+import static com.fluxchess.pulse.model.Rank.r2;
+import static com.fluxchess.pulse.model.Rank.r7;
+import static com.fluxchess.pulse.model.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class NotationTest {

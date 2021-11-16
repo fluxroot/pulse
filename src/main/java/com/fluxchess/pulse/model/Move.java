@@ -1,15 +1,15 @@
 /*
- * Copyright (C) 2013-2019 Phokham Nonava
+ * Copyright (C) 2013-2021 Phokham Nonava
  *
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-package com.fluxchess.pulse;
+package com.fluxchess.pulse.model;
 
-import static com.fluxchess.pulse.MoveType.NOMOVETYPE;
-import static com.fluxchess.pulse.Piece.NOPIECE;
-import static com.fluxchess.pulse.PieceType.NOPIECETYPE;
-import static com.fluxchess.pulse.Square.NOSQUARE;
+import static com.fluxchess.pulse.model.MoveType.NOMOVETYPE;
+import static com.fluxchess.pulse.model.Piece.NOPIECE;
+import static com.fluxchess.pulse.model.PieceType.NOPIECETYPE;
+import static com.fluxchess.pulse.model.Square.NOSQUARE;
 
 /**
  * This class represents a move as a int value. The fields are represented by
@@ -23,7 +23,7 @@ import static com.fluxchess.pulse.Square.NOSQUARE;
  * <li><code>27 - 29</code>: promotion type (optional)</li>
  * </ul>
  */
-final class Move {
+public final class Move {
 
 	// These are our bit masks
 	private static final int TYPE_SHIFT = 0;
@@ -40,7 +40,7 @@ final class Move {
 	private static final int PROMOTION_MASK = PieceType.MASK << PROMOTION_SHIFT;
 
 	// We don't use 0 as a null value to protect against errors.
-	static final int NOMOVE = (NOMOVETYPE << TYPE_SHIFT)
+	public static final int NOMOVE = (NOMOVETYPE << TYPE_SHIFT)
 			| (NOSQUARE << ORIGIN_SQUARE_SHIFT)
 			| (NOSQUARE << TARGET_SQUARE_SHIFT)
 			| (NOPIECE << ORIGIN_PIECE_SHIFT)
@@ -50,7 +50,7 @@ final class Move {
 	private Move() {
 	}
 
-	static int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion) {
+	public static int valueOf(int type, int originSquare, int targetSquare, int originPiece, int targetPiece, int promotion) {
 		int move = 0;
 
 		// Encode type
@@ -74,27 +74,27 @@ final class Move {
 		return move;
 	}
 
-	static int getType(int move) {
+	public static int getType(int move) {
 		return (move & TYPE_MASK) >>> TYPE_SHIFT;
 	}
 
-	static int getOriginSquare(int move) {
+	public static int getOriginSquare(int move) {
 		return (move & ORIGIN_SQUARE_MASK) >>> ORIGIN_SQUARE_SHIFT;
 	}
 
-	static int getTargetSquare(int move) {
+	public static int getTargetSquare(int move) {
 		return (move & TARGET_SQUARE_MASK) >>> TARGET_SQUARE_SHIFT;
 	}
 
-	static int getOriginPiece(int move) {
+	public static int getOriginPiece(int move) {
 		return (move & ORIGIN_PIECE_MASK) >>> ORIGIN_PIECE_SHIFT;
 	}
 
-	static int getTargetPiece(int move) {
+	public static int getTargetPiece(int move) {
 		return (move & TARGET_PIECE_MASK) >>> TARGET_PIECE_SHIFT;
 	}
 
-	static int getPromotion(int move) {
+	public static int getPromotion(int move) {
 		return (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
 	}
 }

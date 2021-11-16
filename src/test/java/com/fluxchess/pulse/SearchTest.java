@@ -6,14 +6,15 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.pulse.model.Move;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Semaphore;
 
-import static com.fluxchess.pulse.Move.NOMOVE;
 import static com.fluxchess.pulse.MoveList.RootEntry;
-import static com.fluxchess.pulse.Square.*;
-import static com.fluxchess.pulse.Value.*;
+import static com.fluxchess.pulse.model.Move.NOMOVE;
+import static com.fluxchess.pulse.model.Square.*;
+import static com.fluxchess.pulse.model.Value.*;
 import static java.lang.Integer.signum;
 import static java.lang.Math.abs;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;

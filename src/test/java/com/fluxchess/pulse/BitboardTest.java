@@ -6,6 +6,7 @@
  */
 package com.fluxchess.pulse;
 
+import com.fluxchess.pulse.model.Square;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import static com.fluxchess.pulse.Bitboard.add;
-import static com.fluxchess.pulse.Square.a6;
+import static com.fluxchess.pulse.model.Square.a6;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BitboardTest {
