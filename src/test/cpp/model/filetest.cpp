@@ -5,14 +5,14 @@
  * found in the LICENSE file.
  */
 
-#include "rank.h"
+#include "model/file.h"
 
 #include "gtest/gtest.h"
 
 using namespace pulse;
 
-TEST(ranktest, testValues) {
-	for (auto rank : rank::values) {
-		EXPECT_EQ(rank, rank::values[rank]);
+TEST(filetest, testValues) {
+	for (auto file: file::values) {
+		EXPECT_EQ(file, file::values[file]);
 	}
 }

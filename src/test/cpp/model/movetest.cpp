@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-#include "move.h"
+#include "model/move.h"
 
 #include "gtest/gtest.h"
 

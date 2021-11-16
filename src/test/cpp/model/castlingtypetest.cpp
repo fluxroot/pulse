@@ -5,14 +5,14 @@
  * found in the LICENSE file.
  */
 
-#include "file.h"
+#include "model/castlingtype.h"
 
 #include "gtest/gtest.h"
 
 using namespace pulse;
 
-TEST(filetest, testValues) {
-	for (auto file : file::values) {
-		EXPECT_EQ(file, file::values[file]);
+TEST(castlingtypetest, testValues) {
+	for (auto castlingtype: castlingtype::values) {
+		EXPECT_EQ(castlingtype, castlingtype::values[castlingtype]);
 	}
 }

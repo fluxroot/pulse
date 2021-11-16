@@ -6,7 +6,7 @@
  */
 
 #include "movegenerator.h"
-#include "rank.h"
+#include "model/rank.h"
 
 namespace pulse {
 
@@ -102,7 +102,7 @@ void MoveGenerator::addMoves(MoveList<MoveEntry>& list, int originSquare, const 
 	int oppositeColor = color::opposite(piece::getColor(originPiece));
 
 	// Go through all move directions for this piece
-	for (auto direction : directions) {
+	for (auto direction: directions) {
 		int targetSquare = originSquare + direction;
 
 		// Check if we're still on the board

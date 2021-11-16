@@ -6,9 +6,9 @@
  */
 
 #include "notation.h"
-#include "file.h"
-#include "rank.h"
-#include "castlingtype.h"
+#include "model/file.h"
+#include "model/rank.h"
+#include "model/castlingtype.h"
 
 #include <sstream>
 #include <locale>

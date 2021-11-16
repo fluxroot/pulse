@@ -6,8 +6,8 @@
  */
 
 #include "notation.h"
-#include "file.h"
-#include "rank.h"
+#include "model/file.h"
+#include "model/rank.h"
 
 #include "gtest/gtest.h"
 
@@ -17,7 +17,7 @@ TEST(notationtest, testStandardPosition) {
 	Position position(notation::toPosition(notation::STANDARDPOSITION));
 
 	// Test pawns
-	for (auto file : file::values) {
+	for (auto file: file::values) {
 		EXPECT_EQ(+piece::WHITE_PAWN, position.board[square::valueOf(file, rank::r2)]);
 		EXPECT_EQ(+piece::BLACK_PAWN, position.board[square::valueOf(file, rank::r7)]);
 	}

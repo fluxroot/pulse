@@ -5,14 +5,14 @@
  * found in the LICENSE file.
  */
 
-#include "piecetype.h"
+#include "model/piecetype.h"
 
 #include "gtest/gtest.h"
 
 using namespace pulse;
 
 TEST(piecetypetest, testValues) {
-	for (auto piecetype : piecetype::values) {
+	for (auto piecetype: piecetype::values) {
 		EXPECT_EQ(piecetype, piecetype::values[piecetype]);
 	}
 }

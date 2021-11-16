@@ -29,20 +29,20 @@ include_directories(${main_SOURCE_DIR})
 
 add_executable(unittest
         bitboardtest.cpp
-        castlingtest.cpp
-        castlingtypetest.cpp
-        colortest.cpp
+        model/castlingtest.cpp
+        model/castlingtypetest.cpp
+        model/colortest.cpp
         evaluationtest.cpp
         notationtest.cpp
-        filetest.cpp
+        model/filetest.cpp
         movegeneratortest.cpp
         movelisttest.cpp
-        movetest.cpp
-        piecetest.cpp
-        piecetypetest.cpp
+        model/movetest.cpp
+        model/piecetest.cpp
+        model/piecetypetest.cpp
         positiontest.cpp
-        ranktest.cpp
-        squaretest.cpp
+        model/ranktest.cpp
+        model/squaretest.cpp
         )
 
 target_link_libraries(unittest core gtest_main)

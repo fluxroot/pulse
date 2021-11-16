@@ -3,23 +3,23 @@ project(main)
 
 add_library(core STATIC
         bitboard.cpp
-        castling.cpp
-        color.cpp
+        model/castling.cpp
+        model/color.cpp
         evaluation.cpp
         notation.cpp
-        file.cpp
-        move.cpp
+        model/file.cpp
+        model/move.cpp
         movegenerator.cpp
         movelist.cpp
         perft.cpp
-        piece.cpp
-        piecetype.cpp
+        model/piece.cpp
+        model/piecetype.cpp
         position.cpp
         pulse.cpp
-        rank.cpp
+        model/rank.cpp
         search.cpp
-        square.cpp
-        value.cpp
+        model/square.cpp
+        model/value.cpp
         )
 
 add_executable(pulse main.cpp)

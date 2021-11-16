@@ -6,7 +6,7 @@
  */
 
 #include "notation.h"
-#include "move.h"
+#include "model/move.h"
 
 #include "gtest/gtest.h"
 

@@ -5,9 +5,9 @@
  * found in the LICENSE file.
  */
 
-#include <color.h>
-#include <castlingtype.h>
-#include "castling.h"
+#include <model/color.h>
+#include <model/castlingtype.h>
+#include "model/castling.h"
 
 #include "gtest/gtest.h"
 

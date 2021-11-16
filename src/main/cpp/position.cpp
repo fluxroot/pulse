@@ -6,13 +6,13 @@
  */
 
 #include "position.h"
-#include "move.h"
+#include "model/move.h"
 
 namespace pulse {
 
 // Initialize the zobrist keys
 Position::Zobrist::Zobrist() {
-	for (auto piece : piece::values) {
+	for (auto piece: piece::values) {
 		for (int i = 0; i < square::VALUES_LENGTH; i++) {
 			board[piece][i] = next();
 		}
@@ -473,7 +473,7 @@ bool Position::isAttacked(int targetSquare, int attackerColor) {
  * Returns whether the targetSquare is attacked by a non-sliding piece.
  */
 bool Position::isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& directions) {
-	for (auto direction : directions) {
+	for (auto direction: directions) {
 		int attackerSquare = targetSquare + direction;
 
 		if (square::isValid(attackerSquare) && board[attackerSquare] == attackerPiece) {
@@ -488,7 +488,7 @@ bool Position::isAttacked(int targetSquare, int attackerPiece, const std::vector
  * Returns whether the targetSquare is attacked by a sliding piece.
  */
 bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& directions) {
-	for (auto direction : directions) {
+	for (auto direction: directions) {
 		int attackerSquare = targetSquare + direction;
 
 		while (square::isValid(attackerSquare)) {

@@ -5,16 +5,16 @@
  * found in the LICENSE file.
  */
 
-#include "piece.h"
-#include "color.h"
-#include "piecetype.h"
+#include "model/piece.h"
+#include "model/color.h"
+#include "model/piecetype.h"
 
 #include "gtest/gtest.h"
 
 using namespace pulse;
 
 TEST(piecetest, testValues) {
-	for (auto piece : piece::values) {
+	for (auto piece: piece::values) {
 		EXPECT_EQ(piece, piece::values[piece]);
 	}
 }

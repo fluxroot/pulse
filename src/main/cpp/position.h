@@ -7,12 +7,12 @@
 #pragma once
 
 #include "bitboard.h"
-#include "color.h"
-#include "castling.h"
-#include "square.h"
-#include "piece.h"
-#include "piecetype.h"
-#include "depth.h"
+#include "model/color.h"
+#include "model/castling.h"
+#include "model/square.h"
+#include "model/piece.h"
+#include "model/piecetype.h"
+#include "model/depth.h"
 
 #include <random>
 

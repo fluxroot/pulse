@@ -6,8 +6,8 @@
  */
 #pragma once
 
-#include "value.h"
-#include "move.h"
+#include "model/value.h"
+#include "model/move.h"
 
 #include <array>
 #include <memory>

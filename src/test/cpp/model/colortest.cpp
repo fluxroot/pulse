@@ -5,14 +5,14 @@
  * found in the LICENSE file.
  */
 
-#include "color.h"
+#include "model/color.h"
 
 #include "gtest/gtest.h"
 
 using namespace pulse;
 
 TEST(colortest, testValues) {
-	for (auto color : color::values) {
+	for (auto color: color::values) {
 		EXPECT_EQ(color, color::values[color]);
 	}
 }

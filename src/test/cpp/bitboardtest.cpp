@@ -6,7 +6,7 @@
  */
 
 #include "bitboard.h"
-#include "square.h"
+#include "model/square.h"
 
 #include "gtest/gtest.h"
 
@@ -35,7 +35,7 @@ protected:
 TEST_F(BitboardTest, shouldAddAllSquaresCorrectly) {
 	uint64_t bitboard = 0;
 
-	for (auto x88square : pool) {
+	for (auto x88square: pool) {
 		bitboard = bitboard::add(x88square, bitboard);
 	}
 
@@ -45,7 +45,7 @@ TEST_F(BitboardTest, shouldAddAllSquaresCorrectly) {
 TEST_F(BitboardTest, shouldRemoveAllSquaresCorrectly) {
 	uint64_t bitboard = std::numeric_limits<uint64_t>::max();
 
-	for (auto x88square : pool) {
+	for (auto x88square: pool) {
 		bitboard = bitboard::remove(x88square, bitboard);
 	}
 
@@ -80,7 +80,7 @@ TEST(bitboardtest, testNumberOfTrailingZeros) {
 	uint64_t bitboard = 0;
 	int i = 0;
 
-	for (auto square : square::values) {
+	for (auto square: square::values) {
 		bitboard = bitboard::add(square, bitboard);
 
 		EXPECT_EQ(i, bitboard::numberOfTrailingZeros(bitboard));
