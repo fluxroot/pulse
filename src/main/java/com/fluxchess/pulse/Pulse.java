@@ -75,12 +75,14 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		super(handler);
 	}
 
+	@Override
 	protected void quit() {
 		// We received a quit command. Stop calculating now and
 		// cleanup!
 		search.quit();
 	}
 
+	@Override
 	public void receive(EngineInitializeRequestCommand command) {
 		search.stop();
 
@@ -99,9 +101,11 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		getProtocol().send(answerCommand);
 	}
 
+	@Override
 	public void receive(EngineSetOptionCommand command) {
 	}
 
+	@Override
 	public void receive(EngineDebugCommand command) {
 		if (command.toggle) {
 			debug = !debug;
@@ -118,6 +122,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		getProtocol().send(informationCommand);
 	}
 
+	@Override
 	public void receive(EngineReadyRequestCommand command) {
 		// We received a ready request. We must send the token back as soon as we
 		// can. However, because we launch the search in a separate thread, our main
@@ -127,6 +132,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		getProtocol().send(new ProtocolReadyAnswerCommand(command.token));
 	}
 
+	@Override
 	public void receive(EngineNewGameCommand command) {
 		search.stop();
 
@@ -136,6 +142,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		currentPosition = Notation.toPosition(new GenericBoard(GenericBoard.STANDARDSETUP));
 	}
 
+	@Override
 	public void receive(EngineAnalyzeCommand command) {
 		search.stop();
 
@@ -168,6 +175,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		// Don't start searching though!
 	}
 
+	@Override
 	public void receive(EngineStartCalculatingCommand command) {
 		search.stop();
 
@@ -222,16 +230,19 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		statusStartTime = startTime;
 	}
 
+	@Override
 	public void receive(EnginePonderHitCommand command) {
 		// We received a ponder hit command. Just call ponderhit().
 		search.ponderhit();
 	}
 
+	@Override
 	public void receive(EngineStopCalculatingCommand command) {
 		// We received a stop command. If a search is running, stop it.
 		search.stop();
 	}
 
+	@Override
 	public void sendBestMove(int bestMove, int ponderMove) {
 		GenericMove genericBestMove = null;
 		GenericMove genericPonderMove = null;
@@ -247,6 +258,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		getProtocol().send(new ProtocolBestMoveCommand(genericBestMove, genericPonderMove));
 	}
 
+	@Override
 	public void sendStatus(
 			int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber) {
 		if (currentTimeMillis() - statusStartTime >= 1000) {
@@ -254,6 +266,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		}
 	}
 
+	@Override
 	public void sendStatus(
 			boolean force, int currentDepth, int currentMaxDepth, long totalNodes, int currentMove, int currentMoveNumber) {
 		long timeDelta = currentTimeMillis() - startTime;
@@ -277,6 +290,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		}
 	}
 
+	@Override
 	public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
 		long timeDelta = currentTimeMillis() - startTime;
 

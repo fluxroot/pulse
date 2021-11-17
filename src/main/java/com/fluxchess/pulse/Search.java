@@ -6,9 +6,12 @@
  */
 package com.fluxchess.pulse;
 
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import static com.fluxchess.pulse.MoveList.*;
 import static com.fluxchess.pulse.model.Color.WHITE;
@@ -18,20 +21,18 @@ import static com.fluxchess.pulse.model.Depth.MAX_PLY;
 import static com.fluxchess.pulse.model.Move.NOMOVE;
 import static com.fluxchess.pulse.model.Value.*;
 import static java.lang.Math.abs;
+import static java.lang.Runtime.getRuntime;
+import static java.lang.Thread.currentThread;
+import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
-/**
- * This class implements our search in a separate thread to keep the main
- * thread available for more commands.
- */
-final class Search implements Runnable {
+final class Search {
 
-	private final Thread thread = new Thread(this);
-	private final Semaphore wakeupSignal = new Semaphore(0);
-	private final Semaphore runSignal = new Semaphore(0);
-	private final Semaphore stopSignal = new Semaphore(0);
+	private final ExecutorService executorService = newFixedThreadPool(getRuntime().availableProcessors());
+	private Optional<Future<?>> future = Optional.empty();
+	private volatile boolean abort;
+
 	private final Protocol protocol;
-	private boolean running = false;
-	private boolean shutdown = false;
 
 	private Position position;
 	private final Evaluation evaluation = new Evaluation();
@@ -54,7 +55,6 @@ final class Search implements Runnable {
 
 	// Search parameters
 	private final MoveList<RootEntry> rootMoves = new MoveList<>(RootEntry.class);
-	private boolean abort;
 	private long totalNodes;
 	private final int initialDepth = 1;
 	private int currentDepth;
@@ -164,9 +164,6 @@ final class Search implements Runnable {
 		}
 
 		reset();
-
-		thread.setDaemon(true);
-		thread.start();
 	}
 
 	private void reset() {
@@ -185,32 +182,28 @@ final class Search implements Runnable {
 		currentMoveNumber = 0;
 	}
 
-	synchronized void start() {
-		if (!running) {
-			try {
-				wakeupSignal.release();
-				runSignal.acquire();
-			} catch (InterruptedException e) {
-				// Do nothing
-			}
+	void start() {
+		if (future.isEmpty()) {
+			future = Optional.of(executorService.submit(new Worker()));
 		}
 	}
 
-	synchronized void stop() {
-		if (running) {
-			// Signal the search thread that we want to stop it
+	void stop() {
+		future.ifPresent(value -> {
 			abort = true;
-
 			try {
-				stopSignal.acquire();
+				value.get();
 			} catch (InterruptedException e) {
-				// Do nothing
+				currentThread().interrupt();
+			} catch (ExecutionException e) {
+				protocol.sendInfo("Search aborted with an error: " + e.getCause().getMessage());
 			}
-		}
+		});
+		future = Optional.empty();
 	}
 
-	synchronized void ponderhit() {
-		if (running) {
+	void ponderhit() {
+		future.ifPresent(value -> {
 			// Enable time management
 			timer = new Timer(true);
 			timer.schedule(new SearchTimer(), searchTime);
@@ -220,36 +213,47 @@ final class Search implements Runnable {
 			if (currentDepth > initialDepth) {
 				checkStopConditions();
 			}
-		}
+		});
 	}
 
-	synchronized void quit() {
+	void quit() {
 		stop();
-
-		shutdown = true;
-		wakeupSignal.release();
-
-		// Wait for the thread to die
 		try {
-			thread.join(5000);
+			executorService.shutdown();
+			if (!executorService.awaitTermination(3, SECONDS)) {
+				executorService.shutdownNow();
+			}
 		} catch (InterruptedException e) {
-			// Do nothing
+			executorService.shutdownNow();
+			currentThread().interrupt();
 		}
 	}
 
-	public void run() {
-		while (true) {
-			try {
-				wakeupSignal.acquire();
-			} catch (InterruptedException e) {
-				// Do nothing
-			}
+	private void checkStopConditions() {
+		// We will check the stop conditions only if we are using time management,
+		// that is if our timer != null.
+		if (timer != null && doTimeManagement) {
+			if (timerStopped) {
+				abort = true;
+			} else {
+				// Check if we have only one move to make
+				if (rootMoves.size == 1) {
+					abort = true;
+				} else
 
-			if (shutdown) {
-				break;
+					// Check if we have a checkmate
+					if (isCheckmate(rootMoves.entries[0].value)
+							&& currentDepth >= (CHECKMATE - abs(rootMoves.entries[0].value))) {
+						abort = true;
+					}
 			}
+		}
+	}
 
-			// Do all initialization before releasing the main thread to JCPI
+	private final class Worker implements Runnable {
+
+		@Override
+		public void run() {
 			if (timer != null) {
 				timer.schedule(new SearchTimer(), searchTime);
 			}
@@ -263,11 +267,6 @@ final class Search implements Runnable {
 				rootMoves.entries[rootMoves.size].pv.size = 1;
 				rootMoves.size++;
 			}
-
-			// Go...
-			stopSignal.drainPermits();
-			running = true;
-			runSignal.release();
 
 			//### BEGIN Iterative Deepening
 			for (int depth = initialDepth; depth <= searchDepth; depth++) {
@@ -308,252 +307,228 @@ final class Search implements Runnable {
 
 			// Send the best move to the GUI
 			protocol.sendBestMove(bestMove, ponderMove);
-
-			running = false;
-			stopSignal.release();
 		}
-	}
 
-	private void checkStopConditions() {
-		// We will check the stop conditions only if we are using time management,
-		// that is if our timer != null.
-		if (timer != null && doTimeManagement) {
-			if (timerStopped) {
-				abort = true;
-			} else {
-				// Check if we have only one move to make
-				if (rootMoves.size == 1) {
-					abort = true;
-				} else
+		private void updateSearch(int ply) {
+			totalNodes++;
 
-					// Check if we have a checkmate
-					if (isCheckmate(rootMoves.entries[0].value)
-							&& currentDepth >= (CHECKMATE - abs(rootMoves.entries[0].value))) {
-						abort = true;
-					}
+			if (ply > currentMaxDepth) {
+				currentMaxDepth = ply;
 			}
-		}
-	}
 
-	private void updateSearch(int ply) {
-		totalNodes++;
+			if (searchNodes <= totalNodes) {
+				// Hard stop on number of nodes
+				abort = true;
+			}
 
-		if (ply > currentMaxDepth) {
-			currentMaxDepth = ply;
-		}
+			pv[ply].size = 0;
 
-		if (searchNodes <= totalNodes) {
-			// Hard stop on number of nodes
-			abort = true;
+			protocol.sendStatus(currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
 		}
 
-		pv[ply].size = 0;
+		private void searchRoot(int depth, int alpha, int beta) {
+			int ply = 0;
 
-		protocol.sendStatus(currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
-	}
+			updateSearch(ply);
 
-	private void searchRoot(int depth, int alpha, int beta) {
-		int ply = 0;
-
-		updateSearch(ply);
-
-		// Abort conditions
-		if (abort) {
-			return;
-		}
-
-		// Reset all values, so the best move is pushed to the front
-		for (int i = 0; i < rootMoves.size; i++) {
-			rootMoves.entries[i].value = -INFINITE;
-		}
-
-		for (int i = 0; i < rootMoves.size; i++) {
-			int move = rootMoves.entries[i].move;
-
-			currentMove = move;
-			currentMoveNumber = i + 1;
-			protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
-
-			position.makeMove(move);
-			int value = -search(depth - 1, -beta, -alpha, ply + 1);
-			position.undoMove(move);
-
+			// Abort conditions
 			if (abort) {
 				return;
 			}
 
-			// Do we have a better value?
-			if (value > alpha) {
-				alpha = value;
-
-				// We found a new best move
-				rootMoves.entries[i].value = value;
-				savePV(move, pv[ply + 1], rootMoves.entries[i].pv);
-
-				protocol.sendMove(rootMoves.entries[i], currentDepth, currentMaxDepth, totalNodes);
-			}
-		}
-
-		if (rootMoves.size == 0) {
-			// The root position is a checkmate or stalemate. We cannot search
-			// further. Abort!
-			abort = true;
-		}
-	}
-
-	private int search(int depth, int alpha, int beta, int ply) {
-		// We are at a leaf/horizon. So calculate that value.
-		if (depth <= 0) {
-			// Descend into quiescent
-			return quiescent(0, alpha, beta, ply);
-		}
-
-		updateSearch(ply);
-
-		// Abort conditions
-		if (abort || ply == MAX_PLY) {
-			return evaluation.evaluate(position);
-		}
-
-		// Check insufficient material, repetition and fifty move rule
-		if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
-			return DRAW;
-		}
-
-		// Initialize
-		int bestValue = -INFINITE;
-		int searchedMoves = 0;
-		boolean isCheck = position.isCheck();
-
-		MoveList<MoveEntry> moves = moveGenerators[ply].getMoves(position, depth, isCheck);
-		for (int i = 0; i < moves.size; i++) {
-			int move = moves.entries[i].move;
-			int value = bestValue;
-
-			position.makeMove(move);
-			if (!position.isCheck(opposite(position.activeColor))) {
-				searchedMoves++;
-				value = -search(depth - 1, -beta, -alpha, ply + 1);
-			}
-			position.undoMove(move);
-
-			if (abort) {
-				return bestValue;
+			// Reset all values, so the best move is pushed to the front
+			for (int i = 0; i < rootMoves.size; i++) {
+				rootMoves.entries[i].value = -INFINITE;
 			}
 
-			// Pruning
-			if (value > bestValue) {
-				bestValue = value;
+			for (int i = 0; i < rootMoves.size; i++) {
+				int move = rootMoves.entries[i].move;
+
+				currentMove = move;
+				currentMoveNumber = i + 1;
+				protocol.sendStatus(false, currentDepth, currentMaxDepth, totalNodes, currentMove, currentMoveNumber);
+
+				position.makeMove(move);
+				int value = -search(depth - 1, -beta, -alpha, ply + 1);
+				position.undoMove(move);
+
+				if (abort) {
+					return;
+				}
 
 				// Do we have a better value?
 				if (value > alpha) {
 					alpha = value;
-					savePV(move, pv[ply + 1], pv[ply]);
 
-					// Is the value higher than beta?
-					if (value >= beta) {
-						// Cut-off
-						break;
-					}
+					// We found a new best move
+					rootMoves.entries[i].value = value;
+					savePV(move, pv[ply + 1], rootMoves.entries[i].pv);
+
+					protocol.sendMove(rootMoves.entries[i], currentDepth, currentMaxDepth, totalNodes);
 				}
+			}
+
+			if (rootMoves.size == 0) {
+				// The root position is a checkmate or stalemate. We cannot search
+				// further. Abort!
+				abort = true;
 			}
 		}
 
-		// If we cannot move, check for checkmate and stalemate.
-		if (searchedMoves == 0) {
-			if (isCheck) {
-				// We have a check mate. This is bad for us, so return a -CHECKMATE.
-				return -CHECKMATE + ply;
-			} else {
-				// We have a stale mate. Return the draw value.
+		private int search(int depth, int alpha, int beta, int ply) {
+			// We are at a leaf/horizon. So calculate that value.
+			if (depth <= 0) {
+				// Descend into quiescent
+				return quiescent(0, alpha, beta, ply);
+			}
+
+			updateSearch(ply);
+
+			// Abort conditions
+			if (abort || ply == MAX_PLY) {
+				return evaluation.evaluate(position);
+			}
+
+			// Check insufficient material, repetition and fifty move rule
+			if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
 				return DRAW;
 			}
-		}
 
-		return bestValue;
-	}
+			// Initialize
+			int bestValue = -INFINITE;
+			int searchedMoves = 0;
+			boolean isCheck = position.isCheck();
 
-	private int quiescent(int depth, int alpha, int beta, int ply) {
-		updateSearch(ply);
+			MoveList<MoveEntry> moves = moveGenerators[ply].getMoves(position, depth, isCheck);
+			for (int i = 0; i < moves.size; i++) {
+				int move = moves.entries[i].move;
+				int value = bestValue;
 
-		// Abort conditions
-		if (abort || ply == MAX_PLY) {
-			return evaluation.evaluate(position);
-		}
+				position.makeMove(move);
+				if (!position.isCheck(opposite(position.activeColor))) {
+					searchedMoves++;
+					value = -search(depth - 1, -beta, -alpha, ply + 1);
+				}
+				position.undoMove(move);
 
-		// Check insufficient material, repetition and fifty move rule
-		if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
-			return DRAW;
-		}
-
-		// Initialize
-		int bestValue = -INFINITE;
-		int searchedMoves = 0;
-		boolean isCheck = position.isCheck();
-
-		//### BEGIN Stand pat
-		if (!isCheck) {
-			bestValue = evaluation.evaluate(position);
-
-			// Do we have a better value?
-			if (bestValue > alpha) {
-				alpha = bestValue;
-
-				// Is the value higher than beta?
-				if (bestValue >= beta) {
-					// Cut-off
+				if (abort) {
 					return bestValue;
 				}
-			}
-		}
-		//### ENDOF Stand pat
 
-		MoveList<MoveEntry> moves = moveGenerators[ply].getMoves(position, depth, isCheck);
-		for (int i = 0; i < moves.size; i++) {
-			int move = moves.entries[i].move;
-			int value = bestValue;
+				// Pruning
+				if (value > bestValue) {
+					bestValue = value;
 
-			position.makeMove(move);
-			if (!position.isCheck(opposite(position.activeColor))) {
-				searchedMoves++;
-				value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
-			}
-			position.undoMove(move);
+					// Do we have a better value?
+					if (value > alpha) {
+						alpha = value;
+						savePV(move, pv[ply + 1], pv[ply]);
 
-			if (abort) {
-				return bestValue;
-			}
-
-			// Pruning
-			if (value > bestValue) {
-				bestValue = value;
-
-				// Do we have a better value?
-				if (value > alpha) {
-					alpha = value;
-					savePV(move, pv[ply + 1], pv[ply]);
-
-					// Is the value higher than beta?
-					if (value >= beta) {
-						// Cut-off
-						break;
+						// Is the value higher than beta?
+						if (value >= beta) {
+							// Cut-off
+							break;
+						}
 					}
 				}
 			}
+
+			// If we cannot move, check for checkmate and stalemate.
+			if (searchedMoves == 0) {
+				if (isCheck) {
+					// We have a check mate. This is bad for us, so return a -CHECKMATE.
+					return -CHECKMATE + ply;
+				} else {
+					// We have a stale mate. Return the draw value.
+					return DRAW;
+				}
+			}
+
+			return bestValue;
 		}
 
-		// If we cannot move, check for checkmate.
-		if (searchedMoves == 0 && isCheck) {
-			// We have a check mate. This is bad for us, so return a -CHECKMATE.
-			return -CHECKMATE + ply;
+		private int quiescent(int depth, int alpha, int beta, int ply) {
+			updateSearch(ply);
+
+			// Abort conditions
+			if (abort || ply == MAX_PLY) {
+				return evaluation.evaluate(position);
+			}
+
+			// Check insufficient material, repetition and fifty move rule
+			if (position.isRepetition() || position.hasInsufficientMaterial() || position.halfmoveClock >= 100) {
+				return DRAW;
+			}
+
+			// Initialize
+			int bestValue = -INFINITE;
+			int searchedMoves = 0;
+			boolean isCheck = position.isCheck();
+
+			//### BEGIN Stand pat
+			if (!isCheck) {
+				bestValue = evaluation.evaluate(position);
+
+				// Do we have a better value?
+				if (bestValue > alpha) {
+					alpha = bestValue;
+
+					// Is the value higher than beta?
+					if (bestValue >= beta) {
+						// Cut-off
+						return bestValue;
+					}
+				}
+			}
+			//### ENDOF Stand pat
+
+			MoveList<MoveEntry> moves = moveGenerators[ply].getMoves(position, depth, isCheck);
+			for (int i = 0; i < moves.size; i++) {
+				int move = moves.entries[i].move;
+				int value = bestValue;
+
+				position.makeMove(move);
+				if (!position.isCheck(opposite(position.activeColor))) {
+					searchedMoves++;
+					value = -quiescent(depth - 1, -beta, -alpha, ply + 1);
+				}
+				position.undoMove(move);
+
+				if (abort) {
+					return bestValue;
+				}
+
+				// Pruning
+				if (value > bestValue) {
+					bestValue = value;
+
+					// Do we have a better value?
+					if (value > alpha) {
+						alpha = value;
+						savePV(move, pv[ply + 1], pv[ply]);
+
+						// Is the value higher than beta?
+						if (value >= beta) {
+							// Cut-off
+							break;
+						}
+					}
+				}
+			}
+
+			// If we cannot move, check for checkmate.
+			if (searchedMoves == 0 && isCheck) {
+				// We have a check mate. This is bad for us, so return a -CHECKMATE.
+				return -CHECKMATE + ply;
+			}
+
+			return bestValue;
 		}
 
-		return bestValue;
-	}
-
-	private void savePV(int move, MoveVariation src, MoveVariation dest) {
-		dest.moves[0] = move;
-		System.arraycopy(src.moves, 0, dest.moves, 1, src.size);
-		dest.size = src.size + 1;
+		private void savePV(int move, MoveVariation src, MoveVariation dest) {
+			dest.moves[0] = move;
+			System.arraycopy(src.moves, 0, dest.moves, 1, src.size);
+			dest.size = src.size + 1;
+		}
 	}
 }
