@@ -18,5 +18,7 @@ interface Protocol {
 
 	void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes);
 
+	void sendInfo(String message);
+
 	void sendDebug(String message);
 }

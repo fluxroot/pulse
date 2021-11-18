@@ -52,6 +52,10 @@ class SearchTest {
 					}
 
 					@Override
+					public void sendInfo(String message) {
+					}
+
+					@Override
 					public void sendDebug(String message) {
 					}
 				});
@@ -100,6 +104,10 @@ class SearchTest {
 					}
 
 					@Override
+					public void sendInfo(String message) {
+					}
+
+					@Override
 					public void sendDebug(String message) {
 					}
 				});
@@ -144,6 +152,10 @@ class SearchTest {
 					}
 
 					@Override
+					public void sendInfo(String message) {
+					}
+
+					@Override
 					public void sendDebug(String message) {
 					}
 				});
@@ -184,6 +196,10 @@ class SearchTest {
 					}
 
 					@Override
+					public void sendInfo(String message) {
+					}
+
+					@Override
 					public void sendDebug(String message) {
 					}
 				});
@@ -221,6 +237,10 @@ class SearchTest {
 
 					@Override
 					public void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, long totalNodes) {
+					}
+
+					@Override
+					public void sendInfo(String message) {
 					}
 
 					@Override

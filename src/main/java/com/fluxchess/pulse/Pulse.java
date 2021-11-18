@@ -306,6 +306,13 @@ public final class Pulse extends AbstractEngine implements Protocol {
 	}
 
 	@Override
+	public void sendInfo(String message) {
+		ProtocolInformationCommand command = new ProtocolInformationCommand();
+		command.setString(message);
+		getProtocol().send(command);
+	}
+
+	@Override
 	public void sendDebug(String message) {
 		if (debug) {
 			ProtocolInformationCommand command = new ProtocolInformationCommand();
