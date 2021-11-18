@@ -36,6 +36,8 @@ import static java.lang.System.currentTimeMillis;
  */
 public final class Pulse extends AbstractEngine implements Protocol {
 
+	private boolean debug = false;
+
 	private final Search search = new Search(this);
 	private long startTime = 0;
 	private long statusStartTime = 0;
@@ -101,6 +103,19 @@ public final class Pulse extends AbstractEngine implements Protocol {
 	}
 
 	public void receive(EngineDebugCommand command) {
+		if (command.toggle) {
+			debug = !debug;
+		} else {
+			debug = command.debug;
+		}
+
+		ProtocolInformationCommand informationCommand = new ProtocolInformationCommand();
+		if (debug) {
+			informationCommand.setString("Turning on debugging mode");
+		} else {
+			informationCommand.setString("Turning off debugging mode");
+		}
+		getProtocol().send(informationCommand);
 	}
 
 	public void receive(EngineReadyRequestCommand command) {
@@ -288,6 +303,15 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		getProtocol().send(command);
 
 		statusStartTime = currentTimeMillis();
+	}
+
+	@Override
+	public void sendDebug(String message) {
+		if (debug) {
+			ProtocolInformationCommand command = new ProtocolInformationCommand();
+			command.setString(message);
+			getProtocol().send(command);
+		}
 	}
 
 	static GenericMove fromMove(int move) {
