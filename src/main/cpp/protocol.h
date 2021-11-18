@@ -12,7 +12,7 @@ namespace pulse {
 
 class Protocol {
 public:
-	virtual ~Protocol() {};
+	virtual ~Protocol() = default;
 
 	virtual void sendBestMove(int bestMove, int ponderMove) = 0;
 
@@ -25,5 +25,4 @@ public:
 
 	virtual void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) = 0;
 };
-
 }
