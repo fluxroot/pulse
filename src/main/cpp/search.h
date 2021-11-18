@@ -25,7 +25,7 @@ namespace pulse {
  */
 class Search {
 public:
-	Search(Protocol& protocol);
+	explicit Search(Protocol& protocol);
 
 	void newDepthSearch(Position& position, int searchDepth);
 
@@ -84,7 +84,7 @@ private:
 
 	class Semaphore {
 	public:
-		Semaphore(int permits);
+		explicit Semaphore(int permits);
 
 		void acquire();
 
