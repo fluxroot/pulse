@@ -29,6 +29,8 @@ public:
 
 	void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) override;
 
+	void sendInfo(const std::string& message) override;
+
 	static std::string fromMove(int move);
 
 private:

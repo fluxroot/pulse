@@ -303,6 +303,10 @@ void Pulse::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uin
 	statusStartTime = std::chrono::system_clock::now();
 }
 
+void Pulse::sendInfo(const std::string& message) {
+	std::cout << "info string " << message << std::endl;
+}
+
 std::string Pulse::fromMove(int move) {
 	std::string notation;
 
