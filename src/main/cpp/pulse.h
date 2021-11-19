@@ -48,7 +48,7 @@ private:
 
 	void receiveDebug(std::istringstream& istringstream);
 
-	void receiveReady();
+	static void receiveReady();
 
 	void receiveNewGame();
 

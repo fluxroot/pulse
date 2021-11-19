@@ -27,19 +27,19 @@ class Search {
 public:
 	explicit Search(Protocol& protocol);
 
-	void newDepthSearch(Position& position, int searchDepth);
+	void newDepthSearch(Position& _position, int _searchDepth);
 
-	void newNodesSearch(Position& position, uint64_t searchNodes);
+	void newNodesSearch(Position& _position, uint64_t _searchNodes);
 
-	void newTimeSearch(Position& position, uint64_t searchTime);
+	void newTimeSearch(Position& _position, uint64_t _searchTime);
 
-	void newInfiniteSearch(Position& position);
+	void newInfiniteSearch(Position& _position);
 
-	void newClockSearch(Position& position,
+	void newClockSearch(Position& _position,
 						uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft,
 						uint64_t blackTimeIncrement, int movesToGo);
 
-	void newPonderSearch(Position& position,
+	void newPonderSearch(Position& _position,
 						 uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft,
 						 uint64_t blackTimeIncrement, int movesToGo);
 
@@ -63,7 +63,7 @@ private:
 	public:
 		Timer(bool& timerStopped, bool& doTimeManagement, int& currentDepth, const int& initialDepth, bool& abort);
 
-		void start(uint64_t searchTime);
+		void start(uint64_t _searchTime);
 
 		void stop();
 
@@ -79,7 +79,7 @@ private:
 
 		bool& abort;
 
-		void run(uint64_t searchTime);
+		void run(uint64_t _searchTime);
 	};
 
 	class Semaphore {
@@ -147,6 +147,6 @@ private:
 
 	int quiescent(int depth, int alpha, int beta, int ply);
 
-	void savePV(int move, MoveVariation& src, MoveVariation& dest);
+	static void savePV(int move, MoveVariation& src, MoveVariation& dest);
 };
 }

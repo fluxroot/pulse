@@ -17,9 +17,9 @@ Search::Timer::Timer(bool& timerStopped, bool& doTimeManagement, int& currentDep
 		  currentDepth(currentDepth), initialDepth(initialDepth), abort(abort) {
 }
 
-void Search::Timer::run(uint64_t searchTime) {
+void Search::Timer::run(uint64_t _searchTime) {
 	std::unique_lock<std::mutex> lock(mutex);
-	if (!condition.wait_for(lock, std::chrono::milliseconds(searchTime), [=] { return timerStopped; })) {
+	if (!condition.wait_for(lock, std::chrono::milliseconds(_searchTime), [=] { return timerStopped; })) {
 		// Timer timed-out
 		timerStopped = true;
 
@@ -31,8 +31,8 @@ void Search::Timer::run(uint64_t searchTime) {
 	}
 }
 
-void Search::Timer::start(uint64_t searchTime) {
-	thread = std::thread(&Search::Timer::run, this, searchTime);
+void Search::Timer::start(uint64_t _searchTime) {
+	thread = std::thread(&Search::Timer::run, this, _searchTime);
 }
 
 void Search::Timer::stop() {
@@ -64,72 +64,72 @@ void Search::Semaphore::drainPermits() {
 	permits = 0;
 }
 
-void Search::newDepthSearch(Position& position, int searchDepth) {
-	if (searchDepth < 1 || searchDepth > depth::MAX_DEPTH) throw std::exception();
+void Search::newDepthSearch(Position& _position, int _searchDepth) {
+	if (_searchDepth < 1 || _searchDepth > depth::MAX_DEPTH) throw std::exception();
 	if (running) throw std::exception();
 
 	reset();
 
-	this->position = position;
-	this->searchDepth = searchDepth;
+	position = _position;
+	searchDepth = _searchDepth;
 }
 
-void Search::newNodesSearch(Position& position, uint64_t searchNodes) {
-	if (searchNodes < 1) throw std::exception();
+void Search::newNodesSearch(Position& _position, uint64_t _searchNodes) {
+	if (_searchNodes < 1) throw std::exception();
 	if (running) throw std::exception();
 
 	reset();
 
-	this->position = position;
-	this->searchNodes = searchNodes;
+	position = _position;
+	searchNodes = _searchNodes;
 }
 
-void Search::newTimeSearch(Position& position, uint64_t searchTime) {
-	if (searchTime < 1) throw std::exception();
+void Search::newTimeSearch(Position& _position, uint64_t _searchTime) {
+	if (_searchTime < 1) throw std::exception();
 	if (running) throw std::exception();
 
 	reset();
 
-	this->position = position;
-	this->searchTime = searchTime;
-	this->runTimer = true;
+	position = _position;
+	searchTime = _searchTime;
+	runTimer = true;
 }
 
-void Search::newInfiniteSearch(Position& position) {
+void Search::newInfiniteSearch(Position& _position) {
 	if (running) throw std::exception();
 
 	reset();
 
-	this->position = position;
+	position = _position;
 }
 
-void Search::newClockSearch(Position& position,
+void Search::newClockSearch(Position& _position,
 							uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft,
 							uint64_t blackTimeIncrement, int movesToGo) {
-	newPonderSearch(position,
+	newPonderSearch(_position,
 			whiteTimeLeft, whiteTimeIncrement, blackTimeLeft, blackTimeIncrement, movesToGo
 	);
 
 	this->runTimer = true;
 }
 
-void Search::newPonderSearch(Position& position,
+void Search::newPonderSearch(Position& _position,
 							 uint64_t whiteTimeLeft, uint64_t whiteTimeIncrement, uint64_t blackTimeLeft,
 							 uint64_t blackTimeIncrement, int movesToGo) {
-	if (whiteTimeLeft < 1 && position.activeColor == color::WHITE) throw std::exception();
-	if (whiteTimeIncrement < 0 && position.activeColor == color::WHITE) throw std::exception();
-	if (blackTimeLeft < 1 && position.activeColor == color::BLACK) throw std::exception();
-	if (blackTimeIncrement < 0 && position.activeColor == color::BLACK) throw std::exception();
+	if (whiteTimeLeft < 1 && _position.activeColor == color::WHITE) throw std::exception();
+	if (whiteTimeIncrement < 0 && _position.activeColor == color::WHITE) throw std::exception();
+	if (blackTimeLeft < 1 && _position.activeColor == color::BLACK) throw std::exception();
+	if (blackTimeIncrement < 0 && _position.activeColor == color::BLACK) throw std::exception();
 	if (movesToGo < 0) throw std::exception();
 	if (running) throw std::exception();
 
 	reset();
 
-	this->position = position;
+	position = _position;
 
 	uint64_t timeLeft;
 	uint64_t timeIncrement;
-	if (position.activeColor == color::WHITE) {
+	if (_position.activeColor == color::WHITE) {
 		timeLeft = whiteTimeLeft;
 		timeIncrement = whiteTimeIncrement;
 	} else {

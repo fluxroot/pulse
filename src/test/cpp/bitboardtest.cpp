@@ -19,8 +19,10 @@ class BitboardTest : public ::testing::Test {
 protected:
 	std::list<int> pool;
 
-	virtual void SetUp() {
-		std::default_random_engine generator;
+	void SetUp() override {
+		std::random_device randomDevice;
+		unsigned int seed = randomDevice();
+		std::default_random_engine generator(seed);
 
 		while (pool.size() < 64) {
 			std::uniform_int_distribution<int> distribution(0, 63);
@@ -91,7 +93,9 @@ TEST(bitboardtest, testNumberOfTrailingZeros) {
 }
 
 TEST(bitboardtest, testBitCount) {
-	std::default_random_engine generator;
+	std::random_device randomDevice;
+	unsigned int seed = randomDevice();
+	std::default_random_engine generator(seed);
 
 	for (int i = 0; i < 1000; i++) {
 		uint64_t bitboard = 0;

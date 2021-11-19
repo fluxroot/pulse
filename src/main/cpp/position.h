@@ -43,13 +43,13 @@ public:
 
 	bool operator!=(const Position& position) const;
 
-	void setActiveColor(int activeColor);
+	void setActiveColor(int _activeColor);
 
 	void setCastlingRight(int castling);
 
-	void setEnPassantSquare(int enPassantSquare);
+	void setEnPassantSquare(int _enPassantSquare);
 
-	void setHalfmoveClock(int halfmoveClock);
+	void setHalfmoveClock(int _halfmoveClock);
 
 	int getFullmoveNumber() const;
 

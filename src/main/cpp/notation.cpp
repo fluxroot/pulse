@@ -148,13 +148,11 @@ Position toPosition(const std::string& fen) {
 	// Parse castling rights
 	token = tokens[tokensIndex++];
 
-	if (token.compare("-") != 0) {
+	if (token != "-") {
 		for (auto character: token) {
-			int castlingFile;
-			int kingFile;
 			int castling = toCastling(character);
 			if (castling == castling::NOCASTLING) {
-				castlingFile = toFile(character);
+				int castlingFile = toFile(character);
 				if (castlingFile == file::NOFILE) {
 					throw std::exception();
 				}
@@ -165,18 +163,12 @@ Position toPosition(const std::string& fen) {
 					throw std::exception();
 				}
 
-				kingFile = square::getFile(bitboard::next(position.pieces[color][piecetype::KING]));
+				int kingFile = square::getFile(bitboard::next(position.pieces[color][piecetype::KING]));
 				if (castlingFile > kingFile) {
 					castling = castling::valueOf(color, castlingtype::KINGSIDE);
 				} else {
 					castling = castling::valueOf(color, castlingtype::QUEENSIDE);
 				}
-			} else if (castling::getType(castling) == castlingtype::KINGSIDE) {
-				castlingFile = file::h;
-				kingFile = file::e;
-			} else {
-				castlingFile = file::a;
-				kingFile = file::e;
 			}
 
 			position.setCastlingRight(castling);
@@ -186,7 +178,7 @@ Position toPosition(const std::string& fen) {
 	// Parse en passant square
 	token = tokens[tokensIndex++];
 
-	if (token.compare("-") != 0) {
+	if (token != "-") {
 		if (token.length() != 2) {
 			throw std::exception();
 		}
@@ -333,7 +325,7 @@ char fromColor(int color) {
 }
 
 int toPieceType(char notation) {
-	char uppercaseNotation = std::toupper(notation);
+	char uppercaseNotation = std::toupper(notation, std::locale());
 	switch (uppercaseNotation) {
 		case PAWN_NOTATION:
 			return piecetype::PAWN;
@@ -388,7 +380,7 @@ char fromPiece(int piece) {
 }
 
 int toCastlingType(char notation) {
-	char uppercaseNotation = std::toupper(notation);
+	char uppercaseNotation = std::toupper(notation, std::locale());
 	switch (uppercaseNotation) {
 		case KINGSIDE_NOTATION:
 			return castlingtype::KINGSIDE;

@@ -117,9 +117,9 @@ bool Position::operator!=(const Position& position) const {
 	return !(*this == position);
 }
 
-void Position::setActiveColor(int activeColor) {
-	if (this->activeColor != activeColor) {
-		this->activeColor = activeColor;
+void Position::setActiveColor(int _activeColor) {
+	if (activeColor != _activeColor) {
+		activeColor = _activeColor;
 		zobristKey ^= zobrist.activeColor;
 	}
 }
@@ -131,18 +131,18 @@ void Position::setCastlingRight(int castling) {
 	}
 }
 
-void Position::setEnPassantSquare(int enPassantSquare) {
+void Position::setEnPassantSquare(int _enPassantSquare) {
 	if (this->enPassantSquare != square::NOSQUARE) {
 		zobristKey ^= zobrist.enPassantSquare[this->enPassantSquare];
 	}
-	if (enPassantSquare != square::NOSQUARE) {
-		zobristKey ^= zobrist.enPassantSquare[enPassantSquare];
+	if (_enPassantSquare != square::NOSQUARE) {
+		zobristKey ^= zobrist.enPassantSquare[_enPassantSquare];
 	}
-	this->enPassantSquare = enPassantSquare;
+	enPassantSquare = _enPassantSquare;
 }
 
-void Position::setHalfmoveClock(int halfmoveClock) {
-	this->halfmoveClock = halfmoveClock;
+void Position::setHalfmoveClock(int _halfmoveClock) {
+	halfmoveClock = _halfmoveClock;
 }
 
 int Position::getFullmoveNumber() const {
