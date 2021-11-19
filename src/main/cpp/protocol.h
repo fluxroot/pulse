@@ -27,5 +27,7 @@ public:
 	virtual void sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uint64_t totalNodes) = 0;
 
 	virtual void sendInfo(const std::string& message) = 0;
+
+	virtual void sendDebug(const std::string& message) = 0;
 };
 }

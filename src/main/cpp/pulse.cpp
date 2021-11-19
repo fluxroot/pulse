@@ -24,6 +24,8 @@ void Pulse::run() {
 		input >> std::skipws >> token;
 		if (token == "uci") {
 			receiveInitialize();
+		} else if (token == "debug") {
+			receiveDebug(input);
 		} else if (token == "isready") {
 			receiveReady();
 		} else if (token == "ucinewgame") {
@@ -62,6 +64,27 @@ void Pulse::receiveInitialize() {
 	std::cout << "id name Pulse C++ 2.0.0" << std::endl;
 	std::cout << "id author Phokham Nonava" << std::endl;
 	std::cout << "uciok" << std::endl;
+}
+
+void Pulse::receiveDebug(std::istringstream& input) {
+	std::string token;
+	input >> token;
+	if (token == "on") {
+		debug = true;
+	} else if (token == "off") {
+		debug = false;
+	} else if (token.empty()) {
+		debug = !debug;
+	} else {
+		sendInfo("Unknown token: " + token);
+		return;
+	}
+
+	if (debug) {
+		sendInfo("Turning on debugging mode");
+	} else {
+		sendInfo("Turning off debugging mode");
+	}
 }
 
 void Pulse::receiveReady() {
@@ -305,6 +328,12 @@ void Pulse::sendMove(RootEntry entry, int currentDepth, int currentMaxDepth, uin
 
 void Pulse::sendInfo(const std::string& message) {
 	std::cout << "info string " << message << std::endl;
+}
+
+void Pulse::sendDebug(const std::string& message) {
+	if (debug) {
+		std::cout << "info string " << message << std::endl;
+	}
 }
 
 std::string Pulse::fromMove(int move) {

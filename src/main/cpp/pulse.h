@@ -33,7 +33,10 @@ public:
 
 	static std::string fromMove(int move);
 
+	void sendDebug(const std::string& message) override;
+
 private:
+	bool debug;
 	std::unique_ptr<Search> search = std::make_unique<Search>(*this);
 	std::chrono::system_clock::time_point startTime;
 	std::chrono::system_clock::time_point statusStartTime;
@@ -42,6 +45,8 @@ private:
 			notation::toPosition(notation::STANDARDPOSITION));
 
 	void receiveInitialize();
+
+	void receiveDebug(std::istringstream& istringstream);
 
 	void receiveReady();
 
