@@ -43,6 +43,7 @@ add_executable(unittest
         positiontest.cpp
         model/ranktest.cpp
         model/squaretest.cpp
+        threadpooltest.cpp
         )
 
 target_link_libraries(unittest core gtest_main)
