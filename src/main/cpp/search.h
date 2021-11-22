@@ -21,7 +21,7 @@ namespace pulse {
  * This class implements our search in a separate thread to keep the main
  * thread available for more commands.
  */
-class Search {
+class Search final {
 public:
 	explicit Search(Protocol& protocol);
 
@@ -57,7 +57,7 @@ private:
 	/**
 	 * This is our search timer for time & clock & ponder searches.
 	 */
-	class Timer {
+	class Timer final {
 	public:
 		Timer(bool& timerStopped, bool& doTimeManagement, int& currentDepth, const int& initialDepth, bool& abort);
 
@@ -80,7 +80,7 @@ private:
 		void run(uint64_t _searchTime);
 	};
 
-	class Semaphore {
+	class Semaphore final {
 	public:
 		explicit Semaphore(int permits);
 

@@ -11,7 +11,7 @@
 
 namespace pulse {
 
-class Pulse : public Protocol {
+class Pulse final : public Protocol {
 public:
 	void run();
 

@@ -17,7 +17,7 @@ namespace pulse {
  * will populate pv for every root move.
  */
 template<class T>
-class MoveList {
+class MoveList final {
 private:
 	static const int MAX_MOVES = 256;
 
@@ -32,7 +32,7 @@ public:
 	void rateFromMVVLVA();
 };
 
-class MoveVariation {
+class MoveVariation final {
 public:
 	std::array<int, depth::MAX_PLY> moves;
 	int size = 0;
@@ -44,7 +44,7 @@ public:
 	int value = value::NOVALUE;
 };
 
-class RootEntry : public MoveEntry {
+class RootEntry final : public MoveEntry {
 public:
 	MoveVariation pv;
 };

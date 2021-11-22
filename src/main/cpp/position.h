@@ -16,7 +16,7 @@
 
 namespace pulse {
 
-class Position {
+class Position final {
 public:
 	std::array<int, square::VALUES_LENGTH> board;
 
@@ -72,7 +72,7 @@ public:
 	bool isAttacked(int targetSquare, int attackerColor);
 
 private:
-	class Zobrist {
+	class Zobrist final {
 	public:
 		std::array<std::array<uint64_t, square::VALUES_LENGTH>, piece::VALUES_SIZE> board;
 		std::array<uint64_t, castling::VALUES_LENGTH> castlingRights;
@@ -89,7 +89,7 @@ private:
 		uint64_t next();
 	};
 
-	class State {
+	class State final {
 	public:
 		uint64_t zobristKey = 0;
 		int castlingRights = castling::NOCASTLING;

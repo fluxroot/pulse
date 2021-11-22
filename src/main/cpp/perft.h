@@ -8,7 +8,7 @@
 
 namespace pulse {
 
-class Perft {
+class Perft final {
 public:
 	void run();
 
@@ -19,5 +19,4 @@ private:
 
 	uint64_t miniMax(int depth, Position& position, int ply);
 };
-
 }

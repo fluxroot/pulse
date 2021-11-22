@@ -9,7 +9,7 @@
 
 namespace pulse {
 
-class MoveGenerator {
+class MoveGenerator final {
 public:
 	MoveList<MoveEntry>& getLegalMoves(Position& position, int depth, bool isCheck);
 
