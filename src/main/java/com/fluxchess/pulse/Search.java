@@ -28,7 +28,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 final class Search {
 
-	private final ExecutorService executorService = newFixedThreadPool(getRuntime().availableProcessors());
+	private final ExecutorService threadPool = newFixedThreadPool(getRuntime().availableProcessors());
 	private Optional<Future<?>> future = Optional.empty();
 	private volatile boolean abort;
 
@@ -184,7 +184,7 @@ final class Search {
 
 	void start() {
 		if (future.isEmpty()) {
-			future = Optional.of(executorService.submit(new Worker()));
+			future = Optional.of(threadPool.submit(new Worker()));
 		}
 	}
 
@@ -219,12 +219,12 @@ final class Search {
 	void quit() {
 		stop();
 		try {
-			executorService.shutdown();
-			if (!executorService.awaitTermination(3, SECONDS)) {
-				executorService.shutdownNow();
+			threadPool.shutdown();
+			if (!threadPool.awaitTermination(3, SECONDS)) {
+				threadPool.shutdownNow();
 			}
 		} catch (InterruptedException e) {
-			executorService.shutdownNow();
+			threadPool.shutdownNow();
 			currentThread().interrupt();
 		}
 	}
