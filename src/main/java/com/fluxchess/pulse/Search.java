@@ -63,23 +63,6 @@ final class Search {
 	private int currentMoveNumber;
 	private final MoveVariation[] pv = new MoveVariation[MAX_PLY + 1];
 
-	/**
-	 * This is our search timer for time & clock & ponder searches.
-	 */
-	private final class SearchTimer extends TimerTask {
-
-		@Override
-		public void run() {
-			timerStopped = true;
-
-			// If we finished the first iteration, we should have a result.
-			// In this case abort the search.
-			if (!doTimeManagement || currentDepth > initialDepth) {
-				abort = true;
-			}
-		}
-	}
-
 	void newDepthSearch(Position position, int searchDepth) {
 		reset();
 
@@ -246,6 +229,23 @@ final class Search {
 							&& currentDepth >= (CHECKMATE - abs(rootMoves.entries[0].value))) {
 						abort = true;
 					}
+			}
+		}
+	}
+
+	/**
+	 * This is our search timer for time & clock & ponder searches.
+	 */
+	private final class SearchTimer extends TimerTask {
+
+		@Override
+		public void run() {
+			timerStopped = true;
+
+			// If we finished the first iteration, we should have a result.
+			// In this case abort the search.
+			if (!doTimeManagement || currentDepth > initialDepth) {
+				abort = true;
 			}
 		}
 	}
