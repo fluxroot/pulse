@@ -4,6 +4,7 @@
       <element module="Java Sources" copyright="MIT" />
       <element module="Kotlin Sources" copyright="MIT" />
       <element module="C++ Sources" copyright="MIT" />
+      <element module="Go Sources" copyright="MIT" />
     </module2copyright>
     <LanguageOptions name="__TEMPLATE__" />
   </settings>
