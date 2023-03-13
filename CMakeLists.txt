@@ -23,7 +23,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-add_subdirectory(src/main/cpp)
-add_subdirectory(src/test/cpp)
+add_subdirectory(pulse-cpp/src/main/cpp)
+add_subdirectory(pulse-cpp/src/test/cpp)
 
-install(FILES README.md LICENSE CHANGES.md src/dist/logo.bmp DESTINATION .)
+install(FILES README.md LICENSE CHANGES.md src/main/dist/logo.bmp DESTINATION .)
