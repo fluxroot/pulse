@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Pulse Go" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="pulse-go" />
+    <working_directory value="$PROJECT_DIR$/pulse-go" />
+    <kind value="PACKAGE" />
+    <package value="github.com/fluxroot/pulse/cmd" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/pulse-go/cmd/pulse.go" />
+    <method v="2" />
+  </configuration>
+</component>
