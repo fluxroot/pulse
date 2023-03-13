@@ -29,3 +29,14 @@ tasks.test {
 tasks.named<JavaExec>("run") {
 	standardInput = System.`in`
 }
+
+distributions {
+	main {
+		contents {
+			from(rootProject.layout.projectDirectory.file("src/main/dist"))
+			from(rootProject.layout.projectDirectory.file("README.md"))
+			from(rootProject.layout.projectDirectory.file("CHANGES.md"))
+			from(rootProject.layout.projectDirectory.file("LICENSE"))
+		}
+	}
+}
