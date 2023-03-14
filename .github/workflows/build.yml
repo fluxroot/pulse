@@ -1,6 +1,6 @@
-on: [ push ]
+on: push
 jobs:
-  - build-java:
+  build-java:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -11,7 +11,7 @@ jobs:
       - name: Build
         run: ./gradlew build
 
-  - build-cpp-linux:
+  build-cpp-linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,7 +23,7 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: ctest -C Release
 
-  - build-cpp-windows:
+  build-cpp-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
