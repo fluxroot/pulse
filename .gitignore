@@ -2,21 +2,9 @@
 /.gradle/
 /*/build/
 
-# Maven
-/target/
-
 # CMake
 /build/
-/cmake-build-debug/
-/cmake-build-debug-wsl/
-
-# Eclipse
-/.settings/
-/bin/
-/.classpath
-/.project
+cmake-build-debug/
 
 # IntelliJ IDEA
 /.idea/
-/out/
-/*.iml
