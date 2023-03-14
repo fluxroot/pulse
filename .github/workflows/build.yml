@@ -1,11 +1,36 @@
 on: [ push ]
 jobs:
-  build:
+  - build-java:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: 11
-      - run: ./gradlew build
+          java-version: '11.0.18+10'
+      - name: Build
+        run: ./gradlew build
+
+  - build-cpp-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config Release
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C Release
+
+  - build-cpp-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config Release
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C Release
