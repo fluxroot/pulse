@@ -35,3 +35,17 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: ctest -C Release
+
+  build-go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.20
+      - name: Build
+        working-directory: ${{github.workspace}}/pulse-go
+        run: go build -v ./...
+      - name: Test
+        working-directory: ${{github.workspace}}/pulse-go
+        run: go test -v ./...
