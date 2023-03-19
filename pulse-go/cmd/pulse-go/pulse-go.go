@@ -10,6 +10,7 @@ package main
 import (
 	"fmt"
 	"github.com/fluxroot/pulse/internal/pulse"
+	"log"
 	"os"
 	"strings"
 )
@@ -17,7 +18,9 @@ import (
 func main() {
 	args := os.Args[1:]
 	if len(args) == 0 {
-		pulse.NewPulse().Run()
+		if err := pulse.NewPulse().Run(); err != nil {
+			log.Fatalf("Error: %v", err)
+		}
 	} else if (len(args)) == 1 && strings.EqualFold(args[0], "perft") {
 		pulse.NewPerft().Run()
 	} else {

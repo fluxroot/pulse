@@ -3,7 +3,7 @@
     <module name="pulse-go" />
     <working_directory value="$PROJECT_DIR$/pulse-go" />
     <kind value="PACKAGE" />
-    <package value="github.com/fluxroot/pulse/cmd" />
+    <package value="github.com/fluxroot/pulse/cmd/pulse-go" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/pulse-go/cmd/pulse.go" />
     <method v="2" />

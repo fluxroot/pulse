@@ -7,6 +7,12 @@
 
 package pulse
 
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
 func NewPulse() *Pulse {
 	return &Pulse{}
 }
@@ -14,5 +20,34 @@ func NewPulse() *Pulse {
 type Pulse struct {
 }
 
-func (p *Pulse) Run() {
+func (p *Pulse) Run() error {
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		line := scanner.Text()
+		switch line {
+		case "uci":
+			// TODO
+		case "debug":
+			// TODO
+		case "isready":
+			// TODO
+		case "ucinewgame":
+			// TODO
+		case "position":
+			// TODO
+		case "go":
+			// TODO
+		case "stop":
+			// TODO
+		case "ponderhit":
+			// TODO
+		case "quit":
+			// TODO
+			return nil
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("scan: %w", err)
+	}
+	return nil
 }
