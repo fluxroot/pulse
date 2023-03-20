@@ -7,6 +7,8 @@
 
 package protocol
 
+//go:generate mockgen -source=receiver.go -destination=mock/receiver.go -package=mock
+
 type Receiver interface {
 	Receive() error
 }
