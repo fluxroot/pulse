@@ -23,11 +23,14 @@ type Sender struct {
 }
 
 func (s *Sender) Id(name string, author string) error {
-	if _, err := fmt.Fprintln(s.writer, "id name ", name); err != nil {
+	if _, err := fmt.Fprintln(s.writer, "id name", name); err != nil {
 		return fmt.Errorf("fprintln: %w", err)
 	}
-	if _, err := fmt.Fprintln(s.writer, "id author ", author); err != nil {
+	if _, err := fmt.Fprintln(s.writer, "id author", author); err != nil {
 		return fmt.Errorf("fprintln: %w", err)
+	}
+	if err := s.writer.Flush(); err != nil {
+		return fmt.Errorf("flush: %w", err)
 	}
 	return nil
 }
@@ -35,6 +38,9 @@ func (s *Sender) Id(name string, author string) error {
 func (s *Sender) Ok() error {
 	if _, err := fmt.Fprintln(s.writer, "uciok"); err != nil {
 		return fmt.Errorf("fprintln: %w", err)
+	}
+	if err := s.writer.Flush(); err != nil {
+		return fmt.Errorf("flush: %w", err)
 	}
 	return nil
 }
