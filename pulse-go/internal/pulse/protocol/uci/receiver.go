@@ -14,19 +14,19 @@ import (
 	"io"
 )
 
-func NewReceiver(reader io.Reader, engine protocol.Engine) protocol.Receiver {
-	return &receiver{
+func NewReceiver(reader io.Reader, engine protocol.Engine) *Receiver {
+	return &Receiver{
 		reader: reader,
 		engine: engine,
 	}
 }
 
-type receiver struct {
+type Receiver struct {
 	reader io.Reader
 	engine protocol.Engine
 }
 
-func (r *receiver) Receive() error {
+func (r *Receiver) Receive() error {
 	scanner := bufio.NewScanner(r.reader)
 	for scanner.Scan() {
 		line := scanner.Text()

@@ -7,13 +7,9 @@
 
 package uci
 
-import (
-	"github.com/fluxroot/pulse/internal/pulse/protocol"
-)
-
-func NewSender() protocol.Sender {
-	return &sender{}
+func NewSender() *Sender {
+	return &Sender{}
 }
 
-type sender struct {
+type Sender struct {
 }

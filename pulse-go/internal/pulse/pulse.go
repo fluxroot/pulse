@@ -7,9 +7,7 @@
 
 package pulse
 
-import "github.com/fluxroot/pulse/internal/pulse/protocol"
-
-func NewPulse() protocol.Engine {
+func NewPulse() *Pulse {
 	return &Pulse{}
 }
 
