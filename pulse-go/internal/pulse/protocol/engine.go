@@ -10,13 +10,13 @@ package protocol
 //go:generate mockgen -source=engine.go -destination=mock/engine.go -package=mock
 
 type Engine interface {
-	Initialize()
-	Debug()
-	Ready()
-	NewGame()
-	Position()
-	Start()
-	Stop()
-	PonderHit()
-	Quit()
+	Initialize() error
+	Debug() error
+	Ready() error
+	NewGame() error
+	Position() error
+	Start() error
+	Stop() error
+	PonderHit() error
+	Quit() error
 }

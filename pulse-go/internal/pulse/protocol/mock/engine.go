@@ -34,9 +34,11 @@ func (m *MockEngine) EXPECT() *MockEngineMockRecorder {
 }
 
 // Debug mocks base method.
-func (m *MockEngine) Debug() {
+func (m *MockEngine) Debug() error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Debug")
+	ret := m.ctrl.Call(m, "Debug")
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // Debug indicates an expected call of Debug.
@@ -46,9 +48,11 @@ func (mr *MockEngineMockRecorder) Debug() *gomock.Call {
 }
 
 // Initialize mocks base method.
-func (m *MockEngine) Initialize() {
+func (m *MockEngine) Initialize() error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Initialize")
+	ret := m.ctrl.Call(m, "Initialize")
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // Initialize indicates an expected call of Initialize.
@@ -58,9 +62,11 @@ func (mr *MockEngineMockRecorder) Initialize() *gomock.Call {
 }
 
 // NewGame mocks base method.
-func (m *MockEngine) NewGame() {
+func (m *MockEngine) NewGame() error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "NewGame")
+	ret := m.ctrl.Call(m, "NewGame")
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // NewGame indicates an expected call of NewGame.
@@ -70,9 +76,11 @@ func (mr *MockEngineMockRecorder) NewGame() *gomock.Call {
 }
 
 // PonderHit mocks base method.
-func (m *MockEngine) PonderHit() {
+func (m *MockEngine) PonderHit() error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "PonderHit")
+	ret := m.ctrl.Call(m, "PonderHit")
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // PonderHit indicates an expected call of PonderHit.
@@ -82,9 +90,11 @@ func (mr *MockEngineMockRecorder) PonderHit() *gomock.Call {
 }
 
 // Position mocks base method.
-func (m *MockEngine) Position() {
+func (m *MockEngine) Position() error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Position")
+	ret := m.ctrl.Call(m, "Position")
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // Position indicates an expected call of Position.
@@ -94,9 +104,11 @@ func (mr *MockEngineMockRecorder) Position() *gomock.Call {
 }
 
 // Quit mocks base method.
-func (m *MockEngine) Quit() {
+func (m *MockEngine) Quit() error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Quit")
+	ret := m.ctrl.Call(m, "Quit")
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // Quit indicates an expected call of Quit.
@@ -106,9 +118,11 @@ func (mr *MockEngineMockRecorder) Quit() *gomock.Call {
 }
 
 // Ready mocks base method.
-func (m *MockEngine) Ready() {
+func (m *MockEngine) Ready() error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Ready")
+	ret := m.ctrl.Call(m, "Ready")
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // Ready indicates an expected call of Ready.
@@ -118,9 +132,11 @@ func (mr *MockEngineMockRecorder) Ready() *gomock.Call {
 }
 
 // Start mocks base method.
-func (m *MockEngine) Start() {
+func (m *MockEngine) Start() error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Start")
+	ret := m.ctrl.Call(m, "Start")
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // Start indicates an expected call of Start.
@@ -130,9 +146,11 @@ func (mr *MockEngineMockRecorder) Start() *gomock.Call {
 }
 
 // Stop mocks base method.
-func (m *MockEngine) Stop() {
+func (m *MockEngine) Stop() error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Stop")
+	ret := m.ctrl.Call(m, "Stop")
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // Stop indicates an expected call of Stop.

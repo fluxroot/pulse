@@ -7,45 +7,70 @@
 
 package pulse
 
-func NewPulse() *Pulse {
-	return &Pulse{}
+import (
+	"fmt"
+	"github.com/fluxroot/pulse/internal/pulse/protocol"
+)
+
+func NewPulse(sender protocol.Sender) *Pulse {
+	return &Pulse{
+		sender: sender,
+	}
 }
 
 type Pulse struct {
+	sender protocol.Sender
 }
 
-func (p *Pulse) Initialize() {
-	// TODO
+func (p *Pulse) Initialize() error {
+	if err := p.Stop(); err != nil {
+		return fmt.Errorf("stop: %w", err)
+	}
+	if err := p.sender.Id("Pulse Go 2.0.0", "Phokham Nonava"); err != nil {
+		return fmt.Errorf("id: %w", err)
+	}
+	if err := p.sender.Ok(); err != nil {
+		return fmt.Errorf("ok: %w", err)
+	}
+	return nil
 }
 
-func (p *Pulse) Debug() {
+func (p *Pulse) Debug() error {
 	// TODO
+	return nil
 }
 
-func (p *Pulse) Ready() {
+func (p *Pulse) Ready() error {
 	// TODO
+	return nil
 }
 
-func (p *Pulse) NewGame() {
+func (p *Pulse) NewGame() error {
 	// TODO
+	return nil
 }
 
-func (p *Pulse) Position() {
+func (p *Pulse) Position() error {
 	// TODO
+	return nil
 }
 
-func (p *Pulse) Start() {
+func (p *Pulse) Start() error {
 	// TODO
+	return nil
 }
 
-func (p *Pulse) Stop() {
+func (p *Pulse) Stop() error {
 	// TODO
+	return nil
 }
 
-func (p *Pulse) PonderHit() {
+func (p *Pulse) PonderHit() error {
 	// TODO
+	return nil
 }
 
-func (p *Pulse) Quit() {
+func (p *Pulse) Quit() error {
 	// TODO
+	return nil
 }

@@ -11,48 +11,64 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/fluxroot/pulse/internal/pulse/protocol"
-	"io"
 )
 
-func NewReceiver(reader io.Reader, engine protocol.Engine) *Receiver {
+func NewReceiver(scanner *bufio.Scanner, engine protocol.Engine) *Receiver {
 	return &Receiver{
-		reader: reader,
-		engine: engine,
+		scanner: scanner,
+		engine:  engine,
 	}
 }
 
 type Receiver struct {
-	reader io.Reader
-	engine protocol.Engine
+	scanner *bufio.Scanner
+	engine  protocol.Engine
 }
 
 func (r *Receiver) Run() error {
-	scanner := bufio.NewScanner(r.reader)
-	for scanner.Scan() {
-		line := scanner.Text()
+	for r.scanner.Scan() {
+		line := r.scanner.Text()
 		switch line {
 		case "uci":
-			r.engine.Initialize()
+			if err := r.engine.Initialize(); err != nil {
+				return fmt.Errorf("initialize: %w", err)
+			}
 		case "debug":
-			r.engine.Debug()
+			if err := r.engine.Debug(); err != nil {
+				return fmt.Errorf("debug: %w", err)
+			}
 		case "isready":
-			r.engine.Ready()
+			if err := r.engine.Ready(); err != nil {
+				return fmt.Errorf("ready: %w", err)
+			}
 		case "ucinewgame":
-			r.engine.NewGame()
+			if err := r.engine.NewGame(); err != nil {
+				return fmt.Errorf("new game: %w", err)
+			}
 		case "position":
-			r.engine.Position()
+			if err := r.engine.Position(); err != nil {
+				return fmt.Errorf("position: %w", err)
+			}
 		case "go":
-			r.engine.Start()
+			if err := r.engine.Start(); err != nil {
+				return fmt.Errorf("start: %w", err)
+			}
 		case "stop":
-			r.engine.Stop()
+			if err := r.engine.Stop(); err != nil {
+				return fmt.Errorf("stop: %w", err)
+			}
 		case "ponderhit":
-			r.engine.PonderHit()
+			if err := r.engine.PonderHit(); err != nil {
+				return fmt.Errorf("ponder hit: %w", err)
+			}
 		case "quit":
-			r.engine.Quit()
+			if err := r.engine.Quit(); err != nil {
+				return fmt.Errorf("quit: %w", err)
+			}
 			return nil
 		}
 	}
-	if err := scanner.Err(); err != nil {
+	if err := r.scanner.Err(); err != nil {
 		return fmt.Errorf("scan: %w", err)
 	}
 	return nil

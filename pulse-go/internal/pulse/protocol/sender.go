@@ -10,4 +10,6 @@ package protocol
 //go:generate mockgen -source=sender.go -destination=mock/sender.go -package=mock
 
 type Sender interface {
+	Id(name string, author string) error
+	Ok() error
 }

@@ -5,6 +5,8 @@
 package mock
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -29,4 +31,32 @@ func NewMockSender(ctrl *gomock.Controller) *MockSender {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSender) EXPECT() *MockSenderMockRecorder {
 	return m.recorder
+}
+
+// Id mocks base method.
+func (m *MockSender) Id(name, author string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Id", name, author)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Id indicates an expected call of Id.
+func (mr *MockSenderMockRecorder) Id(name, author interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Id", reflect.TypeOf((*MockSender)(nil).Id), name, author)
+}
+
+// Ok mocks base method.
+func (m *MockSender) Ok() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Ok")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Ok indicates an expected call of Ok.
+func (mr *MockSenderMockRecorder) Ok() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ok", reflect.TypeOf((*MockSender)(nil).Ok))
 }

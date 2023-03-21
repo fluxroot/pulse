@@ -8,6 +8,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/fluxroot/pulse/internal/pulse"
 	"github.com/fluxroot/pulse/internal/pulse/protocol/uci"
@@ -19,8 +20,9 @@ import (
 func main() {
 	args := os.Args[1:]
 	if len(args) == 0 {
-		engine := pulse.NewPulse()
-		receiver := uci.NewReceiver(os.Stdin, engine)
+		sender := uci.NewSender(bufio.NewWriter(os.Stdout))
+		engine := pulse.NewPulse(sender)
+		receiver := uci.NewReceiver(bufio.NewScanner(os.Stdin), engine)
 		if err := receiver.Run(); err != nil {
 			log.Fatalf("Error: %v", err)
 		}

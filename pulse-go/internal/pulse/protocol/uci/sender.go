@@ -7,9 +7,34 @@
 
 package uci
 
-func NewSender() *Sender {
-	return &Sender{}
+import (
+	"bufio"
+	"fmt"
+)
+
+func NewSender(writer *bufio.Writer) *Sender {
+	return &Sender{
+		writer: writer,
+	}
 }
 
 type Sender struct {
+	writer *bufio.Writer
+}
+
+func (s *Sender) Id(name string, author string) error {
+	if _, err := fmt.Fprintln(s.writer, "id name ", name); err != nil {
+		return fmt.Errorf("fprintln: %w", err)
+	}
+	if _, err := fmt.Fprintln(s.writer, "id author ", author); err != nil {
+		return fmt.Errorf("fprintln: %w", err)
+	}
+	return nil
+}
+
+func (s *Sender) Ok() error {
+	if _, err := fmt.Fprintln(s.writer, "uciok"); err != nil {
+		return fmt.Errorf("fprintln: %w", err)
+	}
+	return nil
 }
