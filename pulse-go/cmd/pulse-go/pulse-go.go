@@ -21,7 +21,7 @@ func main() {
 	if len(args) == 0 {
 		engine := pulse.NewPulse()
 		receiver := uci.NewReceiver(os.Stdin, engine)
-		if err := receiver.Receive(); err != nil {
+		if err := receiver.Run(); err != nil {
 			log.Fatalf("Error: %v", err)
 		}
 	} else if (len(args)) == 1 && strings.EqualFold(args[0], "perft") {

@@ -26,7 +26,7 @@ type Receiver struct {
 	engine protocol.Engine
 }
 
-func (r *Receiver) Receive() error {
+func (r *Receiver) Run() error {
 	scanner := bufio.NewScanner(r.reader)
 	for scanner.Scan() {
 		line := scanner.Text()

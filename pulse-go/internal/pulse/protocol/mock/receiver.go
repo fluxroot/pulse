@@ -33,16 +33,16 @@ func (m *MockReceiver) EXPECT() *MockReceiverMockRecorder {
 	return m.recorder
 }
 
-// Receive mocks base method.
-func (m *MockReceiver) Receive() error {
+// Run mocks base method.
+func (m *MockReceiver) Run() error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Receive")
+	ret := m.ctrl.Call(m, "Run")
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Receive indicates an expected call of Receive.
-func (mr *MockReceiverMockRecorder) Receive() *gomock.Call {
+// Run indicates an expected call of Run.
+func (mr *MockReceiverMockRecorder) Run() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Receive", reflect.TypeOf((*MockReceiver)(nil).Receive))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockReceiver)(nil).Run))
 }
