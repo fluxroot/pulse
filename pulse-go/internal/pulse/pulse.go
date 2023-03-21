@@ -9,17 +9,17 @@ package pulse
 
 import (
 	"fmt"
-	"github.com/fluxroot/pulse/internal/pulse/protocol"
+	"github.com/fluxroot/pulse/internal/pulse/uci"
 )
 
-func NewPulse(sender protocol.Sender) *Pulse {
+func NewPulse(sender *uci.Sender) *Pulse {
 	return &Pulse{
 		sender: sender,
 	}
 }
 
 type Pulse struct {
-	sender protocol.Sender
+	sender *uci.Sender
 }
 
 func (p *Pulse) Initialize() error {

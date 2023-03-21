@@ -11,7 +11,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/fluxroot/pulse/internal/pulse"
-	"github.com/fluxroot/pulse/internal/pulse/protocol/uci"
+	"github.com/fluxroot/pulse/internal/pulse/uci"
 	"log"
 	"os"
 	"strings"

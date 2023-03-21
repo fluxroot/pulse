@@ -10,10 +10,9 @@ package uci
 import (
 	"bufio"
 	"fmt"
-	"github.com/fluxroot/pulse/internal/pulse/protocol"
 )
 
-func NewReceiver(scanner *bufio.Scanner, engine protocol.Engine) *Receiver {
+func NewReceiver(scanner *bufio.Scanner, engine Engine) *Receiver {
 	return &Receiver{
 		scanner: scanner,
 		engine:  engine,
@@ -22,7 +21,7 @@ func NewReceiver(scanner *bufio.Scanner, engine protocol.Engine) *Receiver {
 
 type Receiver struct {
 	scanner *bufio.Scanner
-	engine  protocol.Engine
+	engine  Engine
 }
 
 func (r *Receiver) Run() error {

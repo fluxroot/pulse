@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-package protocol
+package uci
 
 //go:generate mockgen -source=engine.go -destination=mock/engine.go -package=mock
 
