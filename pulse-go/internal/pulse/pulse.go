@@ -26,10 +26,10 @@ func (p *Pulse) Initialize() error {
 	if err := p.Stop(); err != nil {
 		return fmt.Errorf("stop: %w", err)
 	}
-	if err := p.sender.Id("Pulse Go 2.0.0", "Phokham Nonava"); err != nil {
+	if err := p.sender.ID("Pulse Go 2.0.0", "Phokham Nonava"); err != nil {
 		return fmt.Errorf("id: %w", err)
 	}
-	if err := p.sender.Ok(); err != nil {
+	if err := p.sender.OK(); err != nil {
 		return fmt.Errorf("ok: %w", err)
 	}
 	return nil
@@ -41,7 +41,9 @@ func (p *Pulse) Debug() error {
 }
 
 func (p *Pulse) Ready() error {
-	// TODO
+	if err := p.sender.ReadyOK(); err != nil {
+		return fmt.Errorf("ready ok: %w", err)
+	}
 	return nil
 }
 

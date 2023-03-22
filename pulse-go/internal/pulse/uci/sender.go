@@ -22,7 +22,7 @@ type Sender struct {
 	writer *bufio.Writer
 }
 
-func (s *Sender) Id(name string, author string) error {
+func (s *Sender) ID(name string, author string) error {
 	if _, err := fmt.Fprintln(s.writer, "id name", name); err != nil {
 		return fmt.Errorf("fprintln: %w", err)
 	}
@@ -35,8 +35,18 @@ func (s *Sender) Id(name string, author string) error {
 	return nil
 }
 
-func (s *Sender) Ok() error {
+func (s *Sender) OK() error {
 	if _, err := fmt.Fprintln(s.writer, "uciok"); err != nil {
+		return fmt.Errorf("fprintln: %w", err)
+	}
+	if err := s.writer.Flush(); err != nil {
+		return fmt.Errorf("flush: %w", err)
+	}
+	return nil
+}
+
+func (s *Sender) ReadyOK() error {
+	if _, err := fmt.Fprintln(s.writer, "readyok"); err != nil {
 		return fmt.Errorf("fprintln: %w", err)
 	}
 	if err := s.writer.Flush(); err != nil {
