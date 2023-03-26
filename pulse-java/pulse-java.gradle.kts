@@ -10,13 +10,9 @@ dependencies {
 	testImplementation(libs.assertj)
 }
 
-application {
-	mainClass.set("com.fluxchess.pulse.Main")
-}
-
 java {
 	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(11))
+		languageVersion.set(JavaLanguageVersion.of(17))
 	}
 	withJavadocJar()
 	withSourcesJar()
@@ -24,6 +20,10 @@ java {
 
 tasks.test {
 	useJUnitPlatform()
+}
+
+application {
+	mainClass.set("com.fluxchess.pulse.Main")
 }
 
 tasks.named<JavaExec>("run") {
