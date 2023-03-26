@@ -23,7 +23,7 @@ public final class Main {
 	}
 
 	private static void printUsage() {
-		System.out.println("Usage: pulse [perft]");
+		System.out.println("Usage: pulse-java [perft]");
 		System.exit(1);
 	}
 }

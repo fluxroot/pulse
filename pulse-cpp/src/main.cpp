@@ -9,7 +9,7 @@
 #include <iostream>
 
 int printUsage() {
-	std::cout << "Usage: pulse [perft]" << std::endl;
+	std::cout << "Usage: pulse-cpp [perft]" << std::endl;
 	return 1;
 }
 

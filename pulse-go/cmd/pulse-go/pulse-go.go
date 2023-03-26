@@ -34,6 +34,6 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Println("Usage: pulse [perft]")
+	fmt.Println("Usage: pulse-go [perft]")
 	os.Exit(1)
 }

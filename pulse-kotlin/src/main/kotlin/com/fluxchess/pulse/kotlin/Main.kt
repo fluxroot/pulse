@@ -14,6 +14,6 @@ fun main() {
 }
 
 private fun printUsage() {
-	println("Usage: pulse [perft]")
+	println("Usage: pulse-kotlin [perft]")
 	exitProcess(1)
 }
