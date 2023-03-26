@@ -1,7 +1,8 @@
 rootProject.name = "pulse"
 
 val modules = listOf(
-	"pulse-java"
+	"pulse-java",
+	"pulse-kotlin"
 )
 
 modules.forEach {

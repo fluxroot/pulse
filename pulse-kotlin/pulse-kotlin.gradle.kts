@@ -1,21 +1,24 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
+	alias(libs.plugins.kotlin.jvm)
 	application
 }
 
 dependencies {
-	implementation(libs.jcpi)
-	testImplementation(libs.junit)
+	testImplementation(libs.kotlin.test)
 	testImplementation(libs.assertj)
 }
 
-java {
-	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(17))
-	}
+kotlin {
+	jvmToolchain(17)
 }
 
-tasks.withType<JavaCompile> {
-	options.compilerArgs.addAll(listOf("-Xlint:all", "-Werror"))
+tasks.withType<KotlinJvmCompile> {
+	compilerOptions {
+		allWarningsAsErrors.set(true)
+	}
 }
 
 tasks.test {
@@ -23,7 +26,7 @@ tasks.test {
 }
 
 application {
-	mainClass.set("com.fluxchess.pulse.java.Main")
+	mainClass.set("com.fluxchess.pulse.kotlin.MainKt")
 }
 
 tasks.named<JavaExec>("run") {

@@ -7,10 +7,22 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11.0.18+10'
+          java-version: '17.0.6+10'
       - uses: gradle/gradle-build-action@v2
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew :pulse-java:build
+
+  build-kotlin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17.0.6+10'
+      - uses: gradle/gradle-build-action@v2
+      - name: Build
+        run: ./gradlew :pulse-kotlin:build
 
   build-cpp-linux:
     runs-on: ubuntu-latest

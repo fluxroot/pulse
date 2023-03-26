@@ -13,6 +13,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/pulse-java" />
+            <option value="$PROJECT_DIR$/pulse-kotlin" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Pulse Java" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Run Pulse Kotlin" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value=":pulse-java:run" />
+          <option value=":pulse-kotlin:run" />
         </list>
       </option>
       <option name="vmOptions" />

@@ -2,8 +2,13 @@
 assertj = "3.24.2"
 jcpi = "1.4.1"
 junit = "5.9.2"
+kotlin = "1.8.10"
 
 [libraries]
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 jcpi = { module = "com.fluxchess.jcpi:jcpi", version.ref = "jcpi" }
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
