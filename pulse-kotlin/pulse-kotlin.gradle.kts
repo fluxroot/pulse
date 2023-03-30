@@ -1,32 +1,45 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-	alias(libs.plugins.kotlin.jvm)
+	alias(libs.plugins.kotlin.multiplatform)
 	application
 }
 
-dependencies {
-	testImplementation(libs.kotlin.test)
-	testImplementation(libs.assertj)
-}
-
 kotlin {
-	jvmToolchain(17)
-}
-
-tasks.withType<KotlinJvmCompile> {
-	compilerOptions {
-		allWarningsAsErrors.set(true)
+	jvm() {
+		withJava()
+		jvmToolchain(17)
+		testRuns["test"].executionTask.configure {
+			useJUnitPlatform()
+		}
+	}
+	linuxX64() {
+		binaries {
+			executable()
+		}
+	}
+	mingwX64() {
+		binaries {
+			executable()
+		}
+	}
+	targets.all {
+		compilations.all {
+			compilerOptions.configure {
+				allWarningsAsErrors.set(true)
+			}
+		}
+	}
+	sourceSets {
+		val commonTest by getting {
+			dependencies {
+				implementation(libs.kotlin.test)
+			}
+		}
 	}
 }
 
-tasks.test {
-	useJUnitPlatform()
-}
-
 application {
-	mainClass.set("com.fluxchess.pulse.kotlin.MainKt")
+	mainClass.set("com.fluxchess.pulse.kotlin.jvm.MainKt")
 }
 
 tasks.named<JavaExec>("run") {
