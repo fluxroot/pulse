@@ -1,17 +1,12 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
 	alias(libs.plugins.kotlin.multiplatform)
-	application
+	distribution
 }
 
 kotlin {
-	jvm() {
-		withJava()
-		jvmToolchain(17)
-		testRuns["test"].executionTask.configure {
-			useJUnitPlatform()
-		}
-	}
 	linuxX64() {
 		binaries {
 			executable()
@@ -30,7 +25,7 @@ kotlin {
 		}
 	}
 	sourceSets {
-		val commonTest by getting {
+		getByName("commonTest") {
 			dependencies {
 				implementation(libs.kotlin.test)
 			}
@@ -38,21 +33,24 @@ kotlin {
 	}
 }
 
-application {
-	mainClass.set("com.fluxchess.pulse.kotlin.jvm.MainKt")
-}
-
-tasks.named<JavaExec>("run") {
-	standardInput = System.`in`
+val assets = copySpec {
+	from(rootProject.layout.projectDirectory.dir("src/main/dist"))
+	from(rootProject.layout.projectDirectory.file("README.md"))
+	from(rootProject.layout.projectDirectory.file("CHANGES.md"))
+	from(rootProject.layout.projectDirectory.file("LICENSE"))
 }
 
 distributions {
-	main {
+	create("linux") {
 		contents {
-			from(rootProject.layout.projectDirectory.dir("src/main/dist"))
-			from(rootProject.layout.projectDirectory.file("README.md"))
-			from(rootProject.layout.projectDirectory.file("CHANGES.md"))
-			from(rootProject.layout.projectDirectory.file("LICENSE"))
+			from(kotlin.linuxX64().binaries.getExecutable(NativeBuildType.RELEASE).outputFile)
+			with(assets)
+		}
+	}
+	create("windows") {
+		contents {
+			from(kotlin.mingwX64().binaries.getExecutable(NativeBuildType.RELEASE).outputFile)
+			with(assets)
 		}
 	}
 }
