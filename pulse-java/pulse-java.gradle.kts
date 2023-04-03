@@ -24,6 +24,7 @@ tasks.test {
 
 application {
 	mainClass.set("com.fluxchess.pulse.java.Main")
+	executableDir = ""
 }
 
 tasks.named<JavaExec>("run") {
