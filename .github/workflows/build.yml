@@ -62,7 +62,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: pulse-cpp-linux
-          path: pulse-cpp/build/pulse-cpp-linux-*.tar.gz
+          path: build/pulse-cpp-linux-*.tar.gz
 
   build-cpp-windows:
     runs-on: windows-latest
@@ -78,7 +78,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: pulse-cpp-windows
-          path: pulse-cpp/build/pulse-cpp-windows-*.zip
+          path: build/pulse-cpp-windows-*.zip
 
   build-go-linux:
     runs-on: ubuntu-latest
