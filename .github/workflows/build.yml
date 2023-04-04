@@ -1,6 +1,6 @@
 on: push
 jobs:
-  build-java-jvm:
+  build-java:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -11,6 +11,10 @@ jobs:
       - uses: gradle/gradle-build-action@v2
       - name: Build
         run: ./gradlew :pulse-java:build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pulse-java
+          path: pulse-java/build/distributions/pulse-java-*.zip
 
   build-kotlin-linux:
     runs-on: ubuntu-latest
@@ -23,6 +27,10 @@ jobs:
       - uses: gradle/gradle-build-action@v2
       - name: Build
         run: ./gradlew :pulse-kotlin:linuxDistTar
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pulse-kotlin-linux
+          path: pulse-kotlin/build/distributions/pulse-kotlin-linux-*.tar.gz
 
   build-kotlin-windows:
     runs-on: windows-latest
@@ -35,6 +43,10 @@ jobs:
       - uses: gradle/gradle-build-action@v2
       - name: Build
         run: ./gradlew :pulse-kotlin:windowsDistZip
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pulse-kotlin-windows
+          path: pulse-kotlin/build/distributions/pulse-kotlin-windows-*.zip
 
   build-cpp-linux:
     runs-on: ubuntu-latest
@@ -43,10 +55,14 @@ jobs:
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config Release
+        run: cmake --build ${{github.workspace}}/build --config Release --target package
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: ctest -C Release
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pulse-cpp-linux
+          path: pulse-cpp/build/pulse-cpp-linux-*.tar.gz
 
   build-cpp-windows:
     runs-on: windows-latest
@@ -55,10 +71,14 @@ jobs:
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config Release
+        run: cmake --build ${{github.workspace}}/build --config Release --target package
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: ctest -C Release
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pulse-cpp-windows
+          path: pulse-cpp/build/pulse-cpp-windows-*.zip
 
   build-go-linux:
     runs-on: ubuntu-latest

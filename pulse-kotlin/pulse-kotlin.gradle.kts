@@ -40,6 +40,11 @@ val assets = copySpec {
 	from(rootProject.layout.projectDirectory.file("LICENSE"))
 }
 
+tasks.withType<Tar> {
+	compression = Compression.GZIP
+	archiveExtension.set("tar.gz")
+}
+
 distributions {
 	create("linux") {
 		contents {

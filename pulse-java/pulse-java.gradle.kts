@@ -31,6 +31,10 @@ tasks.named<JavaExec>("run") {
 	standardInput = System.`in`
 }
 
+tasks.withType<Tar> {
+	enabled = false
+}
+
 distributions {
 	main {
 		contents {
