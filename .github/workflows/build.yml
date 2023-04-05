@@ -88,13 +88,12 @@ jobs:
         with:
           go-version: '1.20'
           cache-dependency-path: pulse-go/go.sum
-      - name: Install Task
+      - name: Build
+        working-directory: ${{github.workspace}}/pulse-go
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install go-task
-      - name: Build
-        working-directory: ${{github.workspace}}/pulse-go
-        run: task build
+          task build
 
   build-go-windows:
     runs-on: windows-latest
@@ -104,8 +103,8 @@ jobs:
         with:
           go-version: '1.20'
           cache-dependency-path: pulse-go/go.sum
-      - name: Install Task
-        run: choco install go-task
       - name: Build
         working-directory: ${{github.workspace}}/pulse-go
-        run: task build
+        run: |
+          choco install go-task
+          task build
