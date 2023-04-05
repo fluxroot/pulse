@@ -48,13 +48,13 @@ tasks.withType<Tar> {
 distributions {
 	create("linux") {
 		contents {
-			from(kotlin.linuxX64().binaries.getExecutable(NativeBuildType.RELEASE).outputFile)
+			from(kotlin.linuxX64().binaries.getExecutable(NativeBuildType.RELEASE).linkTaskProvider)
 			with(assets)
 		}
 	}
 	create("windows") {
 		contents {
-			from(kotlin.mingwX64().binaries.getExecutable(NativeBuildType.RELEASE).outputFile)
+			from(kotlin.mingwX64().binaries.getExecutable(NativeBuildType.RELEASE).linkTaskProvider)
 			with(assets)
 		}
 	}
