@@ -89,7 +89,7 @@ jobs:
           go-version: '1.20'
           cache-dependency-path: pulse-go/go.sum
       - name: Install Task
-        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
+        run: brew install go-task
       - name: Build
         working-directory: ${{github.workspace}}/pulse-go
         run: task build
