@@ -14,7 +14,7 @@ fun main(args: Array<String>) = when {
 		Pulse().run()
 	}
 
-	args.size == 1 && args[0] == "perft" -> {
+	args.size == 1 && "perft".equals(args[0], ignoreCase = true) -> {
 		Perft().run()
 	}
 
