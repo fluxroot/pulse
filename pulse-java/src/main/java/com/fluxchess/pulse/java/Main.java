@@ -19,11 +19,11 @@ public final class Main {
 			new Perft().run();
 		} else {
 			printUsage();
+			System.exit(1);
 		}
 	}
 
 	private static void printUsage() {
-		System.out.println("Usage: pulse-java [perft]");
-		System.exit(1);
+		System.err.println("Usage: pulse-java [perft]");
 	}
 }
