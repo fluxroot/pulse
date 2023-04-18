@@ -7,12 +7,17 @@ plugins {
 }
 
 kotlin {
-	linuxX64() {
+	linuxX64 {
 		binaries {
 			executable()
 		}
 	}
-	mingwX64() {
+	macosX64 {
+		binaries {
+			executable()
+		}
+	}
+	mingwX64 {
 		binaries {
 			executable()
 		}
@@ -49,6 +54,12 @@ distributions {
 	create("linux") {
 		contents {
 			from(kotlin.linuxX64().binaries.getExecutable(NativeBuildType.RELEASE).linkTaskProvider)
+			with(assets)
+		}
+	}
+	create("macos") {
+		contents {
+			from(kotlin.macosX64().binaries.getExecutable(NativeBuildType.RELEASE).linkTaskProvider)
 			with(assets)
 		}
 	}

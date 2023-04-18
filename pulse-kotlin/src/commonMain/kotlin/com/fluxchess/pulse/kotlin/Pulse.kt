@@ -5,8 +5,10 @@
  * found in the LICENSE file.
  */
 
-package com.fluxchess.pulse.kotlin.jvm
+package com.fluxchess.pulse.kotlin
 
-fun main() {
-	println("Hello Pulse Kotlin JVM!")
+class Pulse {
+	fun run() {
+		println("Pulse running")
+	}
 }
