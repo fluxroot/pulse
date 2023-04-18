@@ -8,9 +8,8 @@
 
 #include <iostream>
 
-int printUsage() {
-	std::cout << "Usage: pulse-cpp [perft]" << std::endl;
-	return 1;
+void printUsage() {
+	std::cerr << "Usage: pulse-cpp [perft]" << std::endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -23,9 +22,11 @@ int main(int argc, char* argv[]) {
 			std::unique_ptr<pulse::Perft> perft(new pulse::Perft());
 			perft->run();
 		} else {
-			return printUsage();
+			printUsage();
+			return 1;
 		}
 	} else {
-		return printUsage();
+		printUsage();
+		return 1;
 	}
 }
