@@ -5,6 +5,10 @@
  * found in the LICENSE file.
  */
 
-fun main() {
-	println("Hello Pulse Kotlin Linux!")
+package com.fluxchess.pulse.kotlin
+
+class Perft {
+	fun run() {
+		println("Perft running")
+	}
 }
