@@ -8,3 +8,6 @@ cmake-build-debug/
 
 # IntelliJ IDEA
 /.idea/
+
+# Visual Studio
+/.vs/
