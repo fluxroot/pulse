@@ -29,4 +29,5 @@ int main(int argc, char* argv[]) {
 		printUsage();
 		return 1;
 	}
+	return 0;
 }
