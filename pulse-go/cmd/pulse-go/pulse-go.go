@@ -10,11 +10,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/fluxroot/pulse/internal/pulse"
-	"github.com/fluxroot/pulse/internal/pulse/uci"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/fluxroot/pulse/internal/pulse"
+	"github.com/fluxroot/pulse/internal/pulse/uci"
 )
 
 func main() {
