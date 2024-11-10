@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
 	alias(libs.plugins.kotlin.multiplatform)
 	distribution

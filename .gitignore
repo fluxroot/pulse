@@ -11,3 +11,6 @@ cmake-build-debug/
 
 # Visual Studio
 /.vs/
+
+# Kotlin
+/.kotlin/

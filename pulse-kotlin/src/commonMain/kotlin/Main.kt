@@ -25,7 +25,5 @@ fun main(args: Array<String>) = when {
 }
 
 private fun printUsage() {
-	val message = "Usage: pulse-kotlin [perft]"
-	platform.posix.fprintf(platform.posix.stderr, "%s\n", message)
-	platform.posix.fflush(platform.posix.stderr)
+	println("Usage: pulse-kotlin [perft]")
 }

@@ -2,7 +2,7 @@
 assertj = "3.24.2"
 jcpi = "1.4.1"
 junit = "5.9.2"
-kotlin = "1.8.10"
+kotlin = "2.0.21"
 
 [libraries]
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
