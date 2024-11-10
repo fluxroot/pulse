@@ -19,21 +19,22 @@ import (
 
 func main() {
 	args := os.Args[1:]
-	if len(args) == 0 {
+	switch {
+	case len(args) == 0:
 		sender := uci.NewSender(bufio.NewWriter(os.Stdout))
 		engine := pulse.NewPulse(sender)
 		receiver := uci.NewReceiver(bufio.NewScanner(os.Stdin), engine)
 		if err := receiver.Run(); err != nil {
 			log.Fatalf("Error: %v", err)
 		}
-	} else if (len(args)) == 1 && strings.EqualFold(args[0], "perft") {
+	case (len(args)) == 1 && strings.EqualFold(args[0], "perft"):
 		pulse.NewPerft().Run()
-	} else {
+	default:
 		printUsage()
+		os.Exit(1)
 	}
 }
 
 func printUsage() {
-	fmt.Println("Usage: pulse-go [perft]")
-	os.Exit(1)
+	_, _ = fmt.Fprintf(os.Stderr, "Usage: pulse-go [perft]")
 }
