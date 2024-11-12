@@ -7,8 +7,51 @@
 
 package com.fluxchess.pulse.kotlin
 
-class Pulse {
-	fun run() {
-		println("Pulse running")
+import com.fluxchess.pulse.kotlin.uci.Engine
+import com.fluxchess.pulse.kotlin.uci.Sender
+
+class Pulse(
+	private val sender: Sender,
+) : Engine {
+	override fun initialize() {
+		stop()
+		sender.id("Pulse Kotlin 2.0.0", "Phokham Nonava")
+		sender.ok()
+	}
+
+	override fun ready() {
+		sender.readyOk()
+	}
+
+	override fun setOption(name: String) {
+		TODO("Not yet implemented")
+	}
+
+	override fun setOption(name: String, value: String) {
+		TODO("Not yet implemented")
+	}
+
+	override fun newGame() {
+		TODO("Not yet implemented")
+	}
+
+	override fun position() {
+		TODO("Not yet implemented")
+	}
+
+	override fun start() {
+		TODO("Not yet implemented")
+	}
+
+	override fun stop() {
+		TODO("Not yet implemented")
+	}
+
+	override fun ponderHit() {
+		TODO("Not yet implemented")
+	}
+
+	override fun quit() {
+		TODO("Not yet implemented")
 	}
 }

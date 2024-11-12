@@ -11,8 +11,9 @@ package uci
 
 type Engine interface {
 	Initialize() error
-	Debug() error
 	Ready() error
+	SetNameOnlyOption(name string)
+	SetNameValueOption(name string, value string)
 	NewGame() error
 	Position() error
 	Start() error

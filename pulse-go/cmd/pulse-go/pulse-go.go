@@ -8,7 +8,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -22,9 +21,9 @@ func main() {
 	args := os.Args[1:]
 	switch {
 	case len(args) == 0:
-		sender := uci.NewSender(bufio.NewWriter(os.Stdout))
+		sender := uci.NewDefaultSender(uci.NewStdoutWriter())
 		engine := pulse.NewPulse(sender)
-		receiver := uci.NewReceiver(bufio.NewScanner(os.Stdin), engine)
+		receiver := uci.NewDefaultReceiver(uci.NewStdinReader(), sender, engine)
 		if err := receiver.Run(); err != nil {
 			log.Fatalf("Error: %v", err)
 		}

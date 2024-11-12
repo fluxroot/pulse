@@ -61,13 +61,6 @@ public final class Pulse extends AbstractEngine implements Protocol {
 	// command channel.
 
 	/**
-	 * This is our default constructor to create Pulse. It will use the standard
-	 * input and output.
-	 */
-	public Pulse() {
-	}
-
-	/**
 	 * We could also provide our own input and output streams. We could e.g.
 	 * connect a network stream to our engine.
 	 *
@@ -337,6 +330,10 @@ public final class Pulse extends AbstractEngine implements Protocol {
 		ProtocolInformationCommand command = new ProtocolInformationCommand();
 		command.setString(message);
 		getProtocol().send(command);
+	}
+
+	protected Pulse() {
+		super();
 	}
 
 	@Override

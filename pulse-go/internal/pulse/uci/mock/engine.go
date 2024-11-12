@@ -33,20 +33,6 @@ func (m *MockEngine) EXPECT() *MockEngineMockRecorder {
 	return m.recorder
 }
 
-// Debug mocks base method.
-func (m *MockEngine) Debug() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Debug")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Debug indicates an expected call of Debug.
-func (mr *MockEngineMockRecorder) Debug() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Debug", reflect.TypeOf((*MockEngine)(nil).Debug))
-}
-
 // Initialize mocks base method.
 func (m *MockEngine) Initialize() error {
 	m.ctrl.T.Helper()
@@ -129,6 +115,30 @@ func (m *MockEngine) Ready() error {
 func (mr *MockEngineMockRecorder) Ready() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ready", reflect.TypeOf((*MockEngine)(nil).Ready))
+}
+
+// SetNameOnlyOption mocks base method.
+func (m *MockEngine) SetNameOnlyOption(name string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetNameOnlyOption", name)
+}
+
+// SetNameOnlyOption indicates an expected call of SetNameOnlyOption.
+func (mr *MockEngineMockRecorder) SetNameOnlyOption(name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetNameOnlyOption", reflect.TypeOf((*MockEngine)(nil).SetNameOnlyOption), name)
+}
+
+// SetNameValueOption mocks base method.
+func (m *MockEngine) SetNameValueOption(name, value string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetNameValueOption", name, value)
+}
+
+// SetNameValueOption indicates an expected call of SetNameValueOption.
+func (mr *MockEngineMockRecorder) SetNameValueOption(name, value interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetNameValueOption", reflect.TypeOf((*MockEngine)(nil).SetNameValueOption), name, value)
 }
 
 // Start mocks base method.

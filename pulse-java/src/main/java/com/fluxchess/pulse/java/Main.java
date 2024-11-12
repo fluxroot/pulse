@@ -6,11 +6,18 @@
  */
 package com.fluxchess.pulse.java;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+
 public final class Main {
 
 	public static void main(String[] args) {
 		if (args.length == 0) {
-			new Pulse().run();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			PrintStream printer = System.out;
+			Pulse engine = new Pulse(reader, printer);
+			engine.run();
 		} else if (args.length == 1 && "perft".equalsIgnoreCase(args[0])) {
 			new Perft().run();
 		} else {

@@ -7,11 +7,18 @@
 
 import com.fluxchess.pulse.kotlin.Perft
 import com.fluxchess.pulse.kotlin.Pulse
+import com.fluxchess.pulse.kotlin.uci.DefaultReceiver
+import com.fluxchess.pulse.kotlin.uci.DefaultSender
+import com.fluxchess.pulse.kotlin.uci.StandardInputReader
+import com.fluxchess.pulse.kotlin.uci.StandardOutputWriter
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) = when {
 	args.isEmpty() -> {
-		Pulse().run()
+		val sender = DefaultSender(StandardOutputWriter())
+		val engine = Pulse(sender)
+		val receiver = DefaultReceiver(StandardInputReader(), sender, engine)
+		receiver.run()
 	}
 
 	args.size == 1 && "perft".equals(args[0], ignoreCase = true) -> {

@@ -9,17 +9,18 @@ package pulse
 
 import (
 	"fmt"
+
 	"github.com/fluxroot/pulse/internal/pulse/uci"
 )
 
-func NewPulse(sender *uci.Sender) *Pulse {
+func NewPulse(sender *uci.DefaultSender) *Pulse {
 	return &Pulse{
 		sender: sender,
 	}
 }
 
 type Pulse struct {
-	sender *uci.Sender
+	sender *uci.DefaultSender
 }
 
 func (p *Pulse) Initialize() error {
@@ -35,11 +36,6 @@ func (p *Pulse) Initialize() error {
 	return nil
 }
 
-func (p *Pulse) Debug() error {
-	// TODO
-	return nil
-}
-
 func (p *Pulse) Ready() error {
 	if err := p.sender.ReadyOK(); err != nil {
 		return fmt.Errorf("ready ok: %w", err)
@@ -47,32 +43,34 @@ func (p *Pulse) Ready() error {
 	return nil
 }
 
+func (p *Pulse) SetNameOnlyOption(name string) {
+	panic("implement me")
+}
+
+func (p *Pulse) SetNameValueOption(name string, value string) {
+	panic("implement me")
+}
+
 func (p *Pulse) NewGame() error {
-	// TODO
-	return nil
+	panic("implement me")
 }
 
 func (p *Pulse) Position() error {
-	// TODO
-	return nil
+	panic("implement me")
 }
 
 func (p *Pulse) Start() error {
-	// TODO
-	return nil
+	panic("implement me")
 }
 
 func (p *Pulse) Stop() error {
-	// TODO
-	return nil
+	panic("implement me")
 }
 
 func (p *Pulse) PonderHit() error {
-	// TODO
-	return nil
+	panic("implement me")
 }
 
 func (p *Pulse) Quit() error {
-	// TODO
-	return nil
+	panic("implement me")
 }

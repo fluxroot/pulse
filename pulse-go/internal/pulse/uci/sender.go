@@ -8,49 +8,57 @@
 package uci
 
 import (
-	"bufio"
 	"fmt"
 )
 
-func NewSender(writer *bufio.Writer) *Sender {
-	return &Sender{
-		writer: writer,
+type Sender interface {
+	ID(name string, author string) error
+	OK() error
+	ReadyOK() error
+	Debug(message string) error
+}
+
+func NewDefaultSender(writer Writer) *DefaultSender {
+	return &DefaultSender{
+		writer:    writer,
+		debugMode: false,
 	}
 }
 
-type Sender struct {
-	writer *bufio.Writer
+type DefaultSender struct {
+	writer    Writer
+	debugMode bool
 }
 
-func (s *Sender) ID(name string, author string) error {
-	if _, err := fmt.Fprintln(s.writer, "id name", name); err != nil {
-		return fmt.Errorf("fprintln: %w", err)
+func (s *DefaultSender) ID(name string, author string) error {
+	if err := s.writer.Writeln(fmt.Sprintf("id name %s", name)); err != nil {
+		return err
 	}
-	if _, err := fmt.Fprintln(s.writer, "id author", author); err != nil {
-		return fmt.Errorf("fprintln: %w", err)
-	}
-	if err := s.writer.Flush(); err != nil {
-		return fmt.Errorf("flush: %w", err)
+	if err := s.writer.Writeln(fmt.Sprintf("id author %s", author)); err != nil {
+		return err
 	}
 	return nil
 }
 
-func (s *Sender) OK() error {
-	if _, err := fmt.Fprintln(s.writer, "uciok"); err != nil {
-		return fmt.Errorf("fprintln: %w", err)
-	}
-	if err := s.writer.Flush(); err != nil {
-		return fmt.Errorf("flush: %w", err)
+func (s *DefaultSender) OK() error {
+	if err := s.writer.Writeln("uciok"); err != nil {
+		return err
 	}
 	return nil
 }
 
-func (s *Sender) ReadyOK() error {
-	if _, err := fmt.Fprintln(s.writer, "readyok"); err != nil {
-		return fmt.Errorf("fprintln: %w", err)
+func (s *DefaultSender) ReadyOK() error {
+	if err := s.writer.Writeln("readyok"); err != nil {
+		return err
 	}
-	if err := s.writer.Flush(); err != nil {
-		return fmt.Errorf("flush: %w", err)
+	return nil
+}
+
+func (s *DefaultSender) Debug(message string) error {
+	if s.debugMode {
+		if err := s.writer.Writeln(fmt.Sprintf("info string %s", message)); err != nil {
+			return err
+		}
 	}
 	return nil
 }
