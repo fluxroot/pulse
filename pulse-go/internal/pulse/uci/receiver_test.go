@@ -15,6 +15,7 @@ import (
 	"testing"
 
 	"github.com/fluxroot/pulse/internal/pulse/uci/mock"
+	"go.uber.org/mock/gomock"
 )
 
 func TestDefaultReceiver_Run(t *testing.T) {
