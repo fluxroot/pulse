@@ -1,129 +1,117 @@
 Pulse Chess
 ===========
 
-Copyright 2013-2023 Phokham Nonava
+Copyright 2013-2024 Phokham Nonava
 https://www.fluxchess.com
-
-![Build Status](https://github.com/fluxroot/pulse/actions/workflows/build.yml/badge.svg)
 
 
 Introduction
 ------------
-Pulse Chess is a simple chess engine with didactic intentions in mind.
-The source code should be easy to read, so that new developers can
-learn, how to build a chess engine. If you want to roll your own, just
-fork it and start coding! :)
 
-Pulse Chess is available in Java and C++. Both editions have the same
-feature set. The Java Edition requires Java 11 for compilation and
-execution. The C++ Edition is written in C++17. It has been compiled
-successfully using g++ 7.5.0 and Visual C++ 2019.
+Pulse Chess is a simple and accessible chess engine designed to help developers learn about building their own chess
+engines. It's a great starting point for those who want to understand the fundamentals of chess engine programming.
 
+### Key Features
 
-Features
---------
-Only a couple of basic chess engine features are implemented to keep the
-source code clean and readable. Below is a list of the major building
-blocks.
+- **UCI Compatible**: Supports the Universal Chess Interface (UCI) protocol, making it easy to integrate with various
+  chess GUIs.
+- **0x88 Board Representation**: Utilizes the 0x88 board representation for efficient move generation and board
+  management.
+- **Material and Mobility Evaluation**: Implements basic evaluation functions focusing on material and mobility,
+  providing a clear example of how to assess positions.
+- **Pseudo-Legal Move Generator**: Generates pseudo-legal moves, offering insight into the process of move generation
+  and validation.
+- **Basic Search with Alpha-Beta Pruning and Quiescent Search**: Incorporates a basic search algorithm enhanced with
+  alpha-beta pruning and quiescent search to improve decision-making and performance.
 
-- **UCI compatible**
-*Java Edition*: Pulse Chess uses [JCPI] for implementing the UCI
-protocol.
+Pulse Chess is ideal for novice programmers and experienced developers alike, offering a hands-on approach to
+understanding chess engines.
 
-- **0x88 board representation**
-To keep things simple Pulse Chess uses a 0x88 board representation. In
-addition piece lists are kept in Bitboards.
+Implementations
+---------------
 
-- **Only material and mobility evaluation**
-Currently only material and mobility (to add some variation) are used
-for calculating the evaluation function. However it should be quite easy
-to extend it with other evaluation features.
+Pulse Chess is currently available in Java and C++. However, I am working on additional engines in different languages
+that all have the same feature set.
 
-- **Using integers for type representation**
-*Java Edition*: Although Java is quite efficient and fast in memory
-management, it is not fast enough for chess engines. Instead of using
-objects for important data structures, Pulse Chess uses integers to
-exploit the Java stack.
+| Language      | Features    | Platforms             | Requirements                |
+|---------------|-------------|-----------------------|-----------------------------|
+| Java          | Complete    | Linux, Windows, macOS | Java 17                     |
+| C++           | Complete    | Linux, Windows        | C++17                       |
+| Kotlin/Native | In Progress | Linux, Windows, macOS | Kotlin Multiplatform 2.0.21 |
+| Go            | In Progress | Linux, Windows        | Go 1.23.4                   |
 
-- **Pseudo-legal move generator**
-To keep the source code clean and simple, a pseudo-legal move generator
-is used. This has the advantage to skip writing a complicated legal move
-checking method.
+Build them
+----------
 
-- **Basic search**
-Pulse Chess uses a basic Alpha-beta pruning algorithm with iterative
-deepening. This allows us to use a very simple time management. In
-addition there's a basic Quiescent search to improve the game play.
+First clone the repository using `git clone https://github.com/fluxroot/pulse.git`.
 
+### Java
 
-Hack it
--------
-Pulse Chess can hold its own against an average club player. If you want
-to make it even better, have a look at the following ideas.
+```shell
+./gradlew :pulse-java:build
+ls pulse-java/build/distributions/pulse-java-*.zip
+```
 
-- **Null Move Pruning**
-This will make you faster. A whole lot faster! If done right, it should
-give you quite a boost.
+### C++
 
-- **Transposition Table**
-Although a little bit tricky to get right from the beginning, this
-technique can make you impressively faster.
+```shell
+# Linux
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release --target package
+(cd build; ctest -C Release)
+ls build/pulse-cpp-linux-*.tar.gz
+```
 
-- **Check Extensions**
-This is the one extension I would choose first to implement. If you can
-control the search explosion, the tactical gain is awesome.
+```shell
+# Windows
+cmake -B build
+cmake --build build --config Release --target package
+cd build; ctest -C Release; cd ..
+ls build/pulse-cpp-windows-*.zip
+```
 
-- **Passed Pawn**
-This will definitely improve your endgame.
+### Kotlin/Native
 
-- **Staged move generation**
-Tune your move generation! Don't generate every move upfront. Believe
-me, you will get a nice speed increase.
+```shell
+# Linux
+./gradlew :pulse-kotlin:linuxDistTar
+ls pulse-kotlin/build/distributions/pulse-kotlin-linux-*.tar.gz
+```
 
+```shell
+# Windows
+./gradlew :pulse-kotlin:windowsDistZip
+ls pulse-kotlin/build/distributions/pulse-kotlin-windows-*.zip
+```
 
-Build it
---------
-Pulse Chess uses [Maven] for the Java Edition and [CMake] for the C++
-Edition as build systems. To build it from source, use the following
-steps.
+```shell
+# macOS
+./gradlew :pulse-kotlin:macosDistTar
+ls pulse-kotlin/build/distributions/pulse-kotlin-macos-*.tar.gz
+```
 
-- get it
-    `git clone https://github.com/fluxroot/pulse.git`
+### Go
 
-### Java Edition
+```shell
+# Linux
+cd pulse-go
+go build -v ./...
+# No distribution archive yet
+```
 
-- build it
-    `./mvnw package`
-
-- grab it
-    `cp target/pulse-java-<version>.zip <installation directory>`
-
-### C++ Edition
-
-- build it
-
-        mkdir build
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Release .. && make && make test && make package
-
-    For Visual Studio do the following (you need at least CMake 3.14):
-    `cmake -G "Visual Studio 16 2019" -A x64 .. && cmake --build . --config Release && ctest && cpack -C Release`
-
-- grab it
-    `cp build/pulse-cpp-windows-<version>.zip <installation directory>` or
-    `cp build/pulse-cpp-linux-<version>.tar.gz <installation directory>`
-
+```shell
+# Windows
+cd pulse-go
+go build -v ./...
+# No distribution archive yet
+```
 
 Acknowledgments
 ---------------
-The Pulse Chess logo was created by Silvian Sylwyka. Thanks a lot!
 
+The Pulse Chess logo was created by Silvian Sylwyka. Thanks a lot!
 
 License
 -------
+
 Pulse Chess is released under the MIT License.
-
-
-[JCPI]: https://github.com/fluxroot/jcpi
-[Maven]: http://maven.apache.org/
-[CMake]: http://cmake.org/
