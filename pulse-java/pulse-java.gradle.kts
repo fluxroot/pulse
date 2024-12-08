@@ -40,7 +40,6 @@ distributions {
 		contents {
 			from(rootProject.layout.projectDirectory.dir("src/main/dist"))
 			from(rootProject.layout.projectDirectory.file("README.md"))
-			from(rootProject.layout.projectDirectory.file("CHANGES.md"))
 			from(rootProject.layout.projectDirectory.file("LICENSE"))
 		}
 	}

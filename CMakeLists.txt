@@ -26,4 +26,4 @@ find_package(Threads REQUIRED)
 add_subdirectory(pulse-cpp/src)
 add_subdirectory(pulse-cpp/test)
 
-install(FILES README.md LICENSE CHANGES.md src/main/dist/logo.bmp DESTINATION .)
+install(FILES README.md LICENSE src/main/dist/logo.bmp DESTINATION .)
