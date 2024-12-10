@@ -6,6 +6,9 @@ plugins {
 }
 
 kotlin {
+	compilerOptions {
+		allWarningsAsErrors.set(true)
+	}
 	linuxX64 {
 		binaries {
 			executable()
@@ -19,13 +22,6 @@ kotlin {
 	mingwX64 {
 		binaries {
 			executable()
-		}
-	}
-	targets.all {
-		compilations.all {
-			compilerOptions.configure {
-				allWarningsAsErrors.set(true)
-			}
 		}
 	}
 	sourceSets {
