@@ -10,18 +10,18 @@ package pulse
 type Rank = int
 
 const (
-	_1 Rank = 0
-	_2 Rank = 1
-	_3 Rank = 2
-	_4 Rank = 3
-	_5 Rank = 4
-	_6 Rank = 5
-	_7 Rank = 6
-	_8 Rank = 7
+	Rank1 Rank = 0
+	Rank2 Rank = 1
+	Rank3 Rank = 2
+	Rank4 Rank = 3
+	Rank5 Rank = 4
+	Rank6 Rank = 5
+	Rank7 Rank = 6
+	Rank8 Rank = 7
 
 	NoRank Rank = 8
 )
 
 var (
-	Ranks = [8]Rank{_1, _2, _3, _4, _5, _6, _7, _8}
+	Ranks = [8]Rank{Rank1, Rank2, Rank3, Rank4, Rank5, Rank6, Rank7, Rank8}
 )
