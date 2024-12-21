@@ -23,7 +23,7 @@ class DefaultSenderTest {
 				|id name some-name
 				|id author some-author
 				|""".trimMargin(),
-			testWriter.result
+			testWriter.result,
 		)
 	}
 
@@ -36,7 +36,7 @@ class DefaultSenderTest {
 			"""
 				|uciok
 				|""".trimMargin(),
-			testWriter.result
+			testWriter.result,
 		)
 	}
 
@@ -49,7 +49,7 @@ class DefaultSenderTest {
 			"""
 				|readyok
 				|""".trimMargin(),
-			testWriter.result
+			testWriter.result,
 		)
 	}
 
@@ -61,7 +61,7 @@ class DefaultSenderTest {
 		sender.debug("some message")
 		assertEquals(
 			"",
-			testWriter.result
+			testWriter.result,
 		)
 	}
 
@@ -75,7 +75,7 @@ class DefaultSenderTest {
 			"""
 				|info string some message
 				|""".trimMargin(),
-			testWriter.result
+			testWriter.result,
 		)
 	}
 }

@@ -161,7 +161,7 @@ class DefaultReceiverTest {
 			"""
 				|info string Unsupported command: register
 				|""".trimMargin(),
-			testWriter.result
+			testWriter.result,
 		)
 	}
 

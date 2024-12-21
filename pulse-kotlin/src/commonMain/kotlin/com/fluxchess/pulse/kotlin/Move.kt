@@ -29,11 +29,11 @@ private const val PROMOTION_SHIFT = 27
 private const val PROMOTION_MASK = 0x7 shl PROMOTION_SHIFT
 
 const val NO_MOVE: Move = (NO_MOVE_TYPE shl MOVE_TYPE_SHIFT) or
-		(NO_SQUARE shl ORIGIN_SQUARE_SHIFT) or
-		(NO_SQUARE shl TARGET_SQUARE_SHIFT) or
-		(NO_PIECE shl ORIGIN_PIECE_SHIFT) or
-		(NO_PIECE shl TARGET_PIECE_SHIFT) or
-		(NO_PIECE_TYPE shl PROMOTION_SHIFT)
+	(NO_SQUARE shl ORIGIN_SQUARE_SHIFT) or
+	(NO_SQUARE shl TARGET_SQUARE_SHIFT) or
+	(NO_PIECE shl ORIGIN_PIECE_SHIFT) or
+	(NO_PIECE shl TARGET_PIECE_SHIFT) or
+	(NO_PIECE_TYPE shl PROMOTION_SHIFT)
 
 fun moveOf(
 	moveType: MoveType,
@@ -43,11 +43,11 @@ fun moveOf(
 	targetPiece: Piece,
 	promotion: PieceType,
 ): Move = (moveType shl MOVE_TYPE_SHIFT) or
-		(originSquare shl ORIGIN_SQUARE_SHIFT) or
-		(targetSquare shl TARGET_SQUARE_SHIFT) or
-		(originPiece shl ORIGIN_PIECE_SHIFT) or
-		(targetPiece shl TARGET_PIECE_SHIFT) or
-		(promotion shl PROMOTION_SHIFT)
+	(originSquare shl ORIGIN_SQUARE_SHIFT) or
+	(targetSquare shl TARGET_SQUARE_SHIFT) or
+	(originPiece shl ORIGIN_PIECE_SHIFT) or
+	(targetPiece shl TARGET_PIECE_SHIFT) or
+	(promotion shl PROMOTION_SHIFT)
 
 fun moveTypeOf(move: Move): MoveType {
 	return (move and MOVE_TYPE_MASK) ushr MOVE_TYPE_SHIFT
