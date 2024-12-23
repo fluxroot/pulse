@@ -382,7 +382,8 @@ type testReader struct {
 }
 
 func newTestReader(input string) *testReader {
-	lines := strings.Split(input, "\n")
+	trimmedInput := strings.TrimSuffix(input, "\n")
+	lines := strings.Split(trimmedInput, "\n")
 	seq := slices.Values(lines)
 	iterator, stop := iter.Pull(seq)
 	return &testReader{
