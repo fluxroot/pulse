@@ -7,6 +7,50 @@
 
 package com.fluxchess.pulse.kotlin.uci
 
+import com.fluxchess.pulse.kotlin.engine.A1
+import com.fluxchess.pulse.kotlin.engine.A8
+import com.fluxchess.pulse.kotlin.engine.B1
+import com.fluxchess.pulse.kotlin.engine.B8
+import com.fluxchess.pulse.kotlin.engine.BLACK_BISHOP
+import com.fluxchess.pulse.kotlin.engine.BLACK_KING
+import com.fluxchess.pulse.kotlin.engine.BLACK_KINGSIDE
+import com.fluxchess.pulse.kotlin.engine.BLACK_KNIGHT
+import com.fluxchess.pulse.kotlin.engine.BLACK_PAWN
+import com.fluxchess.pulse.kotlin.engine.BLACK_QUEEN
+import com.fluxchess.pulse.kotlin.engine.BLACK_QUEENSIDE
+import com.fluxchess.pulse.kotlin.engine.BLACK_ROOK
+import com.fluxchess.pulse.kotlin.engine.C1
+import com.fluxchess.pulse.kotlin.engine.C8
+import com.fluxchess.pulse.kotlin.engine.D1
+import com.fluxchess.pulse.kotlin.engine.D8
+import com.fluxchess.pulse.kotlin.engine.E1
+import com.fluxchess.pulse.kotlin.engine.E2
+import com.fluxchess.pulse.kotlin.engine.E4
+import com.fluxchess.pulse.kotlin.engine.E8
+import com.fluxchess.pulse.kotlin.engine.F1
+import com.fluxchess.pulse.kotlin.engine.F8
+import com.fluxchess.pulse.kotlin.engine.G1
+import com.fluxchess.pulse.kotlin.engine.G8
+import com.fluxchess.pulse.kotlin.engine.H1
+import com.fluxchess.pulse.kotlin.engine.H8
+import com.fluxchess.pulse.kotlin.engine.NO_PIECE
+import com.fluxchess.pulse.kotlin.engine.NO_PIECE_TYPE
+import com.fluxchess.pulse.kotlin.engine.PAWN_DOUBLE_MOVE
+import com.fluxchess.pulse.kotlin.engine.Position
+import com.fluxchess.pulse.kotlin.engine.RANK_2
+import com.fluxchess.pulse.kotlin.engine.RANK_7
+import com.fluxchess.pulse.kotlin.engine.WHITE
+import com.fluxchess.pulse.kotlin.engine.WHITE_BISHOP
+import com.fluxchess.pulse.kotlin.engine.WHITE_KING
+import com.fluxchess.pulse.kotlin.engine.WHITE_KINGSIDE
+import com.fluxchess.pulse.kotlin.engine.WHITE_KNIGHT
+import com.fluxchess.pulse.kotlin.engine.WHITE_PAWN
+import com.fluxchess.pulse.kotlin.engine.WHITE_QUEEN
+import com.fluxchess.pulse.kotlin.engine.WHITE_QUEENSIDE
+import com.fluxchess.pulse.kotlin.engine.WHITE_ROOK
+import com.fluxchess.pulse.kotlin.engine.files
+import com.fluxchess.pulse.kotlin.engine.moveOf
+import com.fluxchess.pulse.kotlin.engine.squareOf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -178,6 +222,78 @@ class DefaultReceiverTest {
 	}
 
 	@Test
+	fun `When the starting position is received it should setup the starting position`() {
+		var positionCalled = 0
+		val input = """
+			|position startpos
+		""".trimMargin()
+		val sender = DefaultSender(TestWriter())
+		val testEngine = object : TestEngine() {
+			override fun position(position: Position) {
+				assertEquals(startingPosition(), position)
+				positionCalled++
+			}
+		}
+		DefaultReceiver(TestReader(input), sender, testEngine).run()
+		assertEquals(1, positionCalled)
+	}
+
+	@Test
+	fun `When the starting position with moves is received it should setup the starting position and make the moves`() {
+		var positionCalled = 0
+		val input = """
+			|position startpos moves e2e4
+		""".trimMargin()
+		val sender = DefaultSender(TestWriter())
+		val testEngine = object : TestEngine() {
+			override fun position(position: Position) {
+				val expectedPosition = startingPosition()
+				expectedPosition.makeMove(moveOf(PAWN_DOUBLE_MOVE, E2, E4, WHITE_PAWN, NO_PIECE, NO_PIECE_TYPE))
+				assertEquals(expectedPosition, position)
+				positionCalled++
+			}
+		}
+		DefaultReceiver(TestReader(input), sender, testEngine).run()
+		assertEquals(1, positionCalled)
+	}
+
+	@Test
+	fun `When a FEN position is received it should setup the FEN position`() {
+		var positionCalled = 0
+		val input = """
+			|position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+		""".trimMargin()
+		val sender = DefaultSender(TestWriter())
+		val testEngine = object : TestEngine() {
+			override fun position(position: Position) {
+				assertEquals(startingPosition(), position)
+				positionCalled++
+			}
+		}
+		DefaultReceiver(TestReader(input), sender, testEngine).run()
+		assertEquals(1, positionCalled)
+	}
+
+	@Test
+	fun `When a FEN position with moves is received it should setup the FEN position and make the moves`() {
+		var positionCalled = 0
+		val input = """
+			|position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves e2e4
+		""".trimMargin()
+		val sender = DefaultSender(TestWriter())
+		val testEngine = object : TestEngine() {
+			override fun position(position: Position) {
+				val expectedPosition = startingPosition()
+				expectedPosition.makeMove(moveOf(PAWN_DOUBLE_MOVE, E2, E4, WHITE_PAWN, NO_PIECE, NO_PIECE_TYPE))
+				assertEquals(expectedPosition, position)
+				positionCalled++
+			}
+		}
+		DefaultReceiver(TestReader(input), sender, testEngine).run()
+		assertEquals(1, positionCalled)
+	}
+
+	@Test
 	fun `When 'stop' is received it should stop the engine`() {
 		var stopCalled = 0
 		val input = """
@@ -232,6 +348,34 @@ private class TestReader(input: String) : Reader {
 	}
 }
 
+private fun startingPosition(): Position {
+	val position = Position()
+	position.activeColor = WHITE
+	position.castlingRights = WHITE_KINGSIDE or WHITE_QUEENSIDE or BLACK_KINGSIDE or BLACK_QUEENSIDE
+	position.halfmoveNumber = 2
+	position.put(WHITE_ROOK, A1)
+	position.put(WHITE_KNIGHT, B1)
+	position.put(WHITE_BISHOP, C1)
+	position.put(WHITE_QUEEN, D1)
+	position.put(WHITE_KING, E1)
+	position.put(WHITE_BISHOP, F1)
+	position.put(WHITE_KNIGHT, G1)
+	position.put(WHITE_ROOK, H1)
+	position.put(BLACK_ROOK, A8)
+	position.put(BLACK_KNIGHT, B8)
+	position.put(BLACK_BISHOP, C8)
+	position.put(BLACK_QUEEN, D8)
+	position.put(BLACK_KING, E8)
+	position.put(BLACK_BISHOP, F8)
+	position.put(BLACK_KNIGHT, G8)
+	position.put(BLACK_ROOK, H8)
+	for (file in files) {
+		position.put(WHITE_PAWN, squareOf(file, RANK_2))
+		position.put(BLACK_PAWN, squareOf(file, RANK_7))
+	}
+	return position
+}
+
 private abstract class TestEngine : Engine {
 	override fun initialize() {
 		fail()
@@ -253,7 +397,7 @@ private abstract class TestEngine : Engine {
 		fail()
 	}
 
-	override fun position() {
+	override fun position(position: Position) {
 		fail()
 	}
 

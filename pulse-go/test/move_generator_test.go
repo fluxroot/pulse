@@ -12,7 +12,7 @@ import (
 	"testing"
 
 	"github.com/fluxroot/pulse/internal/pulse/engine"
-	"github.com/fluxroot/pulse/internal/pulse/fen"
+	"github.com/fluxroot/pulse/internal/pulse/uci"
 )
 
 type nodes uint64
@@ -162,7 +162,7 @@ func TestMoveGenerator(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(fmt.Sprintf("depth %d: %s", i+1, tt.fen), func(t *testing.T) {
 				e := tt.entries[i]
-				p, err := fen.ToPosition(tt.fen)
+				p, err := uci.FENToPosition(tt.fen)
 				if err != nil {
 					t.Errorf("invalid FEN: %v", err)
 				}

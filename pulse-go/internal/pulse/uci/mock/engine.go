@@ -12,6 +12,7 @@ package mock
 import (
 	reflect "reflect"
 
+	engine "github.com/fluxroot/pulse/internal/pulse/engine"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -82,17 +83,15 @@ func (mr *MockEngineMockRecorder) PonderHit() *gomock.Call {
 }
 
 // Position mocks base method.
-func (m *MockEngine) Position() error {
+func (m *MockEngine) Position(arg0 *engine.Position) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Position")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Position", arg0)
 }
 
 // Position indicates an expected call of Position.
-func (mr *MockEngineMockRecorder) Position() *gomock.Call {
+func (mr *MockEngineMockRecorder) Position(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Position", reflect.TypeOf((*MockEngine)(nil).Position))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Position", reflect.TypeOf((*MockEngine)(nil).Position), arg0)
 }
 
 // Quit mocks base method.

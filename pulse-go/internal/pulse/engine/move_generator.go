@@ -102,13 +102,13 @@ func addPawnMoves(ml *MoveList, p *Position, pawnSq Square) {
 					if (pawnCol == White && RankOf(targetSq) == Rank8) ||
 						(pawnCol == Black && RankOf(targetSq) == Rank1) {
 						// Pawn promotion capturing move
-						ml.add(moveOf(pawnPromotionMove, pawnSq, targetSq, pawnPc, targetPc, Queen))
-						ml.add(moveOf(pawnPromotionMove, pawnSq, targetSq, pawnPc, targetPc, Rook))
-						ml.add(moveOf(pawnPromotionMove, pawnSq, targetSq, pawnPc, targetPc, Bishop))
-						ml.add(moveOf(pawnPromotionMove, pawnSq, targetSq, pawnPc, targetPc, Knight))
+						ml.add(MoveOf(PawnPromotionMove, pawnSq, targetSq, pawnPc, targetPc, Queen))
+						ml.add(MoveOf(PawnPromotionMove, pawnSq, targetSq, pawnPc, targetPc, Rook))
+						ml.add(MoveOf(PawnPromotionMove, pawnSq, targetSq, pawnPc, targetPc, Bishop))
+						ml.add(MoveOf(PawnPromotionMove, pawnSq, targetSq, pawnPc, targetPc, Knight))
 					} else {
 						// Normal capturing move
-						ml.add(moveOf(normalMove, pawnSq, targetSq, pawnPc, targetPc, NoPieceType))
+						ml.add(MoveOf(NormalMove, pawnSq, targetSq, pawnPc, targetPc, NoPieceType))
 					}
 				}
 			} else if targetSq == p.EnPassantSquare {
@@ -116,7 +116,7 @@ func addPawnMoves(ml *MoveList, p *Position, pawnSq Square) {
 				oppositeDir := pawnMoveDirections[OppositeOf(pawnCol)]
 				captureSq := targetSq + oppositeDir
 				targetPc = p.board[captureSq]
-				ml.add(moveOf(enPassantMove, pawnSq, targetSq, pawnPc, targetPc, NoPieceType))
+				ml.add(MoveOf(EnPassantMove, pawnSq, targetSq, pawnPc, targetPc, NoPieceType))
 			}
 		}
 	}
@@ -129,20 +129,20 @@ func addPawnMoves(ml *MoveList, p *Position, pawnSq Square) {
 		if (pawnCol == White && RankOf(targetSq) == Rank8) ||
 			(pawnCol == Black && RankOf(targetSq) == Rank1) {
 			// Pawn promotion move
-			ml.add(moveOf(pawnPromotionMove, pawnSq, targetSq, pawnPc, NoPiece, Queen))
-			ml.add(moveOf(pawnPromotionMove, pawnSq, targetSq, pawnPc, NoPiece, Rook))
-			ml.add(moveOf(pawnPromotionMove, pawnSq, targetSq, pawnPc, NoPiece, Bishop))
-			ml.add(moveOf(pawnPromotionMove, pawnSq, targetSq, pawnPc, NoPiece, Knight))
+			ml.add(MoveOf(PawnPromotionMove, pawnSq, targetSq, pawnPc, NoPiece, Queen))
+			ml.add(MoveOf(PawnPromotionMove, pawnSq, targetSq, pawnPc, NoPiece, Rook))
+			ml.add(MoveOf(PawnPromotionMove, pawnSq, targetSq, pawnPc, NoPiece, Bishop))
+			ml.add(MoveOf(PawnPromotionMove, pawnSq, targetSq, pawnPc, NoPiece, Knight))
 		} else {
 			// Normal move
-			ml.add(moveOf(normalMove, pawnSq, targetSq, pawnPc, NoPiece, NoPieceType))
+			ml.add(MoveOf(NormalMove, pawnSq, targetSq, pawnPc, NoPiece, NoPieceType))
 
 			targetSq += dir
 			if IsValidSquare(targetSq) && p.board[targetSq] == NoPiece {
 				if (pawnCol == White && RankOf(targetSq) == Rank4) ||
 					(pawnCol == Black && RankOf(targetSq) == Rank5) {
 					// Pawn double move
-					ml.add(moveOf(pawnDoubleMove, pawnSq, targetSq, pawnPc, NoPiece, NoPieceType))
+					ml.add(MoveOf(PawnDoubleMove, pawnSq, targetSq, pawnPc, NoPiece, NoPieceType))
 				}
 			}
 		}
@@ -161,12 +161,12 @@ func addPieceMoves(ml *MoveList, p *Position, originSq Square, directions []dire
 			if targetPc != NoPiece {
 				if PieceColorOf(targetPc) == oppositeCol {
 					// Capturing move
-					ml.add(moveOf(normalMove, originSq, targetSq, originPc, targetPc, NoPieceType))
+					ml.add(MoveOf(NormalMove, originSq, targetSq, originPc, targetPc, NoPieceType))
 				}
 				break
 			} else {
 				// Normal move
-				ml.add(moveOf(normalMove, originSq, targetSq, originPc, NoPiece, NoPieceType))
+				ml.add(MoveOf(NormalMove, originSq, targetSq, originPc, NoPiece, NoPieceType))
 				if !sliding {
 					break
 				}
@@ -185,7 +185,7 @@ func addCastlingMoves(ml *MoveList, p *Position, kingSq Square) {
 			p.board[F1] == NoPiece &&
 			p.board[G1] == NoPiece &&
 			!p.isAttacked(F1, Black) {
-			ml.add(moveOf(castlingMove, kingSq, G1, kingPc, NoPiece, NoPieceType))
+			ml.add(MoveOf(CastlingMove, kingSq, G1, kingPc, NoPiece, NoPieceType))
 		}
 		// Do not test c1 whether it is attacked as we will test it later
 		if (p.CastlingRights&WhiteQueenside) != NoCastling &&
@@ -193,7 +193,7 @@ func addCastlingMoves(ml *MoveList, p *Position, kingSq Square) {
 			p.board[C1] == NoPiece &&
 			p.board[D1] == NoPiece &&
 			!p.isAttacked(D1, Black) {
-			ml.add(moveOf(castlingMove, kingSq, C1, kingPc, NoPiece, NoPieceType))
+			ml.add(MoveOf(CastlingMove, kingSq, C1, kingPc, NoPiece, NoPieceType))
 		}
 	} else {
 		// Do not test g8 whether it is attacked as we will test it later
@@ -201,7 +201,7 @@ func addCastlingMoves(ml *MoveList, p *Position, kingSq Square) {
 			p.board[F8] == NoPiece &&
 			p.board[G8] == NoPiece &&
 			!p.isAttacked(F8, White) {
-			ml.add(moveOf(castlingMove, kingSq, G8, kingPc, NoPiece, NoPieceType))
+			ml.add(MoveOf(CastlingMove, kingSq, G8, kingPc, NoPiece, NoPieceType))
 		}
 		// Do not test c8 whether it is attacked as we will test it later
 		if (p.CastlingRights&BlackQueenside) != NoCastling &&
@@ -209,7 +209,7 @@ func addCastlingMoves(ml *MoveList, p *Position, kingSq Square) {
 			p.board[C8] == NoPiece &&
 			p.board[D8] == NoPiece &&
 			!p.isAttacked(D8, White) {
-			ml.add(moveOf(castlingMove, kingSq, C8, kingPc, NoPiece, NoPieceType))
+			ml.add(MoveOf(CastlingMove, kingSq, C8, kingPc, NoPiece, NoPieceType))
 		}
 	}
 }

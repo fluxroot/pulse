@@ -12,10 +12,10 @@ import (
 )
 
 func TestMoveType(t *testing.T) {
-	t.Run("moveTypes array should be valid", func(t *testing.T) {
-		for mt := range moveTypes {
-			if moveTypes[mt] != mt {
-				t.Errorf("wanted move types at index %d to be %v, but got %v", mt, mt, moveTypes[mt])
+	t.Run("MoveTypes array should be valid", func(t *testing.T) {
+		for mt := range MoveTypes {
+			if MoveTypes[mt] != mt {
+				t.Errorf("wanted move types at index %d to be %v, but got %v", mt, mt, MoveTypes[mt])
 			}
 		}
 	})

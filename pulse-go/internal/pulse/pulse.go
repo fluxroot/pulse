@@ -10,6 +10,7 @@ package pulse
 import (
 	"fmt"
 
+	"github.com/fluxroot/pulse/internal/pulse/engine"
 	"github.com/fluxroot/pulse/internal/pulse/uci"
 )
 
@@ -55,7 +56,7 @@ func (p *Pulse) NewGame() error {
 	panic("implement me")
 }
 
-func (p *Pulse) Position() error {
+func (p *Pulse) Position(pos *engine.Position) {
 	panic("implement me")
 }
 

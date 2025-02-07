@@ -7,6 +7,7 @@
 
 package com.fluxchess.pulse.kotlin
 
+import com.fluxchess.pulse.kotlin.engine.Position
 import com.fluxchess.pulse.kotlin.uci.Engine
 import com.fluxchess.pulse.kotlin.uci.Sender
 
@@ -35,7 +36,7 @@ class Pulse(
 		TODO("Not yet implemented")
 	}
 
-	override fun position() {
+	override fun position(position: Position) {
 		TODO("Not yet implemented")
 	}
 

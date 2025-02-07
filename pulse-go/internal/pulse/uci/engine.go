@@ -7,6 +7,8 @@
 
 package uci
 
+import "github.com/fluxroot/pulse/internal/pulse/engine"
+
 //go:generate mockgen -source=engine.go -destination=mock/engine.go -package=mock
 
 type Engine interface {
@@ -15,7 +17,7 @@ type Engine interface {
 	SetNameOnlyOption(name string)
 	SetNameValueOption(name string, value string)
 	NewGame() error
-	Position() error
+	Position(p *engine.Position)
 	Start() error
 	Stop() error
 	PonderHit() error

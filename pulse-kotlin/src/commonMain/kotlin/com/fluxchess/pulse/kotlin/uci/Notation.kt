@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-package com.fluxchess.pulse.kotlin.fen
+package com.fluxchess.pulse.kotlin.uci
 
 import com.fluxchess.pulse.kotlin.engine.BISHOP
 import com.fluxchess.pulse.kotlin.engine.BLACK
@@ -32,8 +32,10 @@ import com.fluxchess.pulse.kotlin.engine.File
 import com.fluxchess.pulse.kotlin.engine.KING
 import com.fluxchess.pulse.kotlin.engine.KINGSIDE
 import com.fluxchess.pulse.kotlin.engine.KNIGHT
+import com.fluxchess.pulse.kotlin.engine.Move
 import com.fluxchess.pulse.kotlin.engine.NO_FILE
 import com.fluxchess.pulse.kotlin.engine.NO_PIECE
+import com.fluxchess.pulse.kotlin.engine.NO_PIECE_TYPE
 import com.fluxchess.pulse.kotlin.engine.NO_SQUARE
 import com.fluxchess.pulse.kotlin.engine.PAWN
 import com.fluxchess.pulse.kotlin.engine.Piece
@@ -65,12 +67,15 @@ import com.fluxchess.pulse.kotlin.engine.castlingOf
 import com.fluxchess.pulse.kotlin.engine.fileOf
 import com.fluxchess.pulse.kotlin.engine.files
 import com.fluxchess.pulse.kotlin.engine.isValidFile
+import com.fluxchess.pulse.kotlin.engine.originSquareOf
 import com.fluxchess.pulse.kotlin.engine.pieceOf
+import com.fluxchess.pulse.kotlin.engine.promotionOf
 import com.fluxchess.pulse.kotlin.engine.rankOf
 import com.fluxchess.pulse.kotlin.engine.ranks
 import com.fluxchess.pulse.kotlin.engine.squareOf
+import com.fluxchess.pulse.kotlin.engine.targetSquareOf
 
-private val tokenRegex = "\\s+".toRegex()
+private val fenTokenRegex = "\\s+".toRegex()
 private val rankRegex = "/".toRegex()
 
 fun String.toPositionOrNull(): Position? = try {
@@ -81,7 +86,7 @@ fun String.toPositionOrNull(): Position? = try {
 
 fun String.toPosition(): Position {
 	// Clean and split into tokens
-	val tokens = trim().split(tokenRegex)
+	val tokens = trim().split(fenTokenRegex)
 
 	// halfmove clock and fullmove number are optional
 	if (tokens.size < 4 || tokens.size > 6) {
@@ -165,6 +170,8 @@ fun String.toPosition(): Position {
 		if (activeColor == BLACK) {
 			position.halfmoveNumber++
 		}
+	} else {
+		position.halfmoveNumber = 2
 	}
 
 	return position
@@ -244,7 +251,7 @@ fun Position.toFEN(): String {
 					fen += emptySquares
 					emptySquares = 0
 				}
-				fen += pieceToString(piece)
+				fen += pieceToNotation(piece)
 			}
 		}
 		if (emptySquares > 0) {
@@ -256,7 +263,7 @@ fun Position.toFEN(): String {
 	}
 
 	// active color
-	fen += " " + colorToString(activeColor)
+	fen += " " + colorToNotation(activeColor)
 
 	// castling rights
 	var rights = ""
@@ -279,7 +286,7 @@ fun Position.toFEN(): String {
 
 	// en passant square
 	if (enPassantSquare != NO_SQUARE) {
-		fen += " " + squareToString(enPassantSquare)
+		fen += " " + squareToNotation(enPassantSquare)
 	} else {
 		fen += " -"
 	}
@@ -293,7 +300,7 @@ fun Position.toFEN(): String {
 	return fen
 }
 
-fun pieceToString(piece: Piece): String = when (piece) {
+private fun pieceToNotation(piece: Piece): String = when (piece) {
 	WHITE_PAWN -> "P"
 	WHITE_KNIGHT -> "N"
 	WHITE_BISHOP -> "B"
@@ -309,17 +316,17 @@ fun pieceToString(piece: Piece): String = when (piece) {
 	else -> error("Invalid piece: $piece")
 }
 
-fun colorToString(color: Color): String = when (color) {
+private fun colorToNotation(color: Color): String = when (color) {
 	WHITE -> "w"
 	BLACK -> "b"
 	else -> error("Invalid color: $color")
 }
 
-fun squareToString(square: Square): String {
-	return fileToString(fileOf(square)) + rankToString(rankOf(square))
+private fun squareToNotation(square: Square): String {
+	return fileToNotation(fileOf(square)) + rankToNotation(rankOf(square))
 }
 
-fun fileToString(file: File): String = when (file) {
+private fun fileToNotation(file: File): String = when (file) {
 	FILE_A -> "a"
 	FILE_B -> "b"
 	FILE_C -> "c"
@@ -331,7 +338,7 @@ fun fileToString(file: File): String = when (file) {
 	else -> error("Invalid file: $file")
 }
 
-fun rankToString(rank: Rank): String = when (rank) {
+private fun rankToNotation(rank: Rank): String = when (rank) {
 	RANK_1 -> "1"
 	RANK_2 -> "2"
 	RANK_3 -> "3"
@@ -341,4 +348,23 @@ fun rankToString(rank: Rank): String = when (rank) {
 	RANK_7 -> "7"
 	RANK_8 -> "8"
 	else -> error("Invalid rank: $rank")
+}
+
+fun Move.toNotation(): String {
+	var notation = ""
+	notation += squareToNotation(originSquareOf(this))
+	notation += squareToNotation(targetSquareOf(this))
+	val promotion = promotionOf(this)
+	if (promotion != NO_PIECE_TYPE) {
+		notation += pieceTypeToNotation(promotion)
+	}
+	return notation
+}
+
+private fun pieceTypeToNotation(pieceType: PieceType): String = when (pieceType) {
+	KNIGHT -> "n"
+	BISHOP -> "b"
+	ROOK -> "r"
+	QUEEN -> "q"
+	else -> error("Invalid piece type: $pieceType")
 }

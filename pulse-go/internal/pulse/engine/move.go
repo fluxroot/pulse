@@ -29,7 +29,7 @@ const (
 	promotionShift    = 27
 	promotionMask     = 0x7 << promotionShift
 
-	NoMove Move = (noMoveType << moveTypeShift) |
+	NoMove Move = (NoMoveType << moveTypeShift) |
 		(NoSquare << originSquareShift) |
 		(NoSquare << targetSquareShift) |
 		(NoPiece << originPieceShift) |
@@ -37,7 +37,7 @@ const (
 		(NoPieceType << promotionShift)
 )
 
-func moveOf(mt moveType, originSq Square, targetSq Square, originPc Piece, targetPc Piece, promotion PieceType) Move {
+func MoveOf(mt MoveType, originSq Square, targetSq Square, originPc Piece, targetPc Piece, promotion PieceType) Move {
 	return (mt << moveTypeShift) |
 		(originSq << originSquareShift) |
 		(targetSq << targetSquareShift) |
@@ -46,7 +46,7 @@ func moveOf(mt moveType, originSq Square, targetSq Square, originPc Piece, targe
 		(promotion << promotionShift)
 }
 
-func moveTypeOf(m Move) moveType {
+func MoveTypeOf(m Move) MoveType {
 	return (m & moveTypeMask) >> moveTypeShift
 }
 

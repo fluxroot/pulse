@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-package fen
+package uci
 
 import (
 	"errors"
@@ -18,12 +18,12 @@ import (
 	"github.com/fluxroot/pulse/internal/pulse/engine"
 )
 
-var tokenRegex = regexp.MustCompile(`\s+`)
+var fenTokenRegex = regexp.MustCompile(`\s+`)
 var rankRegex = regexp.MustCompile(`/`)
 
-func ToPosition(fen string) (*engine.Position, error) {
+func FENToPosition(fen string) (*engine.Position, error) {
 	// Clean and split into tokens
-	tokens := tokenRegex.Split(strings.TrimSpace(fen), -1)
+	tokens := fenTokenRegex.Split(strings.TrimSpace(fen), -1)
 
 	// halfmove clock and fullmove number are optional
 	if len(tokens) < 4 || len(tokens) > 6 {
@@ -123,6 +123,8 @@ func ToPosition(fen string) (*engine.Position, error) {
 		if activeCol == engine.Black {
 			p.HalfmoveNumber++
 		}
+	} else {
+		p.HalfmoveNumber = 2
 	}
 
 	return p, nil
@@ -249,7 +251,7 @@ func toRank(r rune) (engine.Rank, error) {
 	}
 }
 
-func ToFEN(p engine.Position) string {
+func PositionToFEN(p *engine.Position) string {
 	fen := ""
 
 	// board
@@ -265,7 +267,7 @@ func ToFEN(p engine.Position) string {
 					fen += strconv.Itoa(emptySquares)
 					emptySquares = 0
 				}
-				fen += pieceToString(pc)
+				fen += pieceToNotation(pc)
 			}
 		}
 		if emptySquares > 0 {
@@ -277,7 +279,7 @@ func ToFEN(p engine.Position) string {
 	}
 
 	// active color
-	fen += " " + colorToString(p.ActiveColor)
+	fen += " " + colorToNotation(p.ActiveColor)
 
 	// castling rights
 	castlingRights := ""
@@ -300,7 +302,7 @@ func ToFEN(p engine.Position) string {
 
 	// en passant square
 	if p.EnPassantSquare != engine.NoSquare {
-		fen += " " + squareToString(p.EnPassantSquare)
+		fen += " " + squareToNotation(p.EnPassantSquare)
 	} else {
 		fen += " -"
 	}
@@ -314,7 +316,7 @@ func ToFEN(p engine.Position) string {
 	return fen
 }
 
-func pieceToString(pc engine.Piece) string {
+func pieceToNotation(pc engine.Piece) string {
 	switch pc {
 	case engine.WhitePawn:
 		return "P"
@@ -345,7 +347,7 @@ func pieceToString(pc engine.Piece) string {
 	}
 }
 
-func colorToString(col engine.Color) string {
+func colorToNotation(col engine.Color) string {
 	switch col {
 	case engine.White:
 		return "w"
@@ -356,11 +358,11 @@ func colorToString(col engine.Color) string {
 	}
 }
 
-func squareToString(sq engine.Square) string {
-	return fileToString(engine.FileOf(sq)) + rankToString(engine.RankOf(sq))
+func squareToNotation(sq engine.Square) string {
+	return fileToNotation(engine.FileOf(sq)) + rankToNotation(engine.RankOf(sq))
 }
 
-func fileToString(f engine.File) string {
+func fileToNotation(f engine.File) string {
 	switch f {
 	case engine.FileA:
 		return "a"
@@ -383,7 +385,7 @@ func fileToString(f engine.File) string {
 	}
 }
 
-func rankToString(r engine.Rank) string {
+func rankToNotation(r engine.Rank) string {
 	switch r {
 	case engine.Rank1:
 		return "1"
@@ -403,5 +405,31 @@ func rankToString(r engine.Rank) string {
 		return "8"
 	default:
 		panic(fmt.Sprintf("Invalid rank: %v", r))
+	}
+}
+
+func MoveToNotation(m engine.Move) string {
+	var notation = ""
+	notation += squareToNotation(engine.OriginSquareOf(m))
+	notation += squareToNotation(engine.TargetSquareOf(m))
+	promotion := engine.PromotionOf(m)
+	if promotion != engine.NoPieceType {
+		notation += pieceTypeToNotation(promotion)
+	}
+	return notation
+}
+
+func pieceTypeToNotation(pt engine.PieceType) string {
+	switch pt {
+	case engine.Knight:
+		return "n"
+	case engine.Bishop:
+		return "b"
+	case engine.Rook:
+		return "r"
+	case engine.Queen:
+		return "q"
+	default:
+		panic(fmt.Sprintf("Invalid piece type: %v", pt))
 	}
 }

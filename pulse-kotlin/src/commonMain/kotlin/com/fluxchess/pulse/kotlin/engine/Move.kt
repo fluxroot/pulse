@@ -35,7 +35,7 @@ const val NO_MOVE: Move = (NO_MOVE_TYPE shl MOVE_TYPE_SHIFT) or
 	(NO_PIECE shl TARGET_PIECE_SHIFT) or
 	(NO_PIECE_TYPE shl PROMOTION_SHIFT)
 
-internal fun moveOf(
+fun moveOf(
 	moveType: MoveType,
 	originSquare: Square,
 	targetSquare: Square,
@@ -49,7 +49,7 @@ internal fun moveOf(
 	(targetPiece shl TARGET_PIECE_SHIFT) or
 	(promotion shl PROMOTION_SHIFT)
 
-internal fun moveTypeOf(move: Move): MoveType = (move and MOVE_TYPE_MASK) ushr MOVE_TYPE_SHIFT
+fun moveTypeOf(move: Move): MoveType = (move and MOVE_TYPE_MASK) ushr MOVE_TYPE_SHIFT
 
 fun originSquareOf(move: Move): Square = (move and ORIGIN_SQUARE_MASK) ushr ORIGIN_SQUARE_SHIFT
 

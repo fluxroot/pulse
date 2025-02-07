@@ -7,18 +7,18 @@
 
 package engine
 
-type moveType = int
+type MoveType = int
 
 const (
-	normalMove        moveType = 0
-	pawnDoubleMove    moveType = 1
-	pawnPromotionMove moveType = 2
-	enPassantMove     moveType = 3
-	castlingMove      moveType = 4
+	NormalMove        MoveType = 0
+	PawnDoubleMove    MoveType = 1
+	PawnPromotionMove MoveType = 2
+	EnPassantMove     MoveType = 3
+	CastlingMove      MoveType = 4
 
-	noMoveType moveType = 5
+	NoMoveType MoveType = 5
 )
 
 var (
-	moveTypes = [5]moveType{normalMove, pawnDoubleMove, pawnPromotionMove, enPassantMove, castlingMove}
+	MoveTypes = [5]MoveType{NormalMove, PawnDoubleMove, PawnPromotionMove, EnPassantMove, CastlingMove}
 )

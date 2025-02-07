@@ -23,7 +23,7 @@ func TestPosition_ActiveColor(t *testing.T) {
 				p.Put(WhiteKing, E1)
 				p.Put(BlackKing, E8)
 			},
-			move:        moveOf(normalMove, E1, E2, WhiteKing, NoPiece, NoPieceType),
+			move:        MoveOf(NormalMove, E1, E2, WhiteKing, NoPiece, NoPieceType),
 			activeColor: White,
 			want:        Black,
 		},
@@ -33,7 +33,7 @@ func TestPosition_ActiveColor(t *testing.T) {
 				p.Put(WhiteKing, E1)
 				p.Put(BlackKing, E8)
 			},
-			move:        moveOf(normalMove, E8, E7, BlackKing, NoPiece, NoPieceType),
+			move:        MoveOf(NormalMove, E8, E7, BlackKing, NoPiece, NoPieceType),
 			activeColor: Black,
 			want:        White,
 		},
@@ -75,7 +75,7 @@ func TestPosition_CastlingRights(t *testing.T) {
 				p.Put(BlackRook, A8)
 				p.Put(BlackRook, H8)
 			},
-			move:           moveOf(normalMove, H1, H2, WhiteRook, NoPiece, NoPieceType),
+			move:           MoveOf(NormalMove, H1, H2, WhiteRook, NoPiece, NoPieceType),
 			activeColor:    White,
 			castlingRights: WhiteKingside | WhiteQueenside | BlackKingside | BlackQueenside,
 			want:           WhiteQueenside | BlackKingside | BlackQueenside,
@@ -90,7 +90,7 @@ func TestPosition_CastlingRights(t *testing.T) {
 				p.Put(BlackRook, A8)
 				p.Put(BlackRook, H8)
 			},
-			move:           moveOf(normalMove, A1, A2, WhiteRook, NoPiece, NoPieceType),
+			move:           MoveOf(NormalMove, A1, A2, WhiteRook, NoPiece, NoPieceType),
 			activeColor:    White,
 			castlingRights: WhiteKingside | WhiteQueenside | BlackKingside | BlackQueenside,
 			want:           WhiteKingside | BlackKingside | BlackQueenside,
@@ -105,7 +105,7 @@ func TestPosition_CastlingRights(t *testing.T) {
 				p.Put(BlackRook, A8)
 				p.Put(BlackRook, H8)
 			},
-			move:           moveOf(normalMove, E1, E2, WhiteKing, NoPiece, NoPieceType),
+			move:           MoveOf(NormalMove, E1, E2, WhiteKing, NoPiece, NoPieceType),
 			activeColor:    White,
 			castlingRights: WhiteKingside | WhiteQueenside | BlackKingside | BlackQueenside,
 			want:           BlackKingside | BlackQueenside,
@@ -120,7 +120,7 @@ func TestPosition_CastlingRights(t *testing.T) {
 				p.Put(BlackRook, A8)
 				p.Put(BlackRook, H8)
 			},
-			move:           moveOf(normalMove, H8, H7, BlackRook, NoPiece, NoPieceType),
+			move:           MoveOf(NormalMove, H8, H7, BlackRook, NoPiece, NoPieceType),
 			activeColor:    Black,
 			castlingRights: WhiteKingside | WhiteQueenside | BlackKingside | BlackQueenside,
 			want:           WhiteKingside | WhiteQueenside | BlackQueenside,
@@ -135,7 +135,7 @@ func TestPosition_CastlingRights(t *testing.T) {
 				p.Put(BlackRook, A8)
 				p.Put(BlackRook, H8)
 			},
-			move:           moveOf(normalMove, A8, A7, BlackRook, NoPiece, NoPieceType),
+			move:           MoveOf(NormalMove, A8, A7, BlackRook, NoPiece, NoPieceType),
 			activeColor:    Black,
 			castlingRights: WhiteKingside | WhiteQueenside | BlackKingside | BlackQueenside,
 			want:           WhiteKingside | WhiteQueenside | BlackKingside,
@@ -150,7 +150,7 @@ func TestPosition_CastlingRights(t *testing.T) {
 				p.Put(BlackRook, A8)
 				p.Put(BlackRook, H8)
 			},
-			move:           moveOf(normalMove, E8, E7, BlackKing, NoPiece, NoPieceType),
+			move:           MoveOf(NormalMove, E8, E7, BlackKing, NoPiece, NoPieceType),
 			activeColor:    Black,
 			castlingRights: WhiteKingside | WhiteQueenside | BlackKingside | BlackQueenside,
 			want:           WhiteKingside | WhiteQueenside,
@@ -191,7 +191,7 @@ func TestPosition_EnPassantSquare(t *testing.T) {
 				p.Put(WhitePawn, E2)
 				p.Put(BlackKing, E8)
 			},
-			move:            moveOf(pawnDoubleMove, E2, E4, WhitePawn, NoPiece, NoPieceType),
+			move:            MoveOf(PawnDoubleMove, E2, E4, WhitePawn, NoPiece, NoPieceType),
 			activeColor:     White,
 			enPassantSquare: NoSquare,
 			want:            E3,
@@ -203,7 +203,7 @@ func TestPosition_EnPassantSquare(t *testing.T) {
 				p.Put(BlackKing, E8)
 				p.Put(BlackPawn, E7)
 			},
-			move:            moveOf(pawnDoubleMove, E7, E5, BlackPawn, NoPiece, NoPieceType),
+			move:            MoveOf(PawnDoubleMove, E7, E5, BlackPawn, NoPiece, NoPieceType),
 			activeColor:     Black,
 			enPassantSquare: NoSquare,
 			want:            E6,
@@ -216,7 +216,7 @@ func TestPosition_EnPassantSquare(t *testing.T) {
 				p.Put(BlackKing, E8)
 				p.Put(BlackPawn, E5)
 			},
-			move:            moveOf(enPassantMove, D5, E6, WhitePawn, NoPiece, NoPieceType),
+			move:            MoveOf(EnPassantMove, D5, E6, WhitePawn, NoPiece, NoPieceType),
 			activeColor:     White,
 			enPassantSquare: E6,
 			want:            NoSquare,
@@ -229,7 +229,7 @@ func TestPosition_EnPassantSquare(t *testing.T) {
 				p.Put(BlackKing, E8)
 				p.Put(BlackPawn, D4)
 			},
-			move:            moveOf(enPassantMove, D4, E3, BlackPawn, NoPiece, NoPieceType),
+			move:            MoveOf(EnPassantMove, D4, E3, BlackPawn, NoPiece, NoPieceType),
 			activeColor:     Black,
 			enPassantSquare: E3,
 			want:            NoSquare,
@@ -269,7 +269,7 @@ func TestPosition_HalfmoveClock(t *testing.T) {
 				p.Put(WhiteKing, E1)
 				p.Put(BlackKing, E8)
 			},
-			move:          moveOf(normalMove, E1, E2, WhiteKing, NoPiece, NoPieceType),
+			move:          MoveOf(NormalMove, E1, E2, WhiteKing, NoPiece, NoPieceType),
 			activeColor:   White,
 			halfmoveClock: 0,
 			want:          1,
@@ -281,7 +281,7 @@ func TestPosition_HalfmoveClock(t *testing.T) {
 				p.Put(WhitePawn, E2)
 				p.Put(BlackKing, E8)
 			},
-			move:          moveOf(normalMove, E2, E3, WhitePawn, NoPiece, NoPieceType),
+			move:          MoveOf(NormalMove, E2, E3, WhitePawn, NoPiece, NoPieceType),
 			activeColor:   White,
 			halfmoveClock: 1,
 			want:          0,
@@ -294,7 +294,7 @@ func TestPosition_HalfmoveClock(t *testing.T) {
 				p.Put(BlackKing, E8)
 				p.Put(BlackPawn, D7)
 			},
-			move:          moveOf(normalMove, D1, D7, WhiteQueen, BlackPawn, NoPieceType),
+			move:          MoveOf(NormalMove, D1, D7, WhiteQueen, BlackPawn, NoPieceType),
 			activeColor:   White,
 			halfmoveClock: 1,
 			want:          0,
@@ -334,7 +334,7 @@ func TestPosition_HalfmoveNumber(t *testing.T) {
 				p.Put(WhiteKing, E1)
 				p.Put(BlackKing, E8)
 			},
-			move:           moveOf(normalMove, E1, E2, WhiteKing, NoPiece, NoPieceType),
+			move:           MoveOf(NormalMove, E1, E2, WhiteKing, NoPiece, NoPieceType),
 			activeColor:    White,
 			halfmoveNumber: 0,
 			want:           1,
@@ -376,7 +376,7 @@ func TestPosition_board(t *testing.T) {
 				p.Put(BlackKing, E8)
 				p.Put(BlackPawn, D7)
 			},
-			move:                  moveOf(normalMove, D1, D7, WhiteQueen, BlackPawn, NoPieceType),
+			move:                  MoveOf(NormalMove, D1, D7, WhiteQueen, BlackPawn, NoPieceType),
 			activeColor:           White,
 			wantOriginSquarePiece: NoPiece,
 			wantTargetSquarePiece: WhiteQueen,
@@ -388,7 +388,7 @@ func TestPosition_board(t *testing.T) {
 				p.Put(WhitePawn, C7)
 				p.Put(BlackKing, E8)
 			},
-			move:                  moveOf(pawnPromotionMove, C7, C8, WhitePawn, NoPiece, Queen),
+			move:                  MoveOf(PawnPromotionMove, C7, C8, WhitePawn, NoPiece, Queen),
 			activeColor:           White,
 			wantOriginSquarePiece: NoPiece,
 			wantTargetSquarePiece: WhiteQueen,
@@ -400,7 +400,7 @@ func TestPosition_board(t *testing.T) {
 				p.Put(BlackKing, E8)
 				p.Put(BlackPawn, C2)
 			},
-			move:                  moveOf(pawnPromotionMove, C2, C1, BlackPawn, NoPiece, Queen),
+			move:                  MoveOf(PawnPromotionMove, C2, C1, BlackPawn, NoPiece, Queen),
 			activeColor:           Black,
 			wantOriginSquarePiece: NoPiece,
 			wantTargetSquarePiece: BlackQueen,

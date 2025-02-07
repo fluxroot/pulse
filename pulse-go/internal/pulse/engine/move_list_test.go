@@ -14,7 +14,7 @@ import (
 func TestMoveList_add(t *testing.T) {
 	t.Run("add should add a move to the move list", func(t *testing.T) {
 		ml := &MoveList{}
-		m := moveOf(pawnPromotionMove, A7, B8, WhitePawn, BlackQueen, Knight)
+		m := MoveOf(PawnPromotionMove, A7, B8, WhitePawn, BlackQueen, Knight)
 
 		ml.add(m)
 
@@ -35,12 +35,12 @@ func TestMoveList_rateFromMVVLVA(t *testing.T) {
 	}{
 		{
 			name: "rateByMVVLVA should rate a non-capturing move",
-			move: moveOf(normalMove, D4, D5, WhitePawn, NoPiece, NoPieceType),
+			move: MoveOf(NormalMove, D4, D5, WhitePawn, NoPiece, NoPieceType),
 			want: kingValue / pawnValue,
 		},
 		{
 			name: "rateByMVVLVA should rate a capturing move",
-			move: moveOf(normalMove, D1, G4, WhiteQueen, BlackKnight, NoPieceType),
+			move: MoveOf(NormalMove, D1, G4, WhiteQueen, BlackKnight, NoPieceType),
 			want: kingValue/queenValue + 10*knightValue,
 		},
 	}
@@ -59,10 +59,10 @@ func TestMoveList_rateFromMVVLVA(t *testing.T) {
 func TestMoveList_sort(t *testing.T) {
 	t.Run("sort should sort all moves", func(t *testing.T) {
 		ml := &MoveList{}
-		m1 := moveOf(normalMove, D1, G4, WhiteQueen, BlackKnight, NoPieceType)
-		m2 := moveOf(normalMove, C1, G5, WhiteBishop, BlackPawn, NoPieceType)
-		m3 := moveOf(normalMove, F1, B5, WhiteBishop, NoPiece, NoPieceType)
-		m4 := moveOf(normalMove, D4, D5, WhitePawn, NoPiece, NoPieceType)
+		m1 := MoveOf(NormalMove, D1, G4, WhiteQueen, BlackKnight, NoPieceType)
+		m2 := MoveOf(NormalMove, C1, G5, WhiteBishop, BlackPawn, NoPieceType)
+		m3 := MoveOf(NormalMove, F1, B5, WhiteBishop, NoPiece, NoPieceType)
+		m4 := MoveOf(NormalMove, D4, D5, WhitePawn, NoPiece, NoPieceType)
 		ml.add(m4)
 		ml.Entries[ml.Size-1].value = 1
 		ml.add(m3)

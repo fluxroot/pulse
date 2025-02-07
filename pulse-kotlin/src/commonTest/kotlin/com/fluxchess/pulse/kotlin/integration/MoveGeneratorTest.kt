@@ -12,7 +12,7 @@ import com.fluxchess.pulse.kotlin.engine.MAX_DEPTH
 import com.fluxchess.pulse.kotlin.engine.MoveList
 import com.fluxchess.pulse.kotlin.engine.Position
 import com.fluxchess.pulse.kotlin.engine.generateLegalMoves
-import com.fluxchess.pulse.kotlin.fen.toPositionOrNull
+import com.fluxchess.pulse.kotlin.uci.toPositionOrNull
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -10,12 +10,12 @@ package engine
 import "testing"
 
 func TestMove_moveOf(t *testing.T) {
-	t.Run("moveOf should return the move", func(t *testing.T) {
-		m := moveOf(pawnPromotionMove, A7, B8, WhitePawn, BlackQueen, Knight)
+	t.Run("MoveOf should return the move", func(t *testing.T) {
+		m := MoveOf(PawnPromotionMove, A7, B8, WhitePawn, BlackQueen, Knight)
 
-		mt := moveTypeOf(m)
-		if mt != pawnPromotionMove {
-			t.Errorf("wanted move type of move to be %v, but got %v", pawnPromotionMove, mt)
+		mt := MoveTypeOf(m)
+		if mt != PawnPromotionMove {
+			t.Errorf("wanted move type of move to be %v, but got %v", PawnPromotionMove, mt)
 		}
 		originSq := OriginSquareOf(m)
 		if originSq != A7 {

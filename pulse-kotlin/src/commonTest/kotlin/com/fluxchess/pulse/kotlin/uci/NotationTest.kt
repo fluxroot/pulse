@@ -5,12 +5,15 @@
  * found in the LICENSE file.
  */
 
-package com.fluxchess.pulse.kotlin.fen
+package com.fluxchess.pulse.kotlin.uci
 
 import com.fluxchess.pulse.kotlin.engine.A1
+import com.fluxchess.pulse.kotlin.engine.A7
 import com.fluxchess.pulse.kotlin.engine.A8
 import com.fluxchess.pulse.kotlin.engine.B1
+import com.fluxchess.pulse.kotlin.engine.B2
 import com.fluxchess.pulse.kotlin.engine.B8
+import com.fluxchess.pulse.kotlin.engine.BLACK
 import com.fluxchess.pulse.kotlin.engine.BLACK_BISHOP
 import com.fluxchess.pulse.kotlin.engine.BLACK_KING
 import com.fluxchess.pulse.kotlin.engine.BLACK_KINGSIDE
@@ -24,6 +27,7 @@ import com.fluxchess.pulse.kotlin.engine.C8
 import com.fluxchess.pulse.kotlin.engine.D1
 import com.fluxchess.pulse.kotlin.engine.D8
 import com.fluxchess.pulse.kotlin.engine.E1
+import com.fluxchess.pulse.kotlin.engine.E6
 import com.fluxchess.pulse.kotlin.engine.E8
 import com.fluxchess.pulse.kotlin.engine.F1
 import com.fluxchess.pulse.kotlin.engine.F8
@@ -31,7 +35,13 @@ import com.fluxchess.pulse.kotlin.engine.G1
 import com.fluxchess.pulse.kotlin.engine.G8
 import com.fluxchess.pulse.kotlin.engine.H1
 import com.fluxchess.pulse.kotlin.engine.H8
+import com.fluxchess.pulse.kotlin.engine.NORMAL_MOVE
+import com.fluxchess.pulse.kotlin.engine.NO_CASTLING
+import com.fluxchess.pulse.kotlin.engine.NO_PIECE
+import com.fluxchess.pulse.kotlin.engine.NO_PIECE_TYPE
+import com.fluxchess.pulse.kotlin.engine.PAWN_PROMOTION_MOVE
 import com.fluxchess.pulse.kotlin.engine.Position
+import com.fluxchess.pulse.kotlin.engine.QUEEN
 import com.fluxchess.pulse.kotlin.engine.RANK_2
 import com.fluxchess.pulse.kotlin.engine.RANK_7
 import com.fluxchess.pulse.kotlin.engine.WHITE
@@ -44,16 +54,23 @@ import com.fluxchess.pulse.kotlin.engine.WHITE_QUEEN
 import com.fluxchess.pulse.kotlin.engine.WHITE_QUEENSIDE
 import com.fluxchess.pulse.kotlin.engine.WHITE_ROOK
 import com.fluxchess.pulse.kotlin.engine.files
+import com.fluxchess.pulse.kotlin.engine.moveOf
 import com.fluxchess.pulse.kotlin.engine.squareOf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class FenTest {
+class FenToPositionTest {
 	@Test
 	fun `Valid FEN should return a valid position`() {
 		val position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1".toPosition()
-		assertEquals(standardPosition(), position)
+		assertEquals(startingPosition(), position)
+	}
+
+	@Test
+	fun `Valid FEN without halfmove clock and fullmove number should return a valid position`() {
+		val position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -".toPosition()
+		assertEquals(startingPosition(), position)
 	}
 
 	@Test
@@ -99,6 +116,14 @@ class FenTest {
 	}
 
 	@Test
+	fun `No castling rights should return a valid position`() {
+		val position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1".toPosition()
+		val startingPosition = startingPosition()
+		startingPosition.castlingRights = NO_CASTLING
+		assertEquals(startingPosition, position)
+	}
+
+	@Test
 	fun `Invalid castling rights with too many castlings should return an error`() {
 		val exception = assertFailsWith<FenException> { "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkqK - 0 1".toPosition() }
 		assertEquals("Invalid castling rights: KQkqK", exception.message)
@@ -108,6 +133,14 @@ class FenTest {
 	fun `Invalid castling rights should return an error`() {
 		val exception = assertFailsWith<FenException> { "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w XQkq - 0 1".toPosition() }
 		assertEquals("Invalid castling type: X", exception.message)
+	}
+
+	@Test
+	fun `Valid en passant square should return a valid position`() {
+		val position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq e6 0 1".toPosition()
+		val startingPosition = startingPosition()
+		startingPosition.enPassantSquare = E6
+		assertEquals(startingPosition, position)
 	}
 
 	@Test
@@ -141,13 +174,60 @@ class FenTest {
 	}
 
 	@Test
+	fun `Valid fullmove number should return a valid position`() {
+		val position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1".toPosition()
+		val startingPosition = startingPosition()
+		startingPosition.activeColor = BLACK
+		startingPosition.halfmoveNumber = 3
+		assertEquals(startingPosition, position)
+	}
+
+	@Test
 	fun `Invalid fullmove number should return an error`() {
 		val exception = assertFailsWith<FenException> { "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 x".toPosition() }
 		assertEquals("Invalid fullmove number: x", exception.message)
 	}
 }
 
-private fun standardPosition(): Position {
+class PositionToFenTest {
+	@Test
+	fun `Starting position should return a valid FEN`() {
+		val fen = startingPosition().toFEN()
+		assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", fen)
+	}
+
+	@Test
+	fun `No castling rights should return a valid FEN`() {
+		val startingPosition = startingPosition()
+		startingPosition.castlingRights = NO_CASTLING
+		val fen = startingPosition.toFEN()
+		assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1", fen)
+	}
+
+	@Test
+	fun `Valid en passant square should return a valid FEN`() {
+		val startingPosition = startingPosition()
+		startingPosition.enPassantSquare = E6
+		val fen = startingPosition.toFEN()
+		assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq e6 0 1", fen)
+	}
+}
+
+class MoveToNotationTest {
+	@Test
+	fun `Valid move should return a valid notation`() {
+		val move = moveOf(NORMAL_MOVE, A1, B2, WHITE_QUEEN, BLACK_ROOK, NO_PIECE_TYPE)
+		assertEquals("a1b2", move.toNotation())
+	}
+
+	@Test
+	fun `Valid move with promotion should return a valid notation`() {
+		val move = moveOf(PAWN_PROMOTION_MOVE, A7, A8, WHITE_PAWN, NO_PIECE, QUEEN)
+		assertEquals("a7a8q", move.toNotation())
+	}
+}
+
+private fun startingPosition(): Position {
 	val position = Position()
 	position.activeColor = WHITE
 	position.castlingRights = WHITE_KINGSIDE or WHITE_QUEENSIDE or BLACK_KINGSIDE or BLACK_QUEENSIDE

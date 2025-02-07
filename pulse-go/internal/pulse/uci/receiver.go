@@ -12,11 +12,23 @@ import (
 	"io"
 	"regexp"
 	"strings"
+
+	"github.com/fluxroot/pulse/internal/pulse/engine"
 )
 
-var tokenRegex = regexp.MustCompile(`\s+`)
+const startingPositionFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+
+var uciTokenRegex = regexp.MustCompile(`\s+`)
+
 var nameValueOptionRegex = regexp.MustCompile(`^name\s+(?P<name>.+?)\s+value\s+(?P<value>.+)`)
 var nameOnlyOptionRegex = regexp.MustCompile(`^name\s+(?P<name>.+)`)
+
+var startposMovesRegex = regexp.MustCompile(`^startpos\s+moves\s+(?P<moves>.+)`)
+var fenMovesRegex = regexp.MustCompile(`^fen\s+(?P<fen>.+?)\s+moves\s+(?P<moves>.+)`)
+var startposOnlyRegex = regexp.MustCompile(`^startpos`)
+var fenOnlyRegex = regexp.MustCompile(`^fen\s+(?P<fen>.+)`)
+
+var movesTokenRegex = regexp.MustCompile(`\s+`)
 
 type Receiver interface {
 	Run() error
@@ -47,7 +59,7 @@ func (r *DefaultReceiver) Run() error {
 			_ = r.engine.Quit()
 			return err
 		}
-		tokens := tokenRegex.Split(strings.TrimSpace(line), 2)
+		tokens := uciTokenRegex.Split(strings.TrimSpace(line), 2)
 		if len(tokens) == 0 {
 			continue
 		}
@@ -73,7 +85,7 @@ func (r *DefaultReceiver) Run() error {
 				return fmt.Errorf("new game: %w", err)
 			}
 		case "position":
-			parsePosition()
+			r.parsePosition(tokens)
 		case "go":
 			parseGo()
 		case "stop":
@@ -118,23 +130,23 @@ func (r *DefaultReceiver) parseSetOption(tokens []string) {
 		_ = r.sender.Debug("Argument required")
 		return
 	}
-	match := nameValueOptionRegex.FindStringSubmatch(tokens[1])
-	if match != nil {
+	nameValueMatch := nameValueOptionRegex.FindStringSubmatch(tokens[1])
+	if nameValueMatch != nil {
 		result := map[string]string{}
 		for i, name := range nameValueOptionRegex.SubexpNames() {
 			if i != 0 && name != "" {
-				result[name] = match[i]
+				result[name] = nameValueMatch[i]
 			}
 		}
 		r.engine.SetNameValueOption(result["name"], result["value"])
 		return
 	}
-	match = nameOnlyOptionRegex.FindStringSubmatch(tokens[1])
-	if match != nil {
+	nameOnlyMatch := nameOnlyOptionRegex.FindStringSubmatch(tokens[1])
+	if nameOnlyMatch != nil {
 		result := map[string]string{}
 		for i, name := range nameOnlyOptionRegex.SubexpNames() {
 			if i != 0 && name != "" {
-				result[name] = match[i]
+				result[name] = nameOnlyMatch[i]
 			}
 		}
 		r.engine.SetNameOnlyOption(result["name"])
@@ -143,7 +155,77 @@ func (r *DefaultReceiver) parseSetOption(tokens []string) {
 	_ = r.sender.Debug(fmt.Sprintf("Error parsing argument: %s", tokens[1]))
 }
 
-func parsePosition() {
+func (r *DefaultReceiver) parsePosition(tokens []string) {
+	if len(tokens) != 2 {
+		_ = r.sender.Debug("Argument required")
+		return
+	}
+	startposMovesMatch := startposMovesRegex.FindStringSubmatch(tokens[1])
+	if startposMovesMatch != nil {
+		result := map[string]string{}
+		for i, name := range startposMovesRegex.SubexpNames() {
+			if i != 0 && name != "" {
+				result[name] = startposMovesMatch[i]
+			}
+		}
+		r.playMoves(startingPositionFEN, result["moves"])
+		return
+	}
+	fenMovesMatch := fenMovesRegex.FindStringSubmatch(tokens[1])
+	if fenMovesMatch != nil {
+		result := map[string]string{}
+		for i, name := range fenMovesRegex.SubexpNames() {
+			if i != 0 && name != "" {
+				result[name] = fenMovesMatch[i]
+			}
+		}
+		r.playMoves(result["fen"], result["moves"])
+		return
+	}
+	startposOnlyMatch := startposOnlyRegex.FindStringSubmatch(tokens[1])
+	if startposOnlyMatch != nil {
+		r.playMoves(startingPositionFEN, "")
+		return
+	}
+	fenOnlyMatch := fenOnlyRegex.FindStringSubmatch(tokens[1])
+	if fenOnlyMatch != nil {
+		result := map[string]string{}
+		for i, name := range fenOnlyRegex.SubexpNames() {
+			if i != 0 && name != "" {
+				result[name] = fenOnlyMatch[i]
+			}
+		}
+		r.playMoves(result["fen"], "")
+		return
+	}
+	_ = r.sender.Debug(fmt.Sprintf("Error parsing argument: %s", tokens[1]))
+}
+
+func (r *DefaultReceiver) playMoves(fen string, moves string) {
+	legalMoves := &engine.MoveList{}
+	position, err := FENToPosition(fen)
+	if err != nil {
+		_ = r.sender.Debug(fmt.Sprintf("Invalid position: %s", fen))
+		return
+	}
+	if moves != "" {
+		moveList := movesTokenRegex.Split(moves, -1)
+	MoveList:
+		for _, m := range moveList {
+			engine.GenerateLegalMoves(legalMoves, position)
+			for i := 0; i < legalMoves.Size; i++ {
+				legalMove := legalMoves.Entries[i].Move
+				if MoveToNotation(legalMove) == m {
+					position.MakeMove(legalMove)
+					continue MoveList
+				}
+			}
+			_ = r.sender.Debug(fmt.Sprintf("Invalid move: %s, position: %s", m, PositionToFEN(position)))
+			return
+		}
+	}
+	r.engine.Position(position)
+	return
 }
 
 func parseGo() {

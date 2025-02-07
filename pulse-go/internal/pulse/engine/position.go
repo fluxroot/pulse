@@ -59,7 +59,7 @@ type Position struct {
 func (p *Position) MakeMove(m Move) {
 	p.saveState()
 
-	mt := moveTypeOf(m)
+	mt := MoveTypeOf(m)
 	originSq := OriginSquareOf(m)
 	targetSq := TargetSquareOf(m)
 	originPc := OriginPieceOf(m)
@@ -68,7 +68,7 @@ func (p *Position) MakeMove(m Move) {
 
 	if targetPc != NoPiece {
 		captureSq := targetSq
-		if mt == enPassantMove {
+		if mt == EnPassantMove {
 			oppositeDir := pawnMoveDirections[OppositeOf(originCol)]
 			captureSq += oppositeDir
 		}
@@ -77,13 +77,13 @@ func (p *Position) MakeMove(m Move) {
 	}
 
 	p.Remove(originSq)
-	if mt == pawnPromotionMove {
+	if mt == PawnPromotionMove {
 		p.Put(PieceOf(originCol, PromotionOf(m)), targetSq)
 	} else {
 		p.Put(originPc, targetSq)
 	}
 
-	if mt == castlingMove {
+	if mt == CastlingMove {
 		switch targetSq {
 		case G1:
 			p.Put(p.Remove(H1), F1)
@@ -100,7 +100,7 @@ func (p *Position) MakeMove(m Move) {
 
 	p.clearCastling(originSq)
 
-	if mt == pawnDoubleMove {
+	if mt == PawnDoubleMove {
 		oppositeDir := pawnMoveDirections[OppositeOf(originCol)]
 		p.EnPassantSquare = targetSq + oppositeDir
 	} else {
@@ -119,7 +119,7 @@ func (p *Position) MakeMove(m Move) {
 }
 
 func (p *Position) UndoMove(m Move) {
-	mt := moveTypeOf(m)
+	mt := MoveTypeOf(m)
 	originSq := OriginSquareOf(m)
 	targetSq := TargetSquareOf(m)
 	originPc := OriginPieceOf(m)
@@ -130,7 +130,7 @@ func (p *Position) UndoMove(m Move) {
 
 	p.ActiveColor = OppositeOf(p.ActiveColor)
 
-	if mt == castlingMove {
+	if mt == CastlingMove {
 		switch targetSq {
 		case G1:
 			p.Put(p.Remove(F1), H1)
@@ -150,7 +150,7 @@ func (p *Position) UndoMove(m Move) {
 
 	if targetPc != NoPiece {
 		captureSq := targetSq
-		if mt == enPassantMove {
+		if mt == EnPassantMove {
 			oppositeDir := pawnMoveDirections[OppositeOf(originCol)]
 			captureSq += oppositeDir
 		}
