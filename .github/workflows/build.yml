@@ -11,7 +11,7 @@ jobs:
       - uses: gradle/gradle-build-action@v2
       - name: Build
         run: ./gradlew :pulse-java:build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pulse-java
           path: pulse-java/build/distributions/pulse-java-*.zip
@@ -27,7 +27,7 @@ jobs:
       - uses: gradle/gradle-build-action@v2
       - name: Build
         run: ./gradlew :pulse-kotlin:linuxDistTar
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pulse-kotlin-linux
           path: pulse-kotlin/build/distributions/pulse-kotlin-linux-*.tar.gz
@@ -43,7 +43,7 @@ jobs:
       - uses: gradle/gradle-build-action@v2
       - name: Build
         run: ./gradlew :pulse-kotlin:macosDistTar
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pulse-kotlin-macos
           path: pulse-kotlin/build/distributions/pulse-kotlin-macos-*.tar.gz
@@ -59,7 +59,7 @@ jobs:
       - uses: gradle/gradle-build-action@v2
       - name: Build
         run: ./gradlew :pulse-kotlin:windowsDistZip
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pulse-kotlin-windows
           path: pulse-kotlin/build/distributions/pulse-kotlin-windows-*.zip
@@ -75,7 +75,7 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: ctest -C Release
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pulse-cpp-linux
           path: build/pulse-cpp-linux-*.tar.gz
@@ -91,7 +91,7 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: ctest -C Release
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pulse-cpp-windows
           path: build/pulse-cpp-windows-*.zip
